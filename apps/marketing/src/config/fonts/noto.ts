@@ -22,7 +22,9 @@ import {
 } from 'next/font/google';
 import {SupportedLocale} from '@/config/locales';
 
-// Noto Sans is the fallback font
+/**
+ * Noto is the fallback font for Code.org for glyphs not supported by Figtree.
+ */
 export const notoSans = Noto_Sans({
   variable: '--font-noto-sans',
   display: 'swap',
@@ -38,6 +40,9 @@ export const notoSans = Noto_Sans({
   ],
 });
 
+/**
+ * For mathematical symbols
+ */
 export const notoSansMath = Noto_Sans_Math({
   variable: '--font-noto-sans-math',
   subsets: ['math'],
@@ -45,6 +50,9 @@ export const notoSansMath = Noto_Sans_Math({
   display: 'swap',
 });
 
+/**
+ * Custom fonts for different locales
+ */
 export const notoSansArabic = Noto_Sans_Arabic({
   variable: '--font-noto-fallback',
   subsets: ['arabic'],
@@ -137,6 +145,10 @@ export const notoSansTC = Noto_Sans_TC({
   display: 'swap',
 });
 
+/**
+ * Returns the special noto fonts to use for the specified locale.
+ * @param locale ISO Locale string
+ */
 export function getNotoFallbackFonts(locale: SupportedLocale) {
   switch (locale) {
     case 'ar-SA':
