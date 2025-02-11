@@ -13,7 +13,7 @@ export const OverlineContentfulComponentDefinition: ComponentDefinition = {
     imageUrl:
       'https://images.ctfassets.net/90t6bu6vlf76/2I1BvrvBam8kLhb248w1z4/db2323e89e0ee68853f276417ceada74/component_overline_tooltip.png',
   },
-  builtInStyles: [],
+  builtInStyles: ['cfTextAlign'],
   variables: {
     color: {
       displayName: 'Color',

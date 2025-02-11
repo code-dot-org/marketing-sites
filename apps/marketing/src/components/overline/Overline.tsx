@@ -23,6 +23,8 @@ type OverlineProps = {
   color: 'primary' | 'secondary' | 'white';
   /** Overline margin bottom */
   marginBottom: 'none' | 'xs' | 's' | 'm';
+  /** ClassName passed by contentful to apply styles that are set through contentful native editor*/
+  className?: string;
 };
 
 const overlineSizeToVisualAppearance: Record<
@@ -39,6 +41,7 @@ const Overline: React.FunctionComponent<OverlineProps> = ({
   children,
   color,
   marginBottom,
+  className,
 }) => {
   return (
     <Typography
@@ -46,6 +49,7 @@ const Overline: React.FunctionComponent<OverlineProps> = ({
         moduleStyles.overline,
         moduleStyles[`overline-${color}`],
         moduleStyles[`overline-marginBottom-${marginBottom}`],
+        className,
       )}
       semanticTag="p"
       visualAppearance={overlineSizeToVisualAppearance[size]}
