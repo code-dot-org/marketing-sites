@@ -1,0 +1,33 @@
+p.overline {
+  margin-top: 0;
+}
+
+// Ovrline colors
+p.overline-primary {
+  color: var(--text-brand-teal-primary);
+}
+
+p.overline-secondary {
+  color: var(--text-neutral-quaternary);
+}
+
+p.overline-white {
+  color: var(--text-neutral-white-fixed);
+}
+
+// Overline margin-bottom styles
+p.overline-marginBottom-none {
+  margin-bottom: 0;
+}
+
+p.overline-marginBottom-xs {
+  margin-bottom: 8px;
+}
+
+p.overline-marginBottom-s {
+  margin-bottom: 16px;
+}
+
+p.overline-marginBottom-m {
+  margin-bottom: 24px;
+}
