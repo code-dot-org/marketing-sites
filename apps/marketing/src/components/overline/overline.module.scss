@@ -1,33 +1,37 @@
-p.overline {
-  margin-top: 0;
-}
+@use '@/components/common/styles/mixins' as mixins;
 
-// Ovrline colors
-p.overline-primary {
-  color: var(--text-brand-teal-primary);
-}
+// Overline common styles
+p {
+  &.overline {
+    margin-top: 0;
+  }
 
-p.overline-secondary {
-  color: var(--text-neutral-quaternary);
-}
+  // Overline colors
+  &.overline-color {
+    &-primary {
+      color: var(--text-brand-teal-primary);
+    }
 
-p.overline-white {
-  color: var(--text-neutral-white-fixed);
-}
+    &-secondary {
+      color: var(--text-neutral-quaternary);
+    }
+  }
 
-// Overline margin-bottom styles
-p.overline-marginBottom-none {
-  margin-bottom: 0;
-}
+  &.overline-marginBottom {
+    &-none {
+      @include mixins.common-margin-bottom-none;
+    }
 
-p.overline-marginBottom-xs {
-  margin-bottom: 8px;
-}
+    &-xs {
+      @include mixins.common-margin-bottom-xs;
+    }
 
-p.overline-marginBottom-s {
-  margin-bottom: 16px;
-}
+    &-s {
+      @include mixins.common-margin-bottom-s;
+    }
 
-p.overline-marginBottom-m {
-  margin-bottom: 24px;
+    &-m {
+      @include mixins.common-margin-bottom-m;
+    }
+  }
 }

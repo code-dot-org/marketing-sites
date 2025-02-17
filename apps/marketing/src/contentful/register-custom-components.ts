@@ -12,7 +12,7 @@ import Heading, {
 } from '@/components/heading';
 import Link, {LinkContentfulComponentDefinition} from '@/components/link';
 import Overline, {
-    OverlineContentfulComponentDefinition,
+  OverlineContentfulComponentDefinition,
 } from '@/components/overline';
 import Paragraph, {
   ParagraphContentfulComponentDefinition,
@@ -45,7 +45,7 @@ defineComponents(
       component: Link,
       definition: LinkContentfulComponentDefinition,
     },
-      {component: Overline, definition: OverlineContentfulComponentDefinition},
+    {component: Overline, definition: OverlineContentfulComponentDefinition},
     {
       component: Paragraph,
       definition: ParagraphContentfulComponentDefinition,

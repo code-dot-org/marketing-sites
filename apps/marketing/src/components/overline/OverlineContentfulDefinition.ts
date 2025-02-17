@@ -1,5 +1,6 @@
 // Creates a definition for the Typography component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
+import {marginBottomNoneToMDefinition} from '@/components/common/definitions';
 
 export const OverlineContentfulComponentDefinition: ComponentDefinition = {
   id: 'overline',
@@ -24,7 +25,6 @@ export const OverlineContentfulComponentDefinition: ComponentDefinition = {
         in: [
           {value: 'primary', displayName: 'Primary'},
           {value: 'secondary', displayName: 'Secondary'},
-          {value: 'white', displayName: 'White'},
         ],
       },
     },
@@ -41,20 +41,7 @@ export const OverlineContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
-    marginBottom: {
-      displayName: 'Margin Bottom',
-      type: 'Text',
-      group: 'style',
-      defaultValue: 'xs',
-      validations: {
-        in: [
-          {value: 'none', displayName: 'None'},
-          {value: 'xs', displayName: '8px (Extra Small)'},
-          {value: 's', displayName: '16px (Small)'},
-          {value: 'm', displayName: '24px (Medium)'},
-        ],
-      },
-    },
+    marginBottom: marginBottomNoneToMDefinition,
     children: {
       displayName: 'Content',
       type: 'Text',

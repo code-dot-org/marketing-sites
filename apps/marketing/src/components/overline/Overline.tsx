@@ -3,7 +3,10 @@ import {
   default as Typography,
   VisualAppearance,
 } from '@code-dot-org/component-library/typography';
-import {ComponentSizeXSToL} from '@code-dot-org/component-library/common/types';
+import {
+  ComponentSizeXSToL,
+  SpacingNoneToM,
+} from '@code-dot-org/component-library/common/types';
 import classNames from 'classnames';
 import React, {ReactNode} from 'react';
 
@@ -20,9 +23,9 @@ type OverlineProps = {
   /** Overline size */
   size: Exclude<ComponentSizeXSToL, 'xs'>;
   /** Overline color */
-  color: 'primary' | 'secondary' | 'white';
+  color: 'primary' | 'secondary';
   /** Overline margin bottom */
-  marginBottom: 'none' | 'xs' | 's' | 'm';
+  marginBottom: SpacingNoneToM;
   /** ClassName passed by contentful to apply styles that are set through contentful native editor*/
   className?: string;
 };
@@ -47,7 +50,7 @@ const Overline: React.FunctionComponent<OverlineProps> = ({
     <Typography
       className={classNames(
         moduleStyles.overline,
-        moduleStyles[`overline-${color}`],
+        moduleStyles[`overline-color-${color}`],
         moduleStyles[`overline-marginBottom-${marginBottom}`],
         className,
       )}

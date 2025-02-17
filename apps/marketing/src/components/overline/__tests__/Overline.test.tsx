@@ -2,14 +2,13 @@ import Overline from '@/components/overline';
 import {render, screen} from '@testing-library/react';
 
 type OverlineColorClassMap = [
-  'primary' | 'secondary' | 'white',
-  `overline-${'primary' | 'secondary' | 'white'}`,
+  'primary' | 'secondary',
+  `overline-color-${'primary' | 'secondary'}`,
 ][];
 
 const colorClassMappings: OverlineColorClassMap = [
-  ['primary', 'overline-primary'],
-  ['secondary', 'overline-secondary'],
-  ['white', 'overline-white'],
+  ['primary', 'overline-color-primary'],
+  ['secondary', 'overline-color-secondary'],
 ];
 
 type OverlineSizeClassMap = [
