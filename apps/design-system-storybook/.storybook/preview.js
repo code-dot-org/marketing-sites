@@ -5,7 +5,12 @@ import './preview.module.scss';
  * Ensure fonts are loaded prior to rendering the story
  */
 const fontLoader = async () => {
-  const fontsToLoad = ['1rem Figtree', '1rem Noto Sans'];
+  const fontsToLoad = [
+    '1rem Figtree',
+    '1rem Noto Sans',
+    '1rem Barlow Semi Condensed Semibold',
+    '1rem Barlow Semi Condensed Medium',
+  ];
 
   const fontLoaderPromise = await Promise.all(
     // Load individual fonts
