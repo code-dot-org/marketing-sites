@@ -34,10 +34,7 @@ const Paragraph: React.FunctionComponent<ParagraphProps> = ({
   <Typography
     semanticTag="p"
     visualAppearance={visualAppearance}
-    className={classNames(
-      moduleStyles.paragraph,
-      className,
-    )}
+    className={classNames(moduleStyles.paragraph, className)}
   >
     {isStrong ? <StrongText>{children}</StrongText> : children}
   </Typography>

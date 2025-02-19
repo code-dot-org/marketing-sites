@@ -51,10 +51,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
 }) => (
   <Typography
     semanticTag={headingVisualAppearanceToSemanticTagMap[visualAppearance]}
-    className={classNames(
-      moduleStyles.heading,
-      className,
-    )}
+    className={classNames(moduleStyles.heading, className)}
     visualAppearance={visualAppearance}
   >
     {children}
