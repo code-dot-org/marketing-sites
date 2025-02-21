@@ -21,7 +21,7 @@ type OverlineProps = {
   size: Exclude<ComponentSizeXSToL, 'xs'>;
   /** Overline color */
   color: 'primary' | 'secondary';
-  /** ClassName passed by contentful to apply styles that are set through contentful native editor*/
+  /** ClassName passed by Contentful to apply styles that are set through Contentful native editor*/
   className?: string;
 };
 
