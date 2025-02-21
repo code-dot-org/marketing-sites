@@ -972,12 +972,14 @@ __metadata:
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     rimraf: "npm:^6.0.1"
+    swiper: "npm:^11.0.5"
     tsup: "npm:^8.3.5"
     typescript-eslint: "npm:^8.15.0"
   peerDependencies:
     classnames: ^2.5.1
     react: ">=16"
     react-dom: ">=16"
+    swiper: ^11.0.5
   languageName: unknown
   linkType: soft
 
@@ -15636,6 +15638,13 @@ __metadata:
     "@swc/core": ^1.2.147
     webpack: ">=2"
   checksum: 10c0/b06926c5cb153931589c2166aa4c7c052cc53c68758acdda480d1eb59ecddf7d74b168e33166c4f807cc9dbae4395de9d80a14ad43e265fffaa775638abf71ce
+  languageName: node
+  linkType: hard
+
+"swiper@npm:^11.0.5":
+  version: 11.2.4
+  resolution: "swiper@npm:11.2.4"
+  checksum: 10c0/911c405a2d7feae9ac59d8b6683c40e50f6f5be8ca5c5e44673647c37e319a564417b813dc79a09da034e8fe927b2883253fe72cd8efecfcc09247f669fd5a30
   languageName: node
   linkType: hard
 
