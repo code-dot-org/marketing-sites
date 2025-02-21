@@ -16,22 +16,4 @@ p {
       color: var(--text-neutral-quaternary);
     }
   }
-
-  &.overline-marginBottom {
-    &-none {
-      @include mixins.common-margin-bottom-none;
-    }
-
-    &-xs {
-      @include mixins.common-margin-bottom-xs;
-    }
-
-    &-s {
-      @include mixins.common-margin-bottom-s;
-    }
-
-    &-m {
-      @include mixins.common-margin-bottom-m;
-    }
-  }
 }

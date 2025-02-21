@@ -22,22 +22,10 @@ const sizeClassMappings: OverlineSizeClassMap = [
   ['l', 'overline-one'],
 ];
 
-type OverlineMarginBottomClassMap = [
-  'none' | 'xs' | 's' | 'm',
-  `overline-marginBottom-${'none' | 'xs' | 's' | 'm'}`,
-][];
-
-const marginBottomClassMappings: OverlineMarginBottomClassMap = [
-  ['none', 'overline-marginBottom-none'],
-  ['xs', 'overline-marginBottom-xs'],
-  ['s', 'overline-marginBottom-s'],
-  ['m', 'overline-marginBottom-m'],
-];
-
 describe('Overline Component', () => {
   it('renders Overline with default props', () => {
     render(
-      <Overline size="m" color="primary" marginBottom="none">
+      <Overline size="m" color="primary">
         Test Overline
       </Overline>,
     );
@@ -52,7 +40,7 @@ describe('Overline Component', () => {
     'applies the correct color class for color=%s',
     (color, expectedClass) => {
       render(
-        <Overline size="m" color={color} marginBottom="none">
+        <Overline size="m" color={color}>
           Test Overline
         </Overline>,
       );
@@ -66,27 +54,13 @@ describe('Overline Component', () => {
     'sets correct visualAppearance for size=%s',
     (size, expectedAppearance) => {
       render(
-        <Overline size={size} color="primary" marginBottom="none">
+        <Overline size={size} color="primary">
           Test Overline
         </Overline>,
       );
 
       const overlineElement = screen.getByText('Test Overline');
       expect(overlineElement.className.includes(expectedAppearance)).toBe(true);
-    },
-  );
-
-  it.each(marginBottomClassMappings)(
-    'applies the correct marginBottom class for marginBottom=%s',
-    (marginBottom, expectedClass) => {
-      render(
-        <Overline size="m" color="primary" marginBottom={marginBottom}>
-          Test Overline
-        </Overline>,
-      );
-
-      const overlineElement = screen.getByText('Test Overline');
-      expect(overlineElement).toHaveClass(expectedClass);
     },
   );
 });
