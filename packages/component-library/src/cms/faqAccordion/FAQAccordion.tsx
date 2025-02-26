@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {ReactNode} from 'react';
 import classNames from 'classnames';
 
 import FontAwesomeV6Icon from '@/fontAwesomeV6Icon';
@@ -7,8 +7,11 @@ import moduleStyles from './faqAccordion.module.scss';
 import {BodyTwoText, StrongText} from '@/typography';
 
 export type FAQItem = {
-  question: string;
-  answer: string;
+  id: string;
+  question: string | ReactNode;
+  questionString: string;
+  answer: string | ReactNode;
+  answerString: string;
 };
 
 export type FAQAccordionProps = {
@@ -19,37 +22,26 @@ export type FAQAccordionProps = {
 };
 
 const FAQAccordion: React.FC<FAQAccordionProps> = ({items, className}) => {
-  const [openQuestion, setOpenIndex] = useState<string | null>(null);
-
-  const toggleFAQ = (question: string) => {
-    setOpenIndex(openQuestion => (openQuestion === question ? null : question));
-  };
-
   return (
-    <section className={classNames(moduleStyles.faqAccordion, className)}>
-      <div className={moduleStyles.farAccordion}>
-        {items.map(({question, answer}) => (
-          <details
-            key={question}
-            className={classNames(moduleStyles.faqItem, {
-              [moduleStyles.faqItemOpen]: openQuestion === question,
-            })}
-          >
-            <summary
-              className={moduleStyles.faqQuestion}
-              onClick={() => toggleFAQ(question)}
-              aria-expanded={openQuestion === question}
-            >
-              <BodyTwoText>
-                <StrongText>{question}</StrongText>
-              </BodyTwoText>
-              <FontAwesomeV6Icon
-                iconName={
-                  openQuestion === question ? 'chevron-up' : 'chevron-down'
-                }
-              />
+    <>
+      <div className={classNames(moduleStyles.faqAccordion, className)}>
+        {items.map(({id, question, answer}) => (
+          <details key={id} className={moduleStyles.faqItem}>
+            <summary className={moduleStyles.faqQuestion}>
+              {typeof question === 'string' ? (
+                <BodyTwoText>
+                  <StrongText>{question}</StrongText>
+                </BodyTwoText>
+              ) : (
+                question
+              )}
+              <FontAwesomeV6Icon iconName="chevron-down" />
             </summary>
-            <BodyTwoText>{answer}</BodyTwoText>
+            {typeof answer === 'string' ? (
+              <BodyTwoText>{answer}</BodyTwoText>
+            ) : (
+              answer
+            )}
           </details>
         ))}
       </div>
@@ -63,16 +55,16 @@ const FAQAccordion: React.FC<FAQAccordionProps> = ({items, className}) => {
             '@type': 'FAQPage',
             mainEntity: items.map(item => ({
               '@type': 'Question',
-              name: item.question,
+              name: item.questionString,
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: item.answer,
+                text: item.answerString,
               },
             })),
           }),
         }}
       />
-    </section>
+    </>
   );
 };
 
