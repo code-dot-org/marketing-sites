@@ -294,9 +294,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup --clean",
+    "build": "NODE_OPTIONS='--max-old-space-size=8192' tsup --dts",
+    "build:fast": "tsup",
     "clean": "rimraf dist .turbo",
-    "dev": "tsup --watch",
+    "dev": "yarn build --watch",
+    "dev:fast": "yarn build:fast --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prepack": "clean-package",
@@ -304,7 +306,6 @@
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "release": "release-it --preRelease=alpha",
-    "start": "yarn dev",
     "stylelint": "stylelint src/**/*.{css,scss,sass}",
     "stylelint:fix": "yarn run stylelint --fix",
     "test": "jest",
@@ -356,9 +357,7 @@
     "rimraf": "^6.0.1",
     "stylelint": "^16.14.1",
     "swiper": "^11.0.5",
-    "tsc-alias": "^1.8.11",
     "tsup": "^8.3.5",
-    "typescript": "^5.7.3",
     "typescript-eslint": "^8.15.0"
   },
   "peerDependencies": {
