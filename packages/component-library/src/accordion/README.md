@@ -3,7 +3,7 @@
 ## Consuming This Component
 
 This package exports two styled React components: [Accordion](Accordion.tsx) and
-[FAQAccordion](./FAQAccordion/FAQAccordion.tsx).
+[FAQAccordion](faqAccordion/FAQAccordion.tsx).
 
 You can import them like this:
 
@@ -12,7 +12,7 @@ import Accordion from '@code-dot-org/component-library/accrodion';
 
 import {FAQACcordion} from '@code-dot-org/component-library/accrodion';
 
-import FAQACcordion from '@code-dot-org/component-library/accrodion/FAQAccordion';
+import FAQACcordion from '@code-dot-org/component-library/accrodion/faqAccordion';
 ```
 
 For guidelines on how to use this component and the features it

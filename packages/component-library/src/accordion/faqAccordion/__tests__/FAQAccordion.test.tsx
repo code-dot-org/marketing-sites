@@ -25,8 +25,8 @@ const mockFAQItems: FAQAccordionProps['items'] = [
   },
 ];
 
-describe('FAQAccordion Component', () => {
-  it('renders the FAQAccordion component with all questions', () => {
+describe('faqAccordion Component', () => {
+  it('renders the faqAccordion component with all questions', () => {
     render(<FAQAccordion items={mockFAQItems} />);
 
     mockFAQItems.forEach(({label}) => {
