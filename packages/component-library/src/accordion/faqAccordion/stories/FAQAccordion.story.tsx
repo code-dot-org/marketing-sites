@@ -13,53 +13,57 @@ type Story = StoryObj<typeof FAQAccordion>;
 //
 // STORIES
 //
+const playGroundItems = [
+  {
+    id: 'what-is-code-org',
+    label: 'What is Code.org?',
+    questionString: 'What is Code.org?',
+    content:
+      'Code.org is a nonprofit dedicated to expanding access to computer science in schools and increasing participation by young women and students from underrepresented groups.',
+    answerString:
+      'Code.org is a nonprofit dedicated to expanding access to computer science in schools and increasing participation by young women and students from underrepresented groups.',
+  },
+  {
+    id: 'how-can-i-start-learning',
+    label: 'How can I start learning?',
+    questionString: 'How can I start learning?',
+    content:
+      'You can start learning by exploring our free online courses available for all age groups and skill levels.',
+    answerString:
+      'You can start learning by exploring our free online courses available for all age groups and skill levels.',
+  },
+  {
+    id: 'is-code-org-curriculum-free',
+    label: 'Is Code.org curriculum free?',
+    questionString: 'Is Code.org curriculum free?',
+    content:
+      'Yes! Code.org provides free curriculum and tools for teachers to use in classrooms.',
+    answerString:
+      'Yes! Code.org provides free curriculum and tools for teachers to use in classrooms.',
+  },
+];
 
 export const Playground: Story = {
   args: {
-    items: [
-      {
-        id: 'what-is-code-org',
-        label: 'What is Code.org?',
-        questionString: 'What is Code.org?',
-        content:
-          'Code.org is a nonprofit dedicated to expanding access to computer science in schools and increasing participation by young women and students from underrepresented groups.',
-        answerString:
-          'Code.org is a nonprofit dedicated to expanding access to computer science in schools and increasing participation by young women and students from underrepresented groups.',
-      },
-      {
-        id: 'how-can-i-start-learning',
-        label: 'How can I start learning?',
-        questionString: 'How can I start learning?',
-        content:
-          'You can start learning by exploring our free online courses available for all age groups and skill levels.',
-        answerString:
-          'You can start learning by exploring our free online courses available for all age groups and skill levels.',
-      },
-      {
-        id: 'is-code-org-curriculum-free',
-        label: 'Is Code.org curriculum free?',
-        questionString: 'Is Code.org curriculum free?',
-        content:
-          'Yes! Code.org provides free curriculum and tools for teachers to use in classrooms.',
-        answerString:
-          'Yes! Code.org provides free curriculum and tools for teachers to use in classrooms.',
-      },
-    ],
+    items: playGroundItems,
   },
-  play: ({canvasElement}: {canvasElement: HTMLElement}) => {
+  play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    // Check if all questions are in the document
-    const questions = [
-      'What is Code.org?',
-      'How can I start learning?',
-      'Is Code.org curriculum free?',
-    ];
+    // Check if all accordion labels are rendered
+    for (const {label, content} of playGroundItems) {
+      const labelElement = await canvas.findByText(label);
+      expect(labelElement).toBeInTheDocument();
 
-    questions.forEach(async questionText => {
-      const question = await canvas.findByText(questionText);
-      expect(question).toBeInTheDocument();
-    });
+      // Click to expand
+      await labelElement.click();
+      const contentElement = await canvas.findByText(content);
+      expect(contentElement).toBeVisible();
+
+      // Click again to collapse
+      await labelElement.click();
+      expect(contentElement).not.toBeVisible();
+    }
   },
 };
 

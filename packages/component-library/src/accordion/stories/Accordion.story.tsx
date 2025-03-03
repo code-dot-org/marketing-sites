@@ -14,43 +14,48 @@ type Story = StoryObj<typeof Accordion>;
 // STORIES
 //
 
+const playGroundItems = [
+  {
+    id: 'introduction',
+    label: 'Introduction to Code.org',
+    content:
+      'Code.org is a nonprofit dedicated to expanding access to computer science in schools.',
+  },
+  {
+    id: 'learning-resources',
+    label: 'Learning Resources Available',
+    content:
+      'Code.org offers free online courses, Hour of Code activities, and professional learning programs.',
+  },
+  {
+    id: 'curriculum-access',
+    label: 'Is the Curriculum Free?',
+    content:
+      'Yes! Code.org provides free curriculum and tools for teachers worldwide.',
+  },
+];
+
 export const Playground: Story = {
   args: {
-    items: [
-      {
-        id: 'introduction',
-        label: 'Introduction to Code.org',
-        content:
-          'Code.org is a nonprofit dedicated to expanding access to computer science in schools.',
-      },
-      {
-        id: 'learning-resources',
-        label: 'Learning Resources Available',
-        content:
-          'Code.org offers free online courses, Hour of Code activities, and professional learning programs.',
-      },
-      {
-        id: 'curriculum-access',
-        label: 'Is the Curriculum Free?',
-        content:
-          'Yes! Code.org provides free curriculum and tools for teachers worldwide.',
-      },
-    ],
+    items: playGroundItems,
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
     // Check if all accordion labels are rendered
-    const labels = [
-      'Introduction to Code.org',
-      'Learning Resources Available',
-      'Is the Curriculum Free?',
-    ];
-
-    labels.forEach(async label => {
+    for (const {label, content} of playGroundItems) {
       const labelElement = await canvas.findByText(label);
       expect(labelElement).toBeInTheDocument();
-    });
+
+      // Click to expand
+      await labelElement.click();
+      const contentElement = await canvas.findByText(content);
+      expect(contentElement).toBeVisible();
+
+      // Click again to collapse
+      await labelElement.click();
+      expect(contentElement).not.toBeVisible();
+    }
   },
 };
 
@@ -117,8 +122,8 @@ MultipleAccordions.play = async ({canvasElement}) => {
   const canvas = within(canvasElement);
   const labels = ['First Accordion', 'Second Accordion', 'Third Accordion'];
 
-  labels.forEach(async label => {
+  for (const label of labels) {
     const labelElement = await canvas.findByText(label);
     expect(labelElement).toBeInTheDocument();
-  });
+  }
 };
