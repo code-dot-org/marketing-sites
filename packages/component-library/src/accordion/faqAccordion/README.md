@@ -10,7 +10,7 @@ import FAQAccordion from '@code-dot-org/component-library/accrodion/faqAccordion
 ```
 
 For guidelines on how to use this component and the features it
-offers, [visit Storybook](https://code-dot-org.github.io/dsco_)
+offers, [visit Storybook](https://code-dot-org.github.io/code-dot-org/component-library-storybook)
 (link to be updated once code-dot-org storybook will be public.).
 Or run storybook locally and go
 to [Accordion / FAQAccordion](http://localhost:6006/?path=/docs/designsystem-accordion-faq-accordion).

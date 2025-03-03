@@ -20,7 +20,7 @@
     "./package.json": "./package.json",
     "./accordion": {
       "types": {
-        "import": "./dist/esm/accordion/index.d.mts",
+        "import": "./dist/esm/accordion/index.d.ts",
         "require": "./dist/cjs/accordion/index.d.ts"
       },
       "import": "./dist/esm/accordion/index.mjs",
@@ -28,7 +28,7 @@
     },
     "./accordrion/faqAccordion": {
       "types": {
-        "import": "./dist/esm/accordion/faqAccordion/index.d.mts",
+        "import": "./dist/esm/accordion/faqAccordion/index.d.ts",
         "require": "./dist/cjs/accordion/faqAccordion/index.d.ts"
       },
       "import": "./dist/esm/accordion/faqAccordion/index.mjs",
