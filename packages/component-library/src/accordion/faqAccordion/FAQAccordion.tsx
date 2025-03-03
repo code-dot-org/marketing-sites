@@ -1,3 +1,4 @@
+import {default as DOMPurify} from 'dompurify';
 import {ReactNode} from 'react';
 
 import Accordion, {AccordionProps} from './../Accordion';
@@ -50,10 +51,10 @@ const FAQAccordion: React.FC<FAQAccordionProps> = ({
             '@type': 'FAQPage',
             mainEntity: items.map(item => ({
               '@type': 'Question',
-              name: item.questionString,
+              name: DOMPurify.sanitize(item.questionString),
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: item.answerString,
+                text: DOMPurify.sanitize(item.answerString),
               },
             })),
           }),

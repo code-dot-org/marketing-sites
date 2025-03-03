@@ -339,6 +339,7 @@
     "extends": "@code-dot-org/lint-config/stylelint/index.mjs"
   },
   "dependencies": {
+    "dompurify": "^3.2.4",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
@@ -353,6 +354,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
+    "@types/dompurify": "^3.2.0",
     "@types/identity-obj-proxy": "^3",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4",
