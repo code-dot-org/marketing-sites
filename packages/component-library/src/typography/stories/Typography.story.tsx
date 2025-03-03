@@ -36,7 +36,7 @@ type Story = StoryObj<typeof Typography>;
 export const Playground: Story = {
   args: {
     semanticTag: 'p',
-    visualAppearance: 'body-one',
+    visualAppearance: 'body-two',
     children: 'This is a dynamic Typography Component.',
   },
 };
