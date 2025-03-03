@@ -23,7 +23,7 @@ export interface FAQAccordionProps extends AccordionProps {
  *  * (✔) implementation of component approved by design team;
  *  * (✔) has storybook, covered with stories and documentation;
  *  * (✔) has tests: test every prop, every state and every interaction that's js related;
- *  * (see ./__tests__/FAQAccordrion.test.tsx)
+ *  * (see ./__tests__/FAQAccordion.test.tsx)
  *  * (✔) passes accessibility checks;
  *
  * ###  Status: ```Ready for dev```
