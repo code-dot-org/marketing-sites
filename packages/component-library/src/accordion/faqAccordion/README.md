@@ -6,7 +6,7 @@ This package exports one styled React component: [FAQ](FAQAccordion.tsx).
 You can import it like this:
 
 ```javascript
-import FAQAccordion from '@code-dot-org/component-library/accrodion/faqAccordion';
+import FAQAccordion from '@code-dot-org/component-library/accordion/faqAccordion';
 ```
 
 For guidelines on how to use this component and the features it

@@ -41,7 +41,7 @@ const FAQAccordion: React.FC<FAQAccordionProps> = ({
     <>
       <Accordion items={items} className={className} {...HTMLAttributes} />
 
-      {/* JSON-LD for structured data. Needed for Google seo.
+      {/* JSON-LD for structured data. Needed for Google SEO.
       (see https://developers.google.com/search/docs/appearance/structured-data/faqpage#json-ld) */}
       <script
         type="application/ld+json"

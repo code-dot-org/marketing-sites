@@ -8,11 +8,11 @@ This package exports two styled React components: [Accordion](Accordion.tsx) and
 You can import them like this:
 
 ```javascript
-import Accordion from '@code-dot-org/component-library/accrodion';
+import Accordion from '@code-dot-org/component-library/accordion';
 
-import {FAQAccordion} from '@code-dot-org/component-library/accrodion';
+import {FAQAccordion} from '@code-dot-org/component-library/accordion';
 
-import FAQAccordion from '@code-dot-org/component-library/accrodion/faqAccordion';
+import FAQAccordion from '@code-dot-org/component-library/accordion/faqAccordion';
 ```
 
 For guidelines on how to use this component and the features it

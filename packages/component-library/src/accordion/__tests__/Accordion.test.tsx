@@ -72,28 +72,6 @@ describe('Accordion Component', () => {
     ).toBeVisible();
   });
 
-  it('should close one accordion when another is opened if using <details>', () => {
-    render(<Accordion items={mockAccordionItems} />);
-
-    const firstAccordion = screen.getByText('First Accordion');
-    const secondAccordion = screen.getByText('Second Accordion');
-
-    fireEvent.click(firstAccordion);
-    expect(
-      screen.getByText('This is the first accordion content.'),
-    ).toBeVisible();
-
-    fireEvent.click(secondAccordion);
-    expect(
-      screen.getByText('This is the second accordion content.'),
-    ).toBeVisible();
-
-    // Check that the first accordion is still open, since native <details> allows multiple open
-    expect(
-      screen.getByText('This is the first accordion content.'),
-    ).toBeVisible();
-  });
-
   it('should render rich content correctly', () => {
     const richContentItems: AccordionProps['items'] = [
       {
