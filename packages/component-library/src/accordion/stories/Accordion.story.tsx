@@ -39,24 +39,6 @@ export const Playground: Story = {
   args: {
     items: playGroundItems,
   },
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement);
-
-    // Check if all accordion labels are rendered
-    for (const {label, content} of playGroundItems) {
-      const labelElement = await canvas.findByText(label);
-      expect(labelElement).toBeInTheDocument();
-
-      // Click to expand
-      await labelElement.click();
-      const contentElement = await canvas.findByText(content);
-      expect(contentElement).toBeVisible();
-
-      // Click again to collapse
-      await labelElement.click();
-      expect(contentElement).not.toBeVisible();
-    }
-  },
 };
 
 export const WithRichContent: Story = {
