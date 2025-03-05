@@ -7,6 +7,8 @@ import {
 import React, {ReactNode} from 'react';
 import classNames from 'classnames';
 
+import {WithRemoveMarginBottomProp} from '@/components/common/types';
+
 import moduleStyles from './heading.module.scss';
 
 type HeadingVisualAppearance = Extract<
@@ -23,14 +25,14 @@ type HeadingSemanticTag = Extract<
   'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 >;
 
-type HeadingProps = {
+type HeadingProps = WithRemoveMarginBottomProp<{
   /** Heading content */
   children: ReactNode;
   /** Heading visual appearance */
   visualAppearance: HeadingVisualAppearance;
   /** ClassName passed by contentful to apply styles that are set through contentful native editor*/
   className?: string;
-};
+}>;
 
 const headingVisualAppearanceToSemanticTagMap: Record<
   HeadingVisualAppearance,
@@ -47,11 +49,16 @@ const headingVisualAppearanceToSemanticTagMap: Record<
 const Heading: React.FunctionComponent<HeadingProps> = ({
   visualAppearance,
   children,
+  removeMarginBottom,
   className,
 }) => (
   <Typography
     semanticTag={headingVisualAppearanceToSemanticTagMap[visualAppearance]}
-    className={classNames(moduleStyles.heading, className)}
+    className={classNames(
+      moduleStyles.heading,
+      removeMarginBottom && moduleStyles['heading-removeMarginBottom'],
+      className,
+    )}
     visualAppearance={visualAppearance}
   >
     {children}
