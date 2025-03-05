@@ -7,6 +7,8 @@ import {
 import React, {ReactNode} from 'react';
 import classNames from 'classnames';
 
+import {WithRemoveMarginBottomProp} from '@/components/common/types';
+
 import moduleStyles from './paragraph.module.scss';
 
 type ParagraphVisualAppearance = Extract<
@@ -14,7 +16,7 @@ type ParagraphVisualAppearance = Extract<
   'body-one' | 'body-two' | 'body-three' | 'body-four'
 >;
 
-type ParagraphProps = {
+type ParagraphProps = WithRemoveMarginBottomProp<{
   /** Paragraph content */
   children: ReactNode;
   /** Paragraph visual appearance */
@@ -25,13 +27,14 @@ type ParagraphProps = {
   color: 'primary' | 'secondary';
   /** ClassName passed by contentful to apply styles that are set through contentful native editor*/
   className?: string;
-};
+}>;
 
 const Paragraph: React.FunctionComponent<ParagraphProps> = ({
   visualAppearance,
   isStrong,
   color,
   children,
+  removeMarginBottom,
   className,
 }) => (
   <Typography
@@ -40,6 +43,7 @@ const Paragraph: React.FunctionComponent<ParagraphProps> = ({
     className={classNames(
       moduleStyles.paragraph,
       moduleStyles[`paragraph-color-${color}`],
+      removeMarginBottom && moduleStyles['paragraph-removeMarginBottom'],
       className,
     )}
   >
