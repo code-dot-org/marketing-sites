@@ -7,7 +7,7 @@ import {ComponentSizeXSToL} from '@code-dot-org/component-library/common/types';
 import classNames from 'classnames';
 import React, {ReactNode} from 'react';
 
-import {WithRemoveMarginBottomProp} from '@/components/common/types';
+import {RemoveMarginBottomProps} from '@/components/common/types';
 
 import moduleStyles from './overline.module.scss';
 
@@ -16,7 +16,7 @@ type OverlineVisualAppearance = Extract<
   'overline-one' | 'overline-two' | 'overline-three'
 >;
 
-type OverlineProps = WithRemoveMarginBottomProp<{
+type OverlineProps = RemoveMarginBottomProps & {
   /** Overline content */
   children: ReactNode;
   /** Overline size */
@@ -25,7 +25,7 @@ type OverlineProps = WithRemoveMarginBottomProp<{
   color: 'primary' | 'secondary';
   /** ClassName passed by Contentful to apply styles that are set through Contentful native editor*/
   className?: string;
-}>;
+};
 
 const overlineSizeToVisualAppearance: Record<
   Exclude<ComponentSizeXSToL, 'xs'>,

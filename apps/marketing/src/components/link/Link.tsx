@@ -5,11 +5,11 @@ import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon
 import React, {ReactNode} from 'react';
 import classNames from 'classnames';
 
-import {WithRemoveMarginBottomProp} from '@/components/common/types';
+import {RemoveMarginBottomProps} from '@/components/common/types';
 
 import moduleStyles from './link.module.scss';
 
-export type LinkProps = WithRemoveMarginBottomProp<{
+export type LinkProps = RemoveMarginBottomProps & {
   /** Link Label */
   children: ReactNode;
   /** Link URL */
@@ -18,7 +18,7 @@ export type LinkProps = WithRemoveMarginBottomProp<{
   size: ComponentSizeXSToL;
   /** Whether Link is for internal code.org pages, or external web page. (external links are opened in new tab) */
   isLinkExternal: boolean;
-}>;
+};
 
 const Link: React.FunctionComponent<LinkProps> = ({
   children,
