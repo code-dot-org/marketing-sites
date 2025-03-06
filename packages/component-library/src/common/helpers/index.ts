@@ -1,3 +1,6 @@
+// Auto-import SASS generated CSS
+import './index.css';
+
 import React, {AriaAttributes} from 'react';
 
 import {ComponentPlacementDirection} from '@/common/types';

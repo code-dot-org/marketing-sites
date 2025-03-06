@@ -1,3 +1,6 @@
+// Auto-import SASS generated CSS
+import './index.css';
+
 import {FontAwesomeV6IconProps} from '@/fontAwesomeV6Icon';
 
 /**

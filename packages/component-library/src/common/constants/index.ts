@@ -1,3 +1,6 @@
+// Auto-import SASS generated CSS
+import './index.css';
+
 /**
  * This file contains constants that are used across the component library
  */
