@@ -1,18 +1,9 @@
 import '@code-dot-org/component-library/accordion/faqAccordion/index.css';
 import FAQAccordion from '@code-dot-org/component-library/accordrion/faqAccordion';
-import React, {ReactNode} from 'react';
+import React from 'react';
 
 type FAQAccordionContentfulProps = {
-  faqs: {
-    id: string;
-    slide: ReactNode;
-    fields: {
-      videoTitle: string;
-      youTubeId: string;
-      videoFallbackFile: {fields: {file: {url: string}}};
-    };
-  }[];
-  faqItems: unknown[];
+  faqs: unknown[];
 };
 
 const FAQAccordionContentful: React.FunctionComponent<
