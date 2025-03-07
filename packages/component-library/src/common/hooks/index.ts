@@ -1,6 +1,3 @@
-// Auto-import SASS generated CSS
-import './index.css';
-
 import useBodyScrollLock from './useBodyScrollLock';
 import useDocumentKeydown from './useDocumentKeydown';
 import useEscapeKeyHandler from './useEscapeKeyHandler';
