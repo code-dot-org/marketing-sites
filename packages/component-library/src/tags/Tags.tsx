@@ -41,16 +41,18 @@ const Tags: React.FunctionComponent<TagsProps> = ({
     )}
     data-testid="tags"
   >
-    {tagsList.map(({tooltipId, label, tooltipContent, ariaLabel, icon}) => (
-      <Tag
-        key={tooltipId}
-        tooltipId={tooltipId}
-        label={label}
-        ariaLabel={ariaLabel}
-        icon={icon}
-        tooltipContent={tooltipContent}
-      />
-    ))}
+    {tagsList.map(
+      ({tooltipId, label, tooltipContent, ariaLabel, icon, key}) => (
+        <Tag
+          key={key ?? tooltipId}
+          tooltipId={tooltipId}
+          label={label}
+          ariaLabel={ariaLabel}
+          icon={icon}
+          tooltipContent={tooltipContent}
+        />
+      ),
+    )}
   </div>
 );
 

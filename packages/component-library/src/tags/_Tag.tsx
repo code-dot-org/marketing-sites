@@ -19,6 +19,8 @@ const TagIcon: React.FC<TagIconProps> = memo(({iconName, iconStyle, title}) => (
 export interface TagProps {
   /** Tag label */
   label: string;
+  /** Unique key */
+  key?: string | number;
   /** Tag tooltip content. Can be a simple string or ReactNode (some jsx/html markup/view).
    *  For example - check Tags.story.tsx
    *  Can be null to disable the tooltip */
