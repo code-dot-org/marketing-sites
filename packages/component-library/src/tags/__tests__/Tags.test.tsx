@@ -1,5 +1,5 @@
 import {render, screen, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, {UserEvent} from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
 import Tags, {TagProps} from './../index';
@@ -142,5 +142,84 @@ describe('Design System - Tags Component', () => {
 
     expect(tagLabel).toBeInTheDocument();
     expect(icon).toBeInTheDocument();
+  });
+
+  describe('tag icon onClick', () => {
+    let user: UserEvent;
+    let onClick1: jest.Mock;
+    let onClick2: jest.Mock;
+    let tagsList: TagProps[];
+    let icon1: HTMLElement;
+    let icon2: HTMLElement;
+
+    beforeEach(() => {
+      user = userEvent.setup();
+      onClick1 = jest.fn();
+      onClick2 = jest.fn();
+      tagsList = [
+        {
+          tooltipId: 'tag-icon-1',
+          label: 'tag with icon',
+          tooltipContent: 'Tooltip with icon',
+          icon: {
+            iconName: 'close',
+            iconStyle: 'solid',
+            title: 'Close 1',
+            placement: 'right',
+            onClick: onClick1,
+          },
+        },
+        {
+          tooltipId: 'tag-icon-2',
+          label: 'tag with icon',
+          tooltipContent: 'Tooltip with icon',
+          icon: {
+            iconName: 'close',
+            iconStyle: 'solid',
+            title: 'Close 2',
+            placement: 'right',
+            onClick: onClick2,
+          },
+        },
+      ];
+
+      render(<Tags tagsList={tagsList} />);
+
+      icon1 = screen.getByTitle('Close 1');
+      icon2 = screen.getByTitle('Close 2');
+    });
+
+    it('has keyboard navigable tag icons if onClick is present', async () => {
+      await user.tab();
+
+      expect(icon1).toHaveFocus();
+
+      await user.tab();
+
+      expect(icon2).toHaveFocus();
+    });
+
+    it('calls onClick when an icon is clicked', async () => {
+      await user.click(icon1);
+
+      expect(onClick1).toHaveBeenCalledTimes(1);
+      expect(onClick2).not.toHaveBeenCalled();
+    });
+
+    it('calls onClick when Enter or Space is pressed while tag has focus', async () => {
+      await user.tab();
+      expect(icon1).toHaveFocus();
+      await user.keyboard('{Enter}');
+
+      expect(onClick1).toHaveBeenCalledTimes(1);
+      expect(onClick2).not.toHaveBeenCalled();
+
+      await user.tab();
+      expect(icon2).toHaveFocus();
+      await user.keyboard(' ');
+
+      expect(onClick1).toHaveBeenCalledTimes(1);
+      expect(onClick2).toHaveBeenCalledTimes(1);
+    });
   });
 });

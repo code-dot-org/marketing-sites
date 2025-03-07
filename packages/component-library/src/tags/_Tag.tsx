@@ -1,4 +1,5 @@
-import React, {memo} from 'react';
+import classNames from 'classnames';
+import React, {KeyboardEvent, memo} from 'react';
 
 import FontAwesomeV6Icon from '@/fontAwesomeV6Icon';
 import {WithTooltip} from '@/tooltip';
@@ -10,11 +11,36 @@ type TagIconProps = {
   iconStyle: 'light' | 'solid' | 'regular' | 'thin';
   title: string;
   placement: 'left' | 'right';
+  onClick?: () => void;
 };
 
-const TagIcon: React.FC<TagIconProps> = memo(({iconName, iconStyle, title}) => (
-  <FontAwesomeV6Icon iconName={iconName} iconStyle={iconStyle} title={title} />
-));
+const TagIcon: React.FC<TagIconProps> = memo(
+  ({iconName, iconStyle, title, onClick}) => {
+    const onClickProps = onClick
+      ? {
+          role: 'button',
+          tabIndex: 0,
+          onClick,
+          onKeyDown: (e: KeyboardEvent) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              onClick();
+            }
+          },
+        }
+      : {};
+    return (
+      <FontAwesomeV6Icon
+        iconName={iconName}
+        iconStyle={iconStyle}
+        title={title}
+        {...onClickProps}
+        className={classNames({
+          [moduleStyles.icon_clickable]: onClick,
+        })}
+      />
+    );
+  },
+);
 
 export interface TagProps {
   /** Tag label */
@@ -51,7 +77,8 @@ const Tag: React.FunctionComponent<TagProps> = ({
       }}
     >
       <div
-        tabIndex={0} // eslint-disable-line jsx-a11y/no-noninteractive-tabindex
+        // prevent double tabbing if tag icon has onClick
+        tabIndex={icon?.onClick ? undefined : 0}
         aria-describedby={tooltipId}
         className={moduleStyles.tag}
       >

@@ -1,6 +1,7 @@
 import {Meta, StoryFn} from '@storybook/react';
 
-import Tags, {TagsProps} from '../index';
+import Tags, {TagProps, TagsProps} from '../index';
+import {useState} from 'react';
 
 export default {
   title: 'DesignSystem/Tags',
@@ -22,6 +23,46 @@ const SingleTemplate: StoryFn<TagsProps> = args => (
     </div>
   </>
 );
+
+const SingleTemplateWithOnClick: StoryFn<TagsProps> = args => {
+  const [tags, setTags] = useState(['AAA', 'BBB', 'CCC']);
+
+  const swapTags = (index: number) => {
+    setTags(prev => {
+      if (index === prev.length - 1) return prev;
+      const newTags = [...prev];
+      const temp = newTags[index];
+      newTags[index] = newTags[index + 1];
+      newTags[index + 1] = temp;
+      return newTags;
+    });
+  };
+
+  const tagsList: TagProps[] = tags.map((label, i) => ({
+    label,
+    tooltipId: label,
+    tooltipContent: label,
+    icon: {
+      iconName: 'arrow-right',
+      iconStyle: 'solid',
+      title: 'move',
+      placement: 'right',
+      onClick: () => swapTags(i),
+    },
+  }));
+
+  return (
+    <>
+      <p>
+        * Margins on this screen does not represent Component's margins, and are
+        only added to improve storybook view *{' '}
+      </p>
+      <div style={{marginTop: 50}}>
+        <Tags {...args} tagsList={tagsList} />
+      </div>
+    </>
+  );
+};
 
 const MultipleTemplate: StoryFn<{
   components: TagsProps[];
@@ -129,6 +170,12 @@ TagsWithHTMLTooltipContent.args = {
       tooltipContent: <>English, Science</>,
     },
   ],
+  size: 'm',
+  className: 'test',
+};
+
+export const TagsWithOnClickHandler = SingleTemplateWithOnClick.bind({});
+TagsWithOnClickHandler.args = {
   size: 'm',
   className: 'test',
 };

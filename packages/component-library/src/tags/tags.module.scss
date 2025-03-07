@@ -37,6 +37,10 @@
     &:has(i:not(:first-child)) {
       padding-inline-end: 8px;
     }
+
+    .icon_clickable {
+      cursor: pointer;
+    }
   }
 }
 
