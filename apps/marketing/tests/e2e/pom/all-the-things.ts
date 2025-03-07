@@ -11,7 +11,8 @@ type Section =
   | 'Section - Pattern Dark'
   | 'Section - Pattern Teal'
   | 'Text Link'
-  | 'Video';
+  | 'Video'
+  | 'Video Carousel';
 
 export class AllTheThingsPage extends MarketingPage {
   constructor(page: Page, locale: string) {

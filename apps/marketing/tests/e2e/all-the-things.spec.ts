@@ -257,5 +257,67 @@ test.describe('All the things UI e2e test', () => {
       // Instead, Video is tested in Storybook more rigorously. The scope of this test is to ensure the video component
       // renders.
     });
+
+    /**
+     * Ensure Video Carousel can be hooked to Contentful items array
+     */
+    test.describe('video carousel', () => {
+      let component: Locator;
+      let howAIWorksVideo: Locator;
+      let whatMostSchoolsDontTeachVideo: Locator;
+      let computerScienceIsChangingEverythingVideo: Locator;
+      let introducingHowComputersWorkVideo: Locator;
+
+      test.beforeEach(async () => {
+        component = allTheThingsPage.getSectionLocator('Video Carousel');
+        await component.scrollIntoViewIfNeeded();
+
+        howAIWorksVideo = component.getByText('Introducing How AI Works');
+        whatMostSchoolsDontTeachVideo = component.getByText(
+          "What Most Schools Don't Teach",
+        );
+        computerScienceIsChangingEverythingVideo = component.getByText(
+          'Computer Science is Changing Everything',
+        );
+        introducingHowComputersWorkVideo = component.getByText(
+          'Introducing How Computers Work',
+        );
+      });
+
+      test('renders', async () => {
+        await expect(howAIWorksVideo).toBeInViewport();
+        await expect(whatMostSchoolsDontTeachVideo).toBeInViewport();
+        await expect(
+          computerScienceIsChangingEverythingVideo,
+        ).not.toBeInViewport();
+        await expect(introducingHowComputersWorkVideo).not.toBeInViewport();
+      });
+
+      test('can paginate', async () => {
+        // go to second page
+        const nextButton = component.getByLabel('Next slide');
+        await nextButton.click();
+
+        await expect(howAIWorksVideo).not.toBeInViewport();
+        await expect(whatMostSchoolsDontTeachVideo).not.toBeInViewport();
+        await expect(computerScienceIsChangingEverythingVideo).toBeInViewport();
+        await expect(introducingHowComputersWorkVideo).toBeInViewport();
+
+        // go back to first page
+        const previousButton = component.getByLabel('Previous slide');
+        await previousButton.click();
+
+        await expect(howAIWorksVideo).toBeInViewport();
+        await expect(whatMostSchoolsDontTeachVideo).toBeInViewport();
+        await expect(
+          computerScienceIsChangingEverythingVideo,
+        ).not.toBeInViewport();
+        await expect(introducingHowComputersWorkVideo).not.toBeInViewport();
+      });
+
+      // No eyes tests were made for Video Carousel, this is intentional - it relies on YouTube which is subject to change.
+      // Instead, Video Carousel is tested in Storybook more rigorously. The scope of this test is to ensure the component
+      // renders and basic functionality works.
+    });
   });
 });
