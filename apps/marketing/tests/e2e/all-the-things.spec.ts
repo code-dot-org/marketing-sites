@@ -294,6 +294,10 @@ test.describe('All the things UI e2e test', () => {
       });
 
       test('can paginate', async () => {
+        // wait for slides to load
+        await expect(howAIWorksVideo).toBeInViewport();
+        await expect(whatMostSchoolsDontTeachVideo).toBeInViewport();
+
         // go to second page
         const nextButton = component.getByLabel('Next slide');
         await nextButton.click();
