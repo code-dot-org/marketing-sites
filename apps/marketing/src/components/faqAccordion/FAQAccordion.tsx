@@ -6,7 +6,7 @@ import FAQAccordion, {
 import React, {useMemo} from 'react';
 
 type FAQAccordionContentfulProps = {
-  faqs: (BaseEntry & {
+  faqs?: (BaseEntry & {
     fields: {
       question: EntryFields.Text | EntryFields.RichText;
       answer: EntryFields.Text | EntryFields.RichText;
@@ -27,67 +27,62 @@ const FAQAccordionContentful: React.FunctionComponent<
   FAQAccordionContentfulProps
 > = ({faqs}) => {
   const faqItems = useMemo(() => {
-    return faqs.map(faq => {
-      let id, question, questionString, answer, answerString;
+    return (
+      faqs?.filter(Boolean).map(faq => {
+        let id, question, questionString, answer, answerString;
 
-      if (checkIfEntryFieldIsRichText(faq, 'question')) {
-        question =
-          'Rich Text is not supported yet. Please use Text type instead';
-        questionString = question;
-        id = 'rich-text-not-supported';
-        console.log(
-          'FAQ AccordionContentful RichText',
-          (faq.fields.question as EntryFields.RichText).content,
-        );
-      } else {
-        question = faq.fields.question as string;
-        questionString = question;
-        id = question.replace(' ', '-').toLowerCase();
-      }
+        if (checkIfEntryFieldIsRichText(faq, 'question')) {
+          question =
+            'Rich Text is not supported yet. Please use Text type instead';
+          questionString = question;
+          id = 'rich-text-not-supported';
+          console.log(
+            'FAQ AccordionContentful question RichText',
+            (faq.fields.question as EntryFields.RichText).content,
+          );
+        } else {
+          question = faq.fields.question as string;
+          questionString = question;
+          id = question.replace(' ', '-').toLowerCase();
+        }
 
-      if (checkIfEntryFieldIsRichText(faq, 'answer')) {
-        console.log(
-          'FAQ AccordionContentful RichText',
-          (faq.fields.answer as EntryFields.RichText).content,
-        );
-        answer = 'Rich Text is not supported yet. Please use Text type instead';
-        answerString = answer;
-      } else {
-        answer = faq.fields.answer as string;
-        answerString = answer;
-      }
+        if (checkIfEntryFieldIsRichText(faq, 'answer')) {
+          console.log(
+            'FAQ AccordionContentful answer RichText',
+            (faq.fields.answer as EntryFields.RichText).content,
+          );
+          answer =
+            'Rich Text is not supported yet. Please use Text type instead';
+          answerString = answer;
+        } else {
+          answer = faq.fields.answer as string;
+          answerString = answer;
+        }
 
-      return {
-        id,
-        label: question,
-        questionString,
-        content: answer,
-        answerString,
-      } as FAQAccordionItem;
-    });
+        return {
+          id,
+          label: question,
+          questionString,
+          content: answer,
+          answerString,
+        } as FAQAccordionItem;
+      }) || []
+    );
   }, [faqs]);
 
-  console.log('FAQ AccordionContentful', faqs);
-  console.log(
-    faqs.map(faq => faq.fields.question),
-    faqs.map(faq => faq.fields.answer),
-  );
-  faqs.forEach(faq => {
-    if (
-      typeof faq.fields.answer !== 'string' &&
-      'content' in faq.fields.answer
-    ) {
-      console.log(faq.metadata);
-      console.log(faq.sys);
-
-      console.log(
-        'FAQ AccordionContentful RichText',
-        faq.fields.answer.content,
-      );
-    }
-  });
-  // console.log('FAQ AccordionContentful PROPS', props);
-  console.log('---------------');
+  // Workaround for the experience builder not working with Array
+  if (!faqItems.length) {
+    return (
+      <div>
+        <em>
+          <strong>✍ FAQ Accordion placeholder.</strong> Please add a "FAQs"
+          content type entry in the FAQ Accordion sidebar, save, and open the
+          preview tab to see the carousel. An empty FAQ Accordion will show in
+          this editor, but it's here.
+        </em>
+      </div>
+    );
+  }
 
   return <FAQAccordion items={faqItems} />;
 };
