@@ -192,7 +192,7 @@ describe('Design System - Tags Component', () => {
       });
     });
 
-    it('has keyboard navigable tag icons if onClick is present', async () => {
+    it('has keyboard navigable tag icons if onClose is present', async () => {
       await user.tab();
 
       expect(button1).toHaveFocus();
@@ -202,14 +202,14 @@ describe('Design System - Tags Component', () => {
       expect(button2).toHaveFocus();
     });
 
-    it('calls onClick when an icon is clicked', async () => {
+    it('calls onClose when an icon is clicked', async () => {
       await user.click(button1);
 
       expect(onClick1).toHaveBeenCalledTimes(1);
       expect(onClick2).not.toHaveBeenCalled();
     });
 
-    it('calls onClick when Enter or Space is pressed while tag has focus', async () => {
+    it('calls onClose when Enter or Space is pressed while tag has focus', async () => {
       await user.tab();
       expect(button1).toHaveFocus();
       await user.keyboard('{Enter}');
