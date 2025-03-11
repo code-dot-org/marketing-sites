@@ -34,7 +34,7 @@ export interface BaseTagProps {
    *  and the placement of the icon (left or right))*/
   icon?: TagIconProps;
   /** Unique key */
-  key?: string | number;
+  key?: React.Key;
 }
 
 export interface DefaultTagProps extends BaseTagProps {
