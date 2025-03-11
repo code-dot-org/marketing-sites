@@ -42,7 +42,7 @@ const Tags: React.FunctionComponent<TagsProps> = ({
     data-testid="tags"
   >
     {tagsList.map(
-      ({key, tooltipId, label, tooltipContent, ariaLabel, icon, onClose}) => (
+      ({key, tooltipId, label, tooltipContent, ariaLabel, icon, ...props}) => (
         <Tag
           key={key ?? tooltipId}
           tooltipId={tooltipId}
@@ -50,8 +50,7 @@ const Tags: React.FunctionComponent<TagsProps> = ({
           ariaLabel={ariaLabel}
           icon={icon}
           tooltipContent={tooltipContent}
-          onClose={onClose}
-          size={size}
+          {...props}
         />
       ),
     )}

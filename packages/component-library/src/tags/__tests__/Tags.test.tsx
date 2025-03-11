@@ -158,6 +158,7 @@ describe('Design System - Tags Component', () => {
       onClick2 = jest.fn();
       tagsList = [
         {
+          type: 'closable',
           tooltipId: 'tag-icon-1',
           label: 'tag with icon',
           tooltipContent: 'Tooltip with icon',
@@ -170,6 +171,7 @@ describe('Design System - Tags Component', () => {
           },
         },
         {
+          type: 'closable',
           tooltipId: 'tag-icon-2',
           label: 'tag with icon',
           tooltipContent: 'Tooltip with icon',
