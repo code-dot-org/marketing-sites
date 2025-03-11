@@ -3,7 +3,7 @@ import '@code-dot-org/component-library/accordion/faqAccordion/index.css';
 import FAQAccordion, {
   FAQAccordionItem,
 } from '@code-dot-org/component-library/accordrion/faqAccordion';
-import React, {useMemo} from 'react';
+import {useMemo} from 'react';
 
 type FAQAccordionContentfulProps = {
   faqs?: (BaseEntry & {
@@ -26,8 +26,8 @@ const checkIfEntryFieldIsRichText = (
 const FAQAccordionContentful: React.FunctionComponent<
   FAQAccordionContentfulProps
 > = ({faqs}) => {
-  const faqItems = useMemo(() => {
-    return (
+  const faqItems = useMemo(
+    () =>
       faqs?.filter(Boolean).map(faq => {
         let id, question, questionString, answer, answerString;
 
@@ -35,11 +35,7 @@ const FAQAccordionContentful: React.FunctionComponent<
           question =
             'Rich Text is not supported yet. Please use Text type instead';
           questionString = question;
-          id = 'rich-text-not-supported';
-          console.log(
-            'FAQ AccordionContentful question RichText',
-            (faq.fields.question as EntryFields.RichText).content,
-          );
+          id = 'rich-text-not-supported-yet';
         } else {
           question = faq.fields.question as string;
           questionString = question;
@@ -47,10 +43,6 @@ const FAQAccordionContentful: React.FunctionComponent<
         }
 
         if (checkIfEntryFieldIsRichText(faq, 'answer')) {
-          console.log(
-            'FAQ AccordionContentful answer RichText',
-            (faq.fields.answer as EntryFields.RichText).content,
-          );
           answer =
             'Rich Text is not supported yet. Please use Text type instead';
           answerString = answer;
@@ -66,9 +58,9 @@ const FAQAccordionContentful: React.FunctionComponent<
           content: answer,
           answerString,
         } as FAQAccordionItem;
-      }) || []
-    );
-  }, [faqs]);
+      }) || [],
+    [faqs],
+  );
 
   // Workaround for the experience builder not working with Array
   if (!faqItems.length) {
