@@ -81,7 +81,7 @@ DefaultTags.args = {
   tagsList: [
     {tooltipId: 'math', label: 'Math', tooltipContent: 'Math'},
     {
-      label: '+1',
+      label: 'Icon left',
       icon: {
         iconName: 'check',
         iconStyle: 'solid',
@@ -92,7 +92,7 @@ DefaultTags.args = {
       tooltipContent: 'Science, English',
     },
     {
-      label: '+1',
+      label: 'Icon right',
       icon: {
         iconName: 'check',
         iconStyle: 'solid',
@@ -112,7 +112,7 @@ NoTooltipTags.args = {
   tagsList: [
     {label: 'Math'},
     {
-      label: '+1',
+      label: 'Icon left',
       icon: {
         iconName: 'check',
         iconStyle: 'solid',
@@ -121,7 +121,7 @@ NoTooltipTags.args = {
       },
     },
     {
-      label: '+1',
+      label: 'Icon right',
       icon: {
         iconName: 'check',
         iconStyle: 'solid',
@@ -139,7 +139,7 @@ TagsWithHTMLTooltipContent.args = {
   tagsList: [
     {tooltipId: 'math', label: 'Math', tooltipContent: <>Math</>},
     {
-      label: '+1',
+      label: 'Icon left',
       icon: {
         iconName: 'check',
         iconStyle: 'solid',
@@ -154,7 +154,7 @@ TagsWithHTMLTooltipContent.args = {
       ),
     },
     {
-      label: '+1',
+      label: 'Icon right',
       icon: {
         iconName: 'check',
         iconStyle: 'solid',
@@ -182,7 +182,7 @@ GroupOfSizesOfTags.args = {
       tagsList: [
         {tooltipId: 'mathS', label: 'Math S', tooltipContent: 'Math S'},
         {
-          label: '+1',
+          label: 'Science English S',
           tooltipId: 'science-englishS',
           icon: {
             iconName: 'check',
@@ -194,7 +194,7 @@ GroupOfSizesOfTags.args = {
         },
         {
           tooltipId: 'englishS',
-          label: 'Tags',
+          label: 'English S',
           tooltipContent: 'English S',
           icon: {
             iconName: 'circle-user',
@@ -217,7 +217,7 @@ GroupOfSizesOfTags.args = {
       tagsList: [
         {tooltipId: 'mathM', label: 'Math M', tooltipContent: 'Math M'},
         {
-          label: '+1',
+          label: 'Science english M',
           tooltipId: 'science-englishM',
           icon: {
             iconName: 'check',
@@ -229,7 +229,7 @@ GroupOfSizesOfTags.args = {
         },
         {
           tooltipId: 'englishM',
-          label: 'Tags',
+          label: 'English M',
           tooltipContent: 'English M',
           icon: {
             iconName: 'circle-user',
@@ -252,7 +252,7 @@ GroupOfSizesOfTags.args = {
       tagsList: [
         {tooltipId: 'mathL', label: 'Math L', tooltipContent: 'Math L'},
         {
-          label: '+1',
+          label: 'Science English L',
           tooltipId: 'science-englishL',
           icon: {
             iconName: 'check',
@@ -264,7 +264,7 @@ GroupOfSizesOfTags.args = {
         },
         {
           tooltipId: 'englishL',
-          label: 'Tags',
+          label: 'English L',
           tooltipContent: 'English L',
           icon: {
             iconName: 'circle-user',

@@ -44,7 +44,7 @@ const Tags: React.FunctionComponent<TagsProps> = ({
     {tagsList.map(
       ({key, tooltipId, label, tooltipContent, ariaLabel, icon, ...props}) => (
         <Tag
-          key={key ?? tooltipId}
+          key={key ?? tooltipId ?? label}
           tooltipId={tooltipId}
           label={label}
           ariaLabel={ariaLabel}
