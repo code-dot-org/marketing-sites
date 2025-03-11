@@ -24,16 +24,14 @@ const SingleTemplate: StoryFn<TagsProps> = args => (
   </>
 );
 
-const SingleTemplateWithOnClick: StoryFn<TagsProps> = args => {
-  const [tags, setTags] = useState(['AAA', 'BBB', 'CCC']);
+const SingleTemplateWithTagState: StoryFn<TagsProps> = args => {
+  const initialState = ['AAA', 'BBB', 'CCC'];
+  const [tags, setTags] = useState(initialState);
 
-  const swapTags = (index: number) => {
+  const removeTag = (index: number) => {
     setTags(prev => {
-      if (index === prev.length - 1) return prev;
       const newTags = [...prev];
-      const temp = newTags[index];
-      newTags[index] = newTags[index + 1];
-      newTags[index + 1] = temp;
+      newTags.splice(index, 1);
       return newTags;
     });
   };
@@ -42,13 +40,7 @@ const SingleTemplateWithOnClick: StoryFn<TagsProps> = args => {
     label,
     tooltipId: label,
     tooltipContent: label,
-    icon: {
-      iconName: 'arrow-right',
-      iconStyle: 'solid',
-      title: 'move',
-      placement: 'right',
-      onClick: () => swapTags(i),
-    },
+    onClose: () => removeTag(i),
   }));
 
   return (
@@ -59,6 +51,9 @@ const SingleTemplateWithOnClick: StoryFn<TagsProps> = args => {
       </p>
       <div style={{marginTop: 50}}>
         <Tags {...args} tagsList={tagsList} />
+      </div>
+      <div style={{marginTop: 50}}>
+        <button onClick={() => setTags(initialState)}>Reset</button>
       </div>
     </>
   );
@@ -174,8 +169,8 @@ TagsWithHTMLTooltipContent.args = {
   className: 'test',
 };
 
-export const TagsWithOnClickHandler = SingleTemplateWithOnClick.bind({});
-TagsWithOnClickHandler.args = {
+export const TagsWithOnCloseProp = SingleTemplateWithTagState.bind({});
+TagsWithOnCloseProp.args = {
   size: 'm',
   className: 'test',
 };

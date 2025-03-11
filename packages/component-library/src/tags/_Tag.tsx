@@ -1,52 +1,26 @@
-import classNames from 'classnames';
-import React, {KeyboardEvent, memo} from 'react';
+import React, {HTMLAttributes, memo, useCallback} from 'react';
 
 import FontAwesomeV6Icon from '@/fontAwesomeV6Icon';
 import {WithTooltip} from '@/tooltip';
 
 import moduleStyles from './tags.module.scss';
+import CloseButton from '@/closeButton/CloseButton';
+import {ComponentSizeXSToL} from '@/common/types';
 
 type TagIconProps = {
   iconName: string;
   iconStyle: 'light' | 'solid' | 'regular' | 'thin';
   title: string;
   placement: 'left' | 'right';
-  onClick?: () => void;
 };
 
-const TagIcon: React.FC<TagIconProps> = memo(
-  ({iconName, iconStyle, title, onClick}) => {
-    const onClickProps = onClick
-      ? {
-          role: 'button',
-          tabIndex: 0,
-          onClick,
-          onKeyDown: (e: KeyboardEvent) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              onClick();
-            }
-          },
-        }
-      : {};
-    return (
-      <FontAwesomeV6Icon
-        iconName={iconName}
-        iconStyle={iconStyle}
-        title={title}
-        {...onClickProps}
-        className={classNames({
-          [moduleStyles.icon_clickable]: onClick,
-        })}
-      />
-    );
-  },
-);
+const TagIcon: React.FC<TagIconProps> = memo(({iconName, iconStyle, title}) => (
+  <FontAwesomeV6Icon iconName={iconName} iconStyle={iconStyle} title={title} />
+));
 
 export interface TagProps {
   /** Tag label */
   label: string;
-  /** Unique key */
-  key?: string | number;
   /** Tag tooltip content. Can be a simple string or ReactNode (some jsx/html markup/view).
    *  For example - check Tags.story.tsx
    *  Can be null to disable the tooltip */
@@ -60,39 +34,67 @@ export interface TagProps {
    *  Icon object consists of icon(icon name/style, title for screenReader,
    *  and the placement of the icon (left or right))*/
   icon?: TagIconProps;
+  /** Unique key */
+  key?: string | number;
+  /** onClose callback indicates the tag should have an accessible close button on the
+   * right side of the label */
+  onClose?: () => void;
+  /** Size of tag */
+  size?: Exclude<ComponentSizeXSToL, 'xs'>;
 }
 
 const Tag: React.FunctionComponent<TagProps> = ({
   label,
+  ariaLabel,
   tooltipContent,
   tooltipId,
   icon,
+  onClose,
+  size = 's',
 }) => {
-  return tooltipContent && tooltipId ? (
-    <WithTooltip
-      tooltipProps={{
-        direction: 'onTop',
-        text: tooltipContent,
-        tooltipId,
-      }}
-    >
-      <div
-        // prevent double tabbing if tag icon has onClick
-        tabIndex={icon?.onClick ? undefined : 0}
-        aria-describedby={tooltipId}
-        className={moduleStyles.tag}
-      >
-        {icon && icon.placement === 'left' && <TagIcon {...icon} />}
+  const tooltipWrapper = useCallback(
+    (children: React.ReactNode) =>
+      tooltipContent && tooltipId ? (
+        <WithTooltip
+          tooltipProps={{
+            direction: 'onTop',
+            text: tooltipContent,
+            tooltipId: tooltipId,
+          }}
+        >
+          {children}
+        </WithTooltip>
+      ) : (
+        children
+      ),
+    [tooltipContent, tooltipId],
+  );
+  const containerAttrs: HTMLAttributes<HTMLDivElement> = {
+    className: moduleStyles.tag,
+    tabIndex: 0,
+    'aria-label': ariaLabel,
+    'aria-describedby': tooltipContent && tooltipId ? tooltipId : undefined,
+  };
+  if (onClose) {
+    delete containerAttrs.tabIndex;
+    return tooltipWrapper(
+      <div {...containerAttrs}>
         <span>{label}</span>
-        {icon && icon.placement === 'right' && <TagIcon {...icon} />}
-      </div>
-    </WithTooltip>
-  ) : (
-    <div className={moduleStyles.tag}>
+        <CloseButton
+          onClick={onClose}
+          aria-label={`Close ${ariaLabel ?? label}`}
+          size={size}
+          tabIndex={0}
+        />
+      </div>,
+    );
+  }
+  return tooltipWrapper(
+    <div {...containerAttrs}>
       {icon && icon.placement === 'left' && <TagIcon {...icon} />}
       <span>{label}</span>
       {icon && icon.placement === 'right' && <TagIcon {...icon} />}
-    </div>
+    </div>,
   );
 };
 
