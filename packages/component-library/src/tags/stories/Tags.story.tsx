@@ -41,6 +41,7 @@ const SingleTemplateWithTagState: StoryFn<TagsProps> = args => {
     tooltipId: label,
     tooltipContent: label,
     onClose: () => removeTag(i),
+    type: 'closable',
   }));
 
   return (

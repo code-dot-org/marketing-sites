@@ -41,14 +41,14 @@ export interface DefaultTagProps extends BaseTagProps {
   type?: 'default';
 }
 
-export interface CloseTagProps extends BaseTagProps {
+export interface ClosableTagProps extends BaseTagProps {
   type: 'closable';
   /** onClose callback gives the tag an accessible close button on the
    * right side of the label */
   onClose: () => void;
 }
 
-export type TagProps = DefaultTagProps | CloseTagProps;
+export type TagProps = DefaultTagProps | ClosableTagProps;
 
 const Tag: React.FunctionComponent<TagProps> = props => {
   const {
@@ -86,14 +86,13 @@ const Tag: React.FunctionComponent<TagProps> = props => {
 
   if (type === 'closable') {
     delete containerAttrs.tabIndex;
-    const {onClose} = props as CloseTagProps;
+    const {onClose} = props as ClosableTagProps;
     return tooltipWrapper(
       <div {...containerAttrs}>
         <span>{label}</span>
         <CloseButton
           onClick={onClose}
           aria-label={`Close ${ariaLabel ?? label}`}
-          tabIndex={0}
         />
       </div>,
     );
