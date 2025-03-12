@@ -1267,7 +1267,7 @@ __metadata:
     "@next/eslint-plugin-next": "npm:^15.0.3"
     "@next/third-parties": "npm:^15.2.1"
     "@playwright/test": "npm:~1.49.1"
-    "@statsig/statsig-node-core": "npm:0.0.6-beta.6"
+    "@statsig/statsig-node-core": "npm:^0.0.8"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/jest-dom": "npm:^6.6.3"
     "@testing-library/react": "npm:^16.2.0"
@@ -3928,74 +3928,74 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core-darwin-arm64@npm:0.0.6-beta.6":
-  version: 0.0.6-beta.6
-  resolution: "@statsig/statsig-node-core-darwin-arm64@npm:0.0.6-beta.6"
+"@statsig/statsig-node-core-darwin-arm64@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@statsig/statsig-node-core-darwin-arm64@npm:0.0.8"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core-darwin-x64@npm:0.0.6-beta.6":
-  version: 0.0.6-beta.6
-  resolution: "@statsig/statsig-node-core-darwin-x64@npm:0.0.6-beta.6"
+"@statsig/statsig-node-core-darwin-x64@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@statsig/statsig-node-core-darwin-x64@npm:0.0.8"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core-linux-arm64-gnu@npm:0.0.6-beta.6":
-  version: 0.0.6-beta.6
-  resolution: "@statsig/statsig-node-core-linux-arm64-gnu@npm:0.0.6-beta.6"
+"@statsig/statsig-node-core-linux-arm64-gnu@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@statsig/statsig-node-core-linux-arm64-gnu@npm:0.0.8"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core-linux-arm64-musl@npm:0.0.6-beta.6":
-  version: 0.0.6-beta.6
-  resolution: "@statsig/statsig-node-core-linux-arm64-musl@npm:0.0.6-beta.6"
+"@statsig/statsig-node-core-linux-arm64-musl@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@statsig/statsig-node-core-linux-arm64-musl@npm:0.0.8"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core-linux-x64-gnu@npm:0.0.6-beta.6":
-  version: 0.0.6-beta.6
-  resolution: "@statsig/statsig-node-core-linux-x64-gnu@npm:0.0.6-beta.6"
+"@statsig/statsig-node-core-linux-x64-gnu@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@statsig/statsig-node-core-linux-x64-gnu@npm:0.0.8"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core-linux-x64-musl@npm:0.0.6-beta.6":
-  version: 0.0.6-beta.6
-  resolution: "@statsig/statsig-node-core-linux-x64-musl@npm:0.0.6-beta.6"
+"@statsig/statsig-node-core-linux-x64-musl@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@statsig/statsig-node-core-linux-x64-musl@npm:0.0.8"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core-win32-ia32-msvc@npm:0.0.6-beta.6":
-  version: 0.0.6-beta.6
-  resolution: "@statsig/statsig-node-core-win32-ia32-msvc@npm:0.0.6-beta.6"
+"@statsig/statsig-node-core-win32-ia32-msvc@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@statsig/statsig-node-core-win32-ia32-msvc@npm:0.0.8"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core-win32-x64-msvc@npm:0.0.6-beta.6":
-  version: 0.0.6-beta.6
-  resolution: "@statsig/statsig-node-core-win32-x64-msvc@npm:0.0.6-beta.6"
+"@statsig/statsig-node-core-win32-x64-msvc@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@statsig/statsig-node-core-win32-x64-msvc@npm:0.0.8"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core@npm:0.0.6-beta.6":
-  version: 0.0.6-beta.6
-  resolution: "@statsig/statsig-node-core@npm:0.0.6-beta.6"
+"@statsig/statsig-node-core@npm:^0.0.8":
+  version: 0.0.8
+  resolution: "@statsig/statsig-node-core@npm:0.0.8"
   dependencies:
-    "@statsig/statsig-node-core-darwin-arm64": "npm:0.0.6-beta.6"
-    "@statsig/statsig-node-core-darwin-x64": "npm:0.0.6-beta.6"
-    "@statsig/statsig-node-core-linux-arm64-gnu": "npm:0.0.6-beta.6"
-    "@statsig/statsig-node-core-linux-arm64-musl": "npm:0.0.6-beta.6"
-    "@statsig/statsig-node-core-linux-x64-gnu": "npm:0.0.6-beta.6"
-    "@statsig/statsig-node-core-linux-x64-musl": "npm:0.0.6-beta.6"
-    "@statsig/statsig-node-core-win32-ia32-msvc": "npm:0.0.6-beta.6"
-    "@statsig/statsig-node-core-win32-x64-msvc": "npm:0.0.6-beta.6"
+    "@statsig/statsig-node-core-darwin-arm64": "npm:0.0.8"
+    "@statsig/statsig-node-core-darwin-x64": "npm:0.0.8"
+    "@statsig/statsig-node-core-linux-arm64-gnu": "npm:0.0.8"
+    "@statsig/statsig-node-core-linux-arm64-musl": "npm:0.0.8"
+    "@statsig/statsig-node-core-linux-x64-gnu": "npm:0.0.8"
+    "@statsig/statsig-node-core-linux-x64-musl": "npm:0.0.8"
+    "@statsig/statsig-node-core-win32-ia32-msvc": "npm:0.0.8"
+    "@statsig/statsig-node-core-win32-x64-msvc": "npm:0.0.8"
   dependenciesMeta:
     "@statsig/statsig-node-core-darwin-arm64":
       optional: true
@@ -4013,7 +4013,7 @@ __metadata:
       optional: true
     "@statsig/statsig-node-core-win32-x64-msvc":
       optional: true
-  checksum: 10c0/65614711c401f210b52db023e26355e9a4348b03e00c70f0822121923bfca486a1c14ec772c266b7a6f45205c5986add71ba3996b8c51121ac789df54a52d26e
+  checksum: 10c0/8f2fe91a62196360a459d0a648c9c904e4d079a5be88bb401de48c9fb3f7d093a08ec7a5eb18759ae741ebfcf1cc985eb210788e2815024617c67ca44f6459da
   languageName: node
   linkType: hard
 
