@@ -3,7 +3,7 @@ import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 export const FAQAccordionContentfulComponentDefinition: ComponentDefinition = {
   id: 'faqAccordion',
-  name: 'FAQAccordion',
+  name: 'FAQ Accordion',
   category: 'Custom Components',
   thumbnailUrl:
     'https://images.ctfassets.net/90t6bu6vlf76/2T9oZuMVAKZ0HHTJB80ftF/e81cf4131a6580d1edd86c98e0539bfe/component_faq_thumbnail.png',
