@@ -2,6 +2,8 @@ import {GoogleAnalytics} from '@next/third-parties/google';
 import {headers} from 'next/headers';
 import {getGoogleAnalyticsMeasurementId} from '@/config/ga4';
 import {getBrandFromHostname} from '@/config/brand';
+import {generateBootstrapValues} from '@/providers/statsig/statsig-backend';
+import StatsigProvider from '@/providers/statsig/StatsigProvider';
 
 /**
  * Nested asynchronous layout to temporarily workaround Font Awesome imports going out of order due to CSS Chunking
@@ -16,13 +18,16 @@ export default async function Layout({
   const hostname = (await headers()).get('Host');
   const brand = getBrandFromHostname(hostname);
   const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId(brand);
+  const statsigBootstrapValues = await generateBootstrapValues();
 
   return (
     <>
       {googleAnalyticsMeasurementId && (
         <GoogleAnalytics gaId={googleAnalyticsMeasurementId} />
       )}
-      {children}
+      <StatsigProvider values={statsigBootstrapValues}>
+        {children}
+      </StatsigProvider>
     </>
   );
 }
