@@ -1,5 +1,4 @@
 import {EntryFields, BaseEntry} from 'contentful';
-import '@code-dot-org/component-library/accordion/faqAccordion/index.css';
 import FAQAccordion, {
   FAQAccordionItem,
 } from '@code-dot-org/component-library/accordrion/faqAccordion';

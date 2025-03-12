@@ -26,7 +26,6 @@
       "import": "./dist/esm/accordion/index.mjs",
       "require": "./dist/cjs/accordion/index.js"
     },
-    "./accordion/index.css": "./dist/esm/accordion/index.css",
     "./accordrion/faqAccordion": {
       "types": {
         "import": "./dist/esm/accordion/faqAccordion/index.d.ts",
@@ -35,7 +34,6 @@
       "import": "./dist/esm/accordion/faqAccordion/index.mjs",
       "require": "./dist/cjs/accordion/faqAccordion/index.js"
     },
-    "./accordion/faqAccordion/index.css": "./dist/esm/accordion/faqAccordion/index.css",
     "./alert": {
       "types": {
         "import": "./dist/esm/alert/index.d.ts",
