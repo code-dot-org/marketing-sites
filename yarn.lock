@@ -1225,8 +1225,6 @@ __metadata:
   resolution: "@code-dot-org/frontend@workspace:."
   dependencies:
     "@axe-core/playwright": "npm:^4.10.1"
-    "@statsig/react-bindings": "npm:^3.14.1"
-    "@statsig/web-analytics": "npm:^3.14.1"
     "@storybook/test-runner": "npm:^0.19.1"
     lint-staged: "npm:^15.4.3"
     prettier: "npm:3.3.3"
@@ -1267,7 +1265,9 @@ __metadata:
     "@next/eslint-plugin-next": "npm:^15.0.3"
     "@next/third-parties": "npm:^15.2.1"
     "@playwright/test": "npm:~1.49.1"
+    "@statsig/react-bindings": "npm:^3.14.1"
     "@statsig/statsig-node-core": "npm:^0.0.8"
+    "@statsig/web-analytics": "npm:^3.14.1"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/jest-dom": "npm:^6.6.3"
     "@testing-library/react": "npm:^16.2.0"
