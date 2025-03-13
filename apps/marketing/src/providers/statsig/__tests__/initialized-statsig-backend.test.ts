@@ -1,5 +1,6 @@
-import {generateBootstrapValues} from '../statsig-backend';
 import statsig from '@/providers/statsig/statsig';
+
+import {generateBootstrapValues} from '../statsig-backend';
 
 jest.mock('@/providers/statsig/statsig', () => ({
   __esModule: true,

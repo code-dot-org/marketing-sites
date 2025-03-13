@@ -1,4 +1,5 @@
 import {render} from '@testing-library/react';
+
 import StatsigProvider from '@/providers/statsig/StatsigProvider';
 
 describe('StatsigProvider', () => {

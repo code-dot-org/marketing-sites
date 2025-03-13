@@ -1,9 +1,10 @@
 'use client';
 
-import {ReactNode} from 'react';
 import {StatsigProvider as BaseStatsigProvider} from '@statsig/react-bindings';
-import {getClient} from '@/providers/statsig/client';
+import {ReactNode} from 'react';
+
 import {Stage} from '@/config/stage';
+import {getClient} from '@/providers/statsig/client';
 
 interface StatsigProviderProps {
   stage: Stage;

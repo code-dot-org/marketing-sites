@@ -1,4 +1,5 @@
 import {StatsigUser} from '@statsig/statsig-node-core';
+
 import statsig from '@/providers/statsig/statsig';
 
 const statsigInitializer = statsig ? statsig.initialize() : undefined;
