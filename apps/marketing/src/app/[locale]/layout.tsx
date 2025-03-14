@@ -19,13 +19,17 @@ export default async function Layout({
   const brand = getBrandFromHostname(hostname);
   const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId(brand);
   const statsigBootstrapValues = await generateBootstrapValues();
+  const statsigClientKey = process.env.STATSIG_CLIENT_KEY;
 
   return (
     <>
       {googleAnalyticsMeasurementId && (
         <GoogleAnalytics gaId={googleAnalyticsMeasurementId} />
       )}
-      <StatsigProvider values={statsigBootstrapValues}>
+      <StatsigProvider
+        clientKey={statsigClientKey}
+        values={statsigBootstrapValues}
+      >
         {children}
       </StatsigProvider>
     </>
