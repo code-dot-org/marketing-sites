@@ -11,7 +11,7 @@ describe('StatsigProvider', () => {
   it('should render children when STATSIG_CLIENT_KEY is not set', () => {
     delete process.env.STATSIG_CLIENT_KEY;
     const {getByText} = render(
-      <StatsigProvider values={mockValues}>
+      <StatsigProvider values={mockValues} stage={'development'}>
         <div>Test Child</div>
       </StatsigProvider>,
     );
@@ -19,9 +19,12 @@ describe('StatsigProvider', () => {
   });
 
   it('should render BaseStatsigProvider with client when STATSIG_CLIENT_KEY is set', () => {
-    process.env.STATSIG_CLIENT_KEY = 'test-key';
     const {getByText} = render(
-      <StatsigProvider values={mockValues}>
+      <StatsigProvider
+        values={mockValues}
+        stage={'development'}
+        clientKey={'test-key'}
+      >
         <div>Test Child</div>
       </StatsigProvider>,
     );

@@ -4,6 +4,7 @@ import {getGoogleAnalyticsMeasurementId} from '@/config/ga4';
 import {getBrandFromHostname} from '@/config/brand';
 import {generateBootstrapValues} from '@/providers/statsig/statsig-backend';
 import StatsigProvider from '@/providers/statsig/StatsigProvider';
+import {getStage} from '@/config/stage';
 
 /**
  * Nested asynchronous layout to temporarily workaround Font Awesome imports going out of order due to CSS Chunking
@@ -27,6 +28,7 @@ export default async function Layout({
         <GoogleAnalytics gaId={googleAnalyticsMeasurementId} />
       )}
       <StatsigProvider
+        stage={getStage()}
         clientKey={statsigClientKey}
         values={statsigBootstrapValues}
       >
