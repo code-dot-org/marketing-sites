@@ -89,6 +89,16 @@ yarn run dev
 
 ## Testing
 
+Run linting:
+
+```bash
+yarn lint
+
+yarn lint:fix
+
+yarn prettier:fix
+```
+
 • How to test the component.
 • What kinds of tests are recommended.
 • Example using Jest/RTL.

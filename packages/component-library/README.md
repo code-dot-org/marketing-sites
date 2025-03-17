@@ -230,15 +230,24 @@ export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
 
 ## Styling
 
-We use **SCSS modules** and **class names** for styling. This ensures that component styles are scoped and isolated, which helps prevent unintended side effects.
+We use **SCSS modules** and **class names** for styling. This ensures that component styles are scoped and isolated,
+which helps prevent unintended side effects.
 
-Overwriting Component Styles
+### Overwriting Component Styles
 
-Since SCSS modules generate locally scoped class names, to overwrite the styles of a component, you need to ensure that the overriding styles have the highest specificity priority.
+Since SCSS modules generate locally scoped class names, to overwrite the styles of a component, you need to ensure that
+the overriding styles have the highest specificity priority. Follow the cascade and specificity rules to make sures your
+custom styles will be applied correctly (if hesitant - please read [MDN Specificity Guide](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity),
+[Importance of CSS Specificity and its best practices](https://blogs.halodoc.io/best-practices-that-we-follow-to-avoid-specificity-issues/)).
 
-### ✅ Recommended Approaches:Using SCSS Modules
+**_Always relly on css selector priority, not the order of stylesheets being loaded or classNames being applied._**.
+(Since order of stylesheets load and or classNames being applied can be changed almost randomly [example here](https://codedotorg.slack.com/archives/C0T0PNTM3/p1710363328926969)).
 
-#### You can define custom styles in a SCSS module and apply them using a parent element or directly on the component.
+**_NEVER RELY ON THE ORDER OF STYLESHEETS BEING LOADED AND/OR CLASSNAMES BEING APPLIED._**
+
+#### ✅ Recommended Approaches: Using SCSS Modules
+
+##### You can define custom styles in a SCSS module and apply them using a parent element or directly on the component.
 
 **Example: Overwriting via parent element style**
 
@@ -280,7 +289,7 @@ const Example = () => (
 );
 ```
 
-#### Use of CSS Variables for Theming
+##### Use of CSS Variables for Theming
 
 Theming should rely on semantic tokens defined in primitiveColors.scss and colors.scss. This ensures consistent color application across components and simplifies light/dark mode handling.
 Example:
@@ -293,9 +302,9 @@ Example:
 }
 ```
 
-### ❌ Not Recommended Approaches:
+#### ❌ Not Recommended Approaches:
 
-#### Avoid Inline Styles
+##### Avoid Inline Styles
 
 Inline styles are harder to override and don’t support media queries or pseudo-selectors.
 Example (❌ not recommended):
@@ -306,7 +315,7 @@ Example (❌ not recommended):
 </Heading1>
 ```
 
-#### Avoid Global Styles
+##### Avoid Global Styles
 
 Using global styles inside component styles can cause conflicts and unintended side effects.
 Example (❌ not recommended):
@@ -327,7 +336,7 @@ h1 {
 - Prefer class-based styles over inline styles to maintain override flexibility.
 - Follow the cascade and specificity rules (review [MDN Specificity Guide](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity),
   [Importance of CSS Specificity and its best practices](https://blogs.halodoc.io/best-practices-that-we-follow-to-avoid-specificity-issues/)).
-- For dark/light mode support, rely on semantic colors, data-theme attribute and avoid hard-coded colors.
+- For dark/light mode support, rely on `semantic colors`, `data-theme` attribute and avoid hard-coded colors.
 
 ## Testing
 
@@ -343,6 +352,10 @@ You can run the tests using the following commands:
 
    ```bash
    yarn lint
+
+   yarn lint:fix
+
+   yarn prettier:fix
    ```
 
 ## 🧩 Accessibility
@@ -373,6 +386,11 @@ github issues or any other means of communication.
 <details>
   <summary>Can I request a new component?</summary>
   Yes! Create a thread in `#ask-design-system` Slack channel or open a GitHub issue.
+</details>
+
+<details>
+    <summary>How do I add a new component and/or make an update to existing component?</summary>
+    Follow the guidelines in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 </details>
 
 ## Changelog

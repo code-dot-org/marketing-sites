@@ -85,6 +85,20 @@ For example, to only run the design system storybook:
 yarn workspace @code-dot-org/design-system-storybook dev
 ```
 
+### Formatting, Linting. (Prettier, ESLint, Stylelint)
+
+To format all files in all packages and apps, run the following command:
+
+```bash
+yarn lint:fix
+```
+
+You can also run this command for some specific package or app using yarn workspace:
+
+```bash
+yarn workspace @code-dot-org/component-library prettier:fix
+```
+
 ### Pre-release Testing
 
 To run all tests that the pull-request quality checks do:
