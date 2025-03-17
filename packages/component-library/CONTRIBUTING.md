@@ -13,6 +13,7 @@ the project, please refer to the [README.md](./README.md) file.
 - [🚦 Component Statuses & Production Checklist](#-component-statuses--production-checklist)
 - [🎯 Coding Standards](#-coding-standards)
 - [🧪 How to Test Your Component](#-how-to-test-your-component)
+- [🔀 Commit Message Guidelines](#-commit-message-guidelines)
 - [📚 Need Help?](#-need-help)
 - [💡 Tips for a Smooth PR Review](#-tips-for-a-smooth-pr-review)
 - [✅ How to Get Your PR Approved Faster](#-how-to-get-your-pr-approved-faster)
@@ -124,6 +125,42 @@ const SomeComponent = props => {
 4. **Visual Regression Tests** — Ensure the component appears correctly in all supported themes.
 
 ➡️ See the full [Testing Guide](./README.md#testing) in the README.
+
+## 🔀 Commit Message Guidelines
+
+We follow the Conventional Commits format for all commit messages to ensure a consistent and readable git history.
+
+```bash
+<type>(<scope>): <description>
+```
+
+### ✅ Types:
+
+| Type       | Description                                            |
+| ---------- | ------------------------------------------------------ |
+| `feat`     | A new feature                                          |
+| `fix`      | A bug fix                                              |
+| `docs`     | Documentation updates                                  |
+| `refactor` | Code changes that neither fix a bug nor add a feature  |
+| `test`     | Adding missing tests or updating existing tests        |
+| `chore`    | Maintenance tasks (build process, tools, dependencies) |
+| `perf`     | Performance improvements                               |
+
+### ✅ Examples:
+
+```bash
+feat(button): add new colors option support
+
+fix(accordion): correct styling for RTL support
+
+docs(typography): update documentation for heading elements
+```
+
+### ✅ Best Practices:
+
+- Use present tense (“add” not “added”).
+- Use lowercase for the type and scope.
+- Keep the description concise and specific.
 
 ## 📚 Need Help?
 
