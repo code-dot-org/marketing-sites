@@ -36,7 +36,8 @@ design language and reducing the need for redundant code.
 
 🔹 Key Features:
 
-- ✅ Built-in support for theming (light/dark mode) [Currently in progress, only part of the components are themed]
+- ✅ Built-in support for theming (light/dark mode) [Currently in progress, only part of the components are themed
+  (those that use @code-dot-org/component-library-styles/colors.scss)]
 - ✅ TypeScript support
 - ✅ Accessibility-first design
 - ✅ Well-documented with Storybook ([See Storybook](https://code-dot-org.github.io/code-dot-org/component-library-storybook))
@@ -55,8 +56,8 @@ To run the code in development mode (build + watch):
 yarn run dev
 ```
 
-This mode also generates the typescript declaration files, which generally take upwards of 20 seconds but is necessary
-for cross-project development. To skip typescript declaration generation (for example, when locally developing
+This mode also generates the TypeScript declaration files, which generally take upwards of 20 seconds but is necessary
+for cross-project development. To skip TypeScript declaration generation (for example, when locally developing
 components without the need to cross-reference):
 
 ```bash
@@ -142,7 +143,7 @@ const Example = () => {
 ## API Reference
 
 We use **TypeScript** to define the API of our components. This means that you can view the available props and their
-types directly in your code editor with TypeScript autocomplete and wh support.
+types directly in your code editor.
 
 ### 📖 Where to Find Full API Docs:
 
@@ -291,7 +292,8 @@ const Example = () => (
 
 ##### Use of CSS Variables for Theming
 
-Theming should rely on semantic tokens defined in primitiveColors.scss and colors.scss. This ensures consistent color application across components and simplifies light/dark mode handling.
+Theming should rely on semantic colors defined in primitiveColors.scss and colors.scss. This ensures consistent
+color application across components and simplifies light/dark mode handling.
 Example:
 
 ```scss
@@ -340,7 +342,7 @@ h1 {
 
 ## Testing
 
-We're using Jest and RTL for unit tests. Each component should have a corresponding test file that covers
+We use Jest and RTL for unit tests. Each component should have a corresponding test file that covers
 all possible use cases and edge cases. Where RTL is not enough, we use
 [Storybook Play Function](https://storybook.js.org/docs/writing-stories/play-function) for visual tests.
 We follow [RTL testing approach](https://kentcdodds.com/blog/testing-implementation-details), testing components how
@@ -378,13 +380,27 @@ Short accessibility Checklist:
 - ✅ Screen reader support
 - ✅ RTL (right-to-left) languages support
 
+Complete Accessibility Checklist is following:
+
+- ✅ A keyboard user can access full functionality of a component (with props required/suggested as needed to make this
+  happen)
+- ✅ A mouse user can access full functionality of a component (with props required/suggested as needed to make this
+  happen)
+- ✅ A voiceover user can access full functionality of a component (with props required/suggested as needed to make this
+  happen)\*\*
+- ✅ We have sufficient color contrast according to
+  the [Advanced Perceptual Contrast Algorithm](http://www.myndex.com/APCA) (APCA).
+- ✅ Site renders and behaves as expected for an RTL user
+- ✅ Styling accommodates differently-sized strings for non-English users
+
 ## Contributing
 
 For information on how to contribute to this package, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## FAQ / Troubleshooting
 
-If you encounter any issue that is not addressed here - feel free to reach out to us via `#ask-design-system` slack channel,
+If you encounter any issue that is not addressed here - feel free to reach out to us via `#ask-design-system`
+slack channel,
 github issues or any other means of communication.
 
 - **Why is my component not rendering correctly?**  

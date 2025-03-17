@@ -1,13 +1,16 @@
 # Contributing to the Component Library
 
 Thank you for considering contributing to the Component Library! 🎉  
-We welcome all contributions — whether it’s a bug fix, feature request, documentation improvement, or something else entirely.  
-This guide will help you get started quickly and ensure a smooth contribution process.
+We welcome all contributions — whether it’s a bug fix, feature request, documentation improvement, or something else
+entirely.  
+This guide will help you get started quickly and ensure a smooth contribution process. To get full picture of
+the project, please refer to the [README.md](./README.md) file.
 
 ## Table of Contents
 
 - [🛣️ Contribution Roadmap](#-contribution-roadmap)
 - [🧑‍💻 How to Add a New Component](#-how-to-add-a-new-component)
+- [🚦 Component Statuses & Production Checklist](#-component-statuses--production-checklist)
 - [🎯 Coding Standards](#-coding-standards)
 - [🧪 How to Test Your Component](#-how-to-test-your-component)
 - [📚 Need Help?](#-need-help)
@@ -47,6 +50,64 @@ Here’s a quick guide to the contribution process:
 5. Ensure accessibility using `axe` and screen readers.
 6. Submit a PR following the [Contribution Roadmap](#-contribution-roadmap).
 
+## 🚦 Component Statuses & Production Checklist
+
+To give a better understanding of components state/status and which one can and can not be used we've introduced
+a complete `production-ready checklist` and different `statuses` that's applicable to every new and
+existing Design System component.
+
+### Production-ready Checklist:
+
+- Implementation of component approved by design team;
+- Covered with Storybook stories and documentation;
+- Has tests: test every prop, every state and every interaction that's js related
+- Passes accessibility checks (see [README Accessibility Section](./README.md#-accessibility)).;
+
+### Possible component Statuses:
+
+- `WIP` - Work in progress, not ready for usage in production;
+- `Ready for dev` - Component is ready for development, has most of the functionality implemented but might not yet
+  pass all production ready checklist criteria or might have some visual changes;
+- `Stable` - Component is ready for production, passes all production ready checklist criteria;
+- `DEPRECATED` - Component is deprecated and should not be introduced in new pages but may be maintained in existing
+  codebases for backward compatibility;
+
+To keep track of those two metrics simply go to component and check the top of its `JSDoc comment`
+or open `storybook's docs tab`.
+
+Here's an example/template for better understanding:
+
+````jsx
+/**
+ * ### Production-ready Checklist:
+ * * (✔) implementation of component approved by design team;
+ * * (✔) has storybook, covered with stories and documentation;
+ * * (✘) has tests: test every prop, every state and every interaction that's js related;
+ * * (?) passes accessibility checks;
+ *
+ * ###  Status: ```Ready for dev```
+ * Design System: Some Component.
+ * Some description goes here...
+ */
+const SomeComponent = props => {
+  // ...
+};
+````
+
+This information should always be on the top of the component's documentation. Once component status is set
+to `Stable` or `DEPRECATED` you can remove ` * ### Production-ready Checklist`. Example:
+
+````jsx
+/**
+ * ###  Status: ```Stable```
+ * Design System: Some Component.
+ * Some description goes here...
+ */
+const SomeComponent = props => {
+  // ...
+};
+````
+
 ## 🎯 Coding Standards
 
 ✅ Use **TypeScript** for type safety.  
@@ -76,14 +137,17 @@ If you need help at any point, reach out to:
 
 ✅ Keep the PR focused on **one feature or fix**.  
 ✅ Add **clear, descriptive commit messages**.  
-✅ Keep PRs under **500 lines** where possible (large PRs are harder to review).  
 ✅ Add screenshots or recordings to demonstrate UI changes.  
 ✅ Use `Draft PR` if the feature is still a work in progress.
+
+✅ Keep PRs under 500 lines where possible (large PRs are harder to review — if necessary,
+break them into smaller PRs). Of course, if it’s a PR adding a completely new component or major feature,
+larger PRs are acceptable.
 
 ## ✅ How to Get Your PR Approved Faster
 
 - If there’s no response after **48 hours**, politely ping the reviewer in Slack.
-- If you receive feedback, **address it quickly** to keep the momentum going.
+- If you receive feedback, **respond within 24–48 hours** to keep the momentum going.
 - Make sure all **CI tests** are passing before requesting a review.
 
-## 🙌 Thank you for helping improve the Code.org Design System!
+## 🙌 Thank you for helping improve the Code.org Design System (@code-dot-org/component-library)!
