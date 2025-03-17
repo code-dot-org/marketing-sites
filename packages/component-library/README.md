@@ -39,7 +39,7 @@ design language and reducing the need for redundant code.
 - ✅ Built-in support for theming (light/dark mode) [Currently in progress, only part of the components are themed]
 - ✅ TypeScript support
 - ✅ Accessibility-first design
-- ✅ Well-documented with Storybook
+- ✅ Well-documented with Storybook ([See Storybook](https://code-dot-org.github.io/code-dot-org/component-library-storybook))
 
 ## Installation
 
@@ -340,6 +340,14 @@ h1 {
 
 ## Testing
 
+We're using Jest and RTL for unit tests. Each component should have a corresponding test file that covers
+all possible use cases and edge cases. Where RTL is not enough, we use
+[Storybook Play Function](https://storybook.js.org/docs/writing-stories/play-function) for visual tests.
+We follow [RTL testing approach](https://kentcdodds.com/blog/testing-implementation-details), testing components how
+user see/interact with them instead of testing implementation details.
+We also have eyes tests (in `@code-dot-org/design-system-storybook`) that are used for visual regression testing.
+On top of that, we have linting rules to ensure code quality, of course.
+
 You can run the tests using the following commands:
 
 1. Run jest unit tests:
@@ -361,6 +369,7 @@ You can run the tests using the following commands:
 ## 🧩 Accessibility
 
 We follow WCAG guidelines to ensure our components are accessible.
+Accessibility improves usability for all users, including those with disabilities.
 
 Short accessibility Checklist:
 
@@ -375,27 +384,27 @@ For information on how to contribute to this package, please refer to the [CONTR
 
 ## FAQ / Troubleshooting
 
-If you encounter any issue that is not adressed here - feel free to reach out to us via #rebrand slack channel,
+If you encounter any issue that is not addressed here - feel free to reach out to us via `#ask-design-system` slack channel,
 github issues or any other means of communication.
 
-<details>
-  <summary>Why is my component not rendering correctly?</summary>
+- **Why is my component not rendering correctly?**  
   Make sure that the component is correctly imported and that Storybook compiles without errors.
-</details>
 
-<details>
-  <summary>Can I request a new component?</summary>
+- **Can I request a new component or an update to existing one?**  
   Yes! Create a thread in `#ask-design-system` Slack channel or open a GitHub issue.
-</details>
 
-<details>
-    <summary>How do I add a new component and/or make an update to existing component?</summary>
-    Follow the guidelines in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-</details>
+- **How do I add a new component and/or make an update to an existing component?**  
+  Follow the guidelines in [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+- **How do I add custom styles to a component?**  
+  Use SCSS modules and class names to ensure that styles are scoped and isolated. For more details
+  see [Styling](#styling).
+
+- **How do I test a component?**  
+  Use Jest and RTL for unit tests. For more details see [Testing](#testing).
 
 ## Changelog
 
 You can find the latest changelog in [CHANGELOG.md](CHANGELOG.md).
 
-➡️ component-library
-• Explain any design tokens, utility functions, and how they work together.
+The changelog is updated with each release. Make sure to check it regularly to stay up to date!
