@@ -382,6 +382,7 @@ a.button-l {
 
   &.button-iconOnly {
     padding: 0.75rem;
+    min-width: 3rem;
   }
 }
 
@@ -403,6 +404,7 @@ a.button-m {
 
   &.button-iconOnly {
     padding: 0.625rem;
+    min-width: 2.5rem;
   }
 }
 
@@ -424,6 +426,7 @@ a.button-s {
 
   &.button-iconOnly {
     padding: 0.4375rem;
+    min-width: 2rem;
   }
 }
 
@@ -445,5 +448,6 @@ a.button-xs {
 
   &.button-iconOnly {
     padding: 0.25rem;
+    min-width: 1.5rem;
   }
 }
