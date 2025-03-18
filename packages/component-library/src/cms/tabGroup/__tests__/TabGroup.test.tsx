@@ -1,4 +1,4 @@
-import {render, screen, fireEvent, within} from '@testing-library/react';
+import {fireEvent, render, screen, within} from '@testing-library/react';
 
 import '@testing-library/jest-dom';
 import {LinkButtonProps} from '@/button';
@@ -44,7 +44,7 @@ const defaultTabs: TabGroupTabModel[] = [
 ];
 
 const setup = (props?: Partial<TabGroupProps>) => {
-  const utils = render(
+  return render(
     <TabGroup
       tabs={defaultTabs}
       defaultSelectedTabValue="tab1"
@@ -53,7 +53,6 @@ const setup = (props?: Partial<TabGroupProps>) => {
       {...props}
     />,
   );
-  return utils;
 };
 
 test('renders tabs correctly', () => {
