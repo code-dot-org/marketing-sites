@@ -136,7 +136,6 @@ export const ThreeTabs: Story = {
   },
 };
 
-// ✅ 4 Tabs
 export const FourTabs: Story = {
   args: {
     tabs: [
@@ -175,7 +174,6 @@ export const FourTabs: Story = {
   },
 };
 
-// ✅ 5 Tabs
 export const FiveTabs: Story = {
   args: {
     tabs: [

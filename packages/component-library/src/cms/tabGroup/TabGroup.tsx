@@ -3,7 +3,7 @@ import {useMemo} from 'react';
 
 import Accordion from '@/accordion';
 import {AccordionItem} from '@/accordion/Accordion';
-import {ButtonProps, LinkButton} from '@/button';
+import {LinkButton, LinkButtonProps} from '@/button';
 import Image, {ImageProps} from '@/cms/image';
 import Tabs, {TabModel, TabsProps} from '@/tabs';
 import {BodyThreeText, Heading3, Heading4} from '@/typography';
@@ -11,10 +11,15 @@ import {BodyThreeText, Heading3, Heading4} from '@/typography';
 import moduleStyles from './tabGroup.module.scss';
 
 export interface TabGroupTabModel extends Omit<TabModel, 'tabContent'> {
+  /** Content of the Tab */
   tabContent: {
+    /** Tab Image props */
     image: ImageProps;
-    button: ButtonProps;
+    /** Tab CTA Button props */
+    button: LinkButtonProps;
+    /** Tab Title */
     title: string;
+    /** Tab Description */
     description: string;
   };
 }
@@ -90,6 +95,19 @@ const parseTabsGroupTabToAccordionItem = (
   }
 };
 
+/**
+ * ## Production-ready Checklist:
+ *  * (✔) implementation of component approved by design team;
+ *  * (✔) has storybook, covered with stories and documentation;
+ *  * (✔) has tests: test every prop, every state and every interaction that's js related;
+ *  * (see ./__tests__/Section.test.tsx)
+ *  * (✔) passes accessibility checks;
+ *
+ * ### Status: ```Ready for dev```
+ *
+ * Design System: TabGroup Component.
+ * Renders a group of tabs with content. Tabs are displayed on Desktop and Accordion on Mobile.
+ */
 const TabGroup: React.FunctionComponent<TabGroupProps> = ({
   tabs,
   onChange,
