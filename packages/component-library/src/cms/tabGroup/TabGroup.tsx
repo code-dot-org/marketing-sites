@@ -1,9 +1,12 @@
+import classNames from 'classnames';
 import {useMemo} from 'react';
 
+import Accordion from '@/accordion';
+import {AccordionItem} from '@/accordion/Accordion';
 import {ButtonProps, LinkButton} from '@/button';
 import Image, {ImageProps} from '@/cms/image';
 import Tabs, {TabModel, TabsProps} from '@/tabs';
-import {BodyThreeText, Heading3} from '@/typography';
+import {BodyThreeText, Heading3, Heading4} from '@/typography';
 
 import moduleStyles from './tabGroup.module.scss';
 
@@ -57,6 +60,36 @@ const parseTabsGroupTabToRegularTab = (tab: TabGroupTabModel | TabModel) => {
   }
 };
 
+const parseTabsGroupTabToAccordionItem = (
+  tab: TabGroupTabModel | TabModel,
+): AccordionItem => {
+  if (isTabGroupTabModel(tab)) {
+    return {
+      id: tab.value,
+      label: tab.text || tab.value,
+      content: (
+        <div className={moduleStyles.tabGroupAccordionItemContainer}>
+          <div className={moduleStyles.tabGroupAccordionItemContentContainer}>
+            <Heading4>{tab.tabContent.title}</Heading4>
+            <BodyThreeText>{tab.tabContent.description}</BodyThreeText>
+            <LinkButton {...tab.tabContent.button} />
+          </div>
+          <Image
+            className={moduleStyles.tabGroupAccordionItemImage}
+            {...tab.tabContent.image}
+          />
+        </div>
+      ),
+    };
+  } else {
+    return {
+      id: tab.value,
+      label: tab.text || tab.value,
+      content: tab.tabContent,
+    };
+  }
+};
+
 const TabGroup: React.FunctionComponent<TabGroupProps> = ({
   tabs,
   onChange,
@@ -68,17 +101,37 @@ const TabGroup: React.FunctionComponent<TabGroupProps> = ({
     () => tabs.map(parseTabsGroupTabToRegularTab),
     [tabs],
   );
+  const parsedAccordionItems = useMemo(
+    () => tabs.map(parseTabsGroupTabToAccordionItem),
+    [tabs],
+  );
 
   return (
-    <Tabs
-      tabs={parsedTabs}
-      onChange={onChange}
-      defaultSelectedTabValue={defaultSelectedTabValue}
-      name={name}
-      size="m"
-      type="_tabGroup"
-      {...rest}
-    />
+    <div className={moduleStyles.tabGroupContainer}>
+      {/* Tabs component is displayed on Desktop (implemented via scss)*/}
+      <Tabs
+        tabs={parsedTabs}
+        onChange={onChange}
+        defaultSelectedTabValue={defaultSelectedTabValue}
+        name={name}
+        size="m"
+        type="_tabGroup"
+        {...rest}
+        tabsContainerClassName={classNames(
+          moduleStyles.tabsContainer,
+          rest.tabsContainerClassName,
+        )}
+        tabPanelsContainerClassName={classNames(
+          moduleStyles.tabPanelsContainer,
+          rest.tabPanelsContainerClassName,
+        )}
+      />
+      {/* Accordion component is displayed on Mobile. (implemented via scss)*/}
+      <Accordion
+        items={parsedAccordionItems}
+        className={moduleStyles.tabsAccordion}
+      />
+    </div>
   );
 };
 
