@@ -32,6 +32,29 @@ const defaultImage2: ImageProps = {
   alt: 'Expand computer science in your district',
 };
 
+const defaultImage3: ImageProps = {
+  src: 'https://code.org/images/help-page-top.png',
+  alt: 'Students learning computer science',
+};
+
+const createTab = (
+  value: string,
+  text: string,
+  image: ImageProps,
+  title: string,
+  description: string,
+) =>
+  ({
+    value,
+    text,
+    tabContent: {
+      image,
+      button: defaultButton,
+      title,
+      description,
+    },
+  }) as TabGroupTabModel;
+
 export const Playground: Story = {
   args: {
     tabs: [
@@ -79,6 +102,122 @@ export const Playground: Story = {
     await expect(button).toBeVisible();
 
     await button.click();
+  },
+};
+
+export const ThreeTabs: Story = {
+  args: {
+    tabs: [
+      createTab(
+        'tab1',
+        'Tab 1',
+        defaultImage,
+        'Track Your Progress',
+        'Monitor student work with real-time insights.',
+      ),
+      createTab(
+        'tab2',
+        'Tab 2',
+        defaultImage2,
+        'Engage Students',
+        'Make learning more interactive and fun!',
+      ),
+      createTab(
+        'tab3',
+        'Tab 3',
+        defaultImage3,
+        'Enhance Skills',
+        'Develop problem-solving and critical thinking skills.',
+      ),
+    ],
+    defaultSelectedTabValue: 'tab1',
+    onChange: value => console.log(`Selected Tab: ${value}`),
+    name: 'three-tabs',
+  },
+};
+
+// ✅ 4 Tabs
+export const FourTabs: Story = {
+  args: {
+    tabs: [
+      createTab(
+        'tab1',
+        'Tab 1',
+        defaultImage,
+        'Track Your Progress',
+        'Monitor student work with real-time insights.',
+      ),
+      createTab(
+        'tab2',
+        'Tab 2',
+        defaultImage2,
+        'Engage Students',
+        'Make learning more interactive and fun!',
+      ),
+      createTab(
+        'tab3',
+        'Tab 3',
+        defaultImage3,
+        'Enhance Skills',
+        'Develop problem-solving and critical thinking skills.',
+      ),
+      createTab(
+        'tab4',
+        'Tab 4',
+        defaultImage,
+        'Support Teachers',
+        'Provide teachers with real-time feedback and data.',
+      ),
+    ],
+    defaultSelectedTabValue: 'tab1',
+    onChange: value => console.log(`Selected Tab: ${value}`),
+    name: 'four-tabs',
+  },
+};
+
+// ✅ 5 Tabs
+export const FiveTabs: Story = {
+  args: {
+    tabs: [
+      createTab(
+        'tab1',
+        'Tab 1',
+        defaultImage,
+        'Track Your Progress',
+        'Monitor student work with real-time insights.',
+      ),
+      createTab(
+        'tab2',
+        'Tab 2',
+        defaultImage2,
+        'Engage Students',
+        'Make learning more interactive and fun!',
+      ),
+      createTab(
+        'tab3',
+        'Very Long Tab 3 Tab Title Text That Needs To Be Trimmed',
+        defaultImage3,
+        'Enhance Skills',
+        'Develop problem-solving and critical thinking skills.',
+      ),
+      createTab(
+        'tab4',
+        'Tab 4',
+        defaultImage,
+        'Support Teachers',
+        'Provide teachers with real-time feedback and data.',
+      ),
+      createTab(
+        'tab5',
+        'Tab 5',
+        defaultImage2,
+        'Build Confidence',
+        'Empower students to succeed in coding and beyond.',
+      ),
+    ],
+    defaultSelectedTabValue: 'tab1',
+    onChange: value => console.log(`Selected Tab: ${value}`),
+    name: 'five-tabs',
   },
 };
 

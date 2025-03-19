@@ -16,7 +16,7 @@ export interface TabGroupTabModel extends Omit<TabModel, 'tabContent'> {
   };
 }
 export interface TabGroupProps
-  extends Omit<TabsProps, 'tabs' | 'mode' | 'size' | 'type'> {
+  extends Omit<TabsProps, 'tabs' | 'mode' | 'size' | 'type' | 'onTabClose'> {
   /** Array of props for Tabs to render */
   tabs: (TabModel | TabGroupTabModel)[];
   /** The function that is called when a Tab is clicked/selected tab is changed */
@@ -76,7 +76,7 @@ const TabGroup: React.FunctionComponent<TabGroupProps> = ({
       defaultSelectedTabValue={defaultSelectedTabValue}
       name={name}
       size="m"
-      // type="tabGroup"
+      type="_tabGroup"
       {...rest}
     />
   );
