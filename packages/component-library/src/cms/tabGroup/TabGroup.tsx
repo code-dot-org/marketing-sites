@@ -145,9 +145,11 @@ const TabGroup: React.FunctionComponent<TabGroupProps> = ({
         )}
       />
       {/* Accordion component is displayed on Mobile. (implemented via scss)*/}
+      {/* role='region' is used here since tab group is meant to contain 5 items tops. Also used for testsing. */}
       <Accordion
         items={parsedAccordionItems}
         className={moduleStyles.tabsAccordion}
+        role="region"
       />
     </div>
   );
