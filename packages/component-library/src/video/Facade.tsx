@@ -1,8 +1,10 @@
 import styles from './video.module.scss';
 
 export interface FacadeProps {
-  alt: string;
+  /** Facade poster thumbnail */
   posterThumbnail?: string;
+  /** Facade alt text */
+  alt: string;
 }
 
 const Facade = ({posterThumbnail, alt}: FacadeProps) => {
