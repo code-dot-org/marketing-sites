@@ -5,6 +5,8 @@ import Image, {ImageProps} from '@/cms/image';
 import Tabs, {TabModel, TabsProps} from '@/tabs';
 import {BodyThreeText, Heading3} from '@/typography';
 
+import moduleStyles from './tabGroup.module.scss';
+
 export interface TabGroupTabModel extends Omit<TabModel, 'tabContent'> {
   tabContent: {
     image: ImageProps;
@@ -13,7 +15,8 @@ export interface TabGroupTabModel extends Omit<TabModel, 'tabContent'> {
     description: string;
   };
 }
-export interface TabGroupProps extends Omit<TabsProps, 'tabs'> {
+export interface TabGroupProps
+  extends Omit<TabsProps, 'tabs' | 'mode' | 'size' | 'type'> {
   /** Array of props for Tabs to render */
   tabs: (TabModel | TabGroupTabModel)[];
   /** The function that is called when a Tab is clicked/selected tab is changed */
@@ -36,11 +39,16 @@ const parseTabsGroupTabToRegularTab = (tab: TabGroupTabModel | TabModel) => {
     return {
       ...tab,
       tabContent: (
-        <div>
-          <Image {...tab.tabContent.image} />
-          <Heading3>{tab.tabContent.title}</Heading3>
-          <BodyThreeText>{tab.tabContent.description}</BodyThreeText>
-          <LinkButton {...tab.tabContent.button} />
+        <div className={moduleStyles.tabGroupModelTabContainer}>
+          <Image
+            className={moduleStyles.tabGroupModelTabImageContainer}
+            {...tab.tabContent.image}
+          />
+          <div className={moduleStyles.tabGroupModelTabContentContainer}>
+            <Heading3>{tab.tabContent.title}</Heading3>
+            <BodyThreeText>{tab.tabContent.description}</BodyThreeText>
+            <LinkButton {...tab.tabContent.button} />
+          </div>
         </div>
       ),
     };

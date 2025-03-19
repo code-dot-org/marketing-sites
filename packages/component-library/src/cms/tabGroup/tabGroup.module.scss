@@ -1,1 +1,30 @@
-@import '@code-dot-org/component-library-styles/colors.scss';
+@use '@code-dot-org/component-library-styles/colors.scss';
+@use '@code-dot-org/component-library-styles/variables' as variables;
+
+.tabGroupModelTabContainer {
+  display: flex;
+  padding: 1.875rem;
+  align-items: center;
+  gap: 1.875rem;
+  align-self: stretch;
+  border-radius: 0 0 variables.$regular-border-radius
+    variables.$regular-border-radius;
+  border: 1px solid var(--borders-neutral-primary);
+  background: var(--background-neutral-primary);
+}
+
+.tabGroupModelTabImageContainer {
+  width: 28.6699rem;
+  height: 18.7234rem;
+
+  border-radius: variables.$regular-border-radius;
+  background: var(--background-neutral-tertiary);
+}
+
+.tabGroupModelTabContentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1 0 0;
+}

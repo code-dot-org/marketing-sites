@@ -18,16 +18,20 @@ type Story = StoryObj<typeof TabGroup>;
 
 const defaultButton: LinkButtonProps = {
   children: 'Click Me',
-  href: 'https://google.com',
+  href: 'https://code.org',
   text: 'Click me',
 };
 
 const defaultImage: ImageProps = {
-  src: 'https://via.placeholder.com/150',
-  alt: 'Placeholder Image',
+  src: 'https://code.org/images/teach-page-top.png',
+  alt: 'Teach computer science & ignite possibilities',
 };
 
-// ✅ With Custom Content
+const defaultImage2: ImageProps = {
+  src: 'https://code.org/images/admins-page-top.png',
+  alt: 'Expand computer science in your district',
+};
+
 export const Playground: Story = {
   args: {
     tabs: [
@@ -45,7 +49,7 @@ export const Playground: Story = {
         value: 'tab2',
         text: 'Tab 2',
         tabContent: {
-          image: defaultImage,
+          image: defaultImage2,
           button: defaultButton,
           title: 'Engage Students',
           description: 'Make learning more interactive and fun!',
