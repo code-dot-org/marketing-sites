@@ -188,7 +188,7 @@ Example SCSS:
 The `primitiveColors.scss` file defines the **base colors** used throughout the design system. Unlike semantic colors,
 primitive colors are **fixed** and do **not change** across light and dark themes.
 
-Primitive colors are meant to be used as the foundation for building semantic colors. They define a consistent color
+Primitive colors are meant to be used as the foundation for building semantic colors. They define a consistent color.
 To view the latest primitive color variables, refer to our [DSCO Variables Figma page](https://www.figma.com/design/NIVcvUgU3WmXpAmp9U2vVy/DSCO-Variables?node-id=2925-10156&m=dev).
 palette and ensure a unified visual language across all Code.org components.
 
