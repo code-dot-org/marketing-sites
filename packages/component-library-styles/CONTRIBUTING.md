@@ -146,8 +146,8 @@ If you need help at any point, reach out to:
 
 ## ✅ How to Get Your PR Approved Faster
 
-- If there’s no response after **48 hours**, politely ping the reviewer in Slack.
-- If you receive feedback, **respond within 24–48 hours** to keep the momentum going.
+- If there’s no response after **24 hours**, politely ping the reviewer in Slack.
+- If you receive feedback, **respond within 24 hours** to keep the momentum going.
 - Make sure all **CI tests** are passing before requesting a review.
 
 ## 🙌 Thank you for helping improve the Code.org Design System (@code-dot-org/component-library-styles)!
