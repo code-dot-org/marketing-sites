@@ -10,7 +10,7 @@ project, please refer to the [README.md](./README.md) file.
 
 - [🛣️ Contribution Roadmap](#-contribution-roadmap)
 - [🎨 How to Add a New Style or Token](#-how-to-add-a-new-style-or-token)
-- [🚦Production-ready Checklist](#production-ready-checklist)
+- [🚦 Production-ready Checklist](#production-ready-checklist)
 - [🎯 Coding Standards](#-coding-standards)
 - [🧪 How to Test Your Styles](#-how-to-test-your-styles)
 - [🔀 Commit Message Guidelines](#-commit-message-guidelines)
@@ -25,7 +25,7 @@ Here’s a quick guide to the contribution process:
 1. **(The most important step!) Create a thread** in the `#ask-design-system` Slack channel about your change.
 
    - **Get approval** from @markabarrett and/or @moshebaricdo (design team).
-   - For technical details, ask @levadadenys.
+   - For technical details, ask @levadadenys and/or @kelbyhawn (engineering team).
 
 2. **Create a separate PR** with `@code-dot-org/component-library-styles` code changes.
 
@@ -35,7 +35,7 @@ Here’s a quick guide to the contribution process:
 3. **Get it approved** by:
 
    - ✅ @moshebaricdo and/or @markabarrett (design)
-   - ✅ @levadadenys (technical implementation)
+   - ✅ @levadadenys and/or @kelbyhawn (technical implementation)
 
 4. **Merge the PR** once approved.
 
@@ -60,7 +60,8 @@ and how to do it:
 
    - Follow the existing structure and organization.
 
-4. **Test the token or style** across light/dark themes and RTL.
+4. **Test the token or style** across light/dark themes, RTL and, (if applicable)
+   responsiveness (desktop, tablet, mobile).
 
 5. Submit a PR following the [Contribution Roadmap](#-contribution-roadmap).
 
@@ -133,7 +134,7 @@ If you need help at any point, reach out to:
 
 - `#ask-design-system` Slack channel
 - @moshebaricdo, @markabarrett for design questions
-- @levadadenys for technical implementation questions
+- @levadadenys, @kelbyhawnfor technical implementation questions
 
 ## 💡 Tips for a Smooth PR Review
 

@@ -25,7 +25,7 @@ Here’s a quick guide to the contribution process:
 1. **(The most important step!) Create a thread** in `#ask-design-system` Slack channel about your change.
 
    - **Get approval** from @markabarrett and/or @moshebaricdo (design team).
-   - For technical details, ask @levadadenys.
+   - For technical details, ask @levadadenys and/or @kelbyhawn (engineering team).
 
 2. **Create a separate PR** with `@code-dot-org/component-library` code changes.
 
@@ -35,7 +35,7 @@ Here’s a quick guide to the contribution process:
 3. **Get it approved** by:
 
    - ✅ @moshebaricdo and/or @markabarrett (design)
-   - ✅ @levadadenys (technical implementation)
+   - ✅ @levadadenys and/or @kelbyhawn (technical implementation)
 
 4. **Merge the PR** once approved.
 
@@ -168,7 +168,7 @@ If you need help at any point, reach out to:
 
 - `#ask-design-system` Slack channel
 - @moshebaricdo, @markabarrett for design questions
-- @levadadenys for technical implementation questions
+- @levadadenys, @kelbyhawn for technical implementation questions
 
 ## 💡 Tips for a Smooth PR Review
 
