@@ -1,4 +1,4 @@
-# `component-library/cms/TabGroup`
+# `component-library/cms/tabGroup`
 
 ## Consuming This Component
 
