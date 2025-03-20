@@ -229,7 +229,7 @@ palette and ensure a unified visual language across all Code.org components.
   - Defining semantic tokens
   - Internal design tokens
   - Styling that must remain constant regardless of theme
-- ✅ Avoid directly referencing primitive colors for theming — use semantic tokens instead.
+- ⛔️ Avoid directly referencing primitive colors for theming — use semantic tokens instead.
 
 ### Fonts
 
