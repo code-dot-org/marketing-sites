@@ -416,10 +416,10 @@ To update Font Awesome files in `font.scss`, see [Updating FontAwesome Files](#u
 #### ✅ Best Practices for Font Awesome:
 
 - ✅ Use the **CDN links** for faster loading and caching.
-- ✅ Avoid importing Font Awesome files directly from npm to prevent conflicts.
 - ✅ Only load the necessary icon files to reduce bundle size.
 - ✅ Use semantic CSS classes (`fa-solid`, `fa-regular`, `fa-brands`) for consistency.
 - ✅ Keep the Font Awesome version aligned across all Code.org applications.
+- ⛔️ Avoid importing Font Awesome files directly from npm to prevent conflicts.
 
 ---
 
