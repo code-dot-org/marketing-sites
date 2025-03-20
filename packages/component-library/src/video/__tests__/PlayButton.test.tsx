@@ -7,7 +7,6 @@ describe('PlayButton Component', () => {
     render(<PlayButton label="Play video" />);
     const button = screen.getByRole('button', {name: 'Play video'});
     expect(button).toBeVisible();
-    expect(button).toHaveAttribute('tabIndex', '0');
   });
 
   it('triggers focus when tabbed to', async () => {

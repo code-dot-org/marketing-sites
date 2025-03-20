@@ -4,11 +4,7 @@ import moduleStyles from './video.module.scss';
 
 const PlayButton = ({label}: {label: string}) => {
   return (
-    <button
-      aria-label={label}
-      tabIndex={0}
-      className={moduleStyles.playButtonBackground}
-    >
+    <button aria-label={label} className={moduleStyles.playButtonBackground}>
       <FontAwesomeV6Icon className={moduleStyles.playButton} iconName="play" />
     </button>
   );
