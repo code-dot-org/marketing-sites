@@ -539,8 +539,8 @@ We also provide utility classes that you can apply directly in the markup:
 - ✅ Use `heading` mixins for consistent heading styles.
 - ✅ Use `body` mixins for consistent paragraph styles.
 - ✅ Use `overline` mixins for uppercase labels.
-- ✅ Avoid defining font sizes manually – rely on mixins and classes.
 - ✅ Use `em` and `strong` mixins for consistent emphasis and bold styling.
+- ⛔️ Avoid defining font sizes manually – rely on mixins and classes.
 
 ### Variables
 
