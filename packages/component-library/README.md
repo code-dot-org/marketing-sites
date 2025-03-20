@@ -241,7 +241,7 @@ the overriding styles have the highest specificity priority. Follow the cascade 
 custom styles will be applied correctly (if hesitant - please read [MDN Specificity Guide](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity),
 [Importance of CSS Specificity and its best practices](https://blogs.halodoc.io/best-practices-that-we-follow-to-avoid-specificity-issues/)).
 
-**_Always relly on css selector priority, not the order of stylesheets being loaded or classNames being applied._**.
+**_Always rely on css selector priority, not the order of stylesheets being loaded or classNames being applied._**.
 (Since order of stylesheets load and or classNames being applied can be changed almost randomly [example here](https://codedotorg.slack.com/archives/C0T0PNTM3/p1710363328926969)).
 
 **_NEVER RELY ON THE ORDER OF STYLESHEETS BEING LOADED AND/OR CLASSNAMES BEING APPLIED._**
