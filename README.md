@@ -111,7 +111,7 @@ This command executes all lint, test, and build commands.
 
 ### Visual Snapshot Testing (Eyes)
 
-The design system uses [Applitools Eyes](https://applitools.com/platform/eyes/) via their [storybook integration](https://applitools.com/tutorials/sdks/storybook) to take a visual snapshot of
+The design system uses [Applitools Eyes](https://applitools.com/platform/eyes/) via their [Storybook integration](https://applitools.com/tutorials/sdks/storybook) to take a visual snapshot of
 a storybook component and
 compare it with baselines. Visual snapshots on pull requests and during the CI build.
 
