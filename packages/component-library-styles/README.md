@@ -1,4 +1,4 @@
-# @code-dot-org/component-library
+# @code-dot-org/component-library-styles
 
 Common Styles (`variables`, `colors`, `mixins`, `typography styles`, etc) of Code.org Design System
 
