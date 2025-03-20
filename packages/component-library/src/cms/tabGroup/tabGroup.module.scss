@@ -59,6 +59,11 @@ $mobileBreakpoint: 1024px;
   align-items: flex-start;
   gap: 1rem;
   flex: 1 0 0;
+
+  h3,
+  p {
+    margin: 0;
+  }
 }
 
 .tabGroupAccordionItemContainer {
