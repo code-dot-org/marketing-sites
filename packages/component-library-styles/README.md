@@ -717,7 +717,7 @@ For information on how to contribute to this package, please refer to the [CONTR
 
 - **Why aren't my styles being applied?**  
   Ensure the component imports `colors.scss` and `typography.scss`.  
-  Check for conflicting styles or CSS specificity issues.
+  Check for conflicting styles or CSS specificity issues. You may need to add additional selectors to the element you'd like to style. 
 
 ## Changelog
 
