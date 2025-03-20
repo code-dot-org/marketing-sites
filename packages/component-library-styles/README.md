@@ -581,7 +581,7 @@ With time there'll be more variables added to this file, so make sure to check i
 - ✅ Use defined variables instead of hard-coded values to maintain consistency.
 - ✅ Keep variable names descriptive and intuitive.
 - ✅ Follow a consistent naming convention for new variables.
-- ✅ Avoid redefining existing variables unless it's for a theme override.
+- ⛔️ Avoid redefining existing variables unless it's for a theme override.
 
 ---
 
