@@ -213,7 +213,7 @@ export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
 
   - Naming – Keep names descriptive and consistent with other components.
   - Structure – Organize files in the same way as other components in the library.
-  - Testing – Follow existing test patterns using Jest and RTL.
+  - Testing – Follow existing test patterns using Jest, RTL and @testing-library/user-event..
   - Stories – Ensure the component has a Storybook entry with usage examples.
   - Styles – Use existing mixins and variables from primitiveColors.scss and colors.scss.
 
@@ -342,7 +342,7 @@ h1 {
 
 ## Testing
 
-We use Jest and RTL for unit tests. Each component should have a corresponding test file that covers
+We use Jest, RTL and @testing-library/user-event for unit tests. Each component should have a corresponding test file that covers
 all possible use cases and edge cases. Where RTL is not enough, we use
 [Storybook Play Function](https://storybook.js.org/docs/writing-stories/play-function) for visual tests.
 We follow [RTL testing approach](https://kentcdodds.com/blog/testing-implementation-details), testing components how
@@ -417,7 +417,7 @@ github issues or any other means of communication.
   see [Styling](#styling).
 
 - **How do I test a component?**  
-  Use Jest and RTL for unit tests. For more details see [Testing](#testing).
+  Use Jest, RTL and @testing-library/user-event for unit tests. For more details see [Testing](#testing).
 
 ## Changelog
 

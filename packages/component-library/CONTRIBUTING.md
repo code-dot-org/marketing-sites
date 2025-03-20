@@ -47,7 +47,7 @@ Here’s a quick guide to the contribution process:
 2. Follow the component structure (see any component for example, for best result - see at least couple components)
    and [Best Practices](./README.md/#best-practices).
 3. Add a Storybook story under `stories/`.
-4. Write unit tests using Jest + RTL.
+4. Write unit tests using Jest + RTL + @testing-library/user-event.
 5. Ensure accessibility using `axe` and screen readers.
 6. Submit a PR following the [Contribution Roadmap](#-contribution-roadmap).
 
@@ -114,12 +114,12 @@ const SomeComponent = props => {
 ✅ Use **TypeScript** for type safety.  
 ✅ Follow the [Best Practices](./README.md#best-practices) section in the README.  
 ✅ Use **semantic colors** from `@code-dot-org/component-library-styles/colors.scss` where possible.  
-✅ Ensure components are tested using Jest + RTL.  
+✅ Ensure components are tested using Jest + RTL + @testing-library/user-event..  
 ✅ Follow the [Styling Guidelines](./README.md#styling) to avoid CSS specificity issues.
 
 ## 🧪 How to Test Your Component
 
-1. **Unit Tests** — Write tests using Jest + RTL.
+1. **Unit Tests** — Write tests using Jest + RTL + @testing-library/user-event..
 2. **Storybook Tests** — Ensure Storybook displays the component correctly.
 3. **Accessibility Tests** — Run Axe tests and verify with a screen reader.
 4. **Visual Regression Tests** — Ensure the component appears correctly in all supported themes.
@@ -158,8 +158,7 @@ docs(typography): update documentation for heading elements
 
 ### ✅ Best Practices:
 
-- Use present tense (“add” not “added”).
-- Use lowercase for the type and scope.
+- Use present tense singular form (“add” not “added”, not “adds”).
 - Keep the description concise and specific.
 
 ## 📚 Need Help?

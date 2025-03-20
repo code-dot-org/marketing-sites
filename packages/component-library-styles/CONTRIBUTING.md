@@ -124,8 +124,7 @@ docs(typography): update documentation for heading mixins
 
 ### ✅ Best Practices:
 
-- Use present tense (“add” not “added”).
-- Use lowercase for the type and scope.
+- Use present tense singular form (“add” not “added”, not “adds”).
 - Keep the description concise and specific.
 
 ## 📚 Need Help?
