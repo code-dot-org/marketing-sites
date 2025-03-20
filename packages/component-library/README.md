@@ -389,7 +389,7 @@ Complete Accessibility Checklist is following:
 - ✅ A voiceover user can access full functionality of a component (with props required/suggested as needed to make this
   happen)\*\*
 - ✅ We have sufficient color contrast according to
-  the [Advanced Perceptual Contrast Algorithm](http://www.myndex.com/APCA) (APCA).
+  the [Advanced Perceptual Contrast Algorithm](http://www.myndex.com/APCA) (APCA)
 - ✅ Site renders and behaves as expected for an RTL user
 - ✅ Styling accommodates differently-sized strings for non-English users
 
