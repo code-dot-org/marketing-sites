@@ -84,7 +84,7 @@ and how to do it:
 There's currently no automated testing for styles. Here's how you can test your changes manually or through other
 packages automated tests:
 
-1. **Unit Tests(Manually)** — Test RTL(right-to-left) support directly since it's part of Design System scope.
+1. **Unit Tests (Manually)** — Test RTL (right-to-left) support directly since it's part of Design System scope.
 2. **Storybook Tests** — Ensure Storybook displays the token or style correctly.
 3. **Accessibility Tests** — Run Axe tests to verify accessibility in light and dark themes.
 4. **Visual Regression Tests** — Ensure the style appears correctly across browsers and devices.
