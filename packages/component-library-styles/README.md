@@ -682,7 +682,7 @@ yarn prettier:fix
 
 ## Updating FontAwesome Files
 
-If you are looking to update the FontAwesome files in `font.scss`, Здyou'll need to do the following:
+If you are looking to update the FontAwesome files in `font.scss`, you'll need to do the following:
 
 1. **Download css and webfont files from FontAwesome.**
    Sign in with our shared dev account, find our "Code.org Kit", then click "Download Web Files" from the "Self-Host on the Web" option.
