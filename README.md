@@ -1,7 +1,6 @@
 # Code.org Frontend
 
-This directory mostly contains the codebase powering Code.org's marketing site, UI component library packages and
-everything related to these two.
+This directory contains packages and applications that power Code.org sites.
 
 **Note**: Most of Code.org's Studio product (student experience, curriculum, teacher tools, etc.) is built in the
 top-level `apps` package and is not currently located in this directory.
@@ -30,7 +29,7 @@ Publicly available packages:
 - [@code-dot-org/component-library-styles](packages/component-library-styles): Common Styles
   (`variables`, `colors`, `mixins`, `typography styles`, etc) of Code.org Design System
   ([@code-dot-org/component-library](packages/component-library)). Based on [Figma](https://www.figma.com/design/NIVcvUgU3WmXpAmp9U2vVy/DSCO-Variables?node-id=2925-33951&m=dev).
-  Used by [@code-dot-org/component-library](packages/component-library), can(for Code.org - should) also be used as
+  Used by [@code-dot-org/component-library](packages/component-library), should also be used as
   a standalone package for styling components with Code.org's Design System styles.
 - [@code-dot-org/lint-config](packages/lint-config): Shared linters configuration for Code.org projects
   (includes `eslint`, `lint-staged,` `prettier`, `stylelint`, `typescript` configs).
@@ -96,7 +95,11 @@ yarn lint:fix
 You can also run this command for some specific package or app using yarn workspace:
 
 ```bash
-yarn workspace @code-dot-org/component-library prettier:fix
+yarn lint:fix --filter @code-dot-org/component-library
+
+OR
+
+yarn workspace @code-dot-org/component-library lint:fix
 ```
 
 ### Pre-release Testing
