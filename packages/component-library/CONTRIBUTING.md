@@ -23,6 +23,8 @@ the project, please refer to the [README.md](./README.md) file.
 Here’s a quick guide to the contribution process:
 
 1. **(The most important step!) Create a thread** in `#ask-design-system` Slack channel about your change.
+   If you don't have access to our slack, feel free to reach out through github issues, pull requests or any other
+   means of communication.
 
    - **Get approval** from @markabarrett and/or @moshebaricdo (design team).
    - For technical details, ask @levadadenys and/or @kelbyhawn (engineering team).

@@ -638,7 +638,8 @@ They allow you to define a set of styles that can be reused throughout your proj
 
 ## Best Practices
 
-- ✅ Use **semantic colors** from `colors.scss`, unless necessary.
+- ✅ Use **semantic colors** from `colors.scss`, unless it's necessary to use `primitiveColors.scss`
+  or any other colors.
 - ✅ Keep typography and spacing consistent with design tokens.
 - ⛔️ Avoid defining hard-coded colors — rely on CSS variables.
 
@@ -717,7 +718,7 @@ For information on how to contribute to this package, please refer to the [CONTR
 
 - **Why aren't my styles being applied?**  
   Ensure the component imports `colors.scss` and `typography.scss`.  
-  Check for conflicting styles or CSS specificity issues. You may need to add additional selectors to the element you'd like to style. 
+  Check for conflicting styles or CSS specificity issues. You may need to add additional selectors to the element you'd like to style.
 
 ## Changelog
 

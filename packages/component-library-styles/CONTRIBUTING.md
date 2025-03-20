@@ -23,6 +23,8 @@ project, please refer to the [README.md](./README.md) file.
 Here’s a quick guide to the contribution process:
 
 1. **(The most important step!) Create a thread** in the `#ask-design-system` Slack channel about your change.
+   If you don't have access to our slack, feel free to reach out through github issues, pull requests or any other
+   means of communication.
 
    - **Get approval** from @markabarrett and/or @moshebaricdo (design team).
    - For technical details, ask @levadadenys and/or @kelbyhawn (engineering team).
@@ -74,11 +76,12 @@ and how to do it:
 
 ## 🎯 Coding Standards
 
-✅ Use **SCSS** for consistency.  
-✅ Follow the [Best Practices](./README.md#best-practices) section in the README.  
-✅ Use **semantic colors** from `@code-dot-org/component-library-styles/colors.scss` where possible.  
-✅ Keep token names **descriptive** and follow existing naming conventions.  
-✅ Keep file size reasonable — split large files if needed.
+- ✅ Use **SCSS** for consistency.
+- ✅ Use **semantic colors** from `@code-dot-org/component-library-styles/colors.scss` where possible.
+- ✅ Keep typography and spacing consistent with design tokens.
+- ✅ Keep token names **descriptive** and follow existing naming conventions.
+- ✅ Keep file size reasonable — split large files if needed.
+- ⛔️ Avoid defining hard-coded colors — rely on CSS variables.
 
 ## 🧪 How to Test Your Styles
 
