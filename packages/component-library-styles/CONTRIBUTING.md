@@ -50,7 +50,7 @@ and how to do it:
 
 1. **Add the token** to the appropriate SCSS file:
 
-   - Fonts → `fonts.scss`
+   - Fonts → `font.scss`
    - Variables → `variables.scss`
    - Mixins → `mixins.scss`
 
