@@ -348,7 +348,7 @@ We use **Font Awesome** for icons, loaded from the Code.org CDN.
 #### ✅ Best Practices for Font Awesome:
 
 - ✅ Use CDN links provided in `fonts.scss`.
-- ✅ Avoid loading Font Awesome directly from npm to prevent conflicts with existing styles.
+- ⛔️ Avoid loading Font Awesome directly from npm to prevent conflicts with existing styles.
 
 ### Font Awesome
 
