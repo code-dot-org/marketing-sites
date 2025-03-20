@@ -74,7 +74,7 @@ existing Design System component.
   codebases for backward compatibility;
 
 To keep track of those two metrics simply go to component and check the top of its `JSDoc comment`
-or open `storybook's docs tab`.
+or open `Storybook's docs tab`.
 
 Here's an example/template for better understanding:
 
