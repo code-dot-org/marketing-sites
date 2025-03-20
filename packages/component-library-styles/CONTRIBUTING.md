@@ -93,7 +93,7 @@ packages automated tests:
 
 ## 🔀 Commit Message Guidelines
 
-We follow the Conventional Commits format for all commit messages to ensure a consistent and readable git history.
+We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format for all commit messages to ensure a consistent and readable git history.
 
 ```bash
 <type>(<scope>): <description>
