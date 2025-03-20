@@ -326,7 +326,7 @@ You can override or extend font styles by combining mixins and custom properties
 - ✅ Use `main-font` mixins instead of direct font-family definitions.
 - ✅ Use the provided mixins for font weights instead of hard-coded values.
 - ✅ Figtree should be the primary font; Noto Sans is used for fallback and internationalization.
-- ✅ Avoid using inline styles for font definitions.
+- ⛔️ Avoid using inline styles for font definitions.
 
 ---
 
