@@ -41,7 +41,7 @@ Publicly available packages:
 ## Getting Started
 
 _(!!!)_ If you're unable to find some information in this README.md, please refer to the documentation of package/app
-that you're working on. (e.g. go to [package/component-library/README.md](packages/component-library/README.md),
+that you're working on. (e.g. go to [packages/component-library/README.md](packages/component-library/README.md),
 [apps/marketing/README.md](apps/marketing/README.md), etc)
 
 ### Prerequisites
