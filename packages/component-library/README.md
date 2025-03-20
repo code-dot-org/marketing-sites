@@ -209,7 +209,7 @@ export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
   - Use semantic colors from `@code-dot-org/component-library-styles/colors.scss` to maintain consistent theming
     across light and dark modes. This ensures visual consistency and makes it easier to update themes globally.
 
-- Follow Existing Patterns, Maintain consistency by following established patterns for:
+- Follow Existing Patterns, maintain consistency by following established patterns for:
 
   - Naming – Keep names descriptive and consistent with other components.
   - Structure – Organize files in the same way as other components in the library.
