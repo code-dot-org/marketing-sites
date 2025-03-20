@@ -43,7 +43,7 @@ Here’s a quick guide to the contribution process:
 
 ## 🎨 How to Add a New Style or Token
 
-Most of the styles come directly from the design system Figma file. Here's a list of what can be possibly added
+Most of the styles come directly from the design system Figma file. Here's a list of what can be added
 and how to do it:
 
 0. Check existing design tokens for duplicates or overlap to prevent redundancy.
