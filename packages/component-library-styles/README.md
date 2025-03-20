@@ -639,8 +639,8 @@ They allow you to define a set of styles that can be reused throughout your proj
 ## Best Practices
 
 - ✅ Use **semantic colors** from `colors.scss`, unless necessary.
-- ✅ Avoid defining hard-coded colors — rely on CSS variables.
 - ✅ Keep typography and spacing consistent with design tokens.
+- ⛔️ Avoid defining hard-coded colors — rely on CSS variables.
 
 ## Theming
 
