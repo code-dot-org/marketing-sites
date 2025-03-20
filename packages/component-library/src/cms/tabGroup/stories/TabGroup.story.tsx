@@ -86,22 +86,21 @@ export const Playground: Story = {
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
-    const tab = await canvas.findByText('Tab 1');
+    const tab = await canvas.findByRole('tab', {name: 'Tab 1'});
     await expect(tab).toBeVisible();
 
     // Test the content rendering inside the tab
-    const title = await canvas.findByText('Track Your Progress');
-    const description = await canvas.findByText(
+    const tabPanel = canvas.getByRole('tabpanel');
+    const title = await within(tabPanel).findByText('Track Your Progress');
+    const description = await within(tabPanel).findByText(
       'Monitor student work with real-time insights.',
     );
     await expect(title).toBeVisible();
     await expect(description).toBeVisible();
 
     // Test if the button works
-    const button = await canvas.findByText('Click Me');
+    const button = await within(tabPanel).findByText('Click me');
     await expect(button).toBeVisible();
-
-    await button.click();
   },
 };
 
@@ -231,13 +230,13 @@ export const WithCustomContent: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const tab = await canvas.findByText('Tab 1');
+    const tab = await canvas.getByRole('tab', {name: 'Tab 1'});
 
     // Check if tab is visible
     await expect(tab).toBeVisible();
 
     // Click on the tab and check if it's selected
     await tab.click();
-    await expect(tab).toHaveClass('active');
+    await expect(tab).toHaveAttribute('aria-selected');
   },
 };
