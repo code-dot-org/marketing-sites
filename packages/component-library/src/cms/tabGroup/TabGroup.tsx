@@ -14,7 +14,7 @@ export interface TabGroupTabModel extends Omit<TabModel, 'tabContent'> {
   /** Content of the Tab */
   tabContent: {
     /** Tab Image props */
-    image: Omit<ImageProps, 'decoration'> & {decoration?: 'none' | 'border'};
+    image: ImageProps;
     /** Tab CTA Button props */
     button: LinkButtonProps;
     /** Tab Title */
