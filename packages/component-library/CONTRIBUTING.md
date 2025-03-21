@@ -50,7 +50,7 @@ Here’s a quick guide to the contribution process:
    and [Best Practices](./README.md/#best-practices).
 3. Add a Storybook story under `stories/`.
 4. Write unit tests using Jest + RTL + @testing-library/user-event.
-5. Ensure accessibility using `axe` and screen readers.
+5. Ensure accessibility using `axe` and screen readers. (see [README Accessibility Section](./README.md#-accessibility))
 6. Submit a PR following the [Contribution Roadmap](#-contribution-roadmap).
 
 ## 🚦 Component Statuses & Production Checklist
@@ -123,7 +123,7 @@ const SomeComponent = props => {
 
 1. **Unit Tests** — Write tests using Jest + RTL + @testing-library/user-event..
 2. **Storybook Tests** — Ensure Storybook displays the component correctly.
-3. **Accessibility Tests** — Run Axe tests and verify with a screen reader.
+3. **Accessibility Tests** — Run Axe tests and verify with a screen reader. (see [README Accessibility Section](./README.md#-accessibility))
 4. **Visual Regression Tests** — Ensure the component appears correctly in all supported themes.
 
 ➡️ See the full [Testing Guide](./README.md#testing) in the README.

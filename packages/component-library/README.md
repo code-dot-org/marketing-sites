@@ -376,7 +376,7 @@ Accessibility improves usability for all users, including those with disabilitie
 Short accessibility Checklist:
 
 - ✅ Full keyboard accessibility
-- ✅ Sufficient color contrast (APCA)
+- ✅ Sufficient color contrast ([APCA](http://www.myndex.com/APCA))
 - ✅ Screen reader support
 - ✅ RTL (right-to-left) languages support
 
@@ -392,6 +392,10 @@ Complete Accessibility Checklist is following:
   the [Advanced Perceptual Contrast Algorithm](http://www.myndex.com/APCA) (APCA)
 - ✅ Site renders and behaves as expected for an RTL user
 - ✅ Styling accommodates differently-sized strings for non-English users
+
+We also use [Storybook Accessibility Addon](https://storybook.js.org/docs/writing-tests/accessibility-testing) to test
+components for most accessibility issues automatically on each build, but it's not a substitute for manual testing
+as it can't check all the possible issues. Also, RTL testing is done manually.
 
 ## Contributing
 
