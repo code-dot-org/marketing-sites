@@ -1,3 +1,6 @@
+import adminsPageTopImage from '@public/images/admins-page-top.png';
+import helpPageTopImage from '@public/images/help-page-top.png';
+import teachPageTopImage from '@public/images/teach-page-top.png';
 import {Meta, StoryObj} from '@storybook/react';
 import {within, expect} from '@storybook/test';
 
@@ -11,6 +14,21 @@ export default {
   component: TabGroup,
   parameters: {
     componentSubtitle: 'Renders a group of tabs with optional content',
+    a11y: {
+      config: {
+        rules: [
+          {
+            // Disable the color contrast rule for segmented button.
+            // SegmentedButtons component has one a11y issue, and it's related to selected button color.
+            // Explanation from Design team: Since to indicate active/selected state, means that the user has
+            // already made the decision to interact with that element, we are not worried about it.
+            // This check only starts to pass when made very dark, which causes other issues, so we’ll leave it for now.
+            id: 'color-contrast',
+            enabled: false,
+          },
+        ],
+      },
+    },
   },
 } as Meta<typeof TabGroup>;
 
@@ -23,17 +41,17 @@ const defaultButton: LinkButtonProps = {
 };
 
 const defaultImage: ImageProps = {
-  src: 'https://code.org/images/teach-page-top.png',
+  src: teachPageTopImage,
   alt: 'Teach computer science & ignite possibilities',
 };
 
 const defaultImage2: ImageProps = {
-  src: 'https://code.org/images/admins-page-top.png',
+  src: adminsPageTopImage,
   alt: 'Expand computer science in your district',
 };
 
 const defaultImage3: ImageProps = {
-  src: 'https://code.org/images/help-page-top.png',
+  src: helpPageTopImage,
   alt: 'Students learning computer science',
 };
 
