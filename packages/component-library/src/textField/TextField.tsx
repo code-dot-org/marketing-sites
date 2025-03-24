@@ -45,7 +45,7 @@ export interface TextFieldProps extends HTMLAttributes<HTMLInputElement> {
   maxLength?: number;
   /** min length of TextField */
   minLength?: number;
-  /** min length of TextField */
+  /** handle input autoComplete attribute */
   autoComplete?: string;
 }
 
