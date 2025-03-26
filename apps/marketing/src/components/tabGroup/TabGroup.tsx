@@ -68,7 +68,7 @@ const TabGroupContentful: React.FunctionComponent<TabGroupContentfulProps> = ({
     return (
       <div style={{color: 'var(--text-neutral-primary)'}}>
         <em>
-          <strong>❓ Tab Group placeholder.</strong> Please add a "Tabs" content
+          <strong>🗂️ Tab Group placeholder.</strong> Please add a "Tabs" content
           type entry in the Tab Group sidebar, save, and open the preview tab to
           see the accordions in action.
         </em>
