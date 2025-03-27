@@ -128,33 +128,6 @@ export const ImageWithShadow: Story = {
   },
 };
 
-export const WithCustomStyles: Story = {
-  ...SingleTemplate,
-  args: {
-    src: imageFile,
-    altText: 'Teacher helping student',
-    className: 'customClass',
-  },
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement);
-
-    const style = document.createElement('style');
-    style.innerHTML = `
-      figure.customClass {
-        width: 123px;
-        height: 123px;
-        outline: 2px dashed green;
-      }
-    `;
-    canvasElement.appendChild(style);
-
-    const figure = await canvas.findByRole('figure');
-    await expect(figure).toHaveClass('customClass');
-    await expect(figure).toHaveStyle('width: 123px');
-    await expect(figure).toHaveStyle('height: 123px');
-  },
-};
-
 export const ImageWithError: Story = {
   ...SingleTemplate,
   args: {
@@ -179,5 +152,32 @@ export const ImageWithError: Story = {
     // check if image is loaded
     await expect(canvas.queryByText('Image loaded')).not.toBeInTheDocument();
     await canvas.findByText('Image has error');
+  },
+};
+
+export const WithCustomStyles: Story = {
+  ...SingleTemplate,
+  args: {
+    src: imageFile,
+    altText: 'Teacher helping student',
+    className: 'customClass',
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+      figure.customClass {
+        width: 123px;
+        height: 123px;
+        outline: 2px dashed green;
+      }
+    `;
+    canvasElement.appendChild(style);
+
+    const figure = await canvas.findByRole('figure');
+    await expect(figure).toHaveClass('customClass');
+    await expect(figure).toHaveStyle('width: 123px');
+    await expect(figure).toHaveStyle('height: 123px');
   },
 };
