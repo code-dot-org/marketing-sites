@@ -6,7 +6,7 @@ import {useState} from 'react';
 import Image, {ImageProps} from '../index';
 
 export default {
-  title: 'CMS/Image',
+  title: 'DesignSystem/Image',
   component: Image,
 } as Meta;
 type Story = StoryObj<typeof Image>;
