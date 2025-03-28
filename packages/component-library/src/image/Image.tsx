@@ -1,9 +1,10 @@
 import classNames from 'classnames';
-import {CSSProperties, ImgHTMLAttributes} from 'react';
+import {ImgHTMLAttributes} from 'react';
 
 import moduleStyles from './image.module.scss';
 
-export interface ImageProps extends ImgHTMLAttributes<HTMLElement> {
+export interface ImageProps
+  extends Omit<ImgHTMLAttributes<HTMLElement>, 'width' | 'height'> {
   /** Image source */
   src: string;
   /** Image alt text */
@@ -12,18 +13,6 @@ export interface ImageProps extends ImgHTMLAttributes<HTMLElement> {
   loading?: 'eager' | 'lazy';
   /** Image decoration */
   decoration?: 'none' | 'border' | 'shadow';
-  /** Image container width. You can either pass it as a prop, or use custom className to set the needed width value.
-   * Using custom className is recommended, but we also support setting it via prop for the cases when it might be
-   * impossible to use custom className. */
-  width?: string | number;
-  /** Image container height. You can either pass it as a prop, or use custom className to set the needed height value.
-   Using custom className is recommended, but we also support setting it via prop for the cases when it might be
-   impossible to use custom className. */
-  height?: string | number;
-  /** Optional inline styles. You can either pass it as a prop, or use custom className to set the needed styles values.
-   Using custom className is recommended, but we also support setting it via prop for the cases when it might be
-   impossible to use custom className. */
-  style?: CSSProperties;
   /** Custom className */
   className?: string;
   /** Image onLoad callback */
@@ -50,44 +39,34 @@ const Image: React.FC<ImageProps> = ({
   altText = '',
   loading = 'lazy',
   decoration = 'none',
-  width,
-  height,
   style,
   className,
   onLoad,
   onError,
-  ...imgProps
-}) => {
-  // Only use inline styles if there's no way to add custom className with needed styles.
-  const containerStyles: CSSProperties = {
-    width,
-    height,
-    ...style,
-  };
-
-  return (
-    <figure
-      className={classNames(
-        moduleStyles.figureContainer,
-        {
-          [moduleStyles['figure-hasBorder']]: decoration === 'border',
-          [moduleStyles['figure-hasBoxShadow']]: decoration === 'shadow',
-        },
-        className,
-      )}
-      style={containerStyles}
-    >
-      <img
-        className={classNames(moduleStyles.image)}
-        alt={altText}
-        loading={loading}
-        src={src}
-        onLoad={onLoad}
-        onError={onError}
-        {...imgProps}
-      />
-    </figure>
-  );
-};
+  ...ImageHTMLAttributes
+}) => (
+  <figure
+    className={classNames(
+      moduleStyles.figureContainer,
+      {
+        [moduleStyles['figure-hasBorder']]: decoration === 'border',
+        [moduleStyles['figure-hasBoxShadow']]: decoration === 'shadow',
+      },
+      className,
+    )}
+    // Only use inline styles if there's no way to add custom className with needed styles.
+    style={style}
+  >
+    <img
+      className={classNames(moduleStyles.image)}
+      alt={altText}
+      loading={loading}
+      src={src}
+      onLoad={onLoad}
+      onError={onError}
+      {...ImageHTMLAttributes}
+    />
+  </figure>
+);
 
 export default Image;

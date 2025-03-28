@@ -26,11 +26,7 @@ describe('Image Component', () => {
     const classStyle = 'width: 100px;';
 
     render(
-      <Image
-        src="test.jpg"
-        altText={'This is an image'}
-        className={className}
-      />,
+      <Image src="test.jpg" altText="This is an image" className={className} />,
     );
     const imageFigure = screen.getByRole('figure');
 
@@ -45,12 +41,15 @@ describe('Image Component', () => {
   });
 
   it('applies inline width and height styles from props', () => {
+    // Only use inline styles if there's no way to add custom className with needed styles.
     render(
       <Image
         src="test.jpg"
         altText="With styles"
-        width="200px"
-        height="150px"
+        style={{
+          width: '200px',
+          height: '150px',
+        }}
       />,
     );
     const figure = screen.getByRole('figure');
