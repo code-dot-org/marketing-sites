@@ -38,7 +38,7 @@ export const LinkContentfulComponentDefinition: ComponentDefinition = {
         'External links will be opened in a new tab, while internal links will be opened in the same tab.',
       type: 'Boolean',
       defaultValue: false,
-      group: 'style',
+      group: 'content',
     },
     href: {
       displayName: 'Link URL',
@@ -50,6 +50,11 @@ export const LinkContentfulComponentDefinition: ComponentDefinition = {
       displayName: 'Link Label',
       type: 'Text',
       defaultValue: 'Link',
+      group: 'content',
+    },
+    ariaLabel: {
+      displayName: 'Aria Label',
+      type: 'Text',
       group: 'content',
     },
   },
