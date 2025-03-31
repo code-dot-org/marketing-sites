@@ -31,6 +31,17 @@ export const LinkContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
+    children: {
+      displayName: 'Link Label',
+      type: 'Text',
+      defaultValue: 'Link',
+      group: 'content',
+    },
+    href: {
+      displayName: 'Link URL',
+      type: 'Text',
+      group: 'content',
+    },
     isLinkExternal: {
       displayName:
         'Is this link external? (Does this link leave the code.org site?)',
@@ -40,18 +51,7 @@ export const LinkContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: false,
       group: 'content',
     },
-    href: {
-      displayName: 'Link URL',
-      type: 'Text',
-      group: 'content',
-    },
     removeMarginBottom: {...removeMarginBottomDefinition},
-    children: {
-      displayName: 'Link Label',
-      type: 'Text',
-      defaultValue: 'Link',
-      group: 'content',
-    },
     ariaLabel: {
       displayName: 'Aria Label',
       type: 'Text',

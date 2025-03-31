@@ -25,6 +25,7 @@ type ButtonProps = {
   isLinkExternal?: boolean;
   /** Button left icon name */
   iconLeftName?: string;
+  /** Aria label for the button */
   ariaLabel?: EntryFields.Text;
 };
 
