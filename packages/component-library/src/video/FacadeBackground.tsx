@@ -3,6 +3,7 @@ import styles from './video.module.scss';
 export interface FacadeProps {
   /** Facade poster thumbnail */
   posterThumbnail?: string;
+  /** Facade onClick */
   onClick?: () => void;
   /** Facade alt text */
   alt: string;
