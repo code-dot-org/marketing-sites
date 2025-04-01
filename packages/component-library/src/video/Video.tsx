@@ -131,14 +131,16 @@ const Video: React.FC<VideoProps> = ({
               iconStyle="solid"
             />
             <BodyTwoText>
-              <StrongText>{errorHeading || 'Video unavailable'}</StrongText>
+              <StrongText>
+                {errorHeading || 'Cookie consent required'}
+              </StrongText>
             </BodyTwoText>
             <BodyThreeText>
               {errorBody ||
-                'Please enable Functional Cookies and refresh the page to play this video.'}
+                'Please enable "Functional Cookies" and refresh the page to play this video.'}
             </BodyThreeText>
-
             <Button
+              className={moduleStyles.cookieConsentButton}
               onClick={() => {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (window as any).OneTrust.ToggleInfoDisplay();
