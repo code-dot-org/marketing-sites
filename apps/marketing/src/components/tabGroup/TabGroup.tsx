@@ -7,7 +7,7 @@ import TabGroup, {
 } from '@code-dot-org/component-library/cms/tabGroup';
 
 import {externalLinkIconProps} from '@/components/common/constants';
-import {ImageAssetEntry, LinkEntry} from '@/components/common/entries';
+import {ImageAssetEntry, LinkEntry} from '@/contentful/types/entries';
 
 type TabGroupContentfulProps = {
   tabs?: (BaseEntry & {
