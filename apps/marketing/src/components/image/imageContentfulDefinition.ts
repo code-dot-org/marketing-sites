@@ -20,12 +20,18 @@ export const ImageContentfulComponentDefinition: ComponentDefinition = {
       type: 'Media',
       defaultValue: undefined,
       group: 'content',
+      validations: {
+        bindingSourceType: ['asset', 'manual'],
+      },
     },
     altText: {
       displayName: 'Alt text',
       type: 'Text',
       defaultValue: '',
       group: 'content',
+      validations: {
+        bindingSourceType: ['asset', 'manual', 'entry'],
+      },
     },
     decoration: {
       displayName: 'Decoration',
