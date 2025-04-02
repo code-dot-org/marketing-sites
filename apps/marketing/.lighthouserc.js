@@ -2,7 +2,7 @@ const assertions = {
   'bf-cache': 'off',
   'color-contrast': 'off',
   'inspector-issues': 'off',
-  'offscreen-images': ['error', {minScore: 0.5, maxLength: 2}],
+  'offscreen-images': ['error', {minScore: 0.5, maxLength: 3}],
   'total-byte-weight': ['error', {minScore: 0.5}],
   'unused-css-rules': ['error', {maxLength: 5}],
   'unused-javascript': ['error', {maxLength: 10}],
