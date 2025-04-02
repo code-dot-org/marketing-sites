@@ -137,9 +137,9 @@ export const VideoCookieBlocked: Story = {
     await expect(playButton).toBeVisible();
     await userEvent.click(playButton);
 
-    await expect(
+    expect(
       canvas.getByText(
-        'Please enable Functional Cookies and refresh the page to play this video.',
+        'Please enable "Functional Cookies" and refresh the page to play this video.',
       ),
     );
   },

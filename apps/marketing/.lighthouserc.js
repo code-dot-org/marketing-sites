@@ -9,7 +9,7 @@ const assertions = {
   'uses-text-compression': ['error', {maxLength: 5}],
   'third-party-cookies': 'off',
   'uses-rel-preconnect': 'off',
-    'link-text': 'off', // re-enable after CMS-497
+  'link-text': 'off', // re-enable after CMS-497
 };
 
 if (process.env.STAGE !== 'production') {
