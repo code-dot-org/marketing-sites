@@ -3,6 +3,7 @@ import '@/contentful/register-custom-components';
 
 import {detachExperienceStyles} from '@contentful/experiences-sdk-react';
 import {Metadata} from 'next';
+import {draftMode} from 'next/headers';
 
 import FontLoader from '@code-dot-org/fonts/FontLoader';
 
@@ -11,7 +12,7 @@ import {getExperience} from '@/contentful/get-experience';
 import {getSeoMetadata} from '@/metadata/seo';
 import {getPageHeading} from '@/selectors/contentful/getExperienceEntryFields';
 
-export const dynamic = 'force-static'; // Ensure marketing pages are fully static with ISR and not SSR
+export const dynamic = 'force-static'; // Ensure ISR is enabled
 export const revalidate = 600; // Cache for five minutes until on-demand revalidation works
 
 type ExperiencePageProps = {
@@ -19,11 +20,18 @@ type ExperiencePageProps = {
   searchParams: Promise<{[key: string]: string | string[] | undefined}>;
 };
 
-async function getPageProps({params}: ExperiencePageProps) {
+async function getPageProps({params, searchParams}: ExperiencePageProps) {
   const {locale = 'en-US', slug = 'home-page'} = (await params) || {};
+  const isDraftModeEnabled = (await draftMode()).isEnabled;
 
   return {
-    experienceResult: await getExperience(slug, locale),
+    experienceResult: await getExperience(
+      slug,
+      locale,
+      isDraftModeEnabled
+        ? (await searchParams).expEditorMode === 'true'
+        : false,
+    ),
     locale,
     slug,
   };
