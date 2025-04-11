@@ -200,6 +200,41 @@ export const WithWideText: Story = {
   },
 };
 
+export const WithAnnouncementBanner: Story = {
+  args: {
+    heading: 'Announcement Banner Example',
+    subHeading: 'This hero has an announcement banner',
+    description:
+      'The announcement banner should be clearly visible and distinct from the hero content.',
+    announcementBannerProps: {
+      text: 'Important Announcement: New features released!',
+      icon: {
+        iconName: 'info-circle',
+      },
+      link: {
+        text: 'Learn more',
+        href: '#',
+      },
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // Assert that the banner text is visible
+    await expect(
+      canvas.getByText('Important Announcement: New features released!'),
+    ).toBeInTheDocument();
+
+    // Assert that the link is rendered and points to the correct href
+    const link = canvas.getByRole('link', {name: 'Learn more'});
+    await expect(link).toBeInTheDocument();
+    await expect(link).toHaveAttribute('href', '#');
+
+    // Optionally, verify the icon wrapper exists if it's styled or has an accessible role
+    // e.g., you could check for an element with a title or aria-hidden SVG if needed
+  },
+};
+
 export const WithCustomStyles: Story = {
   args: {
     heading: 'Styled via className',

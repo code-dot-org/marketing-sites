@@ -20,6 +20,20 @@ $mobileBreakpoint: 970px;
   }
 }
 
+div.heroBannerAnnouncementBanner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  background-color: var(--background-neutral-tertiary);
+  color: var(--text-neutral-primary);
+
+  i {
+    align-self: center;
+  }
+}
+
 .heroBannerContainer {
   display: flex;
   max-width: 60rem;
