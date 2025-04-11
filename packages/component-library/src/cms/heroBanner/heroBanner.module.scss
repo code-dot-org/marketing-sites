@@ -26,8 +26,13 @@ div.heroBannerAnnouncementBanner {
   align-items: center;
   gap: 1rem;
 
-  background-color: var(--background-neutral-tertiary);
+  border-radius: 0;
+  background-color: var(--background-neutral-secondary);
   color: var(--text-neutral-primary);
+
+  > div {
+    justify-content: center;
+  }
 
   i {
     align-self: center;

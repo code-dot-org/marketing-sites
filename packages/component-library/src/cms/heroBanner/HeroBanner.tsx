@@ -105,6 +105,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
   >
     {announcementBannerProps && (
       <Alert
+        data-theme={HTMLAttributes['data-theme'] === 'Dark' ? 'Light' : 'Dark'}
         className={moduleStyles.heroBannerAnnouncementBanner}
         text={announcementBannerProps.text}
         icon={announcementBannerProps.icon}
