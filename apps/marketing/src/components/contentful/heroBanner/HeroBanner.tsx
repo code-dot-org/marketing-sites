@@ -70,12 +70,18 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
       subHeading={subHeading}
       description={description}
       imageProps={sectionImage ? {src: sectionImage} : undefined}
-      buttonProps={{
-        text: buttonLabel,
-        href: buttonUrl,
-        ariaLabel: buttonAriaLabel,
-        iconRight: buttonIsLinkExternal ? externalLinkIconProps : undefined,
-      }}
+      buttonProps={
+        buttonUrl && buttonLabel
+          ? {
+              text: buttonLabel,
+              href: buttonUrl,
+              ariaLabel: buttonAriaLabel,
+              iconRight: buttonIsLinkExternal
+                ? externalLinkIconProps
+                : undefined,
+            }
+          : undefined
+      }
       partner={
         partnerLogo && partnerCallout
           ? {title: partnerCallout, logo: {src: partnerLogo}}
