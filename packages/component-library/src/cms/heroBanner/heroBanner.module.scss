@@ -18,6 +18,12 @@ $mobileBreakpoint: 970px;
       flex: 1;
     }
   }
+
+  .heroBannerTextContainer {
+    a {
+      margin: 1.875rem 0 0;
+    }
+  }
 }
 
 .heroBannerContainer {
@@ -52,10 +58,6 @@ $mobileBreakpoint: 970px;
 
   h1 {
     margin-bottom: 1.5rem;
-  }
-
-  a {
-    margin: 1.875rem 0 0;
   }
 }
 
