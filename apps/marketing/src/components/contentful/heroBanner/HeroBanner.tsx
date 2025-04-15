@@ -23,7 +23,14 @@ type HeroBannerProps = {
   description?: string;
   /** Section Image URL */
   sectionImage?: string;
-  // sectionVideo?: ExperienceAsset;
+  /** Section Video URL */
+  sectionVideoTitle?: string;
+  /** Section Video Youtube ID */
+  sectionVideoYouTubeId?: string;
+  /** Section Video Fallback url */
+  sectionVideoFallback?: string;
+  /** Whether to show the section video captions */
+  sectionVideoShowCaption?: boolean;
   /** HeroBanner button label */
   buttonLabel?: string;
   /** HeroBanner button URL */
@@ -49,7 +56,10 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
   subHeading,
   description,
   sectionImage,
-  // sectionVideo,
+  sectionVideoTitle,
+  sectionVideoYouTubeId,
+  sectionVideoFallback,
+  sectionVideoShowCaption,
   buttonLabel,
   buttonUrl,
   buttonIsLinkExternal,
@@ -87,7 +97,16 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
           : undefined
       }
       backgroundImageUrl={backgroundImage}
-      // videoProps={videoProps}
+      videoProps={
+        sectionVideoYouTubeId || sectionVideoFallback
+          ? {
+              videoTitle: sectionVideoTitle,
+              youTubeId: sectionVideoYouTubeId,
+              videoFallback: sectionVideoFallback,
+              showCaption: sectionVideoShowCaption,
+            }
+          : undefined
+      }
       VideoComponent={Video}
       removeBackground={removeBackground}
     />
