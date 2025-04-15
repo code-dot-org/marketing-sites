@@ -97,12 +97,12 @@ $mobileBreakpoint: 970px;
   align-self: stretch;
 
   figure {
-    display: flex;
     max-height: 28.125rem;
-    justify-content: center;
-    align-items: center;
     flex: 1;
     border-radius: variables.$regular-border-radius;
-    background: var(--background-neutral-primary);
+
+    img {
+      background: var(--background-neutral-primary);
+    }
   }
 }
