@@ -210,6 +210,7 @@ export const WithAnnouncementBanner: Story = {
       text: 'Important Announcement: New features released!',
       icon: {
         iconName: 'info-circle',
+        title: 'info icon',
       },
       link: {
         text: 'Learn more',
@@ -230,8 +231,9 @@ export const WithAnnouncementBanner: Story = {
     await expect(link).toBeInTheDocument();
     await expect(link).toHaveAttribute('href', '#');
 
-    // Optionally, verify the icon wrapper exists if it's styled or has an accessible role
-    // e.g., you could check for an element with a title or aria-hidden SVG if needed
+    // Assert that the icon is rendered using the title
+    const icon = canvas.getByTitle('info icon');
+    await expect(icon).toBeInTheDocument();
   },
 };
 
