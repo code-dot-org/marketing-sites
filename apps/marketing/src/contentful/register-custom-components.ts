@@ -42,6 +42,9 @@ import Overline, {
 import Paragraph, {
   ParagraphContentfulComponentDefinition,
 } from '@/components/paragraph';
+import RichText, {
+  RichTextContentfulComponentDefinition,
+} from '@/components/richText';
 import Section, {
   SectionContentfulComponentDefinition,
 } from '@/components/section';
@@ -133,6 +136,10 @@ defineComponents(
     {
       component: Paragraph,
       definition: ParagraphContentfulComponentDefinition,
+    },
+    {
+      component: RichText,
+      definition: RichTextContentfulComponentDefinition,
     },
     {
       component: Section,
