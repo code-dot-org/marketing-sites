@@ -39,6 +39,14 @@ export const HeroBannerContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
+    announcementBannerIconName: {
+      displayName: 'Announcement Banner Icon Name',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Font Awesome icon name. This will be used in the announcement banner.',
+      defaultValue: '',
+    },
     removeBackground: {
       displayName: 'Remove Background?',
       type: 'Boolean',
@@ -71,12 +79,32 @@ export const HeroBannerContentfulComponentDefinition: ComponentDefinition = {
         bindingSourceType: ['entry', 'manual'],
       },
     },
+    announcementBannerText: {
+      displayName: 'Announcement Banner Text',
+      type: 'Text',
+      group: 'content',
+      description:
+        'This is the text that will be displayed in the announcement banner.',
+      validations: {
+        bindingSourceType: ['entry', 'manual'],
+      },
+    },
+    announcementBannerLink: {
+      displayName: 'Announcement Banner Link',
+      type: 'Link',
+      group: 'content',
+      description:
+        'This is the link that will be used in the announcement banner.',
+      validations: {
+        bindingSourceType: ['entry'],
+      },
+    },
     sectionImage: {
       displayName: 'Section Image',
       type: 'Media',
       group: 'content',
       validations: {
-        bindingSourceType: ['asset'],
+        bindingSourceType: ['entry', 'asset'],
         required: true,
       },
     },
@@ -109,14 +137,6 @@ export const HeroBannerContentfulComponentDefinition: ComponentDefinition = {
       description:
         'Check this to show a caption (video title) under the video player.',
     },
-    // sectionVideo: {
-    //   displayName: 'Section Video',
-    //   type: 'Media',
-    //   group: 'content',
-    //   validations: {
-    //     bindingSourceType: ['asset'],
-    //   },
-    // },
     buttonLabel: {
       displayName: 'Button Label',
       type: 'Text',

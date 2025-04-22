@@ -5,6 +5,7 @@ import {Theme} from '@code-dot-org/component-library/common/contexts';
 
 import {externalLinkIconProps} from '@/components/common/constants';
 import Video from '@/components/video';
+import {LinkEntry} from '@/types/contentful/entries/Link';
 
 type HeroBannerProps = {
   /** HeroBanner content mode (theme) value */
@@ -21,6 +22,12 @@ type HeroBannerProps = {
   subHeading?: string;
   /** HeroBanner description */
   description?: string;
+  /** HeroBanner announcement banner icon name */
+  announcementBannerIconName?: string;
+  /** HeroBanner announcement banner text */
+  announcementBannerText?: string;
+  /** HeroBanner announcement banner link  entry*/
+  announcementBannerLink?: LinkEntry;
   /** Section Image URL */
   sectionImage?: string;
   /** Section Video URL */
@@ -51,10 +58,13 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
   // Style Props
   contentMode,
   imageSize,
+  announcementBannerIconName,
   // Content Props
   heading,
   subHeading,
   description,
+  announcementBannerText = '',
+  announcementBannerLink,
   sectionImage,
   sectionVideoTitle,
   sectionVideoYouTubeId,
@@ -78,6 +88,25 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
       heading={heading}
       subHeading={subHeading}
       description={description}
+      announcementBannerProps={
+        announcementBannerText
+          ? {
+              icon: announcementBannerIconName
+                ? {iconName: announcementBannerIconName}
+                : undefined,
+              text: announcementBannerText,
+              link: announcementBannerLink
+                ? {
+                    text: announcementBannerLink.fields.label,
+                    'aria-label': announcementBannerLink.fields.ariaLabel,
+                    href: announcementBannerLink.fields.primaryTarget,
+                    external:
+                      announcementBannerLink.fields.isThisAnExternalLink,
+                  }
+                : undefined,
+            }
+          : undefined
+      }
       imageProps={sectionImage ? {src: sectionImage} : undefined}
       buttonProps={
         buttonUrl && buttonLabel
