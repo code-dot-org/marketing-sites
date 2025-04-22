@@ -39,6 +39,20 @@ export const HeroBannerContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
+    removeBackground: {
+      displayName: 'Remove Background?',
+      type: 'Boolean',
+      defaultValue: false,
+      group: 'style',
+    },
+    sectionVideoShowCaption: {
+      displayName: 'Show video caption',
+      type: 'Boolean',
+      defaultValue: true,
+      group: 'style',
+      description:
+        'Check this to show a caption (video title) under the video player.',
+    },
     announcementBannerIconName: {
       displayName: 'Announcement Banner Icon Name',
       type: 'Text',
@@ -46,12 +60,6 @@ export const HeroBannerContentfulComponentDefinition: ComponentDefinition = {
       description:
         'Font Awesome icon name. This will be used in the announcement banner.',
       defaultValue: '',
-    },
-    removeBackground: {
-      displayName: 'Remove Background?',
-      type: 'Boolean',
-      defaultValue: false,
-      group: 'style',
     },
     // Content Props:
     heading: {
@@ -77,26 +85,6 @@ export const HeroBannerContentfulComponentDefinition: ComponentDefinition = {
       group: 'content',
       validations: {
         bindingSourceType: ['entry', 'manual'],
-      },
-    },
-    announcementBannerText: {
-      displayName: 'Announcement Banner Text',
-      type: 'Text',
-      group: 'content',
-      description:
-        'This is the text that will be displayed in the announcement banner.',
-      validations: {
-        bindingSourceType: ['entry', 'manual'],
-      },
-    },
-    announcementBannerLink: {
-      displayName: 'Announcement Banner Link',
-      type: 'Link',
-      group: 'content',
-      description:
-        'This is the link that will be used in the announcement banner.',
-      validations: {
-        bindingSourceType: ['entry'],
       },
     },
     sectionImage: {
@@ -128,14 +116,6 @@ export const HeroBannerContentfulComponentDefinition: ComponentDefinition = {
       group: 'content',
       description:
         'This is the URL of the video that will be used in place of the YouTube video if YouTube is blocked.',
-    },
-    sectionVideoShowCaption: {
-      displayName: 'Show video caption',
-      type: 'Boolean',
-      defaultValue: true,
-      group: 'style',
-      description:
-        'Check this to show a caption (video title) under the video player.',
     },
     buttonLink: {
       displayName: 'Button Link',
@@ -169,6 +149,26 @@ export const HeroBannerContentfulComponentDefinition: ComponentDefinition = {
       group: 'content',
       validations: {
         bindingSourceType: ['asset'],
+      },
+    },
+    announcementBannerText: {
+      displayName: 'Announcement Banner Text',
+      type: 'Text',
+      group: 'content',
+      description:
+        'This is the text that will be displayed in the announcement banner.',
+      validations: {
+        bindingSourceType: ['entry', 'manual'],
+      },
+    },
+    announcementBannerLink: {
+      displayName: 'Announcement Banner Link',
+      type: 'Link',
+      group: 'content',
+      description:
+        'This is the link that will be used in the announcement banner.',
+      validations: {
+        bindingSourceType: ['entry'],
       },
     },
   },

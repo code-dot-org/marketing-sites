@@ -22,12 +22,6 @@ type HeroBannerProps = {
   subHeading?: string;
   /** HeroBanner description */
   description?: string;
-  /** HeroBanner announcement banner icon name */
-  announcementBannerIconName?: string;
-  /** HeroBanner announcement banner text */
-  announcementBannerText?: string;
-  /** HeroBanner announcement banner link  entry*/
-  announcementBannerLink?: LinkEntry;
   /** Section Image URL */
   sectionImage?: string;
   /** Section Video URL */
@@ -46,6 +40,12 @@ type HeroBannerProps = {
   partnerCallout?: string;
   /** HeroBanner background image URL */
   backgroundImage?: string;
+  /** HeroBanner announcement banner icon name */
+  announcementBannerIconName?: string;
+  /** HeroBanner announcement banner text */
+  announcementBannerText?: string;
+  /** HeroBanner announcement banner link  entry*/
+  announcementBannerLink?: LinkEntry;
 };
 
 const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
