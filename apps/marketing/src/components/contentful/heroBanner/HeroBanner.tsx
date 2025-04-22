@@ -38,14 +38,8 @@ type HeroBannerProps = {
   sectionVideoFallback?: string;
   /** Whether to show the section video captions */
   sectionVideoShowCaption?: boolean;
-  /** HeroBanner button label */
-  buttonLabel?: string;
-  /** HeroBanner button URL */
-  buttonUrl?: string;
-  /** HeroBanner button is external link */
-  buttonIsLinkExternal?: boolean;
-  /** HeroBanner button aria label */
-  buttonAriaLabel?: string;
+  /** Hero Banner Button Link Entry **/
+  buttonLink?: LinkEntry;
   /** HeroBanner partner image URL */
   partnerLogo?: string;
   /** HeroBanner partner callout (title) */
@@ -70,10 +64,7 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
   sectionVideoYouTubeId,
   sectionVideoFallback,
   sectionVideoShowCaption,
-  buttonLabel,
-  buttonUrl,
-  buttonIsLinkExternal,
-  buttonAriaLabel,
+  buttonLink,
   partnerLogo,
   partnerCallout,
   backgroundImage,
@@ -109,12 +100,12 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
       }
       imageProps={sectionImage ? {src: sectionImage} : undefined}
       buttonProps={
-        buttonUrl && buttonLabel
+        buttonLink
           ? {
-              text: buttonLabel,
-              href: buttonUrl,
-              ariaLabel: buttonAriaLabel,
-              iconRight: buttonIsLinkExternal
+              text: buttonLink.fields.label,
+              href: buttonLink.fields.primaryTarget,
+              ariaLabel: buttonLink.fields.ariaLabel,
+              iconRight: buttonLink.fields.primaryTarget
                 ? externalLinkIconProps
                 : undefined,
             }

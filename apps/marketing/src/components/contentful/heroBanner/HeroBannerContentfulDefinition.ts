@@ -137,35 +137,15 @@ export const HeroBannerContentfulComponentDefinition: ComponentDefinition = {
       description:
         'Check this to show a caption (video title) under the video player.',
     },
-    buttonLabel: {
-      displayName: 'Button Label',
-      type: 'Text',
+    buttonLink: {
+      displayName: 'Button Link',
+      type: 'Link',
       group: 'content',
-      validations: {
-        bindingSourceType: ['entry'],
-      },
-    },
-    buttonUrl: {
-      displayName: 'Button Link URL',
-      type: 'Text',
-      group: 'content',
-      validations: {
-        bindingSourceType: ['entry'],
-      },
-    },
-    buttonIsLinkExternal: {
-      displayName:
-        'Is this link external? (Does this link leave the code.org site?)',
       description:
-        'External links will be opened in a new tab, while internal links will be opened in the same tab.',
-      type: 'Boolean',
-      defaultValue: false,
-      group: 'content',
-    },
-    buttonAriaLabel: {
-      displayName: 'Button Aria Label',
-      type: 'Text',
-      group: 'content',
+        'This is the link that will be used in the button. This should be a link entry.',
+      validations: {
+        bindingSourceType: ['entry'],
+      },
     },
     partnerLogo: {
       displayName: 'Partner Logo',
