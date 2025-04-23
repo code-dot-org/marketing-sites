@@ -105,7 +105,7 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
               text: buttonLink.fields.label,
               href: buttonLink.fields.primaryTarget,
               ariaLabel: buttonLink.fields.ariaLabel,
-              iconRight: buttonLink.fields.primaryTarget
+              iconRight: buttonLink.fields.isThisAnExternalLink
                 ? externalLinkIconProps
                 : undefined,
             }
