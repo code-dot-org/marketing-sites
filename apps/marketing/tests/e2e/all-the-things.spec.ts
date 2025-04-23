@@ -4,6 +4,7 @@ import {expect, Locator} from '@playwright/test';
 import {EXPECTED_LOCALIZATION_STRINGS} from './config/i18n';
 import {test} from './fixtures/base';
 import {AllTheThingsPage} from './pom/all-the-things';
+import {MarketingPage} from './pom/marketing';
 
 test.describe('All the things UI e2e test', () => {
   test.describe('a11y', () => {
@@ -24,6 +25,57 @@ test.describe('All the things UI e2e test', () => {
 
         expect(accessibilityScanResults.violations.length).toEqual(1);
       }
+    });
+  });
+
+  test.describe('locale-less redirect', () => {
+    test('should redirect from localeless paths to english localized paths when no language cookie is set', async ({
+      page,
+    }) => {
+      const allTheThingsPage = new MarketingPage(page);
+      await allTheThingsPage.goto('/all-the-things');
+
+      await page.waitForURL('**/en-US/all-the-things');
+    });
+
+    test('should redirect from localeless paths to localized paths using the language cookie', async ({
+      page,
+      context,
+    }) => {
+      const allTheThingsPage = new MarketingPage(page);
+
+      await context.addCookies([
+        {
+          name: 'language_',
+          path: '/',
+          domain: `.${allTheThingsPage.getBaseDomain()}`,
+          value: 'zh-CN',
+        },
+      ]);
+
+      await allTheThingsPage.goto('/all-the-things');
+
+      await page.waitForURL('**/zh-CN/all-the-things');
+    });
+
+    test('should redirect from localeless paths to localized english when language cookie is invalid', async ({
+      page,
+      context,
+    }) => {
+      const allTheThingsPage = new MarketingPage(page);
+
+      await context.addCookies([
+        {
+          name: 'language_',
+          path: '/',
+          domain: `.${allTheThingsPage.getBaseDomain()}`,
+          value: 'invalid',
+        },
+      ]);
+
+      await allTheThingsPage.goto('/all-the-things');
+
+      await page.waitForURL('**/en-US/all-the-things');
     });
   });
 
