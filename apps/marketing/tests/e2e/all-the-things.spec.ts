@@ -41,7 +41,12 @@ test.describe('All the things UI e2e test', () => {
     test('should redirect from localeless paths to localized paths using the language cookie', async ({
       page,
       context,
+      browserName,
     }) => {
+      test.skip(
+        browserName !== 'chromium',
+        'This test only needs to run once on Chromium',
+      );
       const allTheThingsPage = new MarketingPage(page);
 
       await context.addCookies([
@@ -60,8 +65,13 @@ test.describe('All the things UI e2e test', () => {
 
     test('should redirect from localeless paths to localized english when language cookie is invalid', async ({
       page,
+      browserName,
       context,
     }) => {
+      test.skip(
+        browserName !== 'chromium',
+        'This test only needs to run once on Chromium',
+      );
       const allTheThingsPage = new MarketingPage(page);
 
       await context.addCookies([
