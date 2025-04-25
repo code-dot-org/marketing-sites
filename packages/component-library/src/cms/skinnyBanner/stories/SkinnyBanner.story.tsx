@@ -122,20 +122,6 @@ export const WithBackgroundImage: Story = {
   },
 };
 
-export const WithoutBackground: Story = {
-  args: {
-    heading: 'No Background Example',
-    description: 'This skinny banner has no background color or image.',
-    removeBackground: true,
-  },
-  play: async ({canvasElement}) => {
-    const canvas = within(canvasElement);
-    const banner = canvas.getByRole('banner');
-    const styles = window.getComputedStyle(banner);
-    await expect(styles.backgroundImage).toBe('none');
-  },
-};
-
 export const FullExample: Story = {
   args: {
     heading: 'Full Example: Partner, Image, Button, and Custom Background',

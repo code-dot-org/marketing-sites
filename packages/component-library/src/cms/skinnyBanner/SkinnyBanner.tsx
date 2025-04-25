@@ -9,28 +9,26 @@ import {Heading5, BodyTwoText} from '@/typography';
 import moduleStyles from './skinnyBanner.module.scss';
 
 export interface SkinnyBannerProps extends HTMLAttributes<HTMLElement> {
-  /** HeroBanner heading */
+  /** SkinnyBanner heading */
   heading: string | ReactNode;
-  /** HeroBanner description */
+  /** SkinnyBanner description */
   description?: string | ReactNode;
-  /** HeroBanner image */
+  /** SkinnyBanner image */
   imageProps?: ImageProps;
-  /** HeroBanner link */
+  /** SkinnyBanner link */
   buttonProps?: LinkButtonProps;
-  /** HeroBanner custom background color.
+  /** SkinnyBanner custom background color.
    *  backgroundImageUrl is higher priority then backgroundColor. */
   backgroundColor?: string;
-  /** HeroBanner custom background url */
+  /** SkinnyBanner custom background url */
   backgroundImageUrl?: string;
-  /** HeroBanner theme value.
-   *  If you're using backgroundImageUrl - you should make sure you set correct theme value to HeroBanner.
+  /** SkinnyBanner theme value.
+   *  If you're using backgroundImageUrl - you should make sure you set correct theme value to SkinnyBanner.
    *  */
   'data-theme'?: Theme;
-  /** Whether to show the background color */
-  removeBackground?: boolean;
-  /** HeroBanner partner prop */
+  /** SkinnyBanner partner prop */
   partner?: {title: string; logo: ImageProps};
-  /** HeroBanner custom className  */
+  /** SkinnyBanner custom className  */
   className?: string;
 }
 
@@ -39,13 +37,13 @@ export interface SkinnyBannerProps extends HTMLAttributes<HTMLElement> {
  *  * (✔) implementation of component approved by design team;
  *  * (✔) has storybook, covered with stories and documentation;
  *  * (✔) has tests: test every prop, every state and every interaction that's js related;
- *  * (see ./__tests__/HeroBanner.test.tsx)
+ *  * (see ./__tests__/SkinnyBanner.test.tsx)
  *  * (✔) passes accessibility checks;
  *
  * ### Status: ```Ready for dev```
  *
  * Design System: SkinnyBanner Component.
- * Renders a Hero Banner/Section which serves as an opening section of a page. There should only be one Hero Banner
+ * Renders a Skinny Banner/Section which serves as an opening section of a page. There should only be one Skinny Banner
  * per page at the very top of the page under the header navigation.
  */
 const SkinnyBanner: React.FC<SkinnyBannerProps> = ({
@@ -56,7 +54,6 @@ const SkinnyBanner: React.FC<SkinnyBannerProps> = ({
   buttonProps,
   backgroundColor,
   backgroundImageUrl,
-  removeBackground = false,
   className,
   ...HTMLAttributes
 }) => (
@@ -73,7 +70,6 @@ const SkinnyBanner: React.FC<SkinnyBannerProps> = ({
       backgroundImage: backgroundImageUrl
         ? `url(${backgroundImageUrl})`
         : HTMLAttributes.style?.backgroundImage,
-      ...(removeBackground ? {background: 'none'} : {}),
     }}
   >
     <div className={classNames(moduleStyles.skinnyBannerContainer)}>

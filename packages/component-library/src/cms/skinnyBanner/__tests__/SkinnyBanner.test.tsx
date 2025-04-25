@@ -85,11 +85,4 @@ describe('SkinnyBanner', () => {
     const banner = screen.getByRole('banner');
     expect(banner.style.backgroundImage).toContain('background-image.jpg');
   });
-
-  it('removes background if removeBackground is true', () => {
-    render(<SkinnyBanner heading={defaultHeading} removeBackground={true} />);
-
-    const banner = screen.getByRole('banner');
-    expect(banner).toHaveStyle('background: none');
-  });
 });
