@@ -58,7 +58,6 @@ const SkinnyBanner: React.FC<SkinnyBannerProps> = ({
   ...HTMLAttributes
 }) => (
   <aside
-    role="banner"
     className={classNames(moduleStyles.skinnyBannerWrapper, className)}
     data-theme={HTMLAttributes['data-theme']}
     {...HTMLAttributes}

@@ -98,7 +98,7 @@ export const WithBackgroundColor: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const banner = canvas.getByRole('banner');
+    const banner = canvas.getByRole('complementary');
     const styles = window.getComputedStyle(banner);
     await expect(styles.backgroundColor).toBe('rgb(227, 242, 253)');
   },
@@ -114,7 +114,7 @@ export const WithBackgroundImage: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const banner = canvas.getByRole('banner');
+    const banner = canvas.getByRole('complementary');
     const styles = window.getComputedStyle(banner);
     await expect(styles.backgroundImage).toContain(
       'hero-banner-custom-bg-example.png',
@@ -169,7 +169,7 @@ export const WithCustomStyles: Story = {
 
     const style = document.createElement('style');
     style.innerHTML = `
-      div.customSkinnyBannerClass {
+      aside.customSkinnyBannerClass {
         outline: 3px dashed rgb(255, 165, 0);
         background-color: #fefbe9;
         padding: 0;
@@ -177,7 +177,7 @@ export const WithCustomStyles: Story = {
     `;
     canvasElement.appendChild(style);
 
-    const banner = await canvas.findByRole('banner');
+    const banner = await canvas.findByRole('complementary');
     await expect(banner).toHaveClass('customSkinnyBannerClass');
 
     const styles = window.getComputedStyle(banner);

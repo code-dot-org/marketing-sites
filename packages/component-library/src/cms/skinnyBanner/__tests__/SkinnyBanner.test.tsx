@@ -70,7 +70,7 @@ describe('SkinnyBanner', () => {
   it('applies background color style if backgroundColor is provided', () => {
     render(<SkinnyBanner heading={defaultHeading} backgroundColor="#abcdef" />);
 
-    const banner = screen.getByRole('banner');
+    const banner = screen.getByRole('complementary');
     expect(banner).toHaveStyle('background-color: #abcdef');
   });
 
@@ -82,7 +82,7 @@ describe('SkinnyBanner', () => {
       />,
     );
 
-    const banner = screen.getByRole('banner');
+    const banner = screen.getByRole('complementary');
     expect(banner.style.backgroundImage).toContain('background-image.jpg');
   });
 });
