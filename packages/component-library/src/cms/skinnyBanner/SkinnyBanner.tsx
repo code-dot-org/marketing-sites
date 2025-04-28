@@ -4,7 +4,7 @@ import {ReactNode, HTMLAttributes} from 'react';
 import {LinkButton, LinkButtonProps} from '@/button';
 import {Theme} from '@/common/contexts';
 import Image, {ImageProps} from '@/image';
-import {Heading5, BodyTwoText} from '@/typography';
+import {Heading2, BodyTwoText} from '@/typography';
 
 import moduleStyles from './skinnyBanner.module.scss';
 
@@ -43,8 +43,8 @@ export interface SkinnyBannerProps extends HTMLAttributes<HTMLElement> {
  * ### Status: ```Ready for dev```
  *
  * Design System: SkinnyBanner Component.
- * Renders a Skinny Banner/Section which serves as an opening section of a page. There should only be one Skinny Banner
- * per page at the very top of the page under the header navigation.
+ * Renders a Skinny Banner/Section, a full-width marketing banner
+ * placed inline with content. Supports backgrounds, images, text and a CTA.
  */
 const SkinnyBanner: React.FC<SkinnyBannerProps> = ({
   heading,
@@ -74,7 +74,7 @@ const SkinnyBanner: React.FC<SkinnyBannerProps> = ({
   >
     <div className={classNames(moduleStyles.skinnyBannerContainer)}>
       <div className={moduleStyles.skinnyBannerTextContainer}>
-        <Heading5>{heading}</Heading5>
+        <Heading2 visualAppearance="heading-sm">{heading}</Heading2>
 
         {description && <BodyTwoText>{description}</BodyTwoText>}
 
@@ -97,7 +97,7 @@ const SkinnyBanner: React.FC<SkinnyBannerProps> = ({
         </div>
       )}
     </div>
-  </div>
+  </aside>
 );
 
 export default SkinnyBanner;
