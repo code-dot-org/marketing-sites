@@ -27,6 +27,14 @@ $mobileBreakpoint: 970px;
     align-items: center;
     gap: 2.5rem;
 
+    .skinnyBannerTextContainer {
+      align-items: center;
+    }
+
+    .skinnyBannerPartnerContainer {
+      justify-content: center;
+    }
+
     .skinnyBannerMediaContainer figure {
       height: unset;
     }
@@ -41,7 +49,7 @@ $mobileBreakpoint: 970px;
   flex: 2;
   width: 100%;
 
-  h5 {
+  h2 {
     margin: 0;
   }
 
