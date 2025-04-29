@@ -7,23 +7,23 @@ import {externalLinkIconProps} from '@/components/common/constants';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
 type SkinnyBannerProps = {
-  /** HeroBanner content mode (theme) value */
+  /** SkinnyBanner content mode (theme) value */
   contentMode: Theme;
-  /** HeroBanner cf styles*/
+  /** SkinnyBanner cf styles*/
   className?: string;
-  /** HeroBanner heading */
+  /** SkinnyBanner heading */
   heading: string;
-  /** HeroBanner description */
+  /** SkinnyBanner description */
   description?: string;
   /** Section Image URL */
   sectionImage?: string;
-  /** Hero Banner Button Link Entry **/
+  /** SkinnyBanner Button Link Entry **/
   buttonLink?: LinkEntry;
-  /** HeroBanner partner image URL */
+  /** SkinnyBanner partner image URL */
   partnerLogo?: string;
-  /** HeroBanner partner callout (title) */
+  /** SkinnyBanner partner callout (title) */
   partnerCallout?: string;
-  /** HeroBanner background image URL */
+  /** SkinnyBanner background image URL */
   backgroundImage?: string;
 };
 
