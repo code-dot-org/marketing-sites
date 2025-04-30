@@ -3,7 +3,7 @@ import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 export const SkinnyBannerContentfulComponentDefinition: ComponentDefinition = {
   id: 'skinnyBanner',
   name: 'Skinny Banner',
-  category: '01: Page Structure',
+  category: '04: Advanced',
   thumbnailUrl:
     'https://images.ctfassets.net/90t6bu6vlf76/6haDMlmkFkctoCi0z33L1D/33facc2c4dedef85e2a3a24368e6e043/c75b6c340ecf8b29cb58b71615c35e0a7289bb16.png',
   tooltip: {
