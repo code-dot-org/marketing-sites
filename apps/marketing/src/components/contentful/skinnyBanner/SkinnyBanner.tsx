@@ -59,8 +59,11 @@ const SkinnyBanner: React.FunctionComponent<SkinnyBannerProps> = ({
         : undefined
     }
     partner={
-      partnerLogo && partnerCallout
-        ? {title: partnerCallout, logo: {src: partnerLogo}}
+      partnerLogo
+        ? {
+            title: partnerCallout || 'In partnership with:',
+            logo: {src: partnerLogo},
+          }
         : undefined
     }
     backgroundImageUrl={backgroundImage}
