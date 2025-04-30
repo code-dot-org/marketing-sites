@@ -46,6 +46,8 @@ STAGE=<pr|test|production> yarn test:ui:local
 
 "All The Things" is a special page for the purpose of testing all UI components on a single page complete with an integration with Contentful. A special tool has been created to manage creating and updating "All The Things" tests. This page is normally updated using the source control version of the page via the Contentful management API.
 
+All The Things can be found on all environments with the sub-path `/all-the-things`.
+
 ### Forking
 
 To update the "All The Things" page, execute the fork command which will take the `production` version of the page and create a copy on the `development` environment. Use this forked copy to manually make changes to the page on the Contentful experience builder.
