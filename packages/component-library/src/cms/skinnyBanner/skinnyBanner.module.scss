@@ -74,5 +74,7 @@ $mobileBreakpoint: 970px;
 }
 
 .skinnyBannerButtonContainer {
+  display: flex;
   flex: 1;
+  justify-content: end;
 }
