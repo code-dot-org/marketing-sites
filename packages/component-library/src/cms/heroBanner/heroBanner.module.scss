@@ -45,7 +45,7 @@ div.heroBannerAnnouncementBanner {
   margin: 0 auto;
   align-items: center;
   gap: 4.375rem;
-  padding: 4rem 2rem;
+  padding: 4rem 0;
 
   @media (max-width: $mobileBreakpoint) {
     flex-direction: column;
