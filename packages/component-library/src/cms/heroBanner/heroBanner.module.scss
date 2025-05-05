@@ -98,7 +98,10 @@ div.heroBannerAnnouncementBanner {
 
     img {
       background: var(--background-neutral-primary);
-      object-fit: contain;
     }
+  }
+
+  .heroBannerMediaImage img {
+    object-fit: contain;
   }
 }
