@@ -45,18 +45,18 @@ export const SkinnyBannerContentfulComponentDefinition: ComponentDefinition = {
         bindingSourceType: ['entry', 'manual'],
       },
     },
-    sectionImage: {
+    sectionImages: {
       displayName: 'Section Image',
-      type: 'Media',
+      type: 'Array',
       group: 'content',
       validations: {
         bindingSourceType: ['entry', 'asset'],
         required: true,
       },
     },
-    buttonLink: {
+    buttonLinks: {
       displayName: 'Button Link',
-      type: 'Link',
+      type: 'Array',
       group: 'content',
       description:
         'This is the link that will be used in the button. This should be a link entry.',
