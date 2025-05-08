@@ -1,5 +1,5 @@
 export enum Brand {
-  CODE_DOT_ORG = 'code.org',
+  CODE_DOT_ORG = 'Code.org',
   HOUR_OF_CODE = 'hourofcode.com',
   CS_FOR_ALL = 'csforall.org',
 }

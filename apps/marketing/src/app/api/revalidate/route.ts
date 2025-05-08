@@ -38,8 +38,18 @@ function revalidateEntryTag(entryId: string | undefined) {
   revalidateTag(entryId);
 }
 
+function revalidateByContentType(contentType: string) {
+  switch (contentType) {
+    case 'redirect': {
+      console.log('Revalidating redirects');
+      revalidateTag('redirect');
+      break;
+    }
+  }
+}
+
 export async function POST(request: Request) {
-  const {pagePaths, entryId, secret} = await request.json();
+  const {pagePaths, entryId, secret, contentType} = await request.json();
 
   if (secret !== process.env.CONTENTFUL_REVALIDATE_TOKEN) {
     return Response.json(
@@ -54,6 +64,7 @@ export async function POST(request: Request) {
   try {
     revalidatePaths(pagePaths);
     revalidateEntryTag(entryId);
+    revalidateByContentType(contentType);
     return Response.json({revalidated: true});
   } catch (err) {
     console.error(err);
