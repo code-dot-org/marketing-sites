@@ -16,7 +16,8 @@ type SkinnyBannerProps = {
   heading: string;
   /** SkinnyBanner description */
   description?: string;
-  /** Section Images, Array of URL */
+  /** Section Images, Array of Experience entries.
+   * We always render the first image from the array */
   sectionImages?: ExperienceAsset[];
   /** SkinnyBanner Button Links, Array of Link Entries.
    *  We always render the first link from the array. **/
