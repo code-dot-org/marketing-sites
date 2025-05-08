@@ -50,12 +50,20 @@ export const SkinnyBannerContentfulComponentDefinition: ComponentDefinition = {
       type: 'Array',
       group: 'content',
       validations: {
-        bindingSourceType: ['entry', 'asset'],
+        bindingSourceType: ['entry'],
         required: true,
       },
     },
+    backgroundImage: {
+      displayName: 'Section Background Image',
+      type: 'Media',
+      group: 'content',
+      validations: {
+        bindingSourceType: ['asset'],
+      },
+    },
     buttonLinks: {
-      displayName: 'Button Link',
+      displayName: 'Primary Button',
       type: 'Array',
       group: 'content',
       description:
@@ -64,24 +72,16 @@ export const SkinnyBannerContentfulComponentDefinition: ComponentDefinition = {
         bindingSourceType: ['entry'],
       },
     },
-    partnerLogo: {
-      displayName: 'Partner Logo',
-      type: 'Media',
-      group: 'content',
-      validations: {
-        bindingSourceType: ['asset'],
-      },
-    },
     partnerCallout: {
-      displayName: 'Partner Callout',
+      displayName: 'Partner Callout Text',
       type: 'Text',
       group: 'content',
       validations: {
         bindingSourceType: ['entry', 'manual'],
       },
     },
-    backgroundImage: {
-      displayName: 'Background Image',
+    partnerLogo: {
+      displayName: 'Partner Logo',
       type: 'Media',
       group: 'content',
       validations: {
