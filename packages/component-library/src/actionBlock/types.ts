@@ -33,3 +33,11 @@ export interface ActionBlockProps extends HTMLAttributes<HTMLDivElement> {
   /** Action Block custom className */
   className?: string;
 }
+
+export interface ActionBlockWrapperProps
+  extends HTMLAttributes<HTMLDivElement> {
+  /** Action Block custom className */
+  className?: ActionBlockProps['className'];
+  /** Action Block background */
+  background?: ActionBlockProps['background'];
+}
