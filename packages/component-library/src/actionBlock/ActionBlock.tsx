@@ -9,6 +9,7 @@ import {
   StrongText,
   BodyFourText,
 } from '@/typography';
+import Video, {VideoProps} from '@/video';
 
 import {ActionBlockProps} from './types';
 
@@ -17,6 +18,15 @@ import moduleStyles from './actionBlock.module.scss';
 export const getImage = (image?: ImageProps) => {
   if (!image) return null;
   return <Image src={image.src} loading="lazy" alt="" />;
+};
+
+export const getVideo = (video?: VideoProps) => {
+  if (!video) return null;
+  return (
+    <div className={moduleStyles.videoWrapper}>
+      <Video {...video} />
+    </div>
+  );
 };
 
 export const getDetail = (details?: {label: string; description: string}) => {
@@ -104,6 +114,7 @@ export const ActionBlock: React.FC<ActionBlockProps> = ({
   title,
   description,
   image,
+  video,
   overline,
   tag,
   details,
@@ -132,7 +143,7 @@ export const ActionBlock: React.FC<ActionBlockProps> = ({
         >
           {title}
         </Heading3>
-        {image && getImage(image)}
+        {video ? getVideo(video) : image && getImage(image)}
         <BodyThreeText className={classNames(moduleStyles.description)}>
           {description}
         </BodyThreeText>

@@ -295,6 +295,34 @@ export const WithSecondaryBackground: Story = {
   },
 };
 
+export const WithVideo: Story = {
+  args: {
+    ...defaultArgs,
+    title: 'Watch Our Mission',
+    description: 'See how we’re making an impact.',
+    video: {
+      videoTitle: 'What Most Schools Don’t Teach',
+      youTubeId: 'nKIu9yen5nc',
+      showCaption: true,
+      isYouTubeCookieAllowed: true,
+    },
+  },
+  render: args => {
+    return (
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '1.5rem',
+        }}
+      >
+        <ActionBlock {...args} />
+        {/*<ActionBlock {...args} />*/}
+      </div>
+    );
+  },
+};
+
 export const ThreeAcross: Story = {
   args: {
     ...defaultArgs,
