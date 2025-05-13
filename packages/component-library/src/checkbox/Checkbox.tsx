@@ -1,5 +1,11 @@
 import classnames from 'classnames';
-import {useRef, useEffect, ChangeEvent, InputHTMLAttributes} from 'react';
+import {
+  useRef,
+  useEffect,
+  ReactNode,
+  ChangeEvent,
+  InputHTMLAttributes,
+} from 'react';
 
 import {componentSizeToBodyTextSizeMap} from '@/common/constants';
 import {ComponentSizeXSToL} from '@/common/types';
@@ -21,7 +27,7 @@ export interface CheckboxProps
   /** The value attribute specifies the value of an input element. */
   value?: string;
   /** Checkbox label */
-  label?: string;
+  label?: string | ReactNode;
   /** Is checkbox disabled */
   disabled?: boolean;
   /** Is checkbox indeterminate */
