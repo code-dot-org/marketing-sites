@@ -33,6 +33,7 @@ export const FullWidthActionBlock: React.FC<ActionBlockProps> = ({
   description,
   image,
   video,
+  VideoComponent,
   overline,
   tag,
   details,
@@ -49,7 +50,7 @@ export const FullWidthActionBlock: React.FC<ActionBlockProps> = ({
       {...HTMLAttributes}
     >
       {tag && getTag(tag)}
-      {video ? getVideo(video) : image && getImage(image)}
+      {video ? getVideo(VideoComponent, video) : image && getImage(image)}
       <div>
         {overline && (
           <OverlineTwoText className={classNames(moduleStyles.overline)}>

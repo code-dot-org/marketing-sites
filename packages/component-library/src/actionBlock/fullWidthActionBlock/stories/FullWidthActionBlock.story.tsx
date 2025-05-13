@@ -2,6 +2,8 @@ import image from '@public/images/action-block-01.png';
 import type {Meta, StoryObj} from '@storybook/react';
 import {within, expect} from '@storybook/test';
 
+import Video from '@/video';
+
 import FullWidthActionBlock, {ActionBlockProps} from '../index';
 
 export default {
@@ -158,6 +160,7 @@ export const WithVideo: Story = {
       showCaption: true,
       isYouTubeCookieAllowed: true,
     },
+    VideoComponent: Video,
   },
 };
 
