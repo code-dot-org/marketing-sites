@@ -5,6 +5,7 @@ import {Heading3, BodyThreeText, OverlineTwoText} from '@/typography';
 import {
   ActionBlockWrapper,
   getImage,
+  getVideo,
   getButtons,
   getDetail,
   getTag,
@@ -31,6 +32,7 @@ export const FullWidthActionBlock: React.FC<ActionBlockProps> = ({
   title,
   description,
   image,
+  video,
   overline,
   tag,
   details,
@@ -47,7 +49,7 @@ export const FullWidthActionBlock: React.FC<ActionBlockProps> = ({
       {...HTMLAttributes}
     >
       {tag && getTag(tag)}
-      {image && getImage(image)}
+      {video ? getVideo(video) : image && getImage(image)}
       <div>
         {overline && (
           <OverlineTwoText className={classNames(moduleStyles.overline)}>

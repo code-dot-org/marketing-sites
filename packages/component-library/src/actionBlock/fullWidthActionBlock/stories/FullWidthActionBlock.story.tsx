@@ -147,6 +147,20 @@ export const WithoutSecondaryButton: Story = {
   },
 };
 
+export const WithVideo: Story = {
+  args: {
+    ...defaultArgs,
+    title: 'Watch Our Mission',
+    description: 'See how we’re making an impact.',
+    video: {
+      videoTitle: 'What Most Schools Don’t Teach',
+      youTubeId: 'nKIu9yen5nc',
+      showCaption: true,
+      isYouTubeCookieAllowed: true,
+    },
+  },
+};
+
 export const WithSecondaryBackground: Story = {
   args: {
     ...defaultArgs,
