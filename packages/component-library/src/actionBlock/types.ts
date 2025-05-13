@@ -11,7 +11,7 @@ export interface ActionBlockProps extends HTMLAttributes<HTMLDivElement> {
   description?: string;
   /** Action Block image */
   image?: ImageProps;
-  /** Action Block video component. We use this composition here to allow using HeroBanner component for ssr pages.
+  /** Action Block video component. We use this composition here to allow using ActionBlock component for ssr pages.
    * More context can be found in this slack thread: https://codedotorg.slack.com/archives/C07UW4ED66Q/p1744640489709969
    * */
   VideoComponent?: typeof Video;
