@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import {useRef, useEffect, ChangeEvent, HTMLAttributes} from 'react';
+import {useRef, useEffect, ChangeEvent, InputHTMLAttributes} from 'react';
 
 import {componentSizeToBodyTextSizeMap} from '@/common/constants';
 import {ComponentSizeXSToL} from '@/common/types';
@@ -7,7 +7,8 @@ import Typography from '@/typography';
 
 import moduleStyles from './checkbox.module.scss';
 
-export interface CheckboxProps extends HTMLAttributes<HTMLInputElement> {
+export interface CheckboxProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** Checkbox checked state */
   checked: boolean;
   /** Checkbox onChange handler*/
