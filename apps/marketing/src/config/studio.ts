@@ -1,21 +1,19 @@
 import {getStage} from './stage';
 
-export function getStudioUrl(path = '') {
-  let hostname;
-
+export function getStudioBaseUrl() {
   switch (getStage()) {
     case 'development':
     case 'pr':
-      hostname = 'http://localhost-studio.code.org:3000';
-      break;
+      return 'http://localhost-studio.code.org:3000';
     case 'test':
-      hostname = 'https://test-studio.code.org';
-      break;
+      return 'https://test-studio.code.org';
     case 'production':
     default:
-      hostname = 'https://studio.code.org';
-      break;
+      return 'https://studio.code.org';
   }
+}
 
-  return path ? new URL(path, hostname).toString() : hostname;
+export function getStudioUrl(path = '') {
+  const studioBaseUrl = getStudioBaseUrl();
+  return path ? new URL(path, studioBaseUrl).toString() : studioBaseUrl;
 }
