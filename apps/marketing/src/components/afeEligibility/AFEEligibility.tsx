@@ -22,12 +22,12 @@ import styles from './afeEligibility.module.scss';
 const SESSION_STORAGE_KEY = 'afeEligibilityData';
 
 type AFEEligibilityData = {
-  email?: string;
-  userType?: string;
-  schoolId?: string;
-  schoolName?: string;
-  isEligible?: boolean;
-  isSignedIn?: boolean;
+  email: string;
+  userType: string;
+  schoolId: string;
+  schoolName: string;
+  isEligible: boolean;
+  isSignedIn: boolean;
 };
 
 const AFEEligibility: React.FC = () => {
@@ -48,7 +48,9 @@ const AFEEligibility: React.FC = () => {
     ...getSessionEligibilityData(),
   });
 
-  const updateEligibilityData = (newEligibilityData: AFEEligibilityData) =>
+  const updateEligibilityData = (
+    newEligibilityData: Partial<AFEEligibilityData>,
+  ) =>
     setEligibilityData(oldEligibilityData => ({
       ...oldEligibilityData,
       ...newEligibilityData,
@@ -65,7 +67,7 @@ const AFEEligibility: React.FC = () => {
     )
       .then(response => (response.ok ? response.json() : null))
       .then(accountData => {
-        const newEligibilityData: AFEEligibilityData = {
+        const newEligibilityData: Partial<AFEEligibilityData> = {
           userType: accountData?.user_type || '',
           isSignedIn: !!accountData,
         };
