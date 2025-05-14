@@ -65,7 +65,19 @@ const AFEEligibility: React.FC = () => {
         credentials: 'include',
       },
     )
-      .then(response => (response.ok ? response.json() : null))
+      .then(async response => {
+        if (response.ok) {
+          return await response.json();
+        } else if (response.status === 403) {
+          // 403 is expected when the user is not signed in
+          return null;
+        } else {
+          const error = await response.text();
+          throw new Error(
+            `User info fetch failed with HTTP ${response.status} ${response.statusText}: ${error}`,
+          );
+        }
+      })
       .then(accountData => {
         const newEligibilityData: Partial<AFEEligibilityData> = {
           userType: accountData?.user_type || '',
@@ -83,6 +95,9 @@ const AFEEligibility: React.FC = () => {
         }
 
         updateEligibilityData(newEligibilityData);
+      })
+      .catch(error => {
+        console.error(error);
       });
   }, []);
 
