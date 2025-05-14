@@ -5,10 +5,6 @@ import {useCallback, useState, useEffect} from 'react';
 
 import Button, {LinkButton} from '@code-dot-org/component-library/button';
 import {CustomDialog} from '@code-dot-org/component-library/dialog';
-import {
-  SimpleDropdown,
-  SimpleDropdownProps,
-} from '@code-dot-org/component-library/dropdown';
 import Link from '@code-dot-org/component-library/link';
 import TextField from '@code-dot-org/component-library/textField';
 import {
@@ -17,31 +13,27 @@ import {
   BodyFourText,
 } from '@code-dot-org/component-library/typography';
 
+import SchoolSearchFieldset from '@/components/schoolSearchFieldset';
 import {getStudioUrl} from '@/config/studio';
 
 import styles from './afeEligibility.module.scss';
 
+const NO_SCHOOL_ID = '-1';
 const SUPPORT_EMAIL = 'support@code.org';
 const REQUIREMENTS_ID = 'afe-requirements';
-const ZIP_REGEX = new RegExp(/(?!00000)\d{5}/);
-const NO_SCHOOL_ID = '-1';
-
-type School = {
-  nces_id: string;
-  name: string;
-};
 
 type AFESchoolCheckFromData = {
   email: string;
   zipCode: string;
   schoolId: string;
+  schoolName: string;
 };
 
 type AFESchoolCheckResult = {
   isEligible: boolean;
   email: string;
   schoolId: string;
-  schoolName?: string;
+  schoolName: string;
 };
 
 interface AFESchoolCheckProps {
@@ -55,29 +47,21 @@ const AFESchoolCheck: React.FC<AFESchoolCheckProps> = ({
 }) => {
   const {logEvent} = useStatsigClient();
   const [showIneligibleNotice, setShowIneligibleNotice] = useState(false);
-  const [areSchoolsLoading, setSchoolsLoading] = useState(false);
-  const [schoolOptions, setSchoolOptions] = useState<
-    SimpleDropdownProps['items']
-  >([]);
   const [isFormSubmitted, setFormSubmission] = useState(false);
   const [formData, setFormData] = useState<AFESchoolCheckFromData>({
     email,
     zipCode: '',
     schoolId: '',
+    schoolName: '',
   });
   const [formError, setFormError] = useState('');
 
-  const updateFormData = (newFormData: object) => {
+  const updateFormData = (newFormData: Partial<AFESchoolCheckFromData>) => {
     setFormData(oldFormData => ({
       ...oldFormData,
       ...newFormData,
     }));
     setFormError('');
-  };
-
-  const resetSchoolData = () => {
-    setSchoolOptions([]);
-    updateFormData({schoolId: ''});
   };
 
   const handleChange = (
@@ -93,11 +77,9 @@ const AFESchoolCheck: React.FC<AFESchoolCheckProps> = ({
         isEligible,
         email: formData.email,
         schoolId: formData.schoolId,
-        schoolName: schoolOptions?.find(
-          option => option.value === formData.schoolId,
-        )?.text,
+        schoolName: formData.schoolName,
       }),
-    [onComplete, formData, schoolOptions],
+    [onComplete, formData],
   );
 
   const handleEligibility = (isEligible: boolean) => {
@@ -157,49 +139,6 @@ const AFESchoolCheck: React.FC<AFESchoolCheckProps> = ({
     updateFormData({email});
   }, [email]);
 
-  useEffect(() => {
-    if (formData.zipCode && ZIP_REGEX.test(formData.zipCode)) {
-      setSchoolsLoading(true);
-
-      fetch(
-        getStudioUrl(`/dashboardapi/v1/schoolzipsearch/${formData.zipCode}`),
-      )
-        .then(async response => {
-          if (response.ok) {
-            return await response.json();
-          } else {
-            const errorText = await response.text();
-            throw new Error(
-              `Schools search failed with HTTP ${response.status} ${response.statusText}: ${errorText}`,
-            );
-          }
-        })
-        .then(schools => {
-          const schoolItems: SimpleDropdownProps['items'] = [
-            {value: NO_SCHOOL_ID, text: 'Other school not listed below'},
-          ];
-          schools.forEach(({nces_id, name}: School) =>
-            schoolItems.push({value: nces_id, text: name}),
-          );
-          setSchoolOptions(schoolItems);
-          updateFormData({schoolId: NO_SCHOOL_ID});
-        })
-        .catch(error => {
-          resetSchoolData();
-          setFormError(
-            typeof error === 'string'
-              ? error
-              : 'Something went wrong. Please try again later',
-          );
-        })
-        .finally(() => {
-          setSchoolsLoading(false);
-        });
-    } else {
-      resetSchoolData();
-    }
-  }, [formData.zipCode]);
-
   return (
     <>
       <Heading2>Am I eligible?</Heading2>
@@ -222,30 +161,12 @@ const AFESchoolCheck: React.FC<AFESchoolCheckProps> = ({
           onChange={handleChange}
         />
 
-        <TextField
+        <SchoolSearchFieldset
           required
-          inputType="text"
-          name="zipCode"
-          label="Enter your school's zip code"
+          noSchoolId={NO_SCHOOL_ID}
           className={styles.afeEligibilityFormField}
-          pattern={ZIP_REGEX.source}
-          value={formData.zipCode}
-          onChange={handleChange}
-        />
-
-        <SimpleDropdown
-          required
-          name="schoolId"
-          labelText="Select your school from the list"
-          className={styles.afeEligibilityFormField}
-          value={formData.schoolId}
-          onChange={handleChange}
-          readOnly={!schoolOptions?.length}
-          items={schoolOptions}
-          iconLeft={
-            areSchoolsLoading
-              ? {iconName: 'spinner', animationType: 'spin'}
-              : undefined
+          onSelect={(schoolId, schoolName) =>
+            updateFormData({schoolId, schoolName})
           }
         />
 
