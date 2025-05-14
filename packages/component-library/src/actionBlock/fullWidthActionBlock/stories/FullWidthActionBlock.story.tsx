@@ -157,7 +157,6 @@ export const WithVideo: Story = {
     video: {
       videoTitle: 'What Most Schools Don’t Teach',
       youTubeId: 'nKIu9yen5nc',
-      showCaption: true,
       isYouTubeCookieAllowed: true,
     },
     VideoComponent: Video,
