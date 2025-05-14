@@ -306,7 +306,7 @@ const AFEForm: React.FC<AFEFormProps> = ({
         <Divider margin="s" />
 
         <fieldset className={styles.afeEligibilityFormField}>
-          <legend className="heading-xs">
+          <legend>
             How can Amazon Future Engineer support you and your students?
           </legend>
 
