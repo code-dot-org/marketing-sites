@@ -96,8 +96,10 @@ describe('FullWidthActionBlock', () => {
     // Image should NOT be rendered when video is provided
     expect(screen.queryByAltText('')).not.toBeInTheDocument();
 
-    // Video mock should render "YouTube Player"
-    expect(screen.getByText('YouTube Player')).toBeInTheDocument();
+    // Video should be rendered when provided
+    expect(
+      screen.getByLabelText('Play video My Test Video'),
+    ).toBeInTheDocument();
   });
 
   it('shows fallback message if VideoComponent is missing', () => {
