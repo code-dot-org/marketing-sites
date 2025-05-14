@@ -16,7 +16,6 @@ import Link from '@code-dot-org/component-library/link';
 import TextField from '@code-dot-org/component-library/textField';
 import {
   Heading2,
-  Heading3,
   BodyThreeText,
   BodyFourText,
 } from '@code-dot-org/component-library/typography';
@@ -248,7 +247,7 @@ const AFEForm: React.FC<AFEFormProps> = ({
           </Link>
         </BodyThreeText>
 
-        <div className={styles.afeEligibilityFormGrid}>
+        <fieldset className={styles.afeEligibilityFormGrid}>
           <TextField
             required
             inputType="text"
@@ -302,14 +301,14 @@ const AFEForm: React.FC<AFEFormProps> = ({
               });
             }}
           />
-        </div>
+        </fieldset>
 
         <Divider margin="s" />
 
-        <aside className={styles.afeEligibilityFormField}>
-          <Heading3 visualAppearance="heading-xs">
+        <fieldset className={styles.afeEligibilityFormField}>
+          <legend className="heading-xs">
             How can Amazon Future Engineer support you and your students?
-          </Heading3>
+          </legend>
 
           <Checkbox
             size="s"
@@ -341,11 +340,11 @@ const AFEForm: React.FC<AFEFormProps> = ({
             checked={formData.consentCSTA}
             onChange={handleCheckboxChange}
           />
-        </aside>
+        </fieldset>
 
         <Divider margin="s" />
 
-        <aside className={styles.afeEligibilityFormField}>
+        <fieldset className={styles.afeEligibilityFormField}>
           <Checkbox
             required
             size="s"
@@ -369,7 +368,7 @@ const AFEForm: React.FC<AFEFormProps> = ({
             checked={formData.consentAFE}
             onChange={handleCheckboxChange}
           />
-        </aside>
+        </fieldset>
 
         <BodyFourText className={styles.afeEligibilityInfoText}>
           By continuing, you'll get emails from Amazon Future Engineer to claim
