@@ -205,7 +205,7 @@ const AFEForm: React.FC<AFEFormProps> = ({
 
   useEffect(() => {
     updateFormData({schoolId, schoolName});
-  }, [schoolId]);
+  }, [schoolId, schoolName]);
 
   return (
     <>
