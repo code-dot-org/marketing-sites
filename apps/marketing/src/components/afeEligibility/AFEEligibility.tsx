@@ -121,69 +121,69 @@ const AFEEligibility: React.FC = () => {
         <LinkButton href={getStudioUrl('/users/sign_out')} text="Sign out" />
       </>
     );
-  } else {
-    return (
-      <div className={styles.afeEligibility}>
-        <aside className={styles.afeEligibilityFormContainer}>
-          {eligibilityData.isEligible &&
-          eligibilityData.email &&
-          eligibilityData.schoolId &&
-          eligibilityData.schoolName ? (
-            <AFEForm
-              email={eligibilityData.email}
-              schoolId={eligibilityData.schoolId}
-              schoolName={eligibilityData.schoolName}
-              isSignedIn={eligibilityData.isSignedIn}
-              onEligibilityReset={() =>
-                updateEligibilityData({isEligible: false})
-              }
-            />
-          ) : (
-            <AFESchoolCheck
-              email={eligibilityData.email}
-              onComplete={updateEligibilityData}
-            />
-          )}
-        </aside>
-
-        <aside className={styles.afeEligibilityReqsContainer}>
-          <Heading3 visualAppearance="heading-sm">
-            School Eligibility Requirements*
-          </Heading3>
-
-          <BodyThreeText>
-            Title 1 and/or {'>'} 40% Free/Reduced Lunch (FRL) student enrollment
-          </BodyThreeText>
-
-          <div className={styles.afeEligibilityDivider} role="separator">
-            <OverlineThreeText>or</OverlineThreeText>
-          </div>
-
-          <BodyThreeText>
-            {'>'}30% Black/Latino/Native American (BLNA) student enrollment
-          </BodyThreeText>
-
-          <div className={styles.afeEligibilityDivider} role="separator">
-            <OverlineThreeText>or</OverlineThreeText>
-          </div>
-
-          <BodyThreeText>Rural school</BodyThreeText>
-
-          <BodyThreeText className={styles.afeEligibilityInfoText}>
-            *Eligibility requirements verified using{' '}
-            <Link
-              isLinkExternal
-              removeMarginBottom
-              size="s"
-              href="https://nces.ed.gov/ccd/schoolsearch"
-            >
-              NCES data
-            </Link>
-          </BodyThreeText>
-        </aside>
-      </div>
-    );
   }
+
+  return (
+    <div className={styles.afeEligibility}>
+      <aside className={styles.afeEligibilityFormContainer}>
+        {eligibilityData.isEligible &&
+        eligibilityData.email &&
+        eligibilityData.schoolId &&
+        eligibilityData.schoolName ? (
+          <AFEForm
+            email={eligibilityData.email}
+            schoolId={eligibilityData.schoolId}
+            schoolName={eligibilityData.schoolName}
+            isSignedIn={eligibilityData.isSignedIn}
+            onEligibilityReset={() =>
+              updateEligibilityData({isEligible: false})
+            }
+          />
+        ) : (
+          <AFESchoolCheck
+            email={eligibilityData.email}
+            onComplete={updateEligibilityData}
+          />
+        )}
+      </aside>
+
+      <aside className={styles.afeEligibilityReqsContainer}>
+        <Heading3 visualAppearance="heading-sm">
+          School Eligibility Requirements*
+        </Heading3>
+
+        <BodyThreeText>
+          Title 1 and/or {'>'} 40% Free/Reduced Lunch (FRL) student enrollment
+        </BodyThreeText>
+
+        <div className={styles.afeEligibilityDivider} role="separator">
+          <OverlineThreeText>or</OverlineThreeText>
+        </div>
+
+        <BodyThreeText>
+          {'>'}30% Black/Latino/Native American (BLNA) student enrollment
+        </BodyThreeText>
+
+        <div className={styles.afeEligibilityDivider} role="separator">
+          <OverlineThreeText>or</OverlineThreeText>
+        </div>
+
+        <BodyThreeText>Rural school</BodyThreeText>
+
+        <BodyThreeText className={styles.afeEligibilityInfoText}>
+          *Eligibility requirements verified using{' '}
+          <Link
+            isLinkExternal
+            removeMarginBottom
+            size="s"
+            href="https://nces.ed.gov/ccd/schoolsearch"
+          >
+            NCES data
+          </Link>
+        </BodyThreeText>
+      </aside>
+    </div>
+  );
 };
 
 export default AFEEligibility;
