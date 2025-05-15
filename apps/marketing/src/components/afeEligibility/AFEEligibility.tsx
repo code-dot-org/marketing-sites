@@ -23,6 +23,15 @@ import styles from './afeEligibility.module.scss';
 
 const SESSION_STORAGE_KEY = 'afeEligibilityData';
 
+const defaultEligibilityData: AFEEligibilityData = {
+  email: '',
+  userType: '',
+  schoolId: '',
+  schoolName: '',
+  isEligible: false,
+  isSignedIn: false,
+};
+
 const AFEEligibility: React.FC = () => {
   const {logEvent} = useStatsigClient();
 
@@ -32,12 +41,7 @@ const AFEEligibility: React.FC = () => {
       : JSON.parse(sessionStorage.getItem(SESSION_STORAGE_KEY) || '{}');
 
   const [eligibilityData, setEligibilityData] = useState<AFEEligibilityData>({
-    email: '',
-    userType: '',
-    schoolId: '',
-    schoolName: '',
-    isEligible: false,
-    isSignedIn: false,
+    ...defaultEligibilityData,
     ...getSessionEligibilityData(),
   });
 
@@ -73,18 +77,20 @@ const AFEEligibility: React.FC = () => {
       })
       .then(accountData => {
         const newEligibilityData: Partial<AFEEligibilityData> = {
-          userType: accountData?.user_type || '',
+          userType: accountData?.user_type || defaultEligibilityData.userType,
           isSignedIn: !!accountData,
         };
 
-        if (!eligibilityData.email) {
-          newEligibilityData.email = accountData?.teacher_email || '';
+        if (!eligibilityData.email && accountData.teacher_email) {
+          newEligibilityData.email = accountData.teacher_email;
         }
 
-        if (!eligibilityData.schoolId) {
-          newEligibilityData.schoolId = accountData?.nces_school_id || '';
-          newEligibilityData.schoolName = accountData?.school_name || '';
-          newEligibilityData.isEligible = accountData?.afe_high_needs || false;
+        if (!eligibilityData.schoolId && accountData?.nces_school_id) {
+          newEligibilityData.schoolId = accountData.nces_school_id;
+          newEligibilityData.schoolName =
+            accountData?.school_name || defaultEligibilityData.schoolName;
+          newEligibilityData.isEligible =
+            accountData?.afe_high_needs || defaultEligibilityData.isEligible;
         }
 
         updateEligibilityData(newEligibilityData);
