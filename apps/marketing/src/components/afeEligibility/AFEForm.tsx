@@ -3,9 +3,8 @@
 import {useStatsigClient} from '@statsig/react-bindings';
 import React, {useCallback, useRef, useState, useEffect} from 'react';
 
-import Button, {LinkButton} from '@code-dot-org/component-library/button';
+import Button from '@code-dot-org/component-library/button';
 import Checkbox from '@code-dot-org/component-library/checkbox';
-import {CustomDialog} from '@code-dot-org/component-library/dialog';
 import Divider from '@code-dot-org/component-library/divider';
 import {
   SimpleDropdown,
@@ -22,6 +21,8 @@ import {
 
 import {getStudioUrl} from '@/config/studio';
 
+import AFEContinueNotice from './AFEContinueNotice';
+import AFESuccessNotice from './AFESuccessNotice';
 import type {AFEFormProps, AFEFormData} from './types';
 
 import styles from './afeEligibility.module.scss';
@@ -55,7 +56,8 @@ const AFEForm: React.FC<AFEFormProps> = ({
       : JSON.parse(sessionStorage.getItem(SESSION_STORAGE_KEY) || '{}');
 
   const formRef = useRef<HTMLFormElement>(null);
-  const [showSubmissionNotice, setShowSubmissionNotice] = useState(false);
+  const [showContinueNotice, setShowContinueNotice] = useState(false);
+  const [showSuccessNotice, setShowSuccessNotice] = useState(false);
   const [isFormSubmitting, setFormSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState<AFEFormData>({
@@ -77,7 +79,7 @@ const AFEForm: React.FC<AFEFormProps> = ({
     onEligibilityReset();
   }, [onEligibilityReset]);
 
-  const updateFormData = (newFormData: object) => {
+  const updateFormData = (newFormData: Partial<AFEFormData>) => {
     setFormData(oldFormData => ({
       ...oldFormData,
       ...newFormData,
@@ -115,7 +117,7 @@ const AFEForm: React.FC<AFEFormProps> = ({
       });
 
       setFormSubmitting(false);
-      setShowSubmissionNotice(true);
+      setShowContinueNotice(true);
 
       return;
     }
@@ -152,7 +154,7 @@ const AFEForm: React.FC<AFEFormProps> = ({
       .then(async response => {
         if (response.ok) {
           sessionStorage?.removeItem(SESSION_STORAGE_KEY);
-          setShowSubmissionNotice(true);
+          setShowSuccessNotice(true);
           return true;
         } else {
           const errorText = await response.text();
@@ -372,70 +374,17 @@ const AFEForm: React.FC<AFEFormProps> = ({
         />
       </form>
 
-      {showSubmissionNotice && (
-        <CustomDialog
-          className={styles.afeEligibilityNotice}
-          aria-labelledby="afe-submission-notice-header"
+      {showContinueNotice && (
+        <AFEContinueNotice onClose={() => setShowContinueNotice(false)} />
+      )}
+
+      {showSuccessNotice && (
+        <AFESuccessNotice
           onClose={() => {
-            setShowSubmissionNotice(false);
-            if (isSignedIn) handleEligibilityReset();
+            setShowSuccessNotice(false);
+            handleEligibilityReset();
           }}
-        >
-          {isSignedIn ? (
-            <>
-              <Heading2 id="afe-submission-notice-header">
-                Congratulations! You successfully signed up for the Amazon
-                Future Engineer Program
-              </Heading2>
-
-              <BodyThreeText id="dsco-dialog-description">
-                You should receive an email shortly from Amazon Future Engineer
-                to claim your benefits. In the meantime, check out some of the
-                amazing resources around our site.
-              </BodyThreeText>
-
-              <LinkButton href="/teach" text="Start teaching with Code.org" />
-            </>
-          ) : (
-            <>
-              <Heading2 id="afe-submission-notice-header">
-                Almost done!
-              </Heading2>
-
-              <BodyThreeText id="dsco-dialog-description">
-                Thank you for completing your application information for the
-                Amazon Future Engineer program. To finalize your participation
-                and start receiving benefits, sign up for a Code.org teacher
-                account, or sign in if you already have one.
-              </BodyThreeText>
-
-              <BodyThreeText>
-                Already have a Code.org account?{' '}
-                <Link
-                  size="s"
-                  onClick={() => {
-                    logEvent('AFE Sign In Button Press');
-                    location.href = getStudioUrl(
-                      `/users/sign_in?user_return_to=${location.href}`,
-                    );
-                  }}
-                >
-                  Sign in
-                </Link>
-              </BodyThreeText>
-
-              <Button
-                text="Sign up"
-                onClick={() => {
-                  logEvent('AFE Sign Up Button Press');
-                  location.href = getStudioUrl(
-                    `/users/sign_up/login_type?user_type=teacher&user_return_to=${location.href}`,
-                  );
-                }}
-              />
-            </>
-          )}
-        </CustomDialog>
+        />
       )}
     </>
   );
