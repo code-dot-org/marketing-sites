@@ -22,6 +22,8 @@ import {
 
 import {getStudioUrl} from '@/config/studio';
 
+import type {AFEFormProps, AFEFormData} from './types';
+
 import styles from './afeEligibility.module.scss';
 
 const SESSION_STORAGE_KEY = 'afeEligibilityFormData';
@@ -37,27 +39,6 @@ const CSTA_PROFESSIONAL_ROLES = [
   'Other',
 ];
 const CSTA_GRADE_BANDS = ['K-5', '6-8', '9-12'];
-
-interface AFEFormProps {
-  email: string;
-  schoolId: string;
-  schoolName: string;
-  isSignedIn?: boolean;
-  onEligibilityReset: () => void;
-}
-
-type AFEFormData = {
-  email: string;
-  schoolId: string;
-  schoolName: string;
-  firstName: string;
-  lastName: string;
-  professionalRole: string;
-  gradeBands: string[];
-  inspirationKit: boolean;
-  consentCSTA: boolean;
-  consentAFE: boolean;
-};
 
 const AFEForm: React.FC<AFEFormProps> = ({
   email,

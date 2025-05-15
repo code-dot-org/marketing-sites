@@ -17,18 +17,11 @@ import AFESchoolCheck from '@/components/afeEligibility/AFESchoolCheck';
 import Link from '@/components/link';
 import {getStudioUrl} from '@/config/studio';
 
+import type {AFEEligibilityData} from './types';
+
 import styles from './afeEligibility.module.scss';
 
 const SESSION_STORAGE_KEY = 'afeEligibilityData';
-
-type AFEEligibilityData = {
-  email: string;
-  userType: string;
-  schoolId: string;
-  schoolName: string;
-  isEligible: boolean;
-  isSignedIn: boolean;
-};
 
 const AFEEligibility: React.FC = () => {
   const {logEvent} = useStatsigClient();

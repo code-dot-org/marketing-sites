@@ -16,30 +16,13 @@ import {
 import SchoolSearchFieldset from '@/components/schoolSearchFieldset';
 import {getStudioUrl} from '@/config/studio';
 
+import type {AFESchoolCheckProps, AFESchoolCheckFormData} from './types';
+
 import styles from './afeEligibility.module.scss';
 
 const NO_SCHOOL_ID = '-1';
 const SUPPORT_EMAIL = 'support@code.org';
 const REQUIREMENTS_ID = 'afe-requirements';
-
-type AFESchoolCheckFromData = {
-  email: string;
-  zipCode: string;
-  schoolId: string;
-  schoolName: string;
-};
-
-type AFESchoolCheckResult = {
-  isEligible: boolean;
-  email: string;
-  schoolId: string;
-  schoolName: string;
-};
-
-interface AFESchoolCheckProps {
-  email?: string;
-  onComplete: (result: AFESchoolCheckResult) => void;
-}
 
 const AFESchoolCheck: React.FC<AFESchoolCheckProps> = ({
   email = '',
@@ -48,7 +31,7 @@ const AFESchoolCheck: React.FC<AFESchoolCheckProps> = ({
   const {logEvent} = useStatsigClient();
   const [showIneligibleNotice, setShowIneligibleNotice] = useState(false);
   const [isFormSubmitted, setFormSubmission] = useState(false);
-  const [formData, setFormData] = useState<AFESchoolCheckFromData>({
+  const [formData, setFormData] = useState<AFESchoolCheckFormData>({
     email,
     zipCode: '',
     schoolId: '',
@@ -56,7 +39,7 @@ const AFESchoolCheck: React.FC<AFESchoolCheckProps> = ({
   });
   const [formError, setFormError] = useState('');
 
-  const updateFormData = (newFormData: Partial<AFESchoolCheckFromData>) => {
+  const updateFormData = (newFormData: Partial<AFESchoolCheckFormData>) => {
     setFormData(oldFormData => ({
       ...oldFormData,
       ...newFormData,
