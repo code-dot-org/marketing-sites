@@ -81,16 +81,18 @@ const AFEEligibility: React.FC = () => {
           isSignedIn: !!accountData,
         };
 
-        if (!eligibilityData.email && accountData.teacher_email) {
+        if (!eligibilityData.email && accountData?.teacher_email) {
           newEligibilityData.email = accountData.teacher_email;
         }
 
         if (!eligibilityData.schoolId && accountData?.nces_school_id) {
           newEligibilityData.schoolId = accountData.nces_school_id;
           newEligibilityData.schoolName =
-            accountData?.school_name || defaultEligibilityData.schoolName;
+            accountData.school_name || defaultEligibilityData.schoolName;
           newEligibilityData.isEligible =
-            accountData?.afe_high_needs || defaultEligibilityData.isEligible;
+            typeof accountData.afe_high_needs === 'boolean'
+              ? accountData.afe_high_needs
+              : defaultEligibilityData.isEligible;
         }
 
         updateEligibilityData(newEligibilityData);
