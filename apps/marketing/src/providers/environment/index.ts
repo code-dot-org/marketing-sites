@@ -4,7 +4,7 @@ import EnvironmentLoader from './EnvironmentLoader';
 
 export function getEnv(key: string) {
   // Grab environment variable from the browser
-  if (typeof window !== 'undefined' && window[PUBLIC_ENV_KEY]) {
+  if (typeof window !== 'undefined') {
     return window[PUBLIC_ENV_KEY][key];
   }
 
