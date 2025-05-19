@@ -24,6 +24,9 @@ import ImageCarousel, {
 import VideoCarousel, {
   VideoCarouselContentfulComponentDefinition,
 } from '@/components/carousels/videoCarousel';
+import Heading, {
+  HeadingContentfulComponentDefinition,
+} from '@/components/contentful/heading';
 import HeroBanner, {
   HeroBannerContentfulComponentDefinition,
 } from '@/components/contentful/heroBanner';
@@ -42,9 +45,6 @@ import EditorialCard, {
 import FAQAccordion, {
   FAQAccordionContentfulComponentDefinition,
 } from '@/components/faqAccordion';
-import Heading, {
-  HeadingContentfulComponentDefinition,
-} from '@/components/heading';
 import IconHighlight, {
   IconHighlightContentfulComponentDefinition,
 } from '@/components/iconHighlight';
