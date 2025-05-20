@@ -3,6 +3,7 @@ import {EntryFields} from 'contentful';
 import DSCOActionBlock, {
   ActionBlockProps,
 } from '@code-dot-org/component-library/actionBlock';
+import DSCOVideo from '@code-dot-org/component-library/video';
 
 import {externalLinkIconProps} from '@/components/common/constants';
 import {LinkEntry} from '@/types/contentful/entries/Link';
@@ -19,6 +20,14 @@ export type ActionBlockContentfulProps = ActionBlockProps & {
   secondaryButton: LinkEntry;
   background: EntryFields.Text;
   publishedDate?: EntryFields.Date;
+  /** Block Video URL */
+  blockVideoTitle?: string;
+  /** Block Video Youtube ID */
+  blockVideoYouTubeId?: string;
+  /** Block Video Fallback url */
+  blockVideoFallback?: string;
+  /** Whether to show the block video captions */
+  blockVideoShowCaption?: boolean;
 };
 
 const ActionBlock: React.FC<ActionBlockContentfulProps> = ({
@@ -30,12 +39,27 @@ const ActionBlock: React.FC<ActionBlockContentfulProps> = ({
   secondaryButton,
   background,
   publishedDate,
+  blockVideoTitle,
+  blockVideoYouTubeId,
+  blockVideoFallback,
+  blockVideoShowCaption,
 }) => (
   <DSCOActionBlock
     overline={overline}
     title={title}
     description={description}
     image={{src: `https:${image}`}}
+    video={
+      blockVideoYouTubeId || blockVideoFallback
+        ? {
+            videoTitle: blockVideoTitle,
+            youTubeId: blockVideoYouTubeId,
+            showCaption: blockVideoShowCaption,
+            videoFallback: blockVideoFallback,
+          }
+        : undefined
+    }
+    VideoComponent={DSCOVideo}
     primaryButton={
       primaryButton?.fields?.label
         ? {
