@@ -23,7 +23,7 @@ import {FilteringTraceSampler} from '@/otel/FilteringTraceSampler';
 
 // Register OpenTelemetry for the marketing app
 // See: https://nextjs.org/docs/app/guides/opentelemetry
-if (process.env.NEXT_PUBLIC_OTEL_ENABLED === 'true') {
+if (process.env.NEXT_PUBLIC_INSTRUMENTATION_ENABLED === 'true') {
   console.debug(
     `Sending OpenTelemetry traces to ${process.env.OTEL_EXPORTER_OTLP_ENDPOINT}`,
   );
@@ -64,7 +64,7 @@ if (process.env.NEXT_PUBLIC_OTEL_ENABLED === 'true') {
   sdk.start();
 } else {
   console.debug(
-    'NEXT_PUBLIC_OTEL_ENABLED not set, skipping OpenTelemetry instrumentation',
+    'NEXT_PUBLIC_INSTRUMENTATION_ENABLED not set, skipping OpenTelemetry instrumentation',
   );
 }
 
