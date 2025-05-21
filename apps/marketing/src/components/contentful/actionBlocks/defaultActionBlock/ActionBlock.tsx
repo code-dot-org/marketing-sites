@@ -6,29 +6,23 @@ import DSCOActionBlock, {
 import DSCOVideo from '@code-dot-org/component-library/video';
 
 import {externalLinkIconProps} from '@/components/common/constants';
+import {VideoRelatedProps} from '@/components/common/types';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 import {showNewTag} from '../helpers';
 
-export type ActionBlockContentfulProps = ActionBlockProps & {
-  overline: EntryFields.Text;
-  title: EntryFields.Text;
-  description: EntryFields.Text;
-  image: ExperienceAsset;
-  primaryButton: LinkEntry;
-  secondaryButton: LinkEntry;
-  background: EntryFields.Text;
-  publishedDate?: EntryFields.Date;
-  /** Block Video URL */
-  blockVideoTitle?: string;
-  /** Block Video Youtube ID */
-  blockVideoYouTubeId?: string;
-  /** Block Video Fallback url */
-  blockVideoFallback?: string;
-  /** Whether to show the block video captions */
-  blockVideoShowCaption?: boolean;
-};
+export type ActionBlockContentfulProps = ActionBlockProps &
+  VideoRelatedProps & {
+    overline: EntryFields.Text;
+    title: EntryFields.Text;
+    description: EntryFields.Text;
+    image: ExperienceAsset;
+    primaryButton: LinkEntry;
+    secondaryButton: LinkEntry;
+    background: EntryFields.Text;
+    publishedDate?: EntryFields.Date;
+  };
 
 const ActionBlock: React.FC<ActionBlockContentfulProps> = ({
   overline,
@@ -39,10 +33,10 @@ const ActionBlock: React.FC<ActionBlockContentfulProps> = ({
   secondaryButton,
   background,
   publishedDate,
-  blockVideoTitle,
-  blockVideoYouTubeId,
-  blockVideoFallback,
-  blockVideoShowCaption,
+  videoTitle,
+  videoYouTubeId,
+  videoFallback,
+  videoShowCaption,
 }) => (
   <DSCOActionBlock
     overline={overline}
@@ -50,12 +44,12 @@ const ActionBlock: React.FC<ActionBlockContentfulProps> = ({
     description={description}
     image={{src: `https:${image}`}}
     video={
-      blockVideoYouTubeId || blockVideoFallback
+      videoYouTubeId || videoFallback
         ? {
-            videoTitle: blockVideoTitle,
-            youTubeId: blockVideoYouTubeId,
-            showCaption: blockVideoShowCaption,
-            videoFallback: blockVideoFallback,
+            videoTitle: videoTitle,
+            youTubeId: videoYouTubeId,
+            showCaption: videoShowCaption,
+            videoFallback: videoFallback,
           }
         : undefined
     }
