@@ -1,33 +1,67 @@
 import {render} from '@testing-library/react';
 
-import * as environment from '@/providers/environment';
-import * as initialize from '@/providers/newrelic/initialize';
+import NewRelicAgent from '@/providers/newrelic/agent';
 
-import NewRelicProvider from '../NewRelicLoader';
+import NewRelicLoader from '../NewRelicLoader';
 
-jest.mock('@/providers/environment', () => ({
-  getEnv: jest.fn(),
+jest.mock('@/providers/newrelic/agent', () => ({
+  then: jest.fn().mockReturnValue({catch: jest.fn()}),
 }));
 
-jest.mock('@/providers/newrelic/initialize', () => ({
-  initializeNewRelic: jest.fn(),
-}));
-
-describe('NewRelicProvder', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+describe('NewRelicLoader', () => {
+  it('should render without crashing', () => {
+    const {container} = render(<NewRelicLoader />);
+    expect(container).toBeEmptyDOMElement();
   });
 
-  it('should return null if NEXT_PUBLIC_INSTRUMENTATION_ENABLED is not "true"', () => {
-    jest.spyOn(environment, 'getEnv').mockReturnValue('false');
-    const {container} = render(<NewRelicProvider />);
-    expect(container.firstChild).toBeNull();
+  it('should initialize New Relic agent on mount', async () => {
+    const mockThen = jest.fn().mockImplementation(callback => {
+      callback(true);
+      return {catch: jest.fn()};
+    });
+    (NewRelicAgent.then as jest.Mock).mockImplementation(mockThen);
+
+    render(<NewRelicLoader />);
+
+    expect(mockThen).toHaveBeenCalled();
   });
 
-  it('should initialize New Relic if NEXT_PUBLIC_INSTRUMENTATION_ENABLED is "true" and window is defined', () => {
-    jest.spyOn(environment, 'getEnv').mockReturnValue('true');
-    (initialize.initializeNewRelic as jest.Mock).mockResolvedValue(undefined);
-    render(<NewRelicProvider />);
-    expect(initialize.initializeNewRelic).toHaveBeenCalled();
+  it('should log an error if New Relic initialization fails', async () => {
+    const consoleDebugSpy = jest
+      .spyOn(console, 'debug')
+      .mockImplementation(() => {});
+    const mockCatch = jest
+      .fn()
+      .mockImplementation(callback => callback('Initialization error'));
+    (NewRelicAgent.then as jest.Mock).mockImplementation(() => ({
+      catch: mockCatch,
+    }));
+
+    render(<NewRelicLoader />);
+
+    expect(mockCatch).toHaveBeenCalled();
+    expect(consoleDebugSpy).toHaveBeenCalledWith(
+      'Error initializing New Relic',
+      'Initialization error',
+    );
+
+    consoleDebugSpy.mockRestore();
+  });
+
+  it('should log a success message if New Relic initializes successfully', async () => {
+    const consoleDebugSpy = jest
+      .spyOn(console, 'debug')
+      .mockImplementation(() => {});
+    const mockThen = jest.fn().mockImplementation(callback => {
+      callback(true);
+      return {catch: jest.fn()};
+    });
+    (NewRelicAgent.then as jest.Mock).mockImplementation(mockThen);
+
+    render(<NewRelicLoader />);
+
+    expect(consoleDebugSpy).toHaveBeenCalledWith('New Relic initialized');
+
+    consoleDebugSpy.mockRestore();
   });
 });

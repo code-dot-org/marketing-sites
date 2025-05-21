@@ -5,8 +5,6 @@ import {PUBLIC_ENV_KEY} from '@/providers/environment/constants';
 const EnvironmentLoader = () => {
   const publicEnvironmentVariables = {
     NEXT_PUBLIC_STAGE: process.env.NEXT_PUBLIC_STAGE,
-    NEXT_PUBLIC_INSTRUMENTATION_ENABLED:
-      process.env.NEXT_PUBLIC_INSTRUMENTATION_ENABLED,
   };
 
   return (
