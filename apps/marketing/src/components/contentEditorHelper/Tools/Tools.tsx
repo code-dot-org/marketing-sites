@@ -29,7 +29,6 @@ const ContentEditorTools = ({
 
   const getEnableDraftModeUrl = () => {
     const draftModeToken = localStorage.getItem('draftToken');
-    console.log(pageParams);
 
     return `/api/draft?token=${draftModeToken}&slug=${pageParams.paths?.join('/')}&locale=${pageParams.locale}`;
   };
