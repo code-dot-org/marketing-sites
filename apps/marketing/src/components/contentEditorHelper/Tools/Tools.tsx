@@ -15,7 +15,7 @@ const ContentEditorTools = ({
   isDraftModeEnabled,
   previewLabel,
 }: ContentEditorToolsProps) => {
-  const pageParams = useParams();
+  const pageParams = useParams<{paths: Array<string>; locale: string}>();
   const [shareLinkButtonText, setShareableLinkButtonText] =
     useState('Get shareable link');
 
@@ -29,7 +29,9 @@ const ContentEditorTools = ({
 
   const getEnableDraftModeUrl = () => {
     const draftModeToken = localStorage.getItem('draftToken');
-    return `/api/draft?token=${draftModeToken}&slug=${pageParams.slug}&locale=${pageParams.locale}`;
+    console.log(pageParams);
+
+    return `/api/draft?token=${draftModeToken}&slug=${pageParams.paths?.join('/')}&locale=${pageParams.locale}`;
   };
   const handleEnterDraftMode = () => {
     redirect(getEnableDraftModeUrl());
