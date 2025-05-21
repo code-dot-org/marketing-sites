@@ -105,7 +105,7 @@ export default function Error(props: ErrorProps) {
         <Image
           className={errorStyles.sadBeeContainer}
           src={sadBeeImage.src}
-          alt={`A sad bee holding a sign with error code ${props.statusCode}`}
+          alt=""
         />
       )}
       <Overline removeMarginBottom={false} size={'l'} color={'primary'}>
