@@ -5,6 +5,9 @@
  */
 import {defineComponents} from '@contentful/experiences-sdk-react';
 
+import AFEEligibility, {
+  AFEEligibilityContentfulComponentDefinition,
+} from '@/components/afeEligibility';
 import Button, {ButtonContentfulComponentDefinition} from '@/components/button';
 import ActionBlockCarousel, {
   ActionBlockCarouselContentfulComponentDefinition,
@@ -84,6 +87,10 @@ defineComponents(
     {
       component: ActionBlockCarousel,
       definition: ActionBlockCarouselContentfulComponentDefinition,
+    },
+    {
+      component: AFEEligibility,
+      definition: AFEEligibilityContentfulComponentDefinition,
     },
     {component: Button, definition: ButtonContentfulComponentDefinition},
     {
