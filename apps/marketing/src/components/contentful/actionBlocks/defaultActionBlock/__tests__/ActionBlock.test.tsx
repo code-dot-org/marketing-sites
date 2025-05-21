@@ -1,6 +1,36 @@
 import {render} from '@testing-library/react';
+import {ReactPlayerProps} from 'react-player';
+import ReactPlayer from 'react-player/file';
 
 import ActionBlock, {ActionBlockContentfulProps} from '../ActionBlock';
+
+ReactPlayer.canPlay = jest.fn();
+
+jest.mock('react-player/youtube', () => ({
+  __esModule: true,
+  default: ({light, playIcon, onError}: ReactPlayerProps) => (
+    <div>
+      YouTube Player
+      {light}
+      {playIcon}
+      <button onClick={onError}>Trigger Error</button>
+    </div>
+  ),
+  canPlay: jest.fn(),
+}));
+
+jest.mock('react-player/file', () => ({
+  __esModule: true,
+  default: ({light, playIcon, onError}: ReactPlayerProps) => (
+    <div>
+      Fallback Player
+      {light}
+      {playIcon}
+      <button onClick={onError}>Trigger Error</button>
+    </div>
+  ),
+  canPlay: jest.fn(),
+}));
 
 describe('ActionBlock', () => {
   const defaultProps: ActionBlockContentfulProps = {
