@@ -41,7 +41,7 @@ export const videoRelatedDefinitions: Record<
   string,
   ComponentDefinitionVariable
 > = {
-  blockVideoTitle: {
+  videoTitle: {
     displayName: 'Video title',
     type: 'Text',
     group: 'content',
@@ -51,7 +51,7 @@ export const videoRelatedDefinitions: Record<
       bindingSourceType: ['entry', 'manual'],
     },
   },
-  blockVideoYouTubeId: {
+  videoYouTubeId: {
     displayName: 'Video YouTube ID',
     type: 'Text',
     group: 'content',
@@ -61,7 +61,7 @@ export const videoRelatedDefinitions: Record<
       bindingSourceType: ['entry', 'manual'],
     },
   },
-  blockVideoFallback: {
+  videoFallback: {
     displayName: 'Video fallback',
     type: 'Text',
     group: 'content',
@@ -71,10 +71,10 @@ export const videoRelatedDefinitions: Record<
       bindingSourceType: ['entry', 'manual'],
     },
   },
-  blockVideoShowCaption: {
+  videoShowCaption: {
     displayName: 'Show video caption',
     type: 'Boolean',
-    defaultValue: true,
+    defaultValue: false,
     group: 'style',
     description:
       'Check this to show a caption (video title) under the video player.',
