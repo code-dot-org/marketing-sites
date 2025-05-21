@@ -3,8 +3,10 @@ import {EntryFields} from 'contentful';
 import DSCOFullWidthActionBlock, {
   ActionBlockProps,
 } from '@code-dot-org/component-library/actionBlock/fullWidthActionBlock';
+import DSCOVideo from '@code-dot-org/component-library/video';
 
 import {externalLinkIconProps} from '@/components/common/constants';
+import {VideoRelatedProps} from '@/components/common/types';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
@@ -13,19 +15,24 @@ import {showNewTag} from '../helpers';
 export type FullWidthActionBlockContentfulProps = Omit<
   ActionBlockProps,
   'image'
-> & {
-  image: ExperienceAsset;
-  overline: EntryFields.Text;
-  title: EntryFields.Text;
-  description: EntryFields.Text;
-  primaryButton: LinkEntry;
-  secondaryButton: LinkEntry;
-  background: EntryFields.Text;
-  publishedDate?: EntryFields.Date;
-};
+> &
+  VideoRelatedProps & {
+    image: ExperienceAsset;
+    overline: EntryFields.Text;
+    title: EntryFields.Text;
+    description: EntryFields.Text;
+    primaryButton: LinkEntry;
+    secondaryButton: LinkEntry;
+    background: EntryFields.Text;
+    publishedDate?: EntryFields.Date;
+  };
 
 const FullWidthActionBlock: React.FC<FullWidthActionBlockContentfulProps> = ({
   image,
+  videoTitle,
+  videoYouTubeId,
+  videoFallback,
+  videoShowCaption,
   overline,
   title,
   description,
@@ -36,6 +43,17 @@ const FullWidthActionBlock: React.FC<FullWidthActionBlockContentfulProps> = ({
 }) => (
   <DSCOFullWidthActionBlock
     image={{src: `https:${image}`}}
+    video={
+      videoYouTubeId || videoFallback
+        ? {
+            videoTitle: videoTitle,
+            youTubeId: videoYouTubeId,
+            showCaption: videoShowCaption,
+            videoFallback: videoFallback,
+          }
+        : undefined
+    }
+    VideoComponent={DSCOVideo}
     overline={overline}
     title={title}
     description={description}
