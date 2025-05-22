@@ -12,6 +12,8 @@ import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 import {showNewTag} from '../helpers';
 
+import moduleStyles from './../actionBlocks.module.scss';
+
 export type FullWidthActionBlockContentfulProps = Omit<
   ActionBlockProps,
   'image'
@@ -42,6 +44,7 @@ const FullWidthActionBlock: React.FC<FullWidthActionBlockContentfulProps> = ({
   publishedDate,
 }) => (
   <DSCOFullWidthActionBlock
+    className={moduleStyles.hideDownloadVideoButton}
     image={{src: `https:${image}`}}
     video={
       videoYouTubeId || videoFallback

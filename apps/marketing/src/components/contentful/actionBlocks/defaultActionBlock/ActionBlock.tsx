@@ -12,6 +12,8 @@ import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 import {showNewTag} from '../helpers';
 
+import moduleStyles from './../actionBlocks.module.scss';
+
 export type ActionBlockContentfulProps = ActionBlockProps &
   VideoRelatedProps & {
     overline: EntryFields.Text;
@@ -39,6 +41,7 @@ const ActionBlock: React.FC<ActionBlockContentfulProps> = ({
   videoShowCaption,
 }) => (
   <DSCOActionBlock
+    className={moduleStyles.hideDownloadVideoButton}
     overline={overline}
     title={title}
     description={description}
