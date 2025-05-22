@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import {EntryFields} from 'contentful';
 
 import DSCOFullWidthActionBlock, {
@@ -30,6 +31,7 @@ export type FullWidthActionBlockContentfulProps = Omit<
   };
 
 const FullWidthActionBlock: React.FC<FullWidthActionBlockContentfulProps> = ({
+  className,
   image,
   videoTitle,
   videoYouTubeId,
@@ -44,7 +46,7 @@ const FullWidthActionBlock: React.FC<FullWidthActionBlockContentfulProps> = ({
   publishedDate,
 }) => (
   <DSCOFullWidthActionBlock
-    className={moduleStyles.hideDownloadVideoButton}
+    className={classNames(moduleStyles.hideDownloadVideoButton, className)}
     image={{src: `https:${image}`}}
     video={
       videoYouTubeId || videoFallback

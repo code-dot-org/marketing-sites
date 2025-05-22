@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import {EntryFields} from 'contentful';
 
 import DSCOActionBlock, {
@@ -27,6 +28,7 @@ export type ActionBlockContentfulProps = ActionBlockProps &
   };
 
 const ActionBlock: React.FC<ActionBlockContentfulProps> = ({
+  className,
   overline,
   title,
   description,
@@ -41,7 +43,7 @@ const ActionBlock: React.FC<ActionBlockContentfulProps> = ({
   videoShowCaption,
 }) => (
   <DSCOActionBlock
-    className={moduleStyles.hideDownloadVideoButton}
+    className={classNames(moduleStyles.hideDownloadVideoButton, className)}
     overline={overline}
     title={title}
     description={description}
