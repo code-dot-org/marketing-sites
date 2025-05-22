@@ -16,6 +16,7 @@ test.describe('404 Not Found Page', () => {
     );
 
     expect(response?.status()).toEqual(404);
+    expect(await page.title()).toBe('Page Not Found');
     await expect(
       page.getByRole('heading', {name: "We couldn't find this page"}),
     ).toBeVisible();
