@@ -1,46 +1,64 @@
+import classNames from 'classnames';
 import {EntryFields} from 'contentful';
 
-import DSCOFullWidthActionBlock, {
+import DSCOActionBlock, {
   ActionBlockProps,
-} from '@code-dot-org/component-library/actionBlock/fullWidthActionBlock';
+} from '@code-dot-org/component-library/actionBlock';
+import DSCOVideo from '@code-dot-org/component-library/video';
 
 import {externalLinkIconProps} from '@/components/common/constants';
+import {VideoRelatedProps} from '@/components/common/types';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 import {showNewTag} from '../helpers';
 
-export type FullWidthActionBlockContentfulProps = Omit<
-  ActionBlockProps,
-  'image'
-> & {
-  image: ExperienceAsset;
-  overline: EntryFields.Text;
-  title: EntryFields.Text;
-  description: EntryFields.Text;
-  primaryButton: LinkEntry;
-  secondaryButton: LinkEntry;
-  background: EntryFields.Text;
-  publishedDate?: EntryFields.Date;
-};
+import moduleStyles from './../actionBlocks.module.scss';
 
-const FullWidthActionBlock: React.FC<FullWidthActionBlockContentfulProps> = ({
+export type ActionBlockContentfulProps = ActionBlockProps &
+  VideoRelatedProps & {
+    overline: EntryFields.Text;
+    title: EntryFields.Text;
+    description: EntryFields.Text;
+    image: ExperienceAsset;
+    primaryButton: LinkEntry;
+    secondaryButton: LinkEntry;
+    background: EntryFields.Text;
+    publishedDate?: EntryFields.Date;
+  };
+
+const ActionBlock: React.FC<ActionBlockContentfulProps> = ({
   className,
-  image,
   overline,
   title,
   description,
+  image,
   primaryButton,
   secondaryButton,
   background,
   publishedDate,
+  videoTitle,
+  videoYouTubeId,
+  videoFallback,
+  videoShowCaption,
 }) => (
-  <DSCOFullWidthActionBlock
-    className={className}
-    image={{src: `https:${image}`}}
+  <DSCOActionBlock
+    className={classNames(moduleStyles.hideDownloadVideoButton, className)}
     overline={overline}
     title={title}
     description={description}
+    image={{src: `https:${image}`}}
+    video={
+      videoYouTubeId || videoFallback
+        ? {
+            videoTitle: videoTitle,
+            youTubeId: videoYouTubeId,
+            showCaption: videoShowCaption,
+            videoFallback: videoFallback,
+          }
+        : undefined
+    }
+    VideoComponent={DSCOVideo}
     primaryButton={
       primaryButton?.fields?.label
         ? {
@@ -70,4 +88,4 @@ const FullWidthActionBlock: React.FC<FullWidthActionBlockContentfulProps> = ({
   />
 );
 
-export default FullWidthActionBlock;
+export default ActionBlock;

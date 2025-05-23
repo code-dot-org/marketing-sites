@@ -1,6 +1,8 @@
 // Creates a definition for the ActionBlock component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {videoRelatedDefinitions} from '@/components/common/definitions';
+
 export const FullWidthActionBlockContentfulComponentDefinition: ComponentDefinition =
   {
     id: 'fullWidthActionBlock',
@@ -55,6 +57,7 @@ export const FullWidthActionBlockContentfulComponentDefinition: ComponentDefinit
           bindingSourceType: ['entry', 'asset'],
         },
       },
+      ...videoRelatedDefinitions,
       primaryButton: {
         displayName: 'Primary button',
         type: 'Link',

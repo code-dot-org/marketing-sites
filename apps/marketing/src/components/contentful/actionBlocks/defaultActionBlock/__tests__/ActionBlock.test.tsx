@@ -1,38 +1,61 @@
 import {render} from '@testing-library/react';
+import {ReactPlayerProps} from 'react-player';
+import ReactPlayer from 'react-player/file';
 
-import {LinkEntry} from '@/types/contentful/entries/Link';
-import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
+import ActionBlock, {ActionBlockContentfulProps} from '../ActionBlock';
 
-import FullWidthActionBlock, {
-  FullWidthActionBlockContentfulProps,
-} from '../FullWidthActionBlock';
+ReactPlayer.canPlay = jest.fn();
+
+jest.mock('react-player/youtube', () => ({
+  __esModule: true,
+  default: ({light, playIcon, onError}: ReactPlayerProps) => (
+    <div>
+      YouTube Player
+      {light}
+      {playIcon}
+      <button onClick={onError}>Trigger Error</button>
+    </div>
+  ),
+  canPlay: jest.fn(),
+}));
+
+jest.mock('react-player/file', () => ({
+  __esModule: true,
+  default: ({light, playIcon, onError}: ReactPlayerProps) => (
+    <div>
+      Fallback Player
+      {light}
+      {playIcon}
+      <button onClick={onError}>Trigger Error</button>
+    </div>
+  ),
+  canPlay: jest.fn(),
+}));
 
 describe('ActionBlock', () => {
-  const defaultProps: FullWidthActionBlockContentfulProps = {
+  const defaultProps: ActionBlockContentfulProps = {
+    overline: 'Test Overline',
+    title: 'Test Title',
+    description: 'Test Description',
     image: {
       fields: {
         file: {url: 'https://code.org/image.jpg'},
       },
-    } as ExperienceAsset,
-    overline: 'Test Overline',
-    title: 'Test Title',
-    description: 'Test Description',
+    },
     primaryButton: {
       fields: {
         label: 'Test Primary Button',
         primaryTarget: '/primary-link',
         ariaLabel: 'Test Primary Button aria label',
-        isThisAnExternalLink: false,
       },
-    } as LinkEntry,
+    },
     secondaryButton: {
       fields: {
         label: 'Test Secondary Button',
         primaryTarget: '/secondary-link',
         ariaLabel: 'Test Secondary Button aria label',
-        isThisAnExternalLink: false,
       },
-    } as LinkEntry,
+    },
     background: 'primary',
     publishedDate: '2025-03-01T00:00:00Z', // March 1, 2025 12:00 AM UTC
   };
@@ -42,9 +65,7 @@ describe('ActionBlock', () => {
   });
 
   it('renders component with all props', () => {
-    const {getByText, getByAltText} = render(
-      <FullWidthActionBlock {...defaultProps} />,
-    );
+    const {getByText, getByAltText} = render(<ActionBlock {...defaultProps} />);
 
     expect(getByText('Test Overline')).toBeInTheDocument();
     expect(getByText('Test Title')).toBeInTheDocument();
@@ -55,11 +76,8 @@ describe('ActionBlock', () => {
   });
 
   it('does not render buttons when the primary button is not provided', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const primaryButton: any = undefined;
-
     const {queryByText} = render(
-      <FullWidthActionBlock {...defaultProps} primaryButton={primaryButton} />,
+      <ActionBlock {...defaultProps} primaryButton={undefined} />,
     );
 
     // check for primary button
@@ -71,7 +89,7 @@ describe('ActionBlock', () => {
 
   it('renders external link icon for buttons when isThisAnExternalLink is true', () => {
     const {queryAllByTestId} = render(
-      <FullWidthActionBlock
+      <ActionBlock
         {...defaultProps}
         primaryButton={{
           fields: {
@@ -95,7 +113,7 @@ describe('ActionBlock', () => {
     const now = new Date('2025-05-01T00:00:00Z'); // May 1, 2025 12:00 AM UTC
     jest.useFakeTimers().setSystemTime(now);
 
-    const {getByText} = render(<FullWidthActionBlock {...defaultProps} />);
+    const {getByText} = render(<ActionBlock {...defaultProps} />);
 
     expect(getByText('New')).toBeInTheDocument();
   });
@@ -104,7 +122,7 @@ describe('ActionBlock', () => {
     const now = new Date('2025-06-02T00:00:00Z'); // June 2, 2025 12:00 AM UTC
     jest.useFakeTimers().setSystemTime(now);
 
-    const {queryByText} = render(<FullWidthActionBlock {...defaultProps} />);
+    const {queryByText} = render(<ActionBlock {...defaultProps} />);
 
     expect(queryByText('New')).not.toBeInTheDocument();
   });
@@ -113,7 +131,7 @@ describe('ActionBlock', () => {
     const now = new Date('2025-02-28T00:00:00Z'); // Feb 28, 2025 12:00 AM UTC
     jest.useFakeTimers().setSystemTime(now);
 
-    const {queryByText} = render(<FullWidthActionBlock {...defaultProps} />);
+    const {queryByText} = render(<ActionBlock {...defaultProps} />);
 
     expect(queryByText('New')).not.toBeInTheDocument();
   });
@@ -122,7 +140,7 @@ describe('ActionBlock', () => {
     const newProps = {...defaultProps};
     newProps.publishedDate = undefined;
 
-    const {queryByText} = render(<FullWidthActionBlock {...newProps} />);
+    const {queryByText} = render(<ActionBlock {...newProps} />);
 
     expect(queryByText('New')).not.toBeInTheDocument();
   });

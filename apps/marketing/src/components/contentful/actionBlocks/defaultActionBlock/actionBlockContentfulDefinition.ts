@@ -1,6 +1,8 @@
 // Creates a definition for the ActionBlock component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {videoRelatedDefinitions} from '@/components/common/definitions';
+
 export const ActionBlockContentfulComponentDefinition: ComponentDefinition = {
   id: 'verticalActionBlock',
   name: 'Vertical Action Block',
@@ -54,6 +56,7 @@ export const ActionBlockContentfulComponentDefinition: ComponentDefinition = {
         bindingSourceType: ['entry', 'asset'],
       },
     },
+    ...videoRelatedDefinitions,
     primaryButton: {
       displayName: 'Primary button',
       type: 'Link',
