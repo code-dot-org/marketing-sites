@@ -18,8 +18,7 @@ options = {
   subdomain_name: 'code',
   # TODO: populate Account ID dynamically.
   # role_arn: "arn:aws:iam::${account_id}:role/admin/CloudFormationMarketingSitesDevelopmentRole"
-  role_arn: nil,
-  no_interactive: false
+  role_arn: nil
 }
 
 opt_parser = OptionParser.new do |opts|
@@ -73,14 +72,6 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on(
-    '--container_image_name IMAGE_NAME',
-    String,
-    "The repo and image name of the container image, for example 'ghcr.io/code-dot-org/marketing'",
-  ) do |hash|
-    options[:container_image_name] = hash
-  end
-
-  opts.on(
     '--container_image_hash HASH',
     String,
     "The sha256sum of the marketing sites Next.js container image"
@@ -113,13 +104,6 @@ opt_parser = OptionParser.new do |opts|
     "Format: arn:aws:iam::<account-id>:role/<role-name>"
   ) do |arn|
     options[:role_arn] = arn
-  end
-
-  opts.on(
-    '--no_interactive',
-    "Disables interactive prompts",
-  ) do
-    options[:no_interactive] = true
   end
 
   opts.on('-h', '--help', 'Show this help message') do
@@ -205,15 +189,6 @@ def deploy_stack(stack_name, template_file, parameters, region, role_arn, enviro
   end
 end
 
-def download_static_assets(image_name, image_digest)
-  command = <<~CMD
-    docker create --name temp #{image_name}@#{image_digest}
-    docker cp temp:/app/apps/marketing/.next/static/ ./static
-  CMD
-
-  execute_command(command, "Downloading static assets from '#{image_name}@#{image_digest}'")
-end
-
 def get_stack_output(stack_name, output_key, region)
   command = <<~CMD
     aws cloudformation describe-stacks \\
@@ -224,33 +199,6 @@ def get_stack_output(stack_name, output_key, region)
   CMD
 
   execute_command(command, "Getting '#{output_key}' from stack '#{stack_name}'").strip
-end
-
-def upload_static_assets_to_s3(bucket_name)
-  command = <<~CMD
-    aws s3 cp static/ "s3://#{bucket_name}/_next/static" --recursive --quiet
-  CMD
-
-  execute_command(command, "Uploading static assets to S3 bucket #{bucket_name}")
-end
-
-def bucket_exists?(stack_name, region)
-  get_stack_output(stack_name, 'StaticBucketAssetsArn', region)
-  true
-rescue e
-  puts "Bucket does not exist due to: #{e.message}"
-  false
-end
-
-def invalidate_cloudfront(distribution_id, region)
-  command = <<~CMD
-    aws cloudfront create-invalidation \\
-        --distribution-id #{distribution_id} \\
-        --paths "/*" \\
-        --region #{region}
-  CMD
-
-  execute_command(command, "Invalidating CloudFront distribution '#{distribution_id}' at region '#{region}'")
 end
 
 begin
@@ -276,25 +224,15 @@ begin
     puts "Auto-generated stack name: #{options[:stack_name]}"
   end
 
-  bucket_name = "#{options[:subdomain_name]}.#{options[:base_domain_name]}-static-assets"
-  bucket_already_exists = bucket_exists?(options[:stack_name], options[:region])
-
   puts "Deployment configuration:"
   puts "  Marketing Site Template: #{MARKETING_SITE_TEMPLATE_FILE}"
   puts "  Certificate Template: #{CERTIFICATE_TEMPLATE_FILE}"
-  puts "  Bucket Name: #{bucket_name}"
-  puts "  Bucket exists? #{bucket_already_exists}"
   options.each do |key, value|
     puts "  #{key}: #{value}"
   end
 
-  if ENV['CI'] == 'true'
-    puts "Running in CI mode. Skipping confirmation..."
-    confirmation = 'yes'
-  else
-    puts "\nDo you want to continue? [y/N]: "
-    confirmation = $stdin.gets.chomp.downcase
-  end
+  print "\nDo you want to continue? [y/N]: "
+  confirmation = $stdin.gets.chomp.downcase
 
   if ['y', 'yes'].include?(confirmation)
     # Generate certificate stack name
@@ -326,22 +264,12 @@ begin
       options[:environment_type]
     )
 
-    puts "\n=== Step 3: Download Static Assets via Docker Image ==="
-    download_static_assets(options[:container_image_name], options[:container_image_hash])
-
-    puts "\n=== Step 4: Upload to S3 (if exists) ==="
-    if bucket_already_exists
-      upload_static_assets_to_s3(bucket_name)
-    else
-      puts "Skipping upload as the bucket does not exist."
-    end
-
-    # Step 5: Get certificate ARN from stack output.
+    # Step 3: Get certificate ARN from stack output.
     puts "\n=== Step 3: Getting Certificate ARN ==="
     certificate_arn = get_stack_output(cert_stack_name, "TLSCertificateArn", "us-east-1")
     puts "Certificate ARN: #{certificate_arn}"
 
-    # Step 6: Process marketing site template.
+    # Step 4: Process marketing site template.
     puts "\n=== Step 4: Processing Marketing Site Template ==="
     marketing_site_template_path = process_template(
       MARKETING_SITE_TEMPLATE_FILE,
@@ -349,7 +277,7 @@ begin
       binding
     )
 
-    # Step 7: Deploy marketing site stack.
+    # Step 5: Deploy marketing site stack.
     puts "\n=== Step 5: Deploying Marketing Site Stack in #{options[:region]} ==="
     marketing_site_stack_parameters = {
       "HostedZoneId" => options[:hosted_zone_id],
@@ -369,13 +297,6 @@ begin
       options[:role_arn],
       options[:environment_type]
     )
-
-    puts "\n=== Step 8: Upload to S3 (if bucket did not exist yet) ==="
-    upload_static_assets_to_s3(bucket_name) unless bucket_already_exists
-
-    puts "\n=== Step 9: Invalidate Cloudfront Cache ==="
-    distribution_id = get_stack_output(options[:stack_name], "CloudFrontDistributionId", options[:region])
-    invalidate_cloudfront(distribution_id, options[:region])
 
     puts "\nDeployment process completed successfully!"
   else
