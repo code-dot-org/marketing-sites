@@ -108,7 +108,7 @@ opt_parser = OptionParser.new do |opts|
 
   opts.on(
     '--no_interactive',
-    Boolean,
+    TrueClass,
     "Disables interactive prompts",
   ) do
     options[:no_interactive] = true
