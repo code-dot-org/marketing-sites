@@ -106,6 +106,14 @@ opt_parser = OptionParser.new do |opts|
     options[:role_arn] = arn
   end
 
+  opts.on(
+    '--no_interactive',
+    Boolean,
+    "Disables interactive prompts",
+  ) do
+    options[:no_interactive] = true
+  end
+
   opts.on('-h', '--help', 'Show this help message') do
     puts opts
     exit
@@ -232,7 +240,7 @@ begin
   end
 
   print "\nDo you want to continue? [y/N]: "
-  confirmation = $stdin.gets.chomp.downcase
+  confirmation = options[:no_interactive] ? 'y' : $stdin.gets.chomp.downcase
 
   if ['y', 'yes'].include?(confirmation)
     # Generate certificate stack name
