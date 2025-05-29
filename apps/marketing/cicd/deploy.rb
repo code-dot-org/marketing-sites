@@ -239,9 +239,7 @@ begin
     puts "  #{key}: #{value}"
   end
 
-  print "\nDo you want to continue? [y/N]: "
-
-  confirmation = options[:no_interactive] ? 'y' : $stdin.gets.chomp.downcase
+  confirmation = 'y'
 
   if ['y', 'yes'].include?(confirmation)
     # Generate certificate stack name
