@@ -303,28 +303,29 @@ begin
 
     # Step 1: Process certificate template.
     puts "\n=== Step 1: Processing Certificate Template ==="
-    # cert_template_path = process_template(
-    #   CERTIFICATE_TEMPLATE_FILE,
-    #   "certificate_template_#{Time.now.to_i}.yml",
-    #   binding
-    # )
+    cert_template_path = process_template(
+      CERTIFICATE_TEMPLATE_FILE,
+      "certificate_template_#{Time.now.to_i}.yml",
+      binding
+    )
 
     # Step 2: Deploy certificate stack in us-east-1 (always).
     puts "\n=== Step 2: Deploying Certificate Stack in us-east-1 ==="
-    # cert_parameters = {
-    #   "HostedZoneId" => options[:hosted_zone_id],
-    #   "BaseDomainName" => options[:base_domain_name],
-    #   "SubdomainName" => options[:subdomain_name]
-    # }
+    cert_parameters = {
+      "HostedZoneId" => options[:hosted_zone_id],
+      "BaseDomainName" => options[:base_domain_name],
+      "SubdomainName" => options[:subdomain_name]
+    }
 
-    # deploy_stack(
-    #   cert_stack_name,
-    #   cert_template_path,
-    #   cert_parameters,
-    #   "us-east-1",
-    #   options[:role_arn],
-    #   options[:environment_type]
-    # )
+    deploy_stack(
+      cert_stack_name,
+      cert_template_path,
+      cert_parameters,
+      "us-east-1",
+      options[:role_arn],
+      options[:environment_type]
+    )
+
     puts "\n=== Step 3: Download Static Assets via Docker Image ==="
     download_static_assets(options[:container_image_name], options[:container_image_hash])
 
@@ -335,44 +336,44 @@ begin
       puts "Skipping upload as the bucket does not exist."
     end
 
-    # Step 3: Get certificate ARN from stack output.
+    # Step 5: Get certificate ARN from stack output.
     puts "\n=== Step 3: Getting Certificate ARN ==="
     certificate_arn = get_stack_output(cert_stack_name, "TLSCertificateArn", "us-east-1")
     puts "Certificate ARN: #{certificate_arn}"
 
-    # Step 4: Process marketing site template.
+    # Step 6: Process marketing site template.
     puts "\n=== Step 4: Processing Marketing Site Template ==="
-    # marketing_site_template_path = process_template(
-    #   MARKETING_SITE_TEMPLATE_FILE,
-    #   "marketing_site_template_#{Time.now.to_i}.yml",
-    #   binding
-    # )
-    #
-    # # Step 5: Deploy marketing site stack.
-    # puts "\n=== Step 5: Deploying Marketing Site Stack in #{options[:region]} ==="
-    # marketing_site_stack_parameters = {
-    #   "HostedZoneId" => options[:hosted_zone_id],
-    #   "BaseDomainName" => options[:base_domain_name],
-    #   "SubdomainName" => options[:subdomain_name],
-    #   "EnvironmentType" => options[:environment_type],
-    #   "ContainerImageHashDigest" => options[:container_image_hash],
-    #   "CloudFrontTLSCertificateArn" => certificate_arn,
-    #   "WebApplicationServerSecretsARN" => options[:web_application_server_secrets_arn]
-    # }
+    marketing_site_template_path = process_template(
+      MARKETING_SITE_TEMPLATE_FILE,
+      "marketing_site_template_#{Time.now.to_i}.yml",
+      binding
+    )
 
-    # deploy_stack(
-    #   options[:stack_name],
-    #   marketing_site_template_path,
-    #   marketing_site_stack_parameters,
-    #   options[:region],
-    #   options[:role_arn],
-    #   options[:environment_type]
-    # )
+    # Step 7: Deploy marketing site stack.
+    puts "\n=== Step 5: Deploying Marketing Site Stack in #{options[:region]} ==="
+    marketing_site_stack_parameters = {
+      "HostedZoneId" => options[:hosted_zone_id],
+      "BaseDomainName" => options[:base_domain_name],
+      "SubdomainName" => options[:subdomain_name],
+      "EnvironmentType" => options[:environment_type],
+      "ContainerImageHashDigest" => options[:container_image_hash],
+      "CloudFrontTLSCertificateArn" => certificate_arn,
+      "WebApplicationServerSecretsARN" => options[:web_application_server_secrets_arn]
+    }
 
-    puts "\n=== Step 6: Upload to S3 (if bucket did not exist yet) ==="
+    deploy_stack(
+      options[:stack_name],
+      marketing_site_template_path,
+      marketing_site_stack_parameters,
+      options[:region],
+      options[:role_arn],
+      options[:environment_type]
+    )
+
+    puts "\n=== Step 8: Upload to S3 (if bucket did not exist yet) ==="
     upload_static_assets_to_s3(bucket_name) unless bucket_already_exists
 
-    puts "\n=== Step 7: Invalidate Cloudfront Cache ==="
+    puts "\n=== Step 9: Invalidate Cloudfront Cache ==="
     distribution_id = get_stack_output(options[:stack_name], "CloudFrontDistributionId", options[:region])
     invalidate_cloudfront(distribution_id, options[:region])
 
