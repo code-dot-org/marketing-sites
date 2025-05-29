@@ -228,7 +228,7 @@ end
 
 def upload_static_assets_to_s3(bucket_name)
   command = <<~CMD
-    aws s3 sync static/ "s3://#{bucket_name}/_next/static" --quiet
+    aws s3 cp static/ "s3://#{bucket_name}/_next/static" --recursive --quiet
   CMD
 
   execute_command(command, "Uploading static assets to S3 bucket #{bucket_name}")
