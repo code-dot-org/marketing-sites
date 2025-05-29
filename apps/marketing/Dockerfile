@@ -7,6 +7,8 @@
 
 FROM ubuntu:20.04 AS base
 
+RUN sed -i "s|http://|https://|g" /etc/apt/sources.list
+
 # install operating system dependencies
 RUN apt-get update && \
     apt-get install -y curl
