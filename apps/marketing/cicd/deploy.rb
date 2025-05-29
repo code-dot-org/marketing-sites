@@ -266,7 +266,7 @@ begin
   end
 
   bucket_name = "#{options[:subdomain_name]}.#{options[:base_domain_name]}-static-assets"
-  bucket_already_exists = bucket_exists?(bucket_name)
+  bucket_already_exists = bucket_exists?(options[:stack_name], options[:region])
 
   puts "Deployment configuration:"
   puts "  Marketing Site Template: #{MARKETING_SITE_TEMPLATE_FILE}"
