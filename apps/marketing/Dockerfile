@@ -7,7 +7,9 @@
 
 FROM ubuntu:20.04 AS base
 
-RUN sed -i "s|http://|https://|g" /etc/apt/sources.list
+RUN sed -i "s|http://|https://|g" /etc/apt/sources.list && \
+    touch /etc/apt/apt.conf.d/99verify-peer.conf \
+    && echo >>/etc/apt/apt.conf.d/99verify-peer.conf "Acquire { https::Verify-Peer false }"
 
 # install operating system dependencies
 RUN apt-get update && \
