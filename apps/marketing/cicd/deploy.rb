@@ -73,6 +73,14 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on(
+    '--container_image_name IMAGE_NAME',
+    String,
+    "The repo and image name of the container image, for example 'ghcr.io/code-dot-org/marketing'",
+  ) do |hash|
+    options[:container_image_name] = hash
+  end
+
+  opts.on(
     '--container_image_hash HASH',
     String,
     "The sha256sum of the marketing sites Next.js container image"
@@ -197,6 +205,15 @@ def deploy_stack(stack_name, template_file, parameters, region, role_arn, enviro
   end
 end
 
+def download_static_assets(image_name, image_digest)
+  command = <<~CMD
+    docker create --name temp #{image_name}@#{image_digest}
+    docker cp temp:/app/apps/marketing/.next/static/ ./static
+  CMD
+
+  execute_command(command, "Downloading static assets from '#{image_name}@#{image_digest}'")
+end
+
 def get_stack_output(stack_name, output_key, region)
   command = <<~CMD
     aws cloudformation describe-stacks \\
@@ -207,6 +224,22 @@ def get_stack_output(stack_name, output_key, region)
   CMD
 
   execute_command(command, "Getting '#{output_key}' from stack '#{stack_name}'").strip
+end
+
+def upload_static_assets_to_s3(bucket_name)
+  command = <<~CMD
+    aws s3 sync static/ "s3://#{bucket_name}/_next/static" --quiet
+  CMD
+
+  execute_command(command, "Uploading static assets to S3 bucket #{bucket_name}")
+end
+
+def bucket_exists?(bucket_name)
+  command = <<~CMD
+    aws s3 bucket exists --bucket #{bucket_name}
+  CMD
+
+  execute_command(command, "Checking if bucket '#{bucket_name}' exists").success?
 end
 
 begin
@@ -232,9 +265,13 @@ begin
     puts "Auto-generated stack name: #{options[:stack_name]}"
   end
 
+  bucket_name = "#{options[:subdomain_name]}.#{options[:base_domain_name]}-static-assets"
+  bucket_already_exists = bucket_exists?(bucket_name)
+
   puts "Deployment configuration:"
   puts "  Marketing Site Template: #{MARKETING_SITE_TEMPLATE_FILE}"
   puts "  Certificate Template: #{CERTIFICATE_TEMPLATE_FILE}"
+  puts "  Bucket Name: #{bucket_name}, bucket exists? #{bucket_already_exists}"
   options.each do |key, value|
     puts "  #{key}: #{value}"
   end
@@ -262,20 +299,29 @@ begin
 
     # Step 2: Deploy certificate stack in us-east-1 (always).
     puts "\n=== Step 2: Deploying Certificate Stack in us-east-1 ==="
-    cert_parameters = {
-      "HostedZoneId" => options[:hosted_zone_id],
-      "BaseDomainName" => options[:base_domain_name],
-      "SubdomainName" => options[:subdomain_name]
-    }
+    # cert_parameters = {
+    #   "HostedZoneId" => options[:hosted_zone_id],
+    #   "BaseDomainName" => options[:base_domain_name],
+    #   "SubdomainName" => options[:subdomain_name]
+    # }
 
-    deploy_stack(
-      cert_stack_name,
-      cert_template_path,
-      cert_parameters,
-      "us-east-1",
-      options[:role_arn],
-      options[:environment_type]
-    )
+    # deploy_stack(
+    #   cert_stack_name,
+    #   cert_template_path,
+    #   cert_parameters,
+    #   "us-east-1",
+    #   options[:role_arn],
+    #   options[:environment_type]
+    # )
+    puts "\n=== Step 3: Download Static Assets via Docker Image ==="
+    download_static_assets(options[:container_image_name], options[:container_image_hash])
+
+    puts "\n=== Step 4: Upload to S3 (if exists) ==="
+    if bucket_already_exists
+      upload_static_assets_to_s3(bucket_name)
+    else
+      puts "Skipping upload as the bucket does not exist."
+    end
 
     # Step 3: Get certificate ARN from stack output.
     puts "\n=== Step 3: Getting Certificate ARN ==="
@@ -310,6 +356,9 @@ begin
       options[:role_arn],
       options[:environment_type]
     )
+
+    puts "\n=== Step 6: Upload to S3 (if bucket did not exist yet) ==="
+    upload_static_assets_to_s3(bucket_name) unless bucket_already_exists
 
     puts "\nDeployment process completed successfully!"
   else
