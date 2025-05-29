@@ -236,10 +236,10 @@ end
 
 def bucket_exists?(bucket_name)
   command = <<~CMD
-    aws s3 bucket exists --bucket #{bucket_name}
+    aws s3api head-bucket --bucket #{bucket_name}
   CMD
 
-  execute_command(command, "Checking if bucket '#{bucket_name}' exists").success?
+  execute_command(command, "Checking if #{bucket_name} exists").success?
 end
 
 begin
