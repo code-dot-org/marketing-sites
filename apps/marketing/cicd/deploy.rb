@@ -271,7 +271,8 @@ begin
   puts "Deployment configuration:"
   puts "  Marketing Site Template: #{MARKETING_SITE_TEMPLATE_FILE}"
   puts "  Certificate Template: #{CERTIFICATE_TEMPLATE_FILE}"
-  puts "  Bucket Name: #{bucket_name}, bucket exists? #{bucket_already_exists}"
+  puts "  Bucket Name: #{bucket_name}"
+  puts "  Bucket exists? #{bucket_already_exists}"
   options.each do |key, value|
     puts "  #{key}: #{value}"
   end
