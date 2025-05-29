@@ -18,7 +18,8 @@ options = {
   subdomain_name: 'code',
   # TODO: populate Account ID dynamically.
   # role_arn: "arn:aws:iam::${account_id}:role/admin/CloudFormationMarketingSitesDevelopmentRole"
-  role_arn: nil
+  role_arn: nil,
+  no_interactive: false
 }
 
 opt_parser = OptionParser.new do |opts|
@@ -108,7 +109,6 @@ opt_parser = OptionParser.new do |opts|
 
   opts.on(
     '--no_interactive',
-    TrueClass,
     "Disables interactive prompts",
   ) do
     options[:no_interactive] = true
@@ -240,6 +240,7 @@ begin
   end
 
   print "\nDo you want to continue? [y/N]: "
+
   confirmation = options[:no_interactive] ? 'y' : $stdin.gets.chomp.downcase
 
   if ['y', 'yes'].include?(confirmation)
