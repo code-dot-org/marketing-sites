@@ -242,6 +242,17 @@ rescue e
   false
 end
 
+def invalidate_cloudfront(distribution_id, region)
+  command = <<~CMD
+    aws cloudfront create-invalidation \\
+        --distribution-id #{distribution_id} \\
+        --paths "/*" \\
+        --region #{region}
+  CMD
+
+  execute_command(command, "Invalidating CloudFront distribution '#{distribution_id}' at region '#{region}'")
+end
+
 begin
   opt_parser.parse!
 
@@ -292,11 +303,11 @@ begin
 
     # Step 1: Process certificate template.
     puts "\n=== Step 1: Processing Certificate Template ==="
-    cert_template_path = process_template(
-      CERTIFICATE_TEMPLATE_FILE,
-      "certificate_template_#{Time.now.to_i}.yml",
-      binding
-    )
+    # cert_template_path = process_template(
+    #   CERTIFICATE_TEMPLATE_FILE,
+    #   "certificate_template_#{Time.now.to_i}.yml",
+    #   binding
+    # )
 
     # Step 2: Deploy certificate stack in us-east-1 (always).
     puts "\n=== Step 2: Deploying Certificate Stack in us-east-1 ==="
@@ -331,35 +342,39 @@ begin
 
     # Step 4: Process marketing site template.
     puts "\n=== Step 4: Processing Marketing Site Template ==="
-    marketing_site_template_path = process_template(
-      MARKETING_SITE_TEMPLATE_FILE,
-      "marketing_site_template_#{Time.now.to_i}.yml",
-      binding
-    )
+    # marketing_site_template_path = process_template(
+    #   MARKETING_SITE_TEMPLATE_FILE,
+    #   "marketing_site_template_#{Time.now.to_i}.yml",
+    #   binding
+    # )
+    #
+    # # Step 5: Deploy marketing site stack.
+    # puts "\n=== Step 5: Deploying Marketing Site Stack in #{options[:region]} ==="
+    # marketing_site_stack_parameters = {
+    #   "HostedZoneId" => options[:hosted_zone_id],
+    #   "BaseDomainName" => options[:base_domain_name],
+    #   "SubdomainName" => options[:subdomain_name],
+    #   "EnvironmentType" => options[:environment_type],
+    #   "ContainerImageHashDigest" => options[:container_image_hash],
+    #   "CloudFrontTLSCertificateArn" => certificate_arn,
+    #   "WebApplicationServerSecretsARN" => options[:web_application_server_secrets_arn]
+    # }
 
-    # Step 5: Deploy marketing site stack.
-    puts "\n=== Step 5: Deploying Marketing Site Stack in #{options[:region]} ==="
-    marketing_site_stack_parameters = {
-      "HostedZoneId" => options[:hosted_zone_id],
-      "BaseDomainName" => options[:base_domain_name],
-      "SubdomainName" => options[:subdomain_name],
-      "EnvironmentType" => options[:environment_type],
-      "ContainerImageHashDigest" => options[:container_image_hash],
-      "CloudFrontTLSCertificateArn" => certificate_arn,
-      "WebApplicationServerSecretsARN" => options[:web_application_server_secrets_arn]
-    }
-
-    deploy_stack(
-      options[:stack_name],
-      marketing_site_template_path,
-      marketing_site_stack_parameters,
-      options[:region],
-      options[:role_arn],
-      options[:environment_type]
-    )
+    # deploy_stack(
+    #   options[:stack_name],
+    #   marketing_site_template_path,
+    #   marketing_site_stack_parameters,
+    #   options[:region],
+    #   options[:role_arn],
+    #   options[:environment_type]
+    # )
 
     puts "\n=== Step 6: Upload to S3 (if bucket did not exist yet) ==="
     upload_static_assets_to_s3(bucket_name) unless bucket_already_exists
+
+    puts "\n=== Step 7: Invalidate Cloudfront Cache ==="
+    distribution_id = get_stack_output(options[:stack_name], "CloudFrontDistributionId", options[:region])
+    invalidate_cloudfront(distribution_id, options[:region])
 
     puts "\nDeployment process completed successfully!"
   else
