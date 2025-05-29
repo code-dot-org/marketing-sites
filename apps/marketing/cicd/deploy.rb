@@ -18,7 +18,8 @@ options = {
   subdomain_name: 'code',
   # TODO: populate Account ID dynamically.
   # role_arn: "arn:aws:iam::${account_id}:role/admin/CloudFormationMarketingSitesDevelopmentRole"
-  role_arn: nil
+  role_arn: nil,
+  cloudformation_role_boundary: nil
 }
 
 opt_parser = OptionParser.new do |opts|
@@ -104,6 +105,15 @@ opt_parser = OptionParser.new do |opts|
     "Format: arn:aws:iam::<account-id>:role/<role-name>"
   ) do |arn|
     options[:role_arn] = arn
+  end
+
+  opts.on(
+    '--cloudformation_role_boundary ARN',
+    String,
+    "The IAM Policy that any Role created by this template must apply as a Permissions Boundary.",
+    "Format: arn:aws:iam::<account-id>:policy/<policy-name>"
+  ) do |arn|
+    options[:cloudformation_role_boundary] = arn
   end
 
   opts.on('-h', '--help', 'Show this help message') do
@@ -209,6 +219,7 @@ begin
   missing_params << "container_image_hash" unless options[:container_image_hash]
   missing_params << "web_application_server_secrets_arn" unless options[:web_application_server_secrets_arn]
   missing_params << "role_arn" unless options[:role_arn]
+  missing_params << "cloudformation_role_boundary" unless options[:cloudformation_role_boundary]
 
   unless missing_params.empty?
     puts "Error: Missing required parameters: #{missing_params.join(', ')}"
@@ -290,7 +301,8 @@ begin
       "EnvironmentType" => options[:environment_type],
       "ContainerImageHashDigest" => options[:container_image_hash],
       "CloudFrontTLSCertificateArn" => certificate_arn,
-      "WebApplicationServerSecretsARN" => options[:web_application_server_secrets_arn]
+      "WebApplicationServerSecretsARN" => options[:web_application_server_secrets_arn],
+      "RoleBoundary" => options[:cloudformation_role_boundary]
     }
 
     deploy_stack(
