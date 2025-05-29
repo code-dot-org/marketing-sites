@@ -234,12 +234,12 @@ def upload_static_assets_to_s3(bucket_name)
   execute_command(command, "Uploading static assets to S3 bucket #{bucket_name}")
 end
 
-def bucket_exists?(bucket_name)
-  command = <<~CMD
-    aws s3api head-bucket --bucket #{bucket_name}
-  CMD
-
-  execute_command(command, "Checking if #{bucket_name} exists").success?
+def bucket_exists?(stack_name, region)
+  get_stack_output(stack_name, 'StaticBucketAssetsArn', region)
+  true
+rescue e
+  puts "Bucket does not exist due to: #{e.message}"
+  false
 end
 
 begin
