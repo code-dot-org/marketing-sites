@@ -18,7 +18,7 @@ export class MarketingPage {
   }
 
   getBaseDomain() {
-    const domain = process.env.MARKETING_DOMAIN;
+    const domain = process.env.APPLICATION_BASE_ADDRESS;
 
     if (!domain) {
       console.warn('No domain specified, defaulting to localhost:3001!');
