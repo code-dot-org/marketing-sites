@@ -235,12 +235,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/yourschool/thankyou',
-        destination: 'https://studio.code.org/your-school',
+        destination: '/your-school',
         permanent: false,
       },
       {
         source: '/yourschool',
-        destination: 'https://studio.code.org/your-school',
+        destination: '/your-school',
         permanent: false,
       },
       {
