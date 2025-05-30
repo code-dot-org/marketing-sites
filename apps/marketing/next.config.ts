@@ -600,22 +600,22 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/afe/success',
-        destination: 'https://studio.code.org/amazon-future-engineer',
+        destination: '/amazon-future-engineer',
         permanent: false,
       },
       {
         source: '/afe/start-codeorg',
-        destination: 'https://studio.code.org/amazon-future-engineer',
+        destination: '/amazon-future-engineer',
         permanent: false,
       },
       {
         source: '/afe/india',
-        destination: 'https://studio.code.org/amazon-future-engineer',
+        destination: 'https://global.code.org',
         permanent: false,
       },
       {
         source: '/afe',
-        destination: 'https://studio.code.org/amazon-future-engineer',
+        destination: '/amazon-future-engineer',
         permanent: false,
       },
       {
