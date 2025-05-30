@@ -1760,11 +1760,6 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: '/about',
-        destination: '/about',
-        permanent: false,
-      },
-      {
         source: '/mobile',
         destination: '/',
         permanent: false,
