@@ -784,6 +784,11 @@ Resources:
           GeoRestriction:
             RestrictionType: none
 
+        Logging:
+          Bucket: "cdo-logs"
+          Prefix: !Sub "AWSLogs/${AWS::AccountId}/CloudFront/${SubdomainName}.${BaseDomainName}/"
+          IncludeCookies: false
+
         CacheBehaviors:
           # Path: /api/*
           # Description: Marketing application API routes
