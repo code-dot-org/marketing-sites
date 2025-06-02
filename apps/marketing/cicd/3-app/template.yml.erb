@@ -784,6 +784,7 @@ Resources:
           GeoRestriction:
             RestrictionType: none
 
+        # Temporary until distribution becomes the main one, after which Real Time Logging is enabled to avoid double counting between Pegasus and this distribution.
         Logging:
           Bucket: "cdo-logs.s3.amazonaws.com"
           Prefix: !Sub "AWSLogs/${AWS::AccountId}/CloudFront/${SubdomainName}.${BaseDomainName}/"
