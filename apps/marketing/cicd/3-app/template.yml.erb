@@ -785,7 +785,7 @@ Resources:
             RestrictionType: none
 
         Logging:
-          Bucket: "cdo-logs"
+          Bucket: "cdo-logs.s3.amazonaws.com"
           Prefix: !Sub "AWSLogs/${AWS::AccountId}/CloudFront/${SubdomainName}.${BaseDomainName}/"
           IncludeCookies: false
 
