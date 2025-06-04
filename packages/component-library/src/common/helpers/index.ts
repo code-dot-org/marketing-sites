@@ -43,7 +43,7 @@ export const calculatePositionedElementStyles = ({
 }: {
   nodePosition: HTMLElement | null;
   positionedElementRef: React.RefObject<HTMLDivElement | null>;
-  direction?: ComponentPlacementDirection;
+  direction: ComponentPlacementDirection;
   tailOffset: number;
   tailLength: number;
 }) => {
@@ -108,7 +108,7 @@ export const calculatePositionedElementStyles = ({
       );
     };
 
-    let proposedPosition = calculatePosition(direction!);
+    let proposedPosition = calculatePosition(direction);
     if (!fitsInViewport(proposedPosition)) {
       // Flip logic
       const flipDirection = {
@@ -116,7 +116,7 @@ export const calculatePositionedElementStyles = ({
         onLeft: 'onRight',
         onTop: 'onBottom',
         onBottom: 'onTop',
-      }[direction!];
+      }[direction];
 
       const flippedPosition = calculatePosition(
         flipDirection as ComponentPlacementDirection,
@@ -166,7 +166,7 @@ export const updatePositionedElementStyles = ({
 }: {
   nodePosition: HTMLElement | null;
   positionedElementRef: React.RefObject<HTMLDivElement | null>;
-  direction?: ComponentPlacementDirection;
+  direction: ComponentPlacementDirection;
   setPositionedElementStyles: React.Dispatch<
     React.SetStateAction<React.CSSProperties>
   >;
