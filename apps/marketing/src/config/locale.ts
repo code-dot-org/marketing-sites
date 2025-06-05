@@ -1,3 +1,4 @@
+// The following are LocalizeJS language codes and map 1:1. They are replicated here to ensure compatability in SSR.
 export const SUPPORTED_LOCALES = new Set([
   'es',
   'ar',
