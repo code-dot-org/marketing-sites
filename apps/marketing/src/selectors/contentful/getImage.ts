@@ -7,22 +7,20 @@ export function getRelativeImageUrl(asset: ExperienceAsset | undefined) {
 export function getAbsoluteImageUrl(
   asset: ExperienceAsset | string | undefined,
 ) {
-  const absoluteImageUrl =
+  const imgUrl =
     typeof asset === 'string' ? asset : getRelativeImageUrl(asset) || undefined;
 
-  if (!absoluteImageUrl) return undefined;
+  if (!imgUrl) return undefined;
 
   try {
-    const imgUrl = new URL(
-      absoluteImageUrl.startsWith('//')
-        ? `https:${absoluteImageUrl}`
-        : absoluteImageUrl,
+    const absoluteImgUrl = new URL(
+      imgUrl.startsWith('//') ? `https:${imgUrl}` : imgUrl,
     );
     // Force AVIF format conversion for the image
-    imgUrl.searchParams.set('fm', 'avif');
-    return imgUrl.toString();
+    absoluteImgUrl.searchParams.set('fm', 'avif');
+    return absoluteImgUrl.toString();
   } catch (e) {
     console.error(e);
-    return absoluteImageUrl;
+    return imgUrl;
   }
 }
