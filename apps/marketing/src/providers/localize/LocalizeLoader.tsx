@@ -59,6 +59,7 @@ const LocalizeLoader = ({brand, locale}: {brand: Brand; locale: string}) => (
               autodetectLanguage: true,
               rememberLanguage: false, // use the locale in the URL instead
               defaultLanguage: locale,
+              disableWidget: true, // use our own language dropdown
               // Block classes that match developer mode Next.js overlays
               blockedClasses: [
                 'nextjs-toast',
