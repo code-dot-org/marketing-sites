@@ -8,6 +8,3 @@ export const updateUrlParams = (url: string, params: object): string => {
 
   return `${baseURL}?${urlParams.toString()}`;
 };
-
-export const forceAVIFFormat = (src: string): string =>
-  updateUrlParams(src, {fm: 'avif'});

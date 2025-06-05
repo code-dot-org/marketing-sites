@@ -4,8 +4,8 @@ import DSCOHeroBanner from '@code-dot-org/component-library/cms/heroBanner';
 import {Theme} from '@code-dot-org/component-library/common/contexts';
 
 import {externalLinkIconProps} from '@/components/common/constants';
-import {forceAVIFFormat} from '@/components/common/helpers';
 import Video from '@/components/contentful/video';
+import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
@@ -109,14 +109,17 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
             }
           : undefined
       }
-      imageProps={
-        firstSectionImage?.fields?.file?.url
+      imageProps={(() => {
+        const firstSectionImageSrc =
+          firstSectionImage && getAbsoluteImageUrl(firstSectionImage);
+
+        return firstSectionImageSrc
           ? {
-              src: forceAVIFFormat(firstSectionImage.fields.file.url),
+              src: firstSectionImageSrc,
               altText: firstSectionImage.fields.description || '',
             }
-          : undefined
-      }
+          : undefined;
+      })()}
       hideImageOnSmallScreen={hideImageOnSmallScreen}
       buttonProps={
         firstButtonLink
@@ -130,14 +133,16 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
             }
           : undefined
       }
-      partner={
-        partnerLogo
+      partner={(() => {
+        const partnerLogoSrc = partnerLogo && getAbsoluteImageUrl(partnerLogo);
+
+        return partnerLogoSrc
           ? {
               title: partnerCallout || 'In partnership with:',
-              logo: {src: forceAVIFFormat(partnerLogo)},
+              logo: {src: partnerLogoSrc},
             }
-          : undefined
-      }
+          : undefined;
+      })()}
       backgroundImageUrl={backgroundImage}
       videoProps={
         sectionVideoYouTubeId || sectionVideoFallback
