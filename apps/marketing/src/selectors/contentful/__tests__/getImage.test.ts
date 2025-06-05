@@ -56,7 +56,7 @@ describe('getAbsoluteImageUrl', () => {
   });
 
   it('should return the absolute URL if asset is a string', () => {
-    const asset = '//assets.code.org/images/example.jpg';
-    expect(getAbsoluteImageUrl(asset)).toBe(asset + '?fm=avif');
+    const asset = '//assets.code.org/images/example.jpg?test=true';
+    expect(getAbsoluteImageUrl(asset)).toBe('https:' + asset + '&fm=avif');
   });
 });

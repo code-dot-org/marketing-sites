@@ -1,4 +1,3 @@
-import {updateUrlParams} from '@/components/common/helpers';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 export function getRelativeImageUrl(asset: ExperienceAsset | undefined) {
@@ -13,17 +12,19 @@ export function getAbsoluteImageUrl(
   if (typeof asset === 'string') {
     absoluteImageUrl = asset;
   } else {
-    const relativeImageUrl = getRelativeImageUrl(asset);
-    absoluteImageUrl = relativeImageUrl
-      ? `https:${relativeImageUrl}`
-      : undefined;
+    absoluteImageUrl = getRelativeImageUrl(asset) || undefined;
   }
 
   if (!absoluteImageUrl) return undefined;
 
+  if (absoluteImageUrl.startsWith('//'))
+    absoluteImageUrl = `https:${absoluteImageUrl}`;
+
   try {
+    const imgUrl = new URL(absoluteImageUrl);
     // Force AVIF format conversion for the image
-    return updateUrlParams(absoluteImageUrl, {fm: 'avif'});
+    imgUrl.searchParams.set('fm', 'avif');
+    return imgUrl.toString();
   } catch (e) {
     console.error(e);
     return absoluteImageUrl;
