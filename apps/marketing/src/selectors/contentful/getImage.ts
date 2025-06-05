@@ -7,21 +7,17 @@ export function getRelativeImageUrl(asset: ExperienceAsset | undefined) {
 export function getAbsoluteImageUrl(
   asset: ExperienceAsset | string | undefined,
 ) {
-  let absoluteImageUrl: string | undefined;
-
-  if (typeof asset === 'string') {
-    absoluteImageUrl = asset;
-  } else {
-    absoluteImageUrl = getRelativeImageUrl(asset) || undefined;
-  }
+  const absoluteImageUrl =
+    typeof asset === 'string' ? asset : getRelativeImageUrl(asset) || undefined;
 
   if (!absoluteImageUrl) return undefined;
 
-  if (absoluteImageUrl.startsWith('//'))
-    absoluteImageUrl = `https:${absoluteImageUrl}`;
-
   try {
-    const imgUrl = new URL(absoluteImageUrl);
+    const imgUrl = new URL(
+      absoluteImageUrl.startsWith('//')
+        ? `https:${absoluteImageUrl}`
+        : absoluteImageUrl,
+    );
     // Force AVIF format conversion for the image
     imgUrl.searchParams.set('fm', 'avif');
     return imgUrl.toString();
