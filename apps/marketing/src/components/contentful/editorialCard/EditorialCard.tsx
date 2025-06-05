@@ -7,6 +7,7 @@ import EditorialCard, {
 } from '@code-dot-org/component-library/cms/editorialCard';
 
 import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
+import {forceAVIFFormat} from '@/components/common/helpers';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
 export enum EDITORIAL_CARD_CONTENTFUL_LAYOUTS {
@@ -46,7 +47,7 @@ const EditorialCardContentful: React.FC<EditorialCardContentfulProps> = ({
     switch (layoutOpt) {
       case EDITORIAL_CARD_CONTENTFUL_LAYOUTS.HORIZONTAL_WITH_IMAGE:
       case EDITORIAL_CARD_CONTENTFUL_LAYOUTS.VERTICAL_WITH_IMAGE:
-        return image ? {src: image} : undefined;
+        return image ? {src: forceAVIFFormat(image)} : undefined;
       case EDITORIAL_CARD_CONTENTFUL_LAYOUTS.VERTICAL_WITH_ICON:
         return iconName
           ? {

@@ -4,6 +4,7 @@ import DSCOHeroBanner from '@code-dot-org/component-library/cms/heroBanner';
 import {Theme} from '@code-dot-org/component-library/common/contexts';
 
 import {externalLinkIconProps} from '@/components/common/constants';
+import {forceAVIFFormat} from '@/components/common/helpers';
 import Video from '@/components/contentful/video';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
@@ -111,7 +112,7 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
       imageProps={
         firstSectionImage?.fields?.file?.url
           ? {
-              src: firstSectionImage.fields.file.url,
+              src: forceAVIFFormat(firstSectionImage.fields.file.url),
               altText: firstSectionImage.fields.description || '',
             }
           : undefined
@@ -133,7 +134,7 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
         partnerLogo
           ? {
               title: partnerCallout || 'In partnership with:',
-              logo: {src: partnerLogo},
+              logo: {src: forceAVIFFormat(partnerLogo)},
             }
           : undefined
       }

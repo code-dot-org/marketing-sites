@@ -2,6 +2,8 @@ import React from 'react';
 
 import DSCOImage from '@code-dot-org/component-library/image';
 
+import {forceAVIFFormat} from '@/components/common/helpers';
+
 type ImageProps = {
   /** Image URL */
   src?: string | null;
@@ -33,7 +35,7 @@ const Image: React.FC<ImageProps> = ({
 
   return (
     <DSCOImage
-      src={src}
+      src={forceAVIFFormat(src)}
       altText={altText}
       decoration={decoration}
       hasRoundedCorners={hasRoundedCorners}

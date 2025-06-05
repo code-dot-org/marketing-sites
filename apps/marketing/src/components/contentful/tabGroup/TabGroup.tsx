@@ -7,6 +7,7 @@ import TabGroup, {
 } from '@code-dot-org/component-library/cms/tabGroup';
 
 import {externalLinkIconProps} from '@/components/common/constants';
+import {forceAVIFFormat} from '@/components/common/helpers';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
@@ -35,7 +36,9 @@ const TabGroupContentful: React.FunctionComponent<TabGroupContentfulProps> = ({
           description: tab.fields.description,
           image: tab.fields.image
             ? {
-                src: `https:${tab.fields.image.fields?.file?.url}`,
+                src: forceAVIFFormat(
+                  `https:${tab.fields.image.fields?.file?.url}`,
+                ),
                 alt: tab.fields.image.fields?.description,
               }
             : undefined,

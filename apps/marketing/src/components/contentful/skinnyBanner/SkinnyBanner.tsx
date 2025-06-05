@@ -4,6 +4,7 @@ import DSCOSkinnyBanner from '@code-dot-org/component-library/cms/skinnyBanner';
 import {Theme} from '@code-dot-org/component-library/common/contexts';
 
 import {externalLinkIconProps} from '@/components/common/constants';
+import {forceAVIFFormat} from '@/components/common/helpers';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
@@ -55,7 +56,7 @@ const SkinnyBanner: React.FunctionComponent<SkinnyBannerProps> = ({
       imageProps={
         firstSectionImage?.fields?.file?.url
           ? {
-              src: firstSectionImage.fields.file.url,
+              src: forceAVIFFormat(firstSectionImage.fields.file.url),
               altText: firstSectionImage.fields.description || '',
             }
           : undefined
@@ -76,7 +77,7 @@ const SkinnyBanner: React.FunctionComponent<SkinnyBannerProps> = ({
         partnerLogo
           ? {
               title: partnerCallout || 'In partnership with:',
-              logo: {src: partnerLogo},
+              logo: {src: forceAVIFFormat(partnerLogo)},
             }
           : undefined
       }

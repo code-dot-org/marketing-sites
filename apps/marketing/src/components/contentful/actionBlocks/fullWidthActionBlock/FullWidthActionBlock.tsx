@@ -7,6 +7,7 @@ import DSCOFullWidthActionBlock, {
 import DSCOVideo from '@code-dot-org/component-library/video';
 
 import {externalLinkIconProps} from '@/components/common/constants';
+import {forceAVIFFormat} from '@/components/common/helpers';
 import {VideoRelatedProps} from '@/components/common/types';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
@@ -47,7 +48,7 @@ const FullWidthActionBlock: React.FC<FullWidthActionBlockContentfulProps> = ({
 }) => (
   <DSCOFullWidthActionBlock
     className={classNames(moduleStyles.hideDownloadVideoButton, className)}
-    image={{src: `https:${image}`}}
+    image={{src: forceAVIFFormat(`https:${image}`)}}
     video={
       videoYouTubeId || videoFallback
         ? {
