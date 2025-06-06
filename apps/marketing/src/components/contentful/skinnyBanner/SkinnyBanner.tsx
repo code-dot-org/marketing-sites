@@ -86,7 +86,7 @@ const SkinnyBanner: React.FunctionComponent<SkinnyBannerProps> = ({
             }
           : undefined;
       })()}
-      backgroundImageUrl={backgroundImage}
+      backgroundImageUrl={getAbsoluteImageUrl(backgroundImage)}
     />
   );
 };

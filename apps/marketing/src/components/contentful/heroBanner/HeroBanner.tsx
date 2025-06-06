@@ -143,7 +143,7 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
             }
           : undefined;
       })()}
-      backgroundImageUrl={backgroundImage}
+      backgroundImageUrl={getAbsoluteImageUrl(backgroundImage)}
       videoProps={
         sectionVideoYouTubeId || sectionVideoFallback
           ? {
