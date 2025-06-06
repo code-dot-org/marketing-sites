@@ -1,7 +1,7 @@
 import Negotiator from 'negotiator';
 import {NextFetchEvent, NextRequest, NextResponse} from 'next/server';
 
-import {SUPPORTED_LOCALES, SUPPORTED_LOCALES_SET} from '@/config/locale';
+import {SUPPORTED_LOCALE_CODES, SUPPORTED_LOCALES_SET} from '@/config/locale';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
 
 import {MiddlewareFactory} from './types';
@@ -22,7 +22,7 @@ function getLanguageFromAcceptLanguageHeader(request: Request) {
 
   return new Negotiator({
     headers: {'accept-language': acceptLanguageHeader},
-  }).language(SUPPORTED_LOCALES);
+  }).language(SUPPORTED_LOCALE_CODES);
 }
 
 /**

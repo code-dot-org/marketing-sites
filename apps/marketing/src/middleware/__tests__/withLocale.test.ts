@@ -1,6 +1,6 @@
 import {NextRequest, NextFetchEvent, NextResponse} from 'next/server';
 
-import {SUPPORTED_LOCALES, SUPPORTED_LOCALES_SET} from '@/config/locale';
+import {SUPPORTED_LOCALE_CODES, SUPPORTED_LOCALES_SET} from '@/config/locale';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
 
 import {withLocale} from '../withLocale';
@@ -67,7 +67,7 @@ describe('withLocale middleware', () => {
       },
     } as unknown as NextRequest;
 
-    SUPPORTED_LOCALES.push('zh-CN');
+    SUPPORTED_LOCALE_CODES.push('zh-CN');
     (getContentfulSlug as jest.Mock).mockReturnValue('home');
 
     const response = await withLocale(next)(request, mockEvent);
@@ -88,7 +88,7 @@ describe('withLocale middleware', () => {
       },
     } as unknown as NextRequest;
 
-    SUPPORTED_LOCALES.push('en-US');
+    SUPPORTED_LOCALE_CODES.push('en-US');
     (getContentfulSlug as jest.Mock).mockReturnValue('home');
 
     const response = await withLocale(next)(request, mockEvent);

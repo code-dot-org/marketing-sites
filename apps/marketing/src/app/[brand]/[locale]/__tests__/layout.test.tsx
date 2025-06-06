@@ -58,6 +58,13 @@ jest.mock(
     ({brand}: {brand: string}) => <div>OrganizationJsonLd for {brand}</div>,
 );
 
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+  })),
+  usePathname: jest.fn(() => '/example-path'),
+}));
+
 describe('Layout', () => {
   beforeEach(() => {
     jest.clearAllMocks();

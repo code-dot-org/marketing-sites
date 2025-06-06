@@ -48,7 +48,7 @@ export default async function Layout({
             <Header />
             {children}
 
-            <Footer />
+            <Footer locale={locale} />
           </StatsigProvider>
         </OneTrustProvider>
 
