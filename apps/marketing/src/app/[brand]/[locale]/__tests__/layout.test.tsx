@@ -77,7 +77,7 @@ describe('Layout', () => {
     const {findByText} = render(
       await Layout({
         children: <div>Child Component</div>,
-        params: Promise.resolve({brand: 'code.org' as Brand}),
+        params: Promise.resolve({brand: 'code.org' as Brand, locale: 'en-US'}),
       }),
     );
 
@@ -103,10 +103,31 @@ describe('Layout', () => {
     const {queryByText} = render(
       await Layout({
         children: <div>Child Component</div>,
-        params: Promise.resolve({brand: 'code.org' as Brand}),
+        params: Promise.resolve({brand: 'code.org' as Brand, locale: 'en-US'}),
       }),
     );
 
     expect(queryByText('GoogleAnalytics')).not.toBeInTheDocument();
+  });
+
+  it('sets the html lang attribute based on locale', async () => {
+    const locale = 'zh-CN';
+
+    (headers as jest.Mock).mockResolvedValue({
+      get: jest.fn().mockReturnValue('example.com'),
+    });
+    (getBrandFromHostname as jest.Mock).mockReturnValue('code.org');
+    (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue('GA-123456');
+    (getStage as jest.Mock).mockReturnValue('production');
+    (generateBootstrapValues as jest.Mock).mockResolvedValue({});
+
+    const {container} = render(
+      await Layout({
+        children: <div>Child Component</div>,
+        params: Promise.resolve({brand: 'code.org' as Brand, locale}),
+      }),
+    );
+
+    expect(container.querySelector('html')?.getAttribute('lang')).toBe(locale);
   });
 });

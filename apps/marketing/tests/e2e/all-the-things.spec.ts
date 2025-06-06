@@ -95,6 +95,23 @@ test.describe('All the things UI e2e test', () => {
       await page.waitForURL('**/en-US/engineering/all-the-things');
     });
 
+    test('should stay on the same locale if starting from a localized page', async ({
+      page,
+      browserName,
+    }) => {
+      test.skip(
+        browserName !== 'chromium',
+        'This test only needs to run once on Chromium',
+      );
+      const allTheThingsPage = new MarketingPage(page);
+
+      await allTheThingsPage.goto('/zh-TW/engineering/all-the-things');
+
+      // The middleware should send us back to /zh-TW with the language_ cookie set via the previous visit
+      await allTheThingsPage.goto('/engineering/all-the-things');
+      await page.waitForURL('**/zh-TW/engineering/all-the-things');
+    });
+
     test.describe('accept-language header', () => {
       test.use({
         locale: 'zh-TW',

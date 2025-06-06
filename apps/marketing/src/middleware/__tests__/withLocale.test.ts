@@ -10,7 +10,12 @@ jest.mock('@/contentful/slug/getContentfulSlug', () => ({
 }));
 
 describe('withLocale middleware', () => {
-  const next = jest.fn();
+  const cookieMock = {
+    set: jest.fn(),
+  };
+  const next = jest.fn().mockReturnValue({
+    cookies: cookieMock,
+  });
   const mockEvent = {} as NextFetchEvent;
 
   beforeEach(() => {
@@ -22,6 +27,7 @@ describe('withLocale middleware', () => {
       nextUrl: {pathname: '/zh-CN/home'},
       cookies: {get: jest.fn()},
       headers: {get: jest.fn()},
+      response: {cookies: {set: jest.fn()}},
     } as unknown as NextRequest;
 
     SUPPORTED_LOCALES_SET.add('zh-CN');
@@ -29,6 +35,7 @@ describe('withLocale middleware', () => {
 
     expect(next).toHaveBeenCalledWith(request, mockEvent);
     expect(getContentfulSlug).not.toHaveBeenCalled();
+    expect(cookieMock.set).toHaveBeenCalledWith('language_', 'zh-CN');
   });
 
   it('should redirect to the locale path if no locale is present in the path for cookies', async () => {
@@ -92,16 +99,22 @@ describe('withLocale middleware', () => {
     );
   });
 
-  it('should not redirect if the path is empty', async () => {
+  it('should redirect to home page if the path is empty', async () => {
     const request = {
       nextUrl: {pathname: '/'},
       cookies: {get: jest.fn()},
+      headers: {
+        get: jest.fn().mockReturnValue('zh-CN, en-US;q=0.9'),
+      },
+      url: 'https://code.marketing-sites.local',
     } as unknown as NextRequest;
 
-    await withLocale(next)(request, mockEvent);
+    const response = await withLocale(next)(request, mockEvent);
 
-    expect(next).toHaveBeenCalledWith(request, mockEvent);
-    expect(getContentfulSlug).not.toHaveBeenCalled();
+    expect(response).toBeInstanceOf(NextResponse);
+    expect(response?.headers.get('location')).toBe(
+      'https://code.marketing-sites.local/zh-CN/home',
+    );
   });
 
   it('should handle paths with multiple segments correctly', async () => {

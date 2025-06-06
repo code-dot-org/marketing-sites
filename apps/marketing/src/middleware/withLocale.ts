@@ -40,12 +40,16 @@ export const withLocale: MiddlewareFactory = next => {
 
     const maybeLocale = pathParts[0];
 
-    if (pathParts.length === 0 || SUPPORTED_LOCALES_SET.has(maybeLocale)) {
+    if (SUPPORTED_LOCALES_SET.has(maybeLocale)) {
       // If the first part of the path is a supported locale or there are no subpaths, we don't need to redirect
-      return next(request, event);
+      const response = await next(request, event);
+      response.cookies.set('language_', maybeLocale);
+
+      return response;
     }
 
-    const slug = getContentfulSlug(pathParts);
+    // If pathParts is empty, then it is a request to / which should resolve to the /home slug
+    const slug = pathParts.length === 0 ? 'home' : getContentfulSlug(pathParts);
 
     const cookieLocale = getLanguageFromCookie(request);
     const browserPreferredLocale = getLanguageFromAcceptLanguageHeader(request);
@@ -59,6 +63,11 @@ export const withLocale: MiddlewareFactory = next => {
     const locale = cookieLocale || browserPreferredLocale || 'en-US';
 
     const redirectUrl = new URL(`/${locale}/${slug}`, request.url);
-    return NextResponse.redirect(redirectUrl);
+    const response = NextResponse.redirect(redirectUrl);
+
+    // Set the language cookie if discovered via Accept-Language header
+    response.cookies.set('language_', locale);
+
+    return response;
   };
 };
