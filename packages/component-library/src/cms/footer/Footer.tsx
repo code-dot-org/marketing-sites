@@ -103,7 +103,10 @@ const Footer: React.FC<FooterProps> = ({
       </ul>
 
       <DefaultDropdown
-        className={moduleStyles.footerLanguageDropdown}
+        className={classNames(
+          'notranslate',
+          moduleStyles.footerLanguageDropdown,
+        )}
         size={'s'}
         dropdownTextThickness={'thin'}
         color={'black'}

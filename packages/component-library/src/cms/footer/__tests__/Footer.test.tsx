@@ -116,6 +116,8 @@ describe('CMS Footer', () => {
 
     expect(languageSelect).toHaveTextContent('English');
     expect(languageSelect).toHaveTextContent('Spanish');
+    // Don't translate the language dropdown - one of the parents must have the notranslate class
+    expect(languageSelect.closest('.notranslate')).not.toBeNull();
   });
 
   it('calls onLanguageChange when language is changed', async () => {

@@ -116,12 +116,14 @@ const Footer = ({locale}: GlobalFooterProps) => {
   };
 
   return (
-    <DSCOFooter
-      {...defaultProps}
-      onLanguageChange={handleLanguageChange}
-      selectedLocaleCode={locale}
-      languages={SUPPORTED_LOCALES}
-    />
+    <div notranslate>
+      <DSCOFooter
+        {...defaultProps}
+        onLanguageChange={handleLanguageChange}
+        selectedLocaleCode={locale}
+        languages={SUPPORTED_LOCALES}
+      />
+    </div>
   );
 };
 
