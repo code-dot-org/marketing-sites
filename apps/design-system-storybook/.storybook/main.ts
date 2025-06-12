@@ -110,19 +110,5 @@ const config: StorybookConfig = {
   typescript: {
     reactDocgen: 'react-docgen-typescript',
   },
-  previewHead: head => {
-    // Add Font Awesome Pro stylesheets to the preview head
-    return `
-      ${head}
-      <link rel="stylesheet" href="https://dsco.code.org/assets/font-awesome-pro/1728421354/css/fontawesome.min.css">
-      <link rel="stylesheet" href="https://dsco.code.org/assets/font-awesome-pro/1728421354/css/brands.min.css">
-      <link rel="stylesheet" href="https://dsco.code.org/assets/font-awesome-pro/1728421354/css/solid.min.css">
-      <link rel="stylesheet" href="https://dsco.code.org/assets/font-awesome-pro/1728421354/css/regular.min.css">
-      <link rel="stylesheet" href="https://dsco.code.org/assets/font-awesome-pro/1728421354/css/v4-font-face.min.css">
-      <link rel="stylesheet" href="https://dsco.code.org/assets/font-awesome-pro/1728421354/css/v4-shims.min.css">
-      <link rel="stylesheet" href="https://dsco.code.org/assets/font-awesome-pro/1728421354/css/duotone.min.css">
-      <link rel="stylesheet" href="https://dsco.code.org/assets/font-awesome-pro/1728421354/css/custom-icons.min.css">
-    `;
-  },
 };
 export default config;
