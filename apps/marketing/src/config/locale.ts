@@ -20,6 +20,9 @@ export const SUPPORTED_LOCALES = [
   {value: 'uk', text: 'Українська', isRTL: false},
   {value: 'vi', text: 'Tiếng Việt', isRTL: false},
   {value: 'zh-TW', text: '繁體字', isRTL: false},
+  {value: 'sq', text: 'Shqip', isRTL: false},
+  {value: 'tl', text: 'Tagalog', isRTL: false},
+  {value: 'he', text: 'עברית', isRTL: true},
 ];
 
 export const SUPPORTED_LOCALE_CODES = SUPPORTED_LOCALES.map(
