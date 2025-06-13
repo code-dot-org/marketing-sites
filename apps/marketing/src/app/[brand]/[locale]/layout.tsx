@@ -5,6 +5,7 @@ import Header from '@/components/header';
 import {Brand} from '@/config/brand';
 import {getGoogleAnalyticsMeasurementId} from '@/config/ga4';
 import OrganizationJsonLd from '@/config/jsonLd/OrganizationJsonLd';
+import {SUPPORTED_LOCALES_MAP} from '@/config/locale';
 import {getStage} from '@/config/stage';
 import EnvironmentLoader from '@/providers/environment';
 import LocalizeLoader from '@/providers/localize/LocalizeLoader';
@@ -27,9 +28,10 @@ export default async function Layout({
   const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId(brand);
   const statsigBootstrapValues = await generateBootstrapValues();
   const statsigClientKey = process.env.STATSIG_CLIENT_KEY;
+  const localeConfig = SUPPORTED_LOCALES_MAP.get(locale);
 
   return (
-    <html lang={locale}>
+    <html lang={locale} dir={localeConfig?.isRTL ? 'rtl' : 'ltr'}>
       <body>
         <EnvironmentLoader />
         <NewRelicLoader />

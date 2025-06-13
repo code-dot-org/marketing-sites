@@ -136,5 +136,27 @@ describe('Layout', () => {
     );
 
     expect(container.querySelector('html')?.getAttribute('lang')).toBe(locale);
+    expect(container.querySelector('html')?.getAttribute('dir')).toBe('ltr');
+  });
+
+  it('sets the RTL attribute based if locale is RTL language', async () => {
+    const locale = 'ar';
+
+    (headers as jest.Mock).mockResolvedValue({
+      get: jest.fn().mockReturnValue('example.com'),
+    });
+    (getBrandFromHostname as jest.Mock).mockReturnValue('code.org');
+    (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue('GA-123456');
+    (getStage as jest.Mock).mockReturnValue('production');
+    (generateBootstrapValues as jest.Mock).mockResolvedValue({});
+
+    const {container} = render(
+      await Layout({
+        children: <div>Child Component</div>,
+        params: Promise.resolve({brand: 'code.org' as Brand, locale}),
+      }),
+    );
+
+    expect(container.querySelector('html')?.getAttribute('dir')).toBe('rtl');
   });
 });
