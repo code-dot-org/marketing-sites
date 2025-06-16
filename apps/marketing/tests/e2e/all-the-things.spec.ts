@@ -164,7 +164,9 @@ test.describe('All the things UI e2e test', () => {
         const allTheThingsPage = new AllTheThingsPage(page, {locale});
         await allTheThingsPage.goto();
 
-        component = allTheThingsPage.getSectionLocator('Localization');
+        component = allTheThingsPage.getSectionLocator(
+          entry.heading as Section,
+        );
         await component.scrollIntoViewIfNeeded();
       });
 
