@@ -7,6 +7,7 @@ import {
   SUPPORTED_LOCALE_CODES,
   SUPPORTED_LOCALES_SET,
 } from '@/config/locale';
+import {getStage} from '@/config/stage';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
 
 import {MiddlewareFactory} from './types';
@@ -50,9 +51,10 @@ export const withLocale: MiddlewareFactory = next => {
     if (SUPPORTED_LOCALES_SET.has(maybeLocale)) {
       // If the first part of the path is a supported locale or there are no subpaths, we don't need to redirect
       const response = await next(request, event);
+
       response.cookies.set('language_', getPegasusLocale(maybeLocale), {
         path: '/',
-        domain: '.code.org',
+        domain: getStage() === 'production' ? '.code.org' : undefined,
       });
 
       return response;
@@ -78,8 +80,9 @@ export const withLocale: MiddlewareFactory = next => {
     // Set the language cookie if discovered via Accept-Language header
     response.cookies.set('language_', getPegasusLocale(locale), {
       path: '/',
-      domain: '.code.org',
+      domain: getStage() === 'production' ? '.code.org' : undefined,
     });
+
     return response;
   };
 };

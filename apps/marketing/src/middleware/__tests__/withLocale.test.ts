@@ -1,12 +1,17 @@
 import {NextRequest, NextFetchEvent, NextResponse} from 'next/server';
 
 import {SUPPORTED_LOCALE_CODES, SUPPORTED_LOCALES_SET} from '@/config/locale';
+import {getStage} from '@/config/stage';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
 
 import {withLocale} from '../withLocale';
 
 jest.mock('@/contentful/slug/getContentfulSlug', () => ({
   getContentfulSlug: jest.fn(),
+}));
+
+jest.mock('@/config/stage', () => ({
+  getStage: jest.fn(),
 }));
 
 describe('withLocale middleware', () => {
@@ -29,6 +34,26 @@ describe('withLocale middleware', () => {
       headers: {get: jest.fn()},
       response: {cookies: {set: jest.fn()}},
     } as unknown as NextRequest;
+
+    SUPPORTED_LOCALES_SET.add('zh-TW');
+    await withLocale(next)(request, mockEvent);
+
+    expect(next).toHaveBeenCalledWith(request, mockEvent);
+    expect(getContentfulSlug).not.toHaveBeenCalled();
+    expect(cookieMock.set).toHaveBeenCalledWith('language_', 'zh-TW', {
+      domain: undefined,
+      path: '/',
+    });
+  });
+
+  it('should not redirect if the path contains a supported locale - development', async () => {
+    const request = {
+      nextUrl: {pathname: '/zh-TW/home'},
+      cookies: {get: jest.fn()},
+      headers: {get: jest.fn()},
+      response: {cookies: {set: jest.fn()}},
+    } as unknown as NextRequest;
+    (getStage as jest.Mock).mockReturnValue('production');
 
     SUPPORTED_LOCALES_SET.add('zh-TW');
     await withLocale(next)(request, mockEvent);
