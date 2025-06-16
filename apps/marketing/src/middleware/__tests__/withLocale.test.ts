@@ -35,7 +35,10 @@ describe('withLocale middleware', () => {
 
     expect(next).toHaveBeenCalledWith(request, mockEvent);
     expect(getContentfulSlug).not.toHaveBeenCalled();
-    expect(cookieMock.set).toHaveBeenCalledWith('language_', 'zh-CN');
+    expect(cookieMock.set).toHaveBeenCalledWith('language_', 'zh-CN', {
+      domain: '.code.org',
+      path: '/',
+    });
   });
 
   it('should redirect to the locale path if no locale is present in the path for cookies', async () => {

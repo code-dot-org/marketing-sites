@@ -43,7 +43,10 @@ export const withLocale: MiddlewareFactory = next => {
     if (SUPPORTED_LOCALES_SET.has(maybeLocale)) {
       // If the first part of the path is a supported locale or there are no subpaths, we don't need to redirect
       const response = await next(request, event);
-      response.cookies.set('language_', maybeLocale);
+      response.cookies.set('language_', maybeLocale, {
+        path: '/',
+        domain: '.code.org',
+      });
 
       return response;
     }
