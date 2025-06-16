@@ -48,7 +48,7 @@ const PEGASUS_LOCALE_MAP: Record<string, string | undefined> = {
   vi: 'vi-VN',
   'zh-TW': 'zh-TW',
   sq: 'sq-AL',
-  tl: undefined,
+  tl: 'fil-PH',
   he: 'he-IL',
 };
 
