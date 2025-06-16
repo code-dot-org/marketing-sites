@@ -25,6 +25,38 @@ export const SUPPORTED_LOCALES = [
   {value: 'he', text: 'עברית', isRTL: true},
 ];
 
+// Map of LocalizeJS locale codes to Pegasus locale codes
+const PEGASUS_LOCALE_MAP: Record<string, string | undefined> = {
+  'en-US': 'en_US',
+  es: 'es-MX',
+  ar: 'ar-SA',
+  de: 'de-DE',
+  fa: 'fa-IR',
+  fr: 'fr-FR',
+  hi: 'hi-IN',
+  id: 'id-ID',
+  it: 'it-IT',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+  mr: 'mr-IN',
+  pl: 'pl-PL',
+  'pt-BR': 'pt-BR',
+  sk: 'sk-SK',
+  th: 'th-TH',
+  tr: 'tr-TR',
+  uk: 'uk-UA',
+  vi: 'vi-VN',
+  'zh-TW': 'zh-TW',
+  sq: 'sq-AL',
+  tl: undefined,
+  he: 'he-IL',
+};
+
+const LOCALIZEJS_LOCALE_MAP: Record<string, string | undefined> =
+  Object.fromEntries(
+    Object.entries(PEGASUS_LOCALE_MAP).map(([key, value]) => [value, key]),
+  );
+
 export const SUPPORTED_LOCALE_CODES = SUPPORTED_LOCALES.map(
   locale => locale.value,
 );
@@ -33,3 +65,17 @@ export const SUPPORTED_LOCALES_SET = new Set(SUPPORTED_LOCALE_CODES);
 export const SUPPORTED_LOCALES_MAP = new Map(
   SUPPORTED_LOCALES.map(locale => [locale.value, locale]),
 );
+
+export function getPegasusLocale(localizeJsLocale: string): string {
+  return PEGASUS_LOCALE_MAP[localizeJsLocale] || 'en-US';
+}
+
+export function getLocalizeJsLocale(
+  pegasusLocale: string | undefined,
+): string | undefined {
+  if (!pegasusLocale) {
+    return undefined;
+  }
+
+  return LOCALIZEJS_LOCALE_MAP[pegasusLocale];
+}

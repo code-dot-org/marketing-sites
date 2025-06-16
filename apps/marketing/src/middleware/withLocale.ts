@@ -1,13 +1,20 @@
 import Negotiator from 'negotiator';
 import {NextFetchEvent, NextRequest, NextResponse} from 'next/server';
 
-import {SUPPORTED_LOCALE_CODES, SUPPORTED_LOCALES_SET} from '@/config/locale';
+import {
+  getLocalizeJsLocale,
+  getPegasusLocale,
+  SUPPORTED_LOCALE_CODES,
+  SUPPORTED_LOCALES_SET,
+} from '@/config/locale';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
 
 import {MiddlewareFactory} from './types';
 
 function getLanguageFromCookie(request: NextRequest) {
-  const cookieLocale = request.cookies.get('language_')?.value;
+  const cookieLocale = getLocalizeJsLocale(
+    request.cookies.get('language_')?.value,
+  );
   return cookieLocale !== undefined && SUPPORTED_LOCALES_SET.has(cookieLocale)
     ? cookieLocale
     : undefined;
@@ -43,7 +50,7 @@ export const withLocale: MiddlewareFactory = next => {
     if (SUPPORTED_LOCALES_SET.has(maybeLocale)) {
       // If the first part of the path is a supported locale or there are no subpaths, we don't need to redirect
       const response = await next(request, event);
-      response.cookies.set('language_', maybeLocale, {
+      response.cookies.set('language_', getPegasusLocale(maybeLocale), {
         path: '/',
         domain: '.code.org',
       });
@@ -69,8 +76,10 @@ export const withLocale: MiddlewareFactory = next => {
     const response = NextResponse.redirect(redirectUrl);
 
     // Set the language cookie if discovered via Accept-Language header
-    response.cookies.set('language_', locale);
-
+    response.cookies.set('language_', getPegasusLocale(locale), {
+      path: '/',
+      domain: '.code.org',
+    });
     return response;
   };
 };
