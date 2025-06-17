@@ -60,9 +60,8 @@ export const withLocale: MiddlewareFactory = next => {
       return response;
     }
 
-    // If pathParts is empty, then it is a request to / which should resolve to the / slug
-    // It is an empty string here because when a call is made to Contentful, `/` is automatically prepended
-    const slug = pathParts.length === 0 ? '' : getContentfulSlug(pathParts);
+    // If pathParts is empty, then it is a request to / which should resolve to the /home slug
+    const slug = pathParts.length === 0 ? 'home' : getContentfulSlug(pathParts);
 
     const cookieLocale = getLanguageFromCookie(request);
     const browserPreferredLocale = getLanguageFromAcceptLanguageHeader(request);
