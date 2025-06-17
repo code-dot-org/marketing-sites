@@ -600,11 +600,6 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: '/amazon-future-engineer',
-        destination: 'https://studio.code.org/amazon-future-engineer',
-        permanent: false,
-      },
-      {
         source: '/afe/success',
         destination: '/amazon-future-engineer',
         permanent: false,
