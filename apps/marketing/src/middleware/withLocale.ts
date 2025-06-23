@@ -67,8 +67,9 @@ export const withLocale: MiddlewareFactory = next => {
     const isRootRoute = pathParts.length === 0;
 
     if (isRootRoute) {
-      // If the _short_name cookie is set, then Dashboard successfully logged in the user which is an early indicator
+      // If the _user_type cookie is set, then Dashboard successfully logged in the user which is an early indicator
       // that the user is logged in right now. Therefore, send the user to Code Studio
+      // See: https://github.com/code-dot-org/code-dot-org/blob/3fad8bce055846378ae3da343da93a32acd4df8c/dashboard/config/initializers/devise.rb#L331
       const userTypeCookie = request.cookies.get('_user_type');
 
       if (userTypeCookie?.value) {
