@@ -107,10 +107,6 @@ const contentfulRegistration = {
     },
     {component: Button, definition: ButtonContentfulComponentDefinition},
     {
-      component: ActionBlockCarousel,
-      definition: ActionBlockCarouselContentfulComponentDefinition,
-    },
-    {
       component: Divider,
       definition: DividerContentfulComponentDefinition,
       options: {

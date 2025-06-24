@@ -4,9 +4,6 @@ import ActionBlock, {
 import FullWidthActionBlock, {
   FullWidthActionBlockContentfulComponentDefinition,
 } from '@/components/contentful/actionBlocks/fullWidthActionBlock';
-import AFEEligibility, {
-  AFEEligibilityContentfulComponentDefinition,
-} from '@/components/contentful/afeEligibility';
 import Button, {
   ButtonContentfulComponentDefinition,
 } from '@/components/contentful/button';
@@ -22,8 +19,6 @@ import VideoCarousel, {
 import Divider, {
   DividerContentfulComponentDefinition,
 } from '@/components/contentful/divider';
-import {DoubleTheDonationContentfulComponentDefinition} from '@/components/contentful/doubleTheDonation';
-import DoubleTheDonation from '@/components/contentful/doubleTheDonation/DoubleTheDonation';
 import EditorialCard, {
   EditorialCardContentfulComponentDefinition,
 } from '@/components/contentful/editorialCard';
@@ -66,12 +61,6 @@ import SimpleList, {
 import SkinnyBanner, {
   SkinnyBannerContentfulComponentDefinition,
 } from '@/components/contentful/skinnyBanner';
-import CurriculumSnapshot, {
-  CurriculumSnapshotContentfulComponentDefinition,
-} from '@/components/contentful/snapshots/curriculumSnapshot';
-import LabSnapshot, {
-  LabSnapshotContentfulComponentDefinition,
-} from '@/components/contentful/snapshots/labSnapshot';
 import Spacer, {
   SpacerContentfulComponentDefinition,
 } from '@/components/contentful/spacer';
@@ -98,15 +87,7 @@ const contentfulRegistration = {
       component: ActionBlockCarousel,
       definition: ActionBlockCarouselContentfulComponentDefinition,
     },
-    {
-      component: AFEEligibility,
-      definition: AFEEligibilityContentfulComponentDefinition,
-    },
     {component: Button, definition: ButtonContentfulComponentDefinition},
-    {
-      component: ActionBlockCarousel,
-      definition: ActionBlockCarouselContentfulComponentDefinition,
-    },
     {
       component: Divider,
       definition: DividerContentfulComponentDefinition,
@@ -114,11 +95,6 @@ const contentfulRegistration = {
         wrapContainerWidth: '100%',
       },
     },
-    {
-      component: DoubleTheDonation,
-      definition: DoubleTheDonationContentfulComponentDefinition,
-    },
-
     {
       component: EditorialCard,
       definition: EditorialCardContentfulComponentDefinition,
@@ -165,10 +141,6 @@ const contentfulRegistration = {
       definition: ImageCarouselContentfulComponentDefinition,
     },
     {
-      component: LabSnapshot,
-      definition: LabSnapshotContentfulComponentDefinition,
-    },
-    {
       component: Link,
       definition: LinkContentfulComponentDefinition,
     },
@@ -202,10 +174,6 @@ const contentfulRegistration = {
     {
       component: Spacer,
       definition: SpacerContentfulComponentDefinition,
-    },
-    {
-      component: CurriculumSnapshot,
-      definition: CurriculumSnapshotContentfulComponentDefinition,
     },
     {component: TabGroup, definition: TabGroupContentfulComponentDefinition},
     {
