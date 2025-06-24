@@ -1,6 +1,3 @@
-// Register custom components server-side
-import '@/contentful/register-custom-components';
-
 import {detachExperienceStyles} from '@contentful/experiences-sdk-react';
 import {Metadata} from 'next';
 import {draftMode} from 'next/headers';
@@ -11,6 +8,7 @@ import ContentEditorHelper from '@/components/contentEditorHelper';
 import {Brand} from '@/config/brand';
 import ExperiencePageLoader from '@/contentful/components/ExperiencePageLoader';
 import {getExperience} from '@/contentful/get-experience';
+import {registerContentfulComponents} from '@/contentful/registration';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
 import {getSeoMetadata} from '@/metadata/seo';
 import {getPageHeading} from '@/selectors/contentful/getExperienceEntryFields';
@@ -43,7 +41,11 @@ export async function generateStaticParams() {
 }
 
 async function getPageProps({params, searchParams}: ExperiencePageProps) {
-  const {locale = 'en-US', paths = ['']} = (await params) || {};
+  const {
+    locale = 'en-US',
+    brand = Brand.CODE_DOT_ORG,
+    paths = [''],
+  } = (await params) || {};
   const isDraftModeEnabled = (await draftMode()).isEnabled;
 
   const slug = getContentfulSlug(paths);
@@ -59,6 +61,7 @@ async function getPageProps({params, searchParams}: ExperiencePageProps) {
     ),
     locale,
     slug,
+    brand,
   };
 }
 
@@ -66,7 +69,6 @@ export async function generateMetadata({
   params,
   searchParams,
 }: ExperiencePageProps): Promise<Metadata> {
-  const {brand} = (await params) || {};
   const pageProps = await getPageProps({
     params,
     searchParams,
@@ -85,7 +87,7 @@ export async function generateMetadata({
         href: '/images/favicon.ico',
       },
     ],
-    ...getSeoMetadata(experience, brand, pageProps.locale),
+    ...getSeoMetadata(experience, pageProps.brand, pageProps.locale),
   };
 }
 export default async function ExperiencePage({
@@ -99,6 +101,8 @@ export default async function ExperiencePage({
   });
 
   const {experience, error} = pageProps.experienceResult;
+
+  registerContentfulComponents(pageProps.brand);
 
   if (error) {
     if (error.message.startsWith('No experience entry with slug')) {
@@ -121,6 +125,7 @@ export default async function ExperiencePage({
       <ExperiencePageLoader
         experienceJSON={experienceJSON}
         locale={pageProps.locale}
+        brand={pageProps.brand}
       />
     </main>
   );

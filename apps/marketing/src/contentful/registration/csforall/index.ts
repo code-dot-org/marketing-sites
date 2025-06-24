@@ -1,10 +1,3 @@
-/**
- * This file is used to register custom react components for usage in Contentful Studio Experiences.
- *
- * Note: This file must be imported both server-side and client-side to ensure Contentful is able to map on both rendering modes.
- */
-import {defineComponents} from '@contentful/experiences-sdk-react';
-
 import ActionBlock, {
   ActionBlockContentfulComponentDefinition,
 } from '@/components/contentful/actionBlocks/defaultActionBlock';
@@ -26,9 +19,6 @@ import ImageCarousel, {
 import VideoCarousel, {
   VideoCarouselContentfulComponentDefinition,
 } from '@/components/contentful/carousels/videoCarousel';
-import LogoCollection, {
-  LogoCollectionContentfulComponentDefinition,
-} from '@/components/contentful/collections/logoCollection';
 import Divider, {
   DividerContentfulComponentDefinition,
 } from '@/components/contentful/divider';
@@ -95,8 +85,8 @@ import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
 
-defineComponents(
-  [
+const contentfulRegistration = {
+  componentRegistrations: [
     {
       component: ActionBlock,
       definition: ActionBlockContentfulComponentDefinition,
@@ -182,10 +172,6 @@ defineComponents(
       component: Link,
       definition: LinkContentfulComponentDefinition,
     },
-    {
-      component: LogoCollection,
-      definition: LogoCollectionContentfulComponentDefinition,
-    },
     {component: Overline, definition: OverlineContentfulComponentDefinition},
     {
       component: Paragraph,
@@ -241,7 +227,9 @@ defineComponents(
       definition: VideoCarouselContentfulComponentDefinition,
     },
   ],
-  {
+  options: {
     enabledBuiltInComponents: [],
   },
-);
+};
+
+export default contentfulRegistration;
