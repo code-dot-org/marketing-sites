@@ -87,6 +87,9 @@ import Testimonial, {
 import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
+import YourSchool, {
+  YourSchoolContentfulComponentDefinition,
+} from '@/components/contentful/yourSchool';
 
 const contentfulRegistration = {
   componentRegistrations: [
@@ -228,6 +231,13 @@ const contentfulRegistration = {
     {
       component: VideoCarousel,
       definition: VideoCarouselContentfulComponentDefinition,
+    },
+    {
+      component: YourSchool,
+      definition: YourSchoolContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+      },
     },
   ],
   options: {
