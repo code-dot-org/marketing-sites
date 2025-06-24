@@ -6,6 +6,7 @@ import {notFound} from 'next/navigation';
 import Bootstrap from '@/bootstrap';
 import ContentEditorHelper from '@/components/contentEditorHelper';
 import {Brand} from '@/config/brand';
+import {getIcons} from '@/config/metadata/icons';
 import ExperiencePageLoader from '@/contentful/components/ExperiencePageLoader';
 import {getExperience} from '@/contentful/get-experience';
 import {registerContentfulComponents} from '@/contentful/registration';
@@ -78,15 +79,7 @@ export async function generateMetadata({
 
   return {
     title: getPageHeading(experience),
-    // Temporary favicon location for Pegasus compatability.
-    // Remove when Pegasus is deprecated.
-    // TODO: https://codedotorg.atlassian.net/browse/CMS-731
-    icons: [
-      {
-        url: '/images/favicon.ico',
-        href: '/images/favicon.ico',
-      },
-    ],
+    icons: getIcons(pageProps.brand),
     ...getSeoMetadata(experience, pageProps.brand, pageProps.locale),
   };
 }
