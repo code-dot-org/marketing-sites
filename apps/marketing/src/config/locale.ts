@@ -142,8 +142,8 @@ export function getDashboardLocale(localizeJsLocale: string): string {
 }
 
 /**
- * Returns the LocalizeJS locale code for a given Pegasus locale code.
- * @param dashboardLocale - The Pegasus locale code to convert.
+ * Returns the LocalizeJS locale code for a given Dashboard (studio.code.org) locale code.
+ * @param dashboardLocale - The Dashboard (studio.code.org) locale code to convert.
  */
 export function getLocalizeJsLocaleFromDashboardLocale(
   dashboardLocale: string | undefined,
