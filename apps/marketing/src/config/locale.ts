@@ -134,7 +134,7 @@ export function getLocalizeJsLocaleFromBCP47(bcp47Code: string) {
 }
 
 /**
- * Returns the Pegasus locale code for a given LocalizeJS locale code.
+ * Returns the Dashboard (studio.code.org) locale code for a given LocalizeJS locale code.
  * @param localizeJsLocale - The LocalizeJS locale code to convert.
  */
 export function getDashboardLocale(localizeJsLocale: string): string {
