@@ -85,7 +85,7 @@ const LOCALIZEJS_LOCALE: {[locale in SupportedLocale]: string} = {
 };
 
 // Map of LocalizeJS locale codes to Pegasus locale codes
-const PEGASUS_LOCALE_MAP: Record<string, string | undefined> = {
+const DASHBOARD_LOCALE_MAP: Record<string, string | undefined> = {
   'en-US': 'en-US',
   es: 'es-MX',
   ar: 'ar-SA',
@@ -113,7 +113,7 @@ const PEGASUS_LOCALE_MAP: Record<string, string | undefined> = {
 
 const LOCALIZEJS_LOCALE_MAP: Record<string, SupportedLocale | undefined> =
   Object.fromEntries(
-    Object.entries(PEGASUS_LOCALE_MAP).map(([key, value]) => [value, key]),
+    Object.entries(DASHBOARD_LOCALE_MAP).map(([key, value]) => [value, key]),
   );
 
 export const SUPPORTED_LOCALE_CODES = LOCALIZE_JS_CONFIG_MAP.map(
@@ -137,20 +137,20 @@ export function getLocalizeJsLocaleFromBCP47(bcp47Code: string) {
  * Returns the Pegasus locale code for a given LocalizeJS locale code.
  * @param localizeJsLocale - The LocalizeJS locale code to convert.
  */
-export function getPegasusLocale(localizeJsLocale: string): string {
-  return PEGASUS_LOCALE_MAP[localizeJsLocale] || 'en-US';
+export function getDashboardLocale(localizeJsLocale: string): string {
+  return DASHBOARD_LOCALE_MAP[localizeJsLocale] || 'en-US';
 }
 
 /**
  * Returns the LocalizeJS locale code for a given Pegasus locale code.
- * @param pegasusLocale - The Pegasus locale code to convert.
+ * @param dashboardLocale - The Pegasus locale code to convert.
  */
-export function getLocalizeJsLocaleFromPegasusLocale(
-  pegasusLocale: string | undefined,
+export function getLocalizeJsLocaleFromDashboardLocale(
+  dashboardLocale: string | undefined,
 ): SupportedLocale | undefined {
-  if (!pegasusLocale) {
+  if (!dashboardLocale) {
     return undefined;
   }
 
-  return LOCALIZEJS_LOCALE_MAP[pegasusLocale];
+  return LOCALIZEJS_LOCALE_MAP[dashboardLocale];
 }
