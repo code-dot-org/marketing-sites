@@ -84,7 +84,7 @@ const LOCALIZEJS_LOCALE: {[locale in SupportedLocale]: string} = {
   he: 'he',
 };
 
-// Map of LocalizeJS locale codes to Pegasus locale codes
+// Map of LocalizeJS locale codes to Dashboard (studio.code.org) locale codes
 const DASHBOARD_LOCALE_MAP: Record<string, string | undefined> = {
   'en-US': 'en-US',
   es: 'es-MX',
