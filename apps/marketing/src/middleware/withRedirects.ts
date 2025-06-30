@@ -19,8 +19,10 @@ export const withRedirects: MiddlewareFactory = next => {
     const brand = getBrandFromHostname(hostname);
 
     const redirectConfigUrl = new URL(
-      `${getLocalhostAddress()}/api/private/redirects`,
+      `${getLocalhostAddress()}/api/private/redirects/${encodeURIComponent(brand)}/${encodeURIComponent(pathname)}`,
     );
+
+    console.log(`calling redirectConfigUrl: ${redirectConfigUrl}`);
     redirectConfigUrl.search = new URLSearchParams({
       pathname,
       brand,
