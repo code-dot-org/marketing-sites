@@ -41,6 +41,7 @@ export async function GET(
 
   if (redirectEntry) {
     const responseBody = JSON.stringify(redirectEntry);
+    // This API uses Stale While Revalidate with an ETag for caching
     return new Response(responseBody, {
       headers: {
         'Cache-Control': STALE_WHILE_REVALIDATE_ONE_HOUR,

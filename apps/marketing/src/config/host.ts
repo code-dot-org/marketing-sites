@@ -1,3 +1,6 @@
+/**
+ * Returns the localhost domain
+ */
 export function getLocalhostDomain() {
   const port = process.env.PORT || '3000';
   return `localhost:${port}`;

@@ -1,9 +1,18 @@
 import {ContentfulClientApi, Entry, EntrySkeletonType} from 'contentful';
 
+import logger from '@/logger/contentful';
+
+/**
+ * Fetches all entries for a given content type from Contentful.
+ * @param client - The Contentful client to use for fetching entries (preview or delivery)
+ * @param contentType - The content type to fetch all entries for
+ */
 export async function getAllEntriesForContentType<
   EntrySkeleton extends EntrySkeletonType = EntrySkeletonType,
 >(client: ContentfulClientApi<undefined>, contentType: string) {
-  console.log(`Fetching all entries for content type: ${contentType}`);
+  logger.info(`Fetching all entries for content type: ${contentType}`, {
+    contentType,
+  });
 
   const allEntries: Entry<EntrySkeleton, undefined>[] = [];
   const pageSize = 100;
@@ -22,9 +31,7 @@ export async function getAllEntriesForContentType<
     skip += pageSize;
   } while (allEntries.length < total);
 
-  console.log(
-    `Fetched ${allEntries.length} entries for content type: ${contentType}`,
-  );
+  logger.info(`Fetched ${allEntries.length} entries`, {contentType});
 
   return allEntries;
 }

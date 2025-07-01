@@ -25,7 +25,7 @@ async function getRedirectCacheByBrand(): Promise<RedirectCacheByBrand> {
 
   if (!deliveryClient) {
     console.warn(
-      '⚠️ Contentful delivery client is not available, no redirects will be cached. Please check that frontend/apps/marketing/.env is populated.',
+      '⚠️ Contentful delivery client is not available, no redirects will be available. Please check that frontend/apps/marketing/.env is populated.',
     );
     return redirectCacheByBrand;
   }

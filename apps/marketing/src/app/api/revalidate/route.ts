@@ -1,12 +1,14 @@
 import {revalidatePath, revalidateTag} from 'next/cache';
 
+import logger from '@/logger/revalidate';
+
 interface PagePaths {
   [locale: string]: string;
 }
 
 function revalidatePaths(pagePaths: PagePaths | undefined) {
   if (!pagePaths) {
-    console.debug('No pages to revalidate');
+    logger.debug('No pages to revalidate');
     return;
   }
 
@@ -19,7 +21,7 @@ function revalidatePaths(pagePaths: PagePaths | undefined) {
     Array<string>(),
   );
 
-  console.log(`Revalidating paths:`, pathsToRevalidate);
+  logger.info(`Revalidating paths:`, {pathsToRevalidate});
 
   for (const path of pathsToRevalidate) {
     // Trigger ISR for the given page
@@ -33,15 +35,16 @@ function revalidateEntryTag(entryId: string | undefined) {
     return;
   }
 
-  console.log(`Revalidating tag for entry ID: ${entryId}`);
+  logger.info(`Revalidating entry ID: ${entryId}`, {entryId});
 
   revalidateTag(entryId);
 }
 
 function revalidateByContentType(contentType: string) {
+  logger.info('Revalidating all tags for content type', {contentType});
+
   switch (contentType) {
     case 'redirect': {
-      console.log('Revalidating redirects');
       revalidateTag('redirect');
       break;
     }
