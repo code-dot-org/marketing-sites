@@ -1,83 +1,86 @@
 /**
  * @jest-environment node
  */
-import {NextRequest} from 'next/server';
-
+import {STALE_WHILE_REVALIDATE_ONE_HOUR} from '@/cache/constants';
 import {getRedirectEntry} from '@/cache/redirects/getRedirectEntry';
+import {Brand} from '@/config/brand';
 import {getLocalhostDomain} from '@/config/host';
 
 import {GET} from '../route';
 
-jest.mock('@/cache/redirects/getRedirectEntry', () => ({
-  getRedirectEntry: jest.fn(),
-}));
-jest.mock('@/config/host', () => ({
-  getLocalhostDomain: jest.fn(),
+jest.mock('@/cache/redirects/getRedirectEntry');
+jest.mock('@/config/host');
+jest.mock('@tinyhttp/etag', () => ({
+  __esModule: true,
+  eTag: jest.fn(() => '"mocked-etag"'),
 }));
 
-function makeRequest({
-  host,
-  pathname,
-  brand,
-}: {
-  host?: string;
-  pathname?: string;
-  brand?: string;
-}) {
-  const url = new URL('http://test/api/private/redirects');
-  if (pathname) url.searchParams.set('pathname', pathname);
-  if (brand) url.searchParams.set('brand', brand);
-  return {
-    headers: {get: (key: string) => (key === 'host' ? host : undefined)},
-    nextUrl: url,
-  } as unknown as NextRequest;
-}
+const mockGetRedirectEntry = getRedirectEntry as jest.Mock;
+const mockGetLocalhostDomain = getLocalhostDomain as jest.Mock;
 
-describe('GET /api/private/redirects', () => {
+describe('GET /api/private/redirects/[brand]/[pathname]', () => {
+  const brand: Brand = Brand.CODE_DOT_ORG;
+  const pathname = '/foo';
+  const params = Promise.resolve({brand, pathname});
+  const makeRequest = (host = 'localhost:3000') =>
+    ({
+      headers: {get: (key: string) => (key === 'host' ? host : undefined)},
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as any;
+
   beforeEach(() => {
     jest.clearAllMocks();
-    (getLocalhostDomain as jest.Mock).mockReturnValue('localhost:3000');
+    mockGetLocalhostDomain.mockReturnValue('localhost:3000');
+  });
+
+  it('returns 403 if host does not match getLocalhostDomain', async () => {
+    const req = makeRequest('badhost:1234');
+    const res = await GET(req, {params});
+    expect(res.status).toBe(403);
+    const text = await res.text();
+    expect(text).toMatch(/Invalid host/);
   });
 
   it('returns 400 if pathname is missing', async () => {
-    const req = makeRequest({host: 'localhost:3000', brand: 'code.org'});
-    const res = await GET(req);
+    const req = makeRequest();
+    const res = await GET(req, {
+      params: Promise.resolve({brand, pathname: ''}),
+    });
     expect(res.status).toBe(400);
     const text = await res.text();
-    expect(text).toMatch(/Missing required parameter pathname/);
+    expect(text).toMatch(/pathname/);
   });
 
   it('returns 400 if brand is missing', async () => {
-    const req = makeRequest({host: 'localhost:3000', pathname: '/foo'});
-    const res = await GET(req);
+    const req = makeRequest();
+    const res = await GET(req, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      params: Promise.resolve({brand: undefined as any, pathname}),
+    });
     expect(res.status).toBe(400);
     const text = await res.text();
-    expect(text).toMatch(/Missing required parameter brand/);
+    expect(text).toMatch(/brand/);
   });
 
-  it('returns 404 if no redirect entry is found', async () => {
-    (getRedirectEntry as jest.Mock).mockResolvedValue(undefined);
-    const req = makeRequest({
-      host: 'localhost:3000',
-      pathname: '/foo',
-      brand: 'code.org',
-    });
-    const res = await GET(req);
+  it('returns 404 if no redirect entry found', async () => {
+    mockGetRedirectEntry.mockResolvedValue(undefined);
+    const req = makeRequest();
+    const res = await GET(req, {params});
     expect(res.status).toBe(404);
     const text = await res.text();
     expect(text).toMatch(/Not Found/);
   });
 
-  it('returns the redirect entry as JSON if found', async () => {
-    const entry = {to: '/bar', status: 302};
-    (getRedirectEntry as jest.Mock).mockResolvedValue(entry);
-    const req = makeRequest({
-      host: 'localhost:3000',
-      pathname: '/foo',
-      brand: 'code.org',
-    });
-    const res = await GET(req);
+  it('returns 200 and the redirect entry with correct headers', async () => {
+    const entry = {destination: '/bar', permanent: true};
+    mockGetRedirectEntry.mockResolvedValue(entry);
+    const req = makeRequest();
+    const res = await GET(req, {params});
     expect(res.status).toBe(200);
+    expect(res.headers.get('Cache-Control')).toBe(
+      STALE_WHILE_REVALIDATE_ONE_HOUR,
+    );
+    expect(res.headers.get('ETag')).toBeDefined();
     const json = await res.json();
     expect(json).toEqual(entry);
   });
