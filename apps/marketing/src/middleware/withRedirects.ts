@@ -1,5 +1,6 @@
 import {NextFetchEvent, NextRequest, NextResponse} from 'next/server';
 
+import {STALE_WHILE_REVALIDATE_ONE_HOUR} from '@/cache/constants';
 import {RedirectEntry} from '@/cache/redirects/types';
 import {getBrandFromHostname} from '@/config/brand';
 import {getLocalhostAddress} from '@/config/host';
@@ -22,11 +23,6 @@ export const withRedirects: MiddlewareFactory = next => {
       `${getLocalhostAddress()}/api/private/redirects/${encodeURIComponent(brand)}/${encodeURIComponent(pathname)}`,
     );
 
-    redirectConfigUrl.search = new URLSearchParams({
-      pathname,
-      brand,
-    }).toString();
-
     const redirectCacheByBrandResponse = await fetch(redirectConfigUrl, {
       method: 'GET',
     });
@@ -43,8 +39,21 @@ export const withRedirects: MiddlewareFactory = next => {
       : redirectEntry.destination;
 
     if (redirectEntry) {
+      const responseHeaders: HeadersInit = {
+        'Cache-Control': STALE_WHILE_REVALIDATE_ONE_HOUR,
+      };
+
+      const etagValue = redirectCacheByBrandResponse.headers.get('ETag');
+      if (etagValue) {
+        responseHeaders['ETag'] = etagValue;
+      }
+
       return NextResponse.redirect(redirectUrl, {
         status: redirectEntry.permanent ? 308 : 307,
+        headers: {
+          'Cache-Control': STALE_WHILE_REVALIDATE_ONE_HOUR,
+          ETag: redirectCacheByBrandResponse.headers.get('ETag') ?? '',
+        },
       });
     }
 

@@ -1,5 +1,7 @@
 import {NextResponse} from 'next/server';
 
+import {STALE_WHILE_REVALIDATE_ONE_HOUR} from '@/cache/constants';
+
 import {withRedirects} from '../withRedirects';
 
 jest.mock('@/config/brand', () => ({
@@ -8,6 +10,12 @@ jest.mock('@/config/brand', () => ({
 jest.mock('@/config/host', () => ({
   getLocalhostAddress: jest.fn(() => 'http://localhost:3000'),
 }));
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MOCK_RESPONSE_HEADERS: any = {
+  ['ETag']: 'mocked-etag',
+  ['Cache-Control']: STALE_WHILE_REVALIDATE_ONE_HOUR,
+};
 
 global.fetch = jest.fn();
 
@@ -35,6 +43,9 @@ describe('withRedirects middleware', () => {
   it('permanent redirects to absolute destination with correct status', async () => {
     (fetch as jest.Mock).mockResolvedValue({
       status: 200,
+      headers: {
+        get: (header: string) => MOCK_RESPONSE_HEADERS[header],
+      },
       json: async () => ({
         destination: 'https://external.com',
         permanent: true,
@@ -42,18 +53,33 @@ describe('withRedirects middleware', () => {
     });
     const response = await withRedirects(next)(makeRequest(), event);
     expect(response).toEqual(
-      NextResponse.redirect('https://external.com', {status: 308}),
+      NextResponse.redirect('https://external.com', {
+        status: 308,
+        headers: {
+          'Cache-Control': STALE_WHILE_REVALIDATE_ONE_HOUR,
+          ETag: 'mocked-etag',
+        },
+      }),
     );
   });
 
   it('temporary redirects to relative destination with correct status', async () => {
     (fetch as jest.Mock).mockResolvedValue({
       status: 200,
+      headers: {
+        get: (header: string) => MOCK_RESPONSE_HEADERS[header],
+      },
       json: async () => ({destination: '/bar', permanent: false}),
     });
     const response = await withRedirects(next)(makeRequest('/foo'), event);
     expect(response).toEqual(
-      NextResponse.redirect('http://localhost:3000/bar', {status: 307}),
+      NextResponse.redirect('http://localhost:3000/bar', {
+        status: 307,
+        headers: {
+          'Cache-Control': STALE_WHILE_REVALIDATE_ONE_HOUR,
+          ETag: 'mocked-etag',
+        },
+      }),
     );
   });
 });
