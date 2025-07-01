@@ -50,10 +50,7 @@ export const withRedirects: MiddlewareFactory = next => {
 
       return NextResponse.redirect(redirectUrl, {
         status: redirectEntry.permanent ? 308 : 307,
-        headers: {
-          'Cache-Control': STALE_WHILE_REVALIDATE_ONE_HOUR,
-          ETag: redirectCacheByBrandResponse.headers.get('ETag') ?? '',
-        },
+        headers: responseHeaders,
       });
     }
 
