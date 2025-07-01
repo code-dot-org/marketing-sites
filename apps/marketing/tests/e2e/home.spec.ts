@@ -1,5 +1,8 @@
 import {expect} from '@playwright/test';
 
+import {getStage} from '@/config/stage';
+import {getCookieNameByStage} from '@/cookies/getCookie';
+
 import {test} from './fixtures/base';
 import {MarketingPage} from './pom/marketing';
 
@@ -41,7 +44,7 @@ test.describe('Home Page', () => {
 
     await context.addCookies([
       {
-        name: '_user_type',
+        name: getCookieNameByStage('_user_type', getStage()),
         path: '/',
         domain: `.${marketingPage.getCookieDomain()}`,
         value: 'student',
