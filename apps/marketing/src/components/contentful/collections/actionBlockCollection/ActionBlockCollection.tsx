@@ -15,6 +15,8 @@ import {LinkEntry} from '@/types/contentful/entries/Link';
 import {Entry} from '@/types/contentful/Entry';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
+import {CollectionProps} from '../types';
+
 type ItemFields = {
   actionBlockOverline: EntryFields.Text;
   title: EntryFields.Text;
@@ -27,15 +29,11 @@ type ItemFields = {
 
 type ItemEntry = Entry<ItemFields>;
 
-export type ActionBlockCollectionProps = {
+export type ActionBlockCollectionProps = CollectionProps & {
   /** Collection content w/ fields from Contentful */
   blocks: ItemEntry[];
   /** Background color of the Action Blocks */
   background: Extract<ActionBlockProps['background'], string>;
-  /** Sort order */
-  sortOrder: 'alphabetical' | 'manual';
-  /** Hide images */
-  hideImages: boolean;
 };
 
 const styles = {
@@ -57,6 +55,7 @@ const ActionBlockCollection: React.FC<ActionBlockCollectionProps> = ({
   background,
   hideImages = false,
   sortOrder = 'alphabetical',
+  className,
 }) => {
   const CONTENT_TYPES_WITH_OVERLINE = [
     'curriculum',
@@ -147,7 +146,7 @@ const ActionBlockCollection: React.FC<ActionBlockCollectionProps> = ({
   }, [blocks, hideImages, sortOrder]);
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3} className={className}>
       {blocksData.map(block => (
         <Grid
           key={`id-${useId().replaceAll(':', '')}`}
