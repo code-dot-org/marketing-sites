@@ -1,10 +1,10 @@
 import {expect} from '@playwright/test';
 
-import {getStage} from '@/config/stage';
 import {getCookieNameByStage} from '@/cookies/getCookie';
 
 import {test} from './fixtures/base';
 import {MarketingPage} from './pom/marketing';
+import {getAppStageFromTestStage} from './utils/stage';
 
 test.describe('Home Page', () => {
   test('should redirect / to the localized path', async ({
@@ -44,7 +44,7 @@ test.describe('Home Page', () => {
 
     await context.addCookies([
       {
-        name: getCookieNameByStage('_user_type', getStage()),
+        name: getCookieNameByStage('_user_type', getAppStageFromTestStage()),
         path: '/',
         domain: `.${marketingPage.getCookieDomain()}`,
         value: 'student',
