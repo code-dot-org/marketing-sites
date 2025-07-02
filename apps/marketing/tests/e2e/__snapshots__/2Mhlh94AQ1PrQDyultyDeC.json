@@ -1,17 +1,18 @@
 {
   "entryContent": {
     "fields": {
-      "internalName": {
-        "en-US": "❌ [ENG] Self-paced PL Carousel"
+      "listName": {
+        "en-US": "❌ [ENG] Action Block Collection TEST"
       },
-      "carouselName": {
-        "en-US": "Self-paced PL Carousel"
-      },
-      "carouselType": {
-        "en-US": "Self Paced PL"
-      },
-      "slides": {
+      "itemsInThisList": {
         "en-US": [
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "6Jgr1x1twPWiSMQpCUmrUt"
+            }
+          },
           {
             "sys": {
               "type": "Link",
@@ -23,7 +24,7 @@
             "sys": {
               "type": "Link",
               "linkType": "Entry",
-              "id": "6gUm7q1JYZjyE5p9EfANIG"
+              "id": "1HWV07i9omvarlmtVr4orB"
             }
           },
           {
@@ -37,12 +38,19 @@
             "sys": {
               "type": "Link",
               "linkType": "Entry",
-              "id": "4Uu1fmD76F4wyIY6vCnfp8"
+              "id": "3CqSD4orrZzEoAvyXEFS7x"
+            }
+          },
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "6gUm7q1JYZjyE5p9EfANIG"
             }
           }
         ]
       }
     }
   },
-  "contentType": "carousel"
+  "contentType": "list"
 }

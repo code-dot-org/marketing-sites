@@ -2,13 +2,13 @@
   "entryContent": {
     "fields": {
       "linkName": {
-        "en-US": "❌ [ENG] Editorial Card Link"
+        "en-US": "❌ [ENG] Amazon Link TEST"
       },
       "label": {
-        "en-US": "Editorial Card Link"
+        "en-US": "Amazon"
       },
       "primaryTarget": {
-        "en-US": "/editorial-card-test"
+        "en-US": "https://amazon.com"
       },
       "isThisAnExternalLink": {
         "en-US": true

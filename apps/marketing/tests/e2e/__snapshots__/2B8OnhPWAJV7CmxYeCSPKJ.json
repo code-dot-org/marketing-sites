@@ -2,13 +2,13 @@
   "entryContent": {
     "fields": {
       "linkName": {
-        "en-US": "❌ [ENG] Editorial Card Link"
+        "en-US": "Primary Button External Link"
       },
       "label": {
-        "en-US": "Editorial Card Link"
+        "en-US": "Primary Button External Link"
       },
       "primaryTarget": {
-        "en-US": "/editorial-card-test"
+        "en-US": "https://studion.code.org"
       },
       "isThisAnExternalLink": {
         "en-US": true
