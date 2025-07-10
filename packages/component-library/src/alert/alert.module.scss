@@ -27,6 +27,10 @@ $alert-span-vertical-top-spacing: 2px;
 // Types (colors)
 .alert-primary {
   background-color: var(--background-brand-purple-light);
+
+  .alertContentContainer i {
+    color: var(--text-brand-purple-primary-fixed);
+  }
 }
 
 .alert-success {
