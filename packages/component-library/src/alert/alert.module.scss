@@ -65,6 +65,14 @@ $alert-span-vertical-top-spacing: 2px;
   background-color: var(--background-neutral-tertiary);
 }
 
+.alert-aqua {
+  background-color: var(--background-brand-aqua-extra-light);
+
+  .alertContentContainer i {
+    color: var(--text-brand-aqua-primary-fixed);
+  }
+}
+
 // Sizes
 .alert-l {
   padding: 0.875rem 1.125rem;
