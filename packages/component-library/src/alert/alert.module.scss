@@ -37,7 +37,7 @@ $alert-span-vertical-top-spacing: 2px;
   background-color: var(--background-success-extra-light);
 
   .alertContentContainer i {
-    color: var(--text-success-primary);
+    color: var(--text-success-primary-fixed);
   }
 }
 
@@ -45,7 +45,7 @@ $alert-span-vertical-top-spacing: 2px;
   background-color: var(--background-error-extra-light);
 
   .alertContentContainer i {
-    color: var(--text-error-primary);
+    color: var(--text-error-primary-fixed);
   }
 }
 
@@ -53,7 +53,7 @@ $alert-span-vertical-top-spacing: 2px;
   background-color: var(--background-warning-extra-light);
 
   .alertContentContainer i {
-    color: var(--text-warning-primary);
+    color: var(--text-warning-primary-fixed);
   }
 }
 
@@ -61,7 +61,7 @@ $alert-span-vertical-top-spacing: 2px;
   background-color: var(--background-info-extra-light);
 
   .alertContentContainer i {
-    color: var(--text-info-primary);
+    color: var(--text-info-primary-fixed);
   }
 }
 
