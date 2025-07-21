@@ -1,7 +1,7 @@
 import {render, screen, fireEvent, waitFor} from '@testing-library/react';
 
-import AdoptionMap from '@/components/contentful/adoptionMap';
-import SchoolSearchFieldset from '@/components/contentful/schoolSearchFieldset';
+import AdoptionMap from '@/components/contentful/corporateSite/adoptionMap';
+import SchoolSearchFieldset from '@/components/contentful/corporateSite/schoolSearchFieldset';
 
 import {School} from '../../types';
 import YourSchoolMapSection from '../YourSchoolMapSection';
@@ -11,7 +11,7 @@ const selectedSchool: School = {
   name: 'Selected School',
 };
 
-jest.mock('@/components/contentful/schoolSearchFieldset', () => ({
+jest.mock('@/components/contentful/corporateSite/schoolSearchFieldset', () => ({
   __esModule: true,
   default: jest.fn(props => (
     <button
@@ -23,7 +23,7 @@ jest.mock('@/components/contentful/schoolSearchFieldset', () => ({
   )),
 }));
 
-jest.mock('@/components/contentful/adoptionMap', () => ({
+jest.mock('@/components/contentful/corporateSite/adoptionMap', () => ({
   __esModule: true,
   default: jest.fn(props => (
     <div data-testid="your-school-map">
