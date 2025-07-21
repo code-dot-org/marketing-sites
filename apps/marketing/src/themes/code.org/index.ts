@@ -19,7 +19,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          ['&.MuiButton-contained.MuiButton-colorPrimary']: {
+          '&.MuiButton-contained.MuiButton-colorPrimary': {
             backgroundColor: 'var(--brand-purple-50)',
           },
         },
@@ -28,29 +28,29 @@ const theme = createTheme({
     MuiDivider: {
       styleOverrides: {
         root: ({theme}) => ({
-          ['&.MuiDivider-root.divider--color-primary']: {
+          '&.MuiDivider-root.divider--color-primary': {
             borderColor: 'var(--background-neutral-quaternary)',
           },
-          ['&.MuiDivider-root.divider--color-strong']: {
+          '&.MuiDivider-root.divider--color-strong': {
             borderColor: 'var(--background-neutral-senary)',
           },
-          ['&.MuiDivider-root.divider--margin-none']: {
+          '&.MuiDivider-root.divider--margin-none': {
             marginTop: 0,
             marginBottom: 0,
           },
-          ['&.MuiDivider-root.divider--margin-xs']: {
+          '&.MuiDivider-root.divider--margin-xs': {
             marginTop: theme.spacing(1),
             marginBottom: theme.spacing(1),
           },
-          ['&.MuiDivider-root.divider--margin-s']: {
+          '&.MuiDivider-root.divider--margin-s': {
             marginTop: theme.spacing(2),
             marginBottom: theme.spacing(2),
           },
-          ['&.MuiDivider-root.divider--margin-m']: {
+          '&.MuiDivider-root.divider--margin-m': {
             marginTop: theme.spacing(4),
             marginBottom: theme.spacing(4),
           },
-          ['&.MuiDivider-root.divider--margin-l']: {
+          '&.MuiDivider-root.divider--margin-l': {
             marginTop: theme.spacing(8),
             marginBottom: theme.spacing(8),
           },
@@ -70,7 +70,7 @@ const theme = createTheme({
               color: 'var(--text-brand-purple-secondary)',
             },
           },
-          ['& svg']: {
+          '& svg': {
             color: 'var(--text-brand-purple-primary)',
             transition: 'color 0.2s ease-in-out',
           },
@@ -81,6 +81,23 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: 'var(--text-neutral-primary)',
+          // Overline styles
+          '&.MuiTypography-overline.overline--color-primary': {
+            color: 'var(--text-brand-teal-primary)',
+          },
+          '&.MuiTypography-overline.overline--color-secondary': {
+            color: 'var(--text-neutral-quaternary)',
+          },
+          '&.MuiTypography-overline.overline--size-s': {
+            fontSize: '0.625rem', // 10px
+          },
+          '&.MuiTypography-overline.overline--size-m': {
+            fontSize: '0.75rem', // 12px
+          },
+          '&.MuiTypography-overline.overline--size-l': {
+            fontSize: '0.875rem', // 14px
+          },
+          // End Overline styles
         },
         gutterBottom: ({theme}) => ({
           '&.MuiTypography-h1': {
@@ -100,6 +117,9 @@ const theme = createTheme({
           },
           '&.MuiTypography-h6': {
             marginBottom: theme.spacing(1), // 8px
+          },
+          '&.MuiTypography-overline': {
+            marginBottom: theme.spacing(2), // 16px
           },
         }),
       },
@@ -142,6 +162,7 @@ const theme = createTheme({
       lineHeight: 1.48,
     },
     overline: {
+      fontWeight: 600,
       letterSpacing: '0.03rem', // 0.48px
       lineHeight: 1.4,
     },
