@@ -50,12 +50,6 @@ const AdoptionMap: React.FC<AdoptionMapMapProps> = ({
   onTakeSurveyClick,
 }) => {
   const mapRef = useRef<MapRef>(null);
-  const mapTileset = useMemo(
-    () =>
-      new URLSearchParams(window.location.search).get('tileset') ??
-      MAP_TILESET_ID,
-    [],
-  );
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [popupData, setPopupData] = useState<{
@@ -100,7 +94,7 @@ const AdoptionMap: React.FC<AdoptionMapMapProps> = ({
       mapInstance.once('moveend', () => {
         let newPopupData;
 
-        const schoolPoint = mapInstance.querySourceFeatures(mapTileset, {
+        const schoolPoint = mapInstance.querySourceFeatures(MAP_TILESET_ID, {
           sourceLayer: MAP_POINT_LAYER_ID,
           filter: ['all', ['==', 'school_id', school.nces_id]],
         })[0];
@@ -220,13 +214,13 @@ const AdoptionMap: React.FC<AdoptionMapMapProps> = ({
         <NavigationControl position="bottom-right" showCompass={false} />
 
         <Source
-          id={mapTileset}
+          id={MAP_TILESET_ID}
           type="vector"
-          url={`mapbox://codeorg.${mapTileset}`}
+          url={`mapbox://codeorg.${MAP_TILESET_ID}`}
         >
           <Layer
             id={NO_CS_SCHOOLS_LAYER_ID}
-            source={mapTileset}
+            source={MAP_TILESET_ID}
             source-layer={MAP_POINT_LAYER_ID}
             layout={{visibility: 'visible'}}
             type="circle"
@@ -253,7 +247,7 @@ const AdoptionMap: React.FC<AdoptionMapMapProps> = ({
           />
           <Layer
             id={CS_SCHOOLS_LAYER_ID}
-            source={mapTileset}
+            source={MAP_TILESET_ID}
             source-layer={MAP_POINT_LAYER_ID}
             layout={{visibility: 'visible'}}
             type="circle"
