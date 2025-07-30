@@ -4,4 +4,6 @@ export const COLORS = {
   brandSecondary: '#CA01E4',
   brandTertiary: '#00CFFF',
   backgroundPrimary: '#F4F3F2',
+  whiteFixed: '#FFF',
+  grey200: '#CFCCD1',
 };

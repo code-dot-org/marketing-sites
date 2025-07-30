@@ -24,6 +24,7 @@ const theme = createTheme({
     },
     text: {
       primary: COLORS.black,
+      secondary: COLORS.whiteFixed,
     },
     divider: COLORS.black,
     common: {
@@ -31,6 +32,10 @@ const theme = createTheme({
     },
     background: {
       default: COLORS.backgroundPrimary,
+      paper: COLORS.whiteFixed,
+    },
+    grey: {
+      200: COLORS.grey200,
     },
   },
   components: STYLE_OVERRIDES,
