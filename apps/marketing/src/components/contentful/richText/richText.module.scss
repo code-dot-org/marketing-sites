@@ -17,7 +17,8 @@
 
     p,
     .richTextParagraph,
-    a {
+    a,
+    ol {
       margin: 0;
     }
   }
@@ -35,14 +36,18 @@
     white-space: pre-wrap;
   }
 
-  ul {
+  ul,
+  ul.richTextList {
     list-style-type: none;
+    margin: 0;
+
     li {
       padding-left: 0;
+      display: inline-flex;
+      gap: 0.5rem;
 
       svg {
         width: 0.75rem;
-        padding-right: 0.25rem;
       }
     }
   }
@@ -53,6 +58,7 @@
     align-items: flex-start;
     gap: 0.5rem;
     padding: 0 0 0 1.25rem;
+    margin: 0;
 
     li {
       @include font.main-font-regular;
