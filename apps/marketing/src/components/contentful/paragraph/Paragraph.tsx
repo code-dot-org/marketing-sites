@@ -21,11 +21,11 @@ type ParagraphProps = RemoveMarginBottomProps & {
   /** Paragraph content */
   children: ReactNode;
   /** Paragraph visual appearance */
-  visualAppearance: ParagraphVisualAppearance;
+  visualAppearance?: ParagraphVisualAppearance;
   /** Whether the paragraph text is strong */
-  isStrong: boolean;
+  isStrong?: boolean;
   /** Paragraph color */
-  color: TypographyColor;
+  color?: TypographyColor;
   /** ClassName passed by contentful to apply styles that are set through contentful native editor*/
   className?: string;
 };
@@ -43,11 +43,11 @@ const visualAppearanceToMuiTagMap: Record<
 };
 
 const Paragraph: React.FunctionComponent<ParagraphProps> = ({
-  visualAppearance,
-  isStrong,
-  color,
+  visualAppearance = 'body-two',
+  isStrong = false,
+  color = 'primary',
   children,
-  removeMarginBottom,
+  removeMarginBottom = false,
   className,
 }) => (
   <Typography
