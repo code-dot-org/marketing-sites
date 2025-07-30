@@ -12,6 +12,7 @@ import {
   Text,
   Mark,
 } from '@contentful/rich-text-types';
+import Circle from '@mui/icons-material/Circle';
 import MuiList from '@mui/material/List';
 import MuiListItem from '@mui/material/ListItem';
 import MuiTable from '@mui/material/Table';
@@ -65,7 +66,7 @@ const extractNodeContent = (node: RichTextNode): ReactNode[] => {
       const linkContent = getContent();
       return [
         <Link
-          removeMarginBottom={false}
+          removeMarginBottom={true}
           isLinkExternal={node.data.uri.startsWith('http')}
           key={linkContent.join('-') + node.data.uri}
           href={node.data.uri}
@@ -105,6 +106,7 @@ const richTextRenderOptions: Options = {
         <MuiList className={moduleStyles.richTextList} component="ul">
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <MuiListItem key={index}>
+              <Circle />
               <Paragraph removeMarginBottom={false}>
                 {extractNodeContent(itemNode)}
               </Paragraph>

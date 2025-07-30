@@ -16,7 +16,8 @@
     }
 
     p,
-    .richTextParagraph {
+    .richTextParagraph,
+    a {
       margin: 0;
     }
   }
@@ -32,6 +33,18 @@
   p,
   .richTextParagraph {
     white-space: pre-wrap;
+  }
+
+  ul {
+    list-style-type: none;
+    li {
+      padding-left: 0;
+
+      svg {
+        width: 0.75rem;
+        padding-right: 0.25rem;
+      }
+    }
   }
 
   ol {
