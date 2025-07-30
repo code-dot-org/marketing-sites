@@ -12,18 +12,18 @@ import {
   Text,
   Mark,
 } from '@contentful/rich-text-types';
+import MuiList from '@mui/material/List';
+import MuiListItem from '@mui/material/ListItem';
+import MuiTable from '@mui/material/Table';
+import MuiTableCell from '@mui/material/TableCell';
+import MuiTableContainer from '@mui/material/TableContainer';
+import MuiTableHead from '@mui/material/TableHead';
+import MuiTableRow from '@mui/material/TableRow';
 import {EntryFields} from 'contentful';
 import {ReactNode} from 'react';
 
-import Link from '@code-dot-org/component-library/link';
-import SimpleList, {
-  SimpleListItem,
-} from '@code-dot-org/component-library/list/simpleList';
-import {
-  BodyTwoText,
-  StrongText,
-  EmText,
-} from '@code-dot-org/component-library/typography';
+import Link from '@/components/contentful/link';
+import Paragraph from '@/components/contentful/paragraph';
 
 import moduleStyles from './richText.module.scss';
 
@@ -52,9 +52,9 @@ const extractNodeContent = (node: RichTextNode): ReactNode[] => {
         node.marks.reduce((value: ReactNode, {type}: Mark) => {
           switch (type) {
             case MARKS.BOLD:
-              return <StrongText key={type + value} children={value} />;
+              return <strong key={type + value}>{value}</strong>;
             case MARKS.ITALIC:
-              return <EmText key={type + value} children={value} />;
+              return <em key={type + value}>{value}</em>;
             default:
               return value;
           }
@@ -64,7 +64,12 @@ const extractNodeContent = (node: RichTextNode): ReactNode[] => {
     case INLINES.HYPERLINK: {
       const linkContent = getContent();
       return [
-        <Link key={linkContent.join('-') + node.data.uri} href={node.data.uri}>
+        <Link
+          removeMarginBottom={false}
+          isLinkExternal={node.data.uri.startsWith('http')}
+          key={linkContent.join('-') + node.data.uri}
+          href={node.data.uri}
+        >
           {linkContent}
         </Link>,
       ];
@@ -82,24 +87,30 @@ const richTextRenderOptions: Options = {
       // The Rich Text Editor wraps each line in a <p> tag, which acts as a spacer.
       // Replaces empty paragraphs with a <br /> To comply with HTML a11y guidelines.
       return paragraphContent.some(content => content) ? (
-        <BodyTwoText className={moduleStyles.richTextParagraph}>
+        <Paragraph
+          className={moduleStyles.richTextParagraph}
+          color="primary"
+          visualAppearance="body-two"
+          removeMarginBottom={false}
+          isStrong={false}
+        >
           {paragraphContent}
-        </BodyTwoText>
+        </Paragraph>
       ) : (
         <br />
       );
     },
     [BLOCKS.UL_LIST]: (listNode: Block | Inline) => (
       <>
-        <SimpleList
-          className={moduleStyles.richTextList}
-          items={listNode.content.map(
-            (itemNode: RichTextNode, index): SimpleListItem => ({
-              key: index,
-              label: extractNodeContent(itemNode),
-            }),
-          )}
-        />
+        <MuiList className={moduleStyles.richTextList} component="ul">
+          {listNode.content.map((itemNode: RichTextNode, index) => (
+            <MuiListItem key={index}>
+              <Paragraph removeMarginBottom={false}>
+                {extractNodeContent(itemNode)}
+              </Paragraph>
+            </MuiListItem>
+          ))}
+        </MuiList>
         <br />
       </>
     ),
@@ -108,15 +119,56 @@ const richTextRenderOptions: Options = {
         <ol>
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <li key={index}>
-              <BodyTwoText className={moduleStyles.richTextParagraph}>
+              <Paragraph
+                removeMarginBottom={false}
+                className={moduleStyles.richTextParagraph}
+              >
                 {extractNodeContent(itemNode)}
-              </BodyTwoText>
+              </Paragraph>
             </li>
           ))}
         </ol>
         <br />
       </>
     ),
+    [BLOCKS.TABLE]: (tableNode: Block | Inline) => {
+      if (!('content' in tableNode)) return null;
+      const rows = tableNode.content.filter(
+        (row): row is Block => row.nodeType === BLOCKS.TABLE_ROW,
+      );
+
+      const [headerRow, ...bodyRows] = rows;
+      return (
+        <MuiTableContainer className={moduleStyles.richTextTable}>
+          <MuiTable>
+            <MuiTableHead>
+              <MuiTableRow>
+                {(('content' in headerRow && headerRow.content) || []).map(
+                  (cell: RichTextNode, i: number) => (
+                    <MuiTableCell key={`header-cell-${i}`}>
+                      {extractNodeContent(cell)}
+                    </MuiTableCell>
+                  ),
+                )}
+              </MuiTableRow>
+            </MuiTableHead>
+            <tbody>
+              {bodyRows.map((row, rowIndex) => (
+                <MuiTableRow key={`row-${rowIndex}`}>
+                  {(('content' in row && row.content) || []).map(
+                    (cell: RichTextNode, cellIndex: number) => (
+                      <MuiTableCell key={`cell-${cellIndex}`}>
+                        {extractNodeContent(cell)}
+                      </MuiTableCell>
+                    ),
+                  )}
+                </MuiTableRow>
+              ))}
+            </tbody>
+          </MuiTable>
+        </MuiTableContainer>
+      );
+    },
   },
 };
 
