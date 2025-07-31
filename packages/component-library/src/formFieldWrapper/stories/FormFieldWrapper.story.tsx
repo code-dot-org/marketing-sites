@@ -114,9 +114,9 @@ export const WithDisabledChildElement: Story = {
     ...component,
     children: <input type="text" disabled />,
   })),
-  parameters: {
+  globals: {
     backgrounds: {
-      default: 'dark',
+      value: 'dark',
     },
   },
   play: async ({canvasElement}) => {
