@@ -411,7 +411,6 @@ export const FilledOut: Story = {
       ],
       nodeType: BLOCKS.DOCUMENT,
     },
-    children: null,
   },
   play: async ({canvas}) => {
     // Accessibility: paragraphs
