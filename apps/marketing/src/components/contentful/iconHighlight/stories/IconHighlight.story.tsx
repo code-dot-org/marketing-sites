@@ -77,22 +77,23 @@ export const FilledOut: Story = {
     ],
     iconName: 'smile',
   },
-};
+  play: async ({canvas}) => {
+    // Check heading
+    const heading = canvas.getByRole('heading', {
+      name: /Icon Highlight Heading/i,
+    });
+    expect(heading).toBeInTheDocument();
 
-FilledOut.play = async ({canvas}) => {
-  // Check heading
-  const heading = canvas.getByRole('heading', {
-    name: /Icon Highlight Heading/i,
-  });
-  expect(heading).toBeInTheDocument();
+    // Check text
+    const iconHighlightText = canvas.getByText(/Icon Highlight/i);
+    expect(iconHighlightText).toBeInTheDocument();
+    const multilineText = canvas.getByText(/Multiline Text/i);
+    expect(multilineText).toBeInTheDocument();
 
-  // Check text
-  const text = canvas.getByText(/Icon Highlight\nMultiline Text/i);
-  expect(text).toBeInTheDocument();
-
-  // Check link
-  const link = canvas.getByRole('link', {name: /Editorial Card Link/i});
-  expect(link).toBeInTheDocument();
-  expect(link).toHaveAttribute('href', '/editorial-card-test');
-  expect(link).toHaveAttribute('target', '_blank');
+    // Check link
+    const link = canvas.getByRole('link', {name: /Editorial Card Link/i});
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/editorial-card-test');
+    expect(link).toHaveAttribute('target', '_blank');
+  },
 };
