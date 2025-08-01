@@ -85,10 +85,8 @@ export const FilledOut: Story = {
     expect(heading).toBeInTheDocument();
 
     // Check text
-    const iconHighlightText = canvas.getByText(/Icon Highlight/i);
-    expect(iconHighlightText).toBeInTheDocument();
-    const multilineText = canvas.getByText(/Multiline Text/i);
-    expect(multilineText).toBeInTheDocument();
+    const text = canvas.getByText(/Icon Highlight\s*Multiline Text/i);
+    expect(text).toBeInTheDocument();
 
     // Check link
     const link = canvas.getByRole('link', {name: /Editorial Card Link/i});
