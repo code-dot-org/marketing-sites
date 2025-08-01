@@ -7,6 +7,7 @@ import '@code-dot-org/fonts/brands/code.org/index.css';
 import '@code-dot-org/fonts/brands/CSForAll/index.css';
 import cdoTheme from '../../marketing/src/themes/code.org';
 import csforallTheme from '../../marketing/src/themes/csforall';
+import './preview.module.scss';
 
 injectFontAwesome();
 

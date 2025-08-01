@@ -25,6 +25,16 @@ const config: StorybookConfig = {
   viteFinal: async config => {
     const existingPlugins = config.plugins || [];
     config.plugins = [...existingPlugins, tsconfigPaths()];
+
+    config.css = {
+      ...config.css,
+      preprocessorOptions: {
+        scss: {
+          loadPaths: ['node_modules'],
+        },
+      },
+    };
+
     return {
       ...config,
     };

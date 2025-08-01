@@ -39,6 +39,7 @@
     "@applitools/eyes-storybook": "^3.56.0",
     "@chromatic-com/storybook": "^4.0.1",
     "@code-dot-org/component-library": "workspace:*",
+    "@code-dot-org/component-library-styles": "workspace:*",
     "@code-dot-org/fonts": "workspace:*",
     "@code-dot-org/lint-config": "workspace:*",
     "@mdx-js/react": "^3.1.0",
