@@ -23,6 +23,65 @@ export const Playground: Story = {
   },
 };
 
+export const Basic: Story = {
+  args: {
+    className: 'cf-7aa4a121f2a94c53dc4efc4f0cd1ee60',
+    heading: 'Hero Banner Basic',
+    subHeading: 'Hero banner subheading',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget risus vitae massa semper aliquam quis mattis quam.',
+    buttonLinks: [
+      {
+        contentTypeId: 'link',
+        metadata: {
+          tags: [],
+          concepts: [],
+        },
+        sys: {
+          space: {
+            sys: {
+              type: 'Link',
+              linkType: 'Space',
+              id: '90t6bu6vlf76',
+            },
+          },
+          id: '79dI2fR2dzbb0IN3dFQJ3t',
+          type: 'Entry',
+          createdAt: '2025-04-08T15:57:33.257Z',
+          updatedAt: '2025-07-23T18:10:13.079Z',
+          environment: {
+            sys: {
+              id: 'master',
+              type: 'Link',
+              linkType: 'Environment',
+            },
+          },
+          publishedVersion: 430,
+          revision: 20,
+          contentType: {
+            sys: {
+              type: 'Link',
+              linkType: 'ContentType',
+              id: 'link',
+            },
+          },
+          locale: 'en-US',
+        },
+        fields: {
+          linkName: '❌ [ENG] Primary button test',
+          label: 'Primary button test',
+          primaryTarget: '/ping',
+          isThisAnExternalLink: false,
+        },
+      },
+    ],
+    contentMode: 'Light',
+    imageSize: 'Big',
+    sectionVideoShowCaption: true,
+    hideImageOnSmallScreen: false,
+  },
+};
+
 export const WithImageBig: Story = {
   args: {
     className: 'cf-d38a79cc60d6b99f6c5bb47b4507ab2a',
