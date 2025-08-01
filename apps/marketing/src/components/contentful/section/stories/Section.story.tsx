@@ -64,20 +64,6 @@ const createStory = (background: SectionBackground): Story => ({
   },
 });
 
-// Example usage for each background:
-export const Primary = createStory('primary');
-export const Secondary = createStory('secondary');
-export const Dark = createStory('dark');
-export const BrandPrimary = createStory('brandPrimary');
-export const BrandLightPrimary = createStory('brandLightPrimary');
-export const BrandSecondary = createStory('brandSecondary');
-export const BrandLightSecondary = createStory('brandLightSecondary');
-export const BrandTertiary = createStory('brandTertiary');
-export const BrandLightTertiary = createStory('brandLightTertiary');
-export const PatternDark = createStory('patternDark');
-export const PatternPrimary = createStory('patternPrimary');
-export const Transparent = createStory('transparent');
-
 export const Playground: Story = {
   args: {
     background: 'primary',
@@ -98,3 +84,17 @@ export const Playground: Story = {
     children: {control: 'text'},
   },
 };
+
+// Example usage for each background:
+export const Primary = createStory('primary');
+export const Secondary = createStory('secondary');
+export const Dark = createStory('dark');
+export const BrandPrimary = createStory('brandPrimary');
+export const BrandLightPrimary = createStory('brandLightPrimary');
+export const BrandSecondary = createStory('brandSecondary');
+export const BrandLightSecondary = createStory('brandLightSecondary');
+export const BrandTertiary = createStory('brandTertiary');
+export const BrandLightTertiary = createStory('brandLightTertiary');
+export const PatternDark = createStory('patternDark');
+export const PatternPrimary = createStory('patternPrimary');
+export const Transparent = createStory('transparent');
