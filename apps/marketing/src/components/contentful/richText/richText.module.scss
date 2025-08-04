@@ -40,9 +40,10 @@
   ul.richTextList {
     list-style-type: none;
     margin: 0;
+    padding: 0;
 
     li {
-      padding-left: 0;
+      padding-inline-start: 0;
       display: inline-flex;
       gap: 0.5rem;
 
@@ -57,13 +58,14 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
-    padding: 0 0 0 1.25rem;
+    padding: 0;
+    padding-inline-start: 1.25rem;
     margin: 0;
 
     li {
       @include font.main-font-regular;
       color: var(--text-neutral-primary);
-      padding-left: 0.25rem;
+      padding-inline-start: 0.25rem;
     }
   }
 }
