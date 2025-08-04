@@ -44,6 +44,8 @@ export const TABLE_ROW_OVERRIDES: Components<Theme>['MuiTableRow'] = {
 export const TABLE_CONTAINER_OVERRIDES: Components<Theme>['MuiTableContainer'] =
   {
     styleOverrides: {
-      root: () => ({}),
+      root: () => ({
+        borderRadius: '0.25rem',
+      }),
     },
   };
