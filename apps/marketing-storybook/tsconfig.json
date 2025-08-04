@@ -1,6 +1,6 @@
 {
   "extends": "@code-dot-org/lint-config/typescript/tsconfig.react.json",
-  "include": [".storybook/**/*"],
+  "include": [".storybook/**/*", "stories/**/*"],
   "compilerOptions": {
     "paths": {
       "@/*": ["../../apps/marketing/src/*"],

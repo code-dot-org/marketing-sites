@@ -10,7 +10,7 @@ function getAbsolutePath(value: string) {
   return dirname(require.resolve(join(value, 'package.json')));
 }
 const config: StorybookConfig = {
-  stories: ['../../marketing/src/**/stories/*.story.@(js|jsx|mjs|ts|tsx)'],
+  stories: ['../stories/**/*.story.@(js|jsx|mjs|ts|tsx)'],
   addons: [
     getAbsolutePath('@chromatic-com/storybook'),
     getAbsolutePath('@storybook/addon-docs'),
