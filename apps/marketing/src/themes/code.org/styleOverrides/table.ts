@@ -11,6 +11,7 @@ export const TABLE_CELL_OVERRIDES: Components<Theme>['MuiTableCell'] = {
     root: ({theme}) => ({
       padding: `${theme.spacing(1.75)} ${theme.spacing(2.25)}`, //14px 18px
       border: `1px solid var(--borders-neutral-primary)`,
+      color: 'var(--text-neutral-primary)',
     }),
     head: () => ({
       fontSize: '0.875rem',
@@ -31,6 +32,7 @@ export const TABLE_CELL_OVERRIDES: Components<Theme>['MuiTableCell'] = {
 export const TABLE_ROW_OVERRIDES: Components<Theme>['MuiTableRow'] = {
   styleOverrides: {
     root: () => ({
+      color: 'var(--text-neutral-primary)',
       backgroundColor: 'var(--background-neutral-secondary);',
       '&:nth-of-type(odd)': {
         backgroundColor: 'var(--background-neutral-primary)',
