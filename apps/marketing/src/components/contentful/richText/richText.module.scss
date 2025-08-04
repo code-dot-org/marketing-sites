@@ -38,15 +38,18 @@
 
   ul,
   ul.richTextList {
+    display: flex;
+    flex-direction: column;
     list-style-type: none;
     margin: 0;
     padding: 0;
+    gap: 0.5rem;
 
     li {
+      padding: 0;
       padding-inline-start: 0;
       display: inline-flex;
       gap: 0.5rem;
-      padding-block: 0;
 
       svg {
         width: 0.75rem;
@@ -66,6 +69,7 @@
     li {
       @include font.main-font-regular;
       color: var(--text-neutral-primary);
+      padding: 0;
       padding-inline-start: 0.25rem;
     }
   }
