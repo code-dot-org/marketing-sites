@@ -13,7 +13,6 @@ import {
   Mark,
 } from '@contentful/rich-text-types';
 import Circle from '@mui/icons-material/Circle';
-import {SvgIcon} from '@mui/material';
 import MuiList from '@mui/material/List';
 import MuiListItem from '@mui/material/ListItem';
 import MuiTable from '@mui/material/Table';
@@ -107,9 +106,7 @@ const richTextRenderOptions: Options = {
         <MuiList className={moduleStyles.richTextList} component="ul">
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <MuiListItem key={index}>
-              <SvgIcon fontSize="small">
-                <Circle />
-              </SvgIcon>
+              <Circle />
               <Paragraph removeMarginBottom={false}>
                 {extractNodeContent(itemNode)}
               </Paragraph>
