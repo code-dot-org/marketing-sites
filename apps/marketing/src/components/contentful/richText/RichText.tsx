@@ -66,7 +66,7 @@ const extractNodeContent = (node: RichTextNode): ReactNode[] => {
       const linkContent = getContent();
       return [
         <Link
-          removeMarginBottom={true}
+          removeMarginBottom
           isLinkExternal={node.data.uri.startsWith('http')}
           key={linkContent.join('-') + node.data.uri}
           href={node.data.uri}
@@ -92,7 +92,7 @@ const richTextRenderOptions: Options = {
           className={moduleStyles.richTextParagraph}
           color="primary"
           visualAppearance="body-two"
-          removeMarginBottom={false}
+          removeMarginBottom
           isStrong={false}
         >
           {paragraphContent}
@@ -107,7 +107,7 @@ const richTextRenderOptions: Options = {
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <MuiListItem key={index}>
               <Circle />
-              <Paragraph removeMarginBottom={false}>
+              <Paragraph removeMarginBottom>
                 {extractNodeContent(itemNode)}
               </Paragraph>
             </MuiListItem>
@@ -122,7 +122,7 @@ const richTextRenderOptions: Options = {
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <li key={index}>
               <Paragraph
-                removeMarginBottom={false}
+                removeMarginBottom
                 className={moduleStyles.richTextParagraph}
               >
                 {extractNodeContent(itemNode)}
