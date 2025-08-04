@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ActionBlockCollection, {
   ActionBlockCollectionProps,
-} from '@/components/contentful/collections/actionBlockCollection';
+} from '@/components/contentful/collections/actionBlockCollection/ActionBlockCollection';
 import {Meta, StoryObj} from '@storybook/react';
 
 const meta: Meta<ActionBlockCollectionProps> = {

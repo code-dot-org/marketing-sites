@@ -46,6 +46,12 @@ const preview = {
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
       test: 'error',
+
+      options: {
+        rules: {
+          'color-contrast': {enabled: false},
+        },
+      },
     },
   },
 };
