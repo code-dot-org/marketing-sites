@@ -1,8 +1,12 @@
 import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
 import {documentToPlainTextString} from '@contentful/rich-text-plain-text-renderer';
 import {BLOCKS} from '@contentful/rich-text-types';
+import {ExpandMore} from '@mui/icons-material';
+import {Accordion, AccordionDetails, AccordionSummary} from '@mui/material';
 import {EntryFields, BaseEntry} from 'contentful';
 import {useMemo} from 'react';
+import {JsonLd} from 'react-schemaorg';
+import type {FAQPage} from 'schema-dts';
 
 import FAQAccordion, {
   FAQAccordionItem,
@@ -83,7 +87,34 @@ const FAQAccordionContentful: React.FunctionComponent<
   }
 
   return (
-    <FAQAccordion className={moduleStyles.faqAccordion} items={faqItems} />
+    <div>
+      <FAQAccordion className={moduleStyles.faqAccordion} items={faqItems} />
+      {faqItems.map(item => (
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            {item.label}
+          </AccordionSummary>
+          <AccordionDetails>{item.content}</AccordionDetails>
+        </Accordion>
+      ))}
+
+      {/* JSON-LD for structured data. Needed for Google SEO.
+      (see https://developers.google.com/search/docs/appearance/structured-data/faqpage#json-ld) */}
+      <JsonLd<FAQPage>
+        item={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqItems.map(item => ({
+            '@type': 'Question',
+            name: item.questionString,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answerString,
+            },
+          })),
+        }}
+      />
+    </div>
   );
 };
 
