@@ -10,6 +10,7 @@ import ActionBlockCarouselPLMock from './__mocks__/ActionBlockCarouselPL.json';
 const meta: Meta<ActionBlockCarouselProps> = {
   title: 'Marketing/Carousel/ActionBlock',
   component: ActionBlockCarousel,
+  parameters: {eyes: {include: false}},
   tags: ['autodocs'],
 };
 export default meta;

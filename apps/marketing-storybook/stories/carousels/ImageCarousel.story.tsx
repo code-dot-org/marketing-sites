@@ -9,6 +9,7 @@ import ImageCarouselMock from './__mocks__/ImageCarousel.json';
 const meta: Meta<ImageCarouselProps> = {
   title: 'Marketing/Carousel/Image',
   component: ImageCarousel,
+  parameters: {eyes: {include: false}},
   tags: ['autodocs'],
 };
 export default meta;

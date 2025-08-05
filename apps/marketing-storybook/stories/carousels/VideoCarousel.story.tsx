@@ -9,6 +9,7 @@ import VideoCarouselMock from './__mocks__/VideoCarousel.json';
 const meta: Meta<VideoCarouselProps> = {
   title: 'Marketing/Carousel/Video',
   component: VideoCarousel,
+  parameters: {eyes: {include: false}},
   tags: ['autodocs'],
 };
 export default meta;
