@@ -28,6 +28,138 @@ inMemoryEntities.addEntities([
           id: '90t6bu6vlf76',
         },
       },
+      id: '5PQ3scGgrxZeBGJ4M3oXde',
+      type: 'Asset',
+      createdAt: '2025-04-23T21:40:10.428Z',
+      updatedAt: '2025-07-03T15:27:28.748Z',
+      environment: {
+        sys: {
+          id: 'development',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      publishedVersion: 5,
+      revision: 2,
+      locale: 'en-US',
+    },
+    fields: {
+      title: 'Microsoft Logo',
+      description: '',
+      file: {
+        url: '//contentful-images.code.org/90t6bu6vlf76/5PQ3scGgrxZeBGJ4M3oXde/27a23e4679af21c33097d513b55ca0dd/microsoft.png',
+        details: {
+          size: 4942,
+          image: {
+            width: 1024,
+            height: 218,
+          },
+        },
+        fileName: 'microsoft.png',
+        contentType: 'image/png',
+      },
+    },
+  },
+  {
+    metadata: {
+      tags: [],
+      concepts: [],
+    },
+    sys: {
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '90t6bu6vlf76',
+        },
+      },
+      id: '6dKwFBFEBdFlARthWp3NPS',
+      type: 'Entry',
+      createdAt: '2025-06-18T21:48:54.889Z',
+      updatedAt: '2025-07-02T20:15:23.761Z',
+      environment: {
+        sys: {
+          id: 'development',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      publishedVersion: 10,
+      revision: 4,
+      contentType: {
+        sys: {
+          type: 'Link',
+          linkType: 'ContentType',
+          id: 'link',
+        },
+      },
+      locale: 'en-US',
+    },
+    fields: {
+      linkName: '❌ [ENG] Amazon Link TEST',
+      label: 'Amazon',
+      primaryTarget: 'https://amazon.com',
+      isThisAnExternalLink: true,
+    },
+  },
+  {
+    metadata: {
+      tags: [],
+      concepts: [],
+    },
+    sys: {
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '90t6bu6vlf76',
+        },
+      },
+      id: '7ojmgHRZ58dXVrwArsB87Q',
+      type: 'Asset',
+      createdAt: '2025-04-23T21:41:40.053Z',
+      updatedAt: '2025-07-14T17:28:57.079Z',
+      environment: {
+        sys: {
+          id: 'development',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      publishedVersion: 8,
+      revision: 3,
+      locale: 'en-US',
+    },
+    fields: {
+      title: 'amazon logo',
+      description: 'amazon logo',
+      file: {
+        url: '//contentful-images.code.org/90t6bu6vlf76/7ojmgHRZ58dXVrwArsB87Q/3c0e85d48cba810af1f47269fddda347/Amazon_2024.svg',
+        details: {
+          size: 12752,
+          image: {
+            width: 1507,
+            height: 505,
+          },
+        },
+        fileName: 'Amazon_2024.svg',
+        contentType: 'image/svg+xml',
+      },
+    },
+  },
+  {
+    metadata: {
+      tags: [],
+      concepts: [],
+    },
+    sys: {
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '90t6bu6vlf76',
+        },
+      },
       id: '6fdNRFZbNXpiXQd6v7fHen',
       type: 'Asset',
       createdAt: '2025-04-23T21:39:00.300Z',
@@ -196,6 +328,272 @@ inMemoryEntities.addEntities([
       label: 'Primary button test',
       primaryTarget: '/ping',
       isThisAnExternalLink: false,
+    },
+  },
+  {
+    metadata: {
+      tags: [],
+      concepts: [],
+    },
+    sys: {
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '90t6bu6vlf76',
+        },
+      },
+      id: '2BrqKCCWUw4Ns8lf1BeXuA',
+      type: 'Asset',
+      createdAt: '2025-04-23T21:39:37.241Z',
+      updatedAt: '2025-04-23T21:39:37.241Z',
+      environment: {
+        sys: {
+          id: 'development',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      publishedVersion: 2,
+      revision: 1,
+      locale: 'en-US',
+    },
+    fields: {
+      title: 'Clever Logo (Color)',
+      description: "Clever's logo",
+      file: {
+        url: '//contentful-images.code.org/90t6bu6vlf76/2BrqKCCWUw4Ns8lf1BeXuA/08f20205c0b134089a5bfad153c72b3b/logo.png',
+        details: {
+          size: 8215,
+          image: {
+            width: 382,
+            height: 102,
+          },
+        },
+        fileName: 'logo.png',
+        contentType: 'image/png',
+      },
+    },
+  },
+  {
+    metadata: {
+      tags: [],
+      concepts: [],
+    },
+    sys: {
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '90t6bu6vlf76',
+        },
+      },
+      id: '6SvP2wibIZUufai9LgLaS2',
+      type: 'Asset',
+      createdAt: '2025-04-23T21:39:38.090Z',
+      updatedAt: '2025-04-23T21:39:38.090Z',
+      environment: {
+        sys: {
+          id: 'development',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      publishedVersion: 2,
+      revision: 1,
+      locale: 'en-US',
+    },
+    fields: {
+      title: 'Schoology logo',
+      description: '',
+      file: {
+        url: '//contentful-images.code.org/90t6bu6vlf76/6SvP2wibIZUufai9LgLaS2/f3fb15804eef37e2dfccffd6a1676da6/lms_schoology_logo.png',
+        details: {
+          size: 41916,
+          image: {
+            width: 1280,
+            height: 256,
+          },
+        },
+        fileName: 'lms_schoology_logo.png',
+        contentType: 'image/png',
+      },
+    },
+  },
+  {
+    metadata: {
+      tags: [],
+      concepts: [],
+    },
+    sys: {
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '90t6bu6vlf76',
+        },
+      },
+      id: '3UaLznScxJz5Y3eN1mlKMY',
+      type: 'Entry',
+      createdAt: '2025-06-23T17:53:47.804Z',
+      updatedAt: '2025-07-02T20:14:46.530Z',
+      environment: {
+        sys: {
+          id: 'development',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      publishedVersion: 9,
+      revision: 4,
+      contentType: {
+        sys: {
+          type: 'Link',
+          linkType: 'ContentType',
+          id: 'link',
+        },
+      },
+      locale: 'en-US',
+    },
+    fields: {
+      linkName: '❌ [ENG] Schoology TEST',
+      label: 'Schoology',
+      primaryTarget:
+        'https://www.powerschool.com/solutions/personalized-learning/schoology-learning/',
+      isThisAnExternalLink: true,
+    },
+  },
+  {
+    metadata: {
+      tags: [],
+      concepts: [],
+    },
+    sys: {
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '90t6bu6vlf76',
+        },
+      },
+      id: '7aCApN8gyhhPHTvHOMItSN',
+      type: 'Asset',
+      createdAt: '2025-04-23T21:39:37.765Z',
+      updatedAt: '2025-04-23T21:39:37.765Z',
+      environment: {
+        sys: {
+          id: 'development',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      publishedVersion: 2,
+      revision: 1,
+      locale: 'en-US',
+    },
+    fields: {
+      title: 'Google Classroom Logo',
+      description: '',
+      file: {
+        url: '//contentful-images.code.org/90t6bu6vlf76/4k2CBEbZGR9zaraf9Ax7I1/646c5837d809097874e7b46aeed65d0d/microsoft.png',
+        details: {
+          size: 95754,
+          image: {
+            width: 1271,
+            height: 224,
+          },
+        },
+        fileName: 'googleclassroom.png',
+        contentType: 'image/png',
+      },
+    },
+  },
+  {
+    metadata: {
+      tags: [],
+      concepts: [],
+    },
+    sys: {
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '90t6bu6vlf76',
+        },
+      },
+      id: '5j9YYfi7OAiT8hR2ZKsWdX',
+      type: 'Asset',
+      createdAt: '2025-04-23T21:39:37.765Z',
+      updatedAt: '2025-04-23T21:39:37.765Z',
+      environment: {
+        sys: {
+          id: 'development',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      publishedVersion: 2,
+      revision: 1,
+      locale: 'en-US',
+    },
+    fields: {
+      title: 'Google Classroom Logo',
+      description: '',
+      file: {
+        url: '//contentful-images.code.org/90t6bu6vlf76/5j9YYfi7OAiT8hR2ZKsWdX/81eb1d873acd951f64aff63c04d4d66f/googleclassroom.png',
+        details: {
+          size: 95754,
+          image: {
+            width: 1271,
+            height: 224,
+          },
+        },
+        fileName: 'googleclassroom.png',
+        contentType: 'image/png',
+      },
+    },
+  },
+  {
+    metadata: {
+      tags: [],
+      concepts: [],
+    },
+    sys: {
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '90t6bu6vlf76',
+        },
+      },
+      id: '4shm3jYrTHk9uBKkgQMQf6',
+      type: 'Entry',
+      createdAt: '2025-06-23T17:55:38.964Z',
+      updatedAt: '2025-07-02T20:14:35.300Z',
+      environment: {
+        sys: {
+          id: 'development',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      publishedVersion: 9,
+      revision: 4,
+      contentType: {
+        sys: {
+          type: 'Link',
+          linkType: 'ContentType',
+          id: 'link',
+        },
+      },
+      locale: 'en-US',
+    },
+    fields: {
+      linkName: '❌ [ENG] Google Classroom TEST',
+      label: 'Google Classroom',
+      primaryTarget:
+        'https://edu.google.com/workspace-for-education/products/classroom/',
+      isThisAnExternalLink: true,
     },
   },
 ]);
