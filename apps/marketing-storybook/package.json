@@ -28,8 +28,7 @@
     "storybook": "storybook dev -p 6007",
     "test-storybook": "vitest --project=storybook",
     "test:ui:ci": "yarn test-storybook",
-    "test:ui:local": "test-storybook --url http://localhost:6006",
-    "typecheck": "tsc --noEmit"
+    "test:ui:local": "test-storybook --url http://localhost:6006"
   },
   "prettier": "@code-dot-org/lint-config/prettier/index.mjs",
   "stylelint": {

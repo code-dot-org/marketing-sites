@@ -5,7 +5,7 @@ const meta: Meta<typeof Video> = {
   title: 'Marketing/Video',
   component: Video,
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
   },
 };
 export default meta;
