@@ -18,7 +18,8 @@ type Story = StoryObj<ImageCarouselProps>;
 export const SingleSlide: Story = {
   args: ImageCarouselMock,
   play: async ({canvas}) => {
-    await canvas.findByLabelText('Go to slide 2');
+    const nextButton = await canvas.findByLabelText('Go to slide 2');
+    await expect(nextButton).toBeVisible();
 
     // Check for images by alt text and src
     const figures = canvas.getAllByRole('figure');
@@ -41,7 +42,8 @@ export const SingleSlide: Story = {
 export const TwoSlides: Story = {
   args: {...ImageCarouselMock, slidesPerView: 2},
   play: async ({canvas}) => {
-    await canvas.findByLabelText('Go to slide 2');
+    const nextButton = await canvas.findByLabelText('Go to slide 2');
+    await expect(nextButton).toBeVisible();
 
     // Check for images by alt text and src
     const figures = canvas.getAllByRole('figure');
@@ -64,6 +66,9 @@ export const TwoSlides: Story = {
 export const ThreeSlides: Story = {
   args: {...ImageCarouselMock, slidesPerView: 3},
   play: async ({canvas}) => {
+    const nextButton = await canvas.findByLabelText('Go to slide 2');
+    await expect(nextButton).toBeVisible();
+
     // Check for images by alt text and src
     const figures = canvas.getAllByRole('figure');
     ImageCarouselMock.slides.forEach((slide, idx) => {
@@ -85,6 +90,9 @@ export const ThreeSlides: Story = {
 export const FourSlides: Story = {
   args: {...ImageCarouselMock, slidesPerView: 4},
   play: async ({canvas}) => {
+    const nextButton = await canvas.findByLabelText('Go to slide 2');
+    await expect(nextButton).toBeVisible();
+
     // Check for images by alt text and src
     const figures = canvas.getAllByRole('figure');
     ImageCarouselMock.slides.forEach((slide, idx) => {

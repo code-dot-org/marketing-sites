@@ -19,7 +19,8 @@ type Story = StoryObj<ActionBlockCarouselProps>;
 export const Curriculum: Story = {
   args: ActionBlockCarouselCurriculumMock,
   play: async ({canvas}) => {
-    await canvas.findByLabelText('Go to slide 2');
+    const nextButton = await canvas.findByLabelText('Go to slide 2');
+    await expect(nextButton).toBeVisible();
 
     // Check for anchor links (primary/secondary buttons)
     const links = canvas.getAllByRole('link');
@@ -34,7 +35,8 @@ export const Curriculum: Story = {
 export const SelfPacedPL: Story = {
   args: ActionBlockCarouselPLMock,
   play: async ({canvas}) => {
-    await canvas.findByLabelText('Go to slide 2');
+    const nextButton = await canvas.findByLabelText('Go to slide 2');
+    await expect(nextButton).toBeVisible();
 
     const links = canvas.getAllByRole('link');
     expect(links.length).toBeGreaterThan(0);
