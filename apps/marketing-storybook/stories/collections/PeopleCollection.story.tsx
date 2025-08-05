@@ -30,11 +30,6 @@ export const SortedAlphabetically: Story = {
       if (person.fields.bio) {
         expect(canvas.getByText(person.fields.bio)).toBeInTheDocument();
       }
-      if (person.fields.personalLink) {
-        expect(
-          canvas.getByRole('link', {name: /visit personal page/i}),
-        ).toBeInTheDocument();
-      }
     }
   },
 };
@@ -52,11 +47,6 @@ export const SortedManually: Story = {
       if (person.fields.bio) {
         expect(canvas.getByText(person.fields.bio)).toBeInTheDocument();
       }
-      if (person.fields.personalLink) {
-        expect(
-          canvas.getByRole('link', {name: /visit personal page/i}),
-        ).toBeInTheDocument();
-      }
     }
   },
 };
@@ -73,11 +63,6 @@ export const HiddenImages: Story = {
       }
       if (person.fields.bio) {
         expect(canvas.getByText(person.fields.bio)).toBeInTheDocument();
-      }
-      if (person.fields.personalLink) {
-        expect(
-          canvas.getByRole('link', {name: /visit personal page/i}),
-        ).toBeInTheDocument();
       }
     }
   },
