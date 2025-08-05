@@ -18,6 +18,8 @@ type Story = StoryObj<VideoCarouselProps>;
 export const FilledOut: Story = {
   args: VideoCarouselMock,
   play: async ({canvas}) => {
+    await canvas.findByLabelText('Go to slide 2');
+
     // Check for video elements and captions
     VideoCarouselMock.slides.forEach(slide => {
       const {videoTitle} = slide.fields;
