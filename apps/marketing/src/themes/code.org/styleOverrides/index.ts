@@ -4,6 +4,7 @@ import {CONTAINER_OVERRIDES} from './container';
 import {DIVIDER_OVERRIDES} from './divider';
 import {IMAGE_OVERRIDES} from './image';
 import {LINK_OVERRIDES} from './link';
+import {LIST_ITEM_OVERRIDES, LIST_OVERRIDES} from './list';
 import {SVG_ICON_OVERRIDES} from './svgIcon';
 import {
   TABLE_OVERRIDES,
@@ -19,6 +20,8 @@ export const STYLE_OVERRIDES: Components<Theme> = {
   MuiSvgIcon: SVG_ICON_OVERRIDES,
   MuiImage: IMAGE_OVERRIDES,
   MuiLink: LINK_OVERRIDES,
+  MuiList: LIST_OVERRIDES,
+  MuiListItem: LIST_ITEM_OVERRIDES,
   MuiTable: TABLE_OVERRIDES,
   MuiTableCell: TABLE_CELL_OVERRIDES,
   MuiTableRow: TABLE_ROW_OVERRIDES,

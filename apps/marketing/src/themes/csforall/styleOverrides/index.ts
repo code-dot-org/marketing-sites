@@ -6,6 +6,7 @@ import {DIVIDER_OVERRIDES} from './divider';
 import {FOOTER_OVERRIDES} from './footer';
 import {IMAGE_OVERRIDES} from './image';
 import {LINK_OVERRIDES} from './link';
+import {LIST_ITEM_OVERRIDES, LIST_OVERRIDES} from './list';
 import {
   TABLE_OVERRIDES,
   TABLE_CELL_OVERRIDES,
@@ -21,6 +22,8 @@ export const STYLE_OVERRIDES: Components<Theme> = {
   MuiFooter: FOOTER_OVERRIDES,
   MuiImage: IMAGE_OVERRIDES,
   MuiLink: LINK_OVERRIDES,
+  MuiList: LIST_OVERRIDES,
+  MuiListItem: LIST_ITEM_OVERRIDES,
   MuiTypography: TYPOGRAPHY_OVERRIDES,
   MuiTable: TABLE_OVERRIDES,
   MuiTableCell: TABLE_CELL_OVERRIDES,
