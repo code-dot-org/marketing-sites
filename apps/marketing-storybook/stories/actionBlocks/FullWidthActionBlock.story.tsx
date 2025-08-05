@@ -2,6 +2,7 @@
 
 import FullWidthActionBlock from '@/components/contentful/actionBlocks/fullWidthActionBlock';
 import {Meta, StoryObj} from '@storybook/react';
+import {expect} from 'storybook/test';
 
 const meta: Meta<typeof FullWidthActionBlock> = {
   title: 'Marketing/ActionBlocks/FullWidthActionBlock',
@@ -111,6 +112,16 @@ export const WithAllContent: Story = {
     background: 'primary',
     children: null,
   },
+  play: async ({canvas}) => {
+    const headings = canvas.getAllByRole('heading');
+    expect(headings.length).toBeGreaterThan(0);
+    headings.forEach((heading: HTMLElement) =>
+      expect(heading).toBeInTheDocument(),
+    );
+    const links = canvas.getAllByRole('link');
+    expect(links.length).toBeGreaterThan(0);
+    links.forEach((link: HTMLElement) => expect(link).toBeInTheDocument());
+  },
 };
 
 export const WithExternalLinkButtons: Story = {
@@ -214,6 +225,16 @@ export const WithExternalLinkButtons: Story = {
     background: 'primary',
     children: null,
   },
+  play: async ({canvas}) => {
+    const headings = canvas.getAllByRole('heading');
+    expect(headings.length).toBeGreaterThan(0);
+    headings.forEach((heading: HTMLElement) =>
+      expect(heading).toBeInTheDocument(),
+    );
+    const links = canvas.getAllByRole('link');
+    expect(links.length).toBeGreaterThan(0);
+    links.forEach((link: HTMLElement) => expect(link).toBeInTheDocument());
+  },
 };
 
 export const WithSecondaryBackground: Story = {
@@ -315,5 +336,15 @@ export const WithSecondaryBackground: Story = {
     videoShowCaption: false,
     background: 'secondary',
     children: null,
+  },
+  play: async ({canvas}) => {
+    const headings = canvas.getAllByRole('heading');
+    expect(headings.length).toBeGreaterThan(0);
+    headings.forEach((heading: HTMLElement) =>
+      expect(heading).toBeInTheDocument(),
+    );
+    const links = canvas.getAllByRole('link');
+    expect(links.length).toBeGreaterThan(0);
+    links.forEach((link: HTMLElement) => expect(link).toBeInTheDocument());
   },
 };
