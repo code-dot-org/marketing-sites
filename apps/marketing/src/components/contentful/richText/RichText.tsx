@@ -12,7 +12,6 @@ import {
   Text,
   Mark,
 } from '@contentful/rich-text-types';
-import Circle from '@mui/icons-material/Circle';
 import MuiList from '@mui/material/List';
 import MuiListItem from '@mui/material/ListItem';
 import MuiTable from '@mui/material/Table';
@@ -103,10 +102,13 @@ const richTextRenderOptions: Options = {
     },
     [BLOCKS.UL_LIST]: (listNode: Block | Inline) => (
       <>
-        <MuiList className={moduleStyles.richTextList} component="ul">
+        <MuiList
+          className={moduleStyles.richTextList}
+          component="ul"
+          sx={{listStyleType: 'disc'}}
+        >
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <MuiListItem key={index}>
-              <Circle />
               <Paragraph removeMarginBottom>
                 {extractNodeContent(itemNode)}
               </Paragraph>
@@ -118,18 +120,18 @@ const richTextRenderOptions: Options = {
     ),
     [BLOCKS.OL_LIST]: (listNode: Block | Inline) => (
       <>
-        <ol>
+        <MuiList component="ol" sx={{listStyleType: 'decimal'}}>
           {listNode.content.map((itemNode: RichTextNode, index) => (
-            <li key={index}>
+            <MuiListItem key={index} sx={{display: 'list-item'}}>
               <Paragraph
                 removeMarginBottom
                 className={moduleStyles.richTextParagraph}
               >
                 {extractNodeContent(itemNode)}
               </Paragraph>
-            </li>
+            </MuiListItem>
           ))}
-        </ol>
+        </MuiList>
         <br />
       </>
     ),

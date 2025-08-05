@@ -40,38 +40,18 @@
   ul.richTextList {
     display: flex;
     flex-direction: column;
-    list-style-type: none;
     margin: 1rem 0 0;
-    padding: 0;
-    gap: 0.5rem;
-
-    li {
-      padding: 0;
-      padding-inline-start: 0;
-      display: inline-flex;
-      gap: 0.5rem;
-
-      svg {
-        width: 0.75rem;
-        font-size: 7.5px;
-      }
-    }
   }
 
   ol {
     display: inline-flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
-    padding: 0;
-    padding-inline-start: 1.25rem;
     margin: 0;
 
     li {
       @include font.main-font-regular;
       color: var(--text-neutral-primary);
-      padding: 0;
-      padding-inline-start: 0.25rem;
     }
   }
 }
