@@ -492,7 +492,7 @@ inMemoryEntities.addEntities([
       locale: 'en-US',
     },
     fields: {
-      title: 'Google Classroom Logo',
+      title: 'Microsoft Square Logo',
       description: '',
       file: {
         url: '//contentful-images.code.org/90t6bu6vlf76/4k2CBEbZGR9zaraf9Ax7I1/646c5837d809097874e7b46aeed65d0d/microsoft.png',
