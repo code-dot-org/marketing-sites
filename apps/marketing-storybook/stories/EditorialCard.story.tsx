@@ -5,6 +5,10 @@ import EditorialCardContentful, {
   EDITORIAL_CARD_CONTENTFUL_LAYOUTS,
 } from '@/components/contentful/editorialCard/EditorialCard';
 import {Meta, StoryObj} from '@storybook/react';
+import {within} from '@testing-library/dom';
+import {expect} from 'storybook/test';
+
+import EditorialCardMock from './__mocks__/EditorialCard.json';
 
 const meta: Meta<EditorialCardContentfulProps> = {
   title: 'Marketing/EditorialCard',
@@ -20,58 +24,10 @@ function mockEditorialCard(
   index: number,
 ) {
   const contentfulDefinition = {
-    className: '',
+    ...EditorialCardMock,
     heading: `Editorial Card ${index + 1}`,
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget risus vitae massa semper aliquam quis mattis quam.',
-    image:
-      '//contentful-images.code.org/90t6bu6vlf76/6fdNRFZbNXpiXQd6v7fHen/d6328a3a965b3daca5fb0375caf72064/image-component.png',
-    linkEntry: {
-      contentTypeId: 'link',
-      metadata: {
-        tags: [],
-        concepts: [],
-      },
-      sys: {
-        space: {
-          sys: {
-            type: 'Link',
-            linkType: 'Space',
-            id: '90t6bu6vlf76',
-          },
-        },
-        id: '3IqvCruY4yXUCkvfArArsD',
-        type: 'Entry',
-        createdAt: '2025-05-22T21:12:49.939Z',
-        updatedAt: '2025-07-23T18:10:13.642Z',
-        environment: {
-          sys: {
-            id: 'master',
-            type: 'Link',
-            linkType: 'Environment',
-          },
-        },
-        publishedVersion: 58,
-        revision: 14,
-        contentType: {
-          sys: {
-            type: 'Link',
-            linkType: 'ContentType',
-            id: 'link',
-          },
-        },
-        locale: 'en-US',
-      } as any,
-      fields: {
-        linkName: '❌ [ENG] Editorial Card Link',
-        label: 'Editorial Card Link',
-        primaryTarget: '/editorial-card-test',
-        isThisAnExternalLink: true,
-      },
-    },
     layoutOpt: layout,
-    iconName: 'smile',
-    children: null,
-  };
+  } as any;
   return <EditorialCardContentful {...contentfulDefinition} />;
 }
 
@@ -80,57 +36,11 @@ function mockEditorialCardWithIcon(
   index: number,
 ) {
   const contentfulDefinition = {
-    className: '',
-    heading: 'Editorial Card 1',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget risus vitae massa semper aliquam quis mattis quam.',
-    image:
-      '//contentful-images.code.org/90t6bu6vlf76/6fdNRFZbNXpiXQd6v7fHen/d6328a3a965b3daca5fb0375caf72064/image-component.png',
-    linkEntry: {
-      metadata: {
-        tags: [],
-        concepts: [],
-      },
-      sys: {
-        space: {
-          sys: {
-            type: 'Link',
-            linkType: 'Space',
-            id: '90t6bu6vlf76',
-          },
-        },
-        id: '3IqvCruY4yXUCkvfArArsD',
-        type: 'Entry',
-        createdAt: '2025-05-22T21:12:49.939Z',
-        updatedAt: '2025-07-23T18:10:13.642Z',
-        environment: {
-          sys: {
-            id: 'master',
-            type: 'Link',
-            linkType: 'Environment',
-          },
-        },
-        publishedVersion: 58,
-        revision: 14,
-        contentType: {
-          sys: {
-            type: 'Link',
-            linkType: 'ContentType',
-            id: 'link',
-          },
-        },
-        locale: 'en-US',
-      },
-      fields: {
-        linkName: '❌ [ENG] Editorial Card Link',
-        label: 'Editorial Card Link',
-        primaryTarget: '/editorial-card-test',
-        isThisAnExternalLink: true,
-      },
-    } as any,
+    ...EditorialCardMock,
     layoutOpt: layout,
     iconName: `circle-${index + 1}`,
     children: null,
-  };
+  } as any;
   return <EditorialCardContentful {...contentfulDefinition} />;
 }
 
@@ -147,6 +57,20 @@ export const HorizontalWithImage: Story = {
       ))}
     </div>
   ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const headings = canvas.getAllByRole('heading');
+    expect(headings.length).toBe(4);
+    headings.forEach((h: HTMLElement) =>
+      expect(h.textContent).toMatch(/Editorial Card/),
+    );
+    const links = canvas.getAllByRole('link', {name: 'Editorial Card Link'});
+    expect(links.length).toBe(4);
+    links.forEach((link: HTMLElement) => {
+      expect(link).toHaveAttribute('href', '/editorial-card-test');
+      expect(link.textContent).toBe('Editorial Card Link');
+    });
+  },
 };
 
 export const VerticalWithImage: Story = {
@@ -164,6 +88,20 @@ export const VerticalWithImage: Story = {
       ))}
     </div>
   ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const headings = canvas.getAllByRole('heading');
+    expect(headings.length).toBe(3);
+    headings.forEach((h: HTMLElement) =>
+      expect(h.textContent).toMatch(/Editorial Card/),
+    );
+    const links = canvas.getAllByRole('link', {name: 'Editorial Card Link'});
+    expect(links.length).toBe(3);
+    links.forEach((link: HTMLElement) => {
+      expect(link).toHaveAttribute('href', '/editorial-card-test');
+      expect(link.textContent).toBe('Editorial Card Link');
+    });
+  },
 };
 
 export const VerticalWithIcon: Story = {
@@ -181,4 +119,21 @@ export const VerticalWithIcon: Story = {
       ))}
     </div>
   ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    const headings = canvas.getAllByRole('heading');
+    expect(headings.length).toBe(3);
+    headings.forEach((h: HTMLElement) =>
+      expect(h.textContent).toMatch(/Editorial Card/),
+    );
+    const links = canvas.getAllByRole('link', {name: 'Editorial Card Link'});
+    expect(links.length).toBe(3);
+    links.forEach((link: HTMLElement) => {
+      expect(link).toHaveAttribute('href', '/editorial-card-test');
+      expect(link.textContent).toBe('Editorial Card Link');
+    });
+    // Icon test: check for svg or i tag
+    const icons = canvasElement.querySelectorAll('svg, i');
+    expect(icons.length).toBeGreaterThanOrEqual(3);
+  },
 };
