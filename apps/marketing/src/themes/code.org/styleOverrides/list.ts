@@ -21,7 +21,6 @@ export const LIST_ITEM_OVERRIDES: Components<Theme>['MuiListItem'] = {
       '&::marker': {
         color: 'var(--text-neutral-primary)',
         fontFamily: FIGTREE_FONT,
-        fontSize: '1.2rem',
       },
     }),
   },
