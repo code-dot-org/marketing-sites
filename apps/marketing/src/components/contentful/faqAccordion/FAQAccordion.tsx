@@ -8,10 +8,6 @@ import {useMemo} from 'react';
 import {JsonLd} from 'react-schemaorg';
 import type {FAQPage} from 'schema-dts';
 
-import FAQAccordion, {
-  FAQAccordionItem,
-} from '@code-dot-org/component-library/accordrion/faqAccordion';
-
 import RichText from '@/components/contentful/richText';
 
 import moduleStyles from './faqAccordion.module.scss';
@@ -68,7 +64,7 @@ const FAQAccordionContentful: React.FunctionComponent<
           questionString,
           content: answer,
           answerString,
-        } as FAQAccordionItem;
+        };
       }) || [],
     [faqs],
   );
@@ -88,9 +84,8 @@ const FAQAccordionContentful: React.FunctionComponent<
 
   return (
     <div>
-      <FAQAccordion className={moduleStyles.faqAccordion} items={faqItems} />
       {faqItems.map(item => (
-        <Accordion>
+        <Accordion key={item.id} slotProps={{heading: {component: 'h5'}}}>
           <AccordionSummary expandIcon={<ExpandMore />}>
             {item.label}
           </AccordionSummary>
