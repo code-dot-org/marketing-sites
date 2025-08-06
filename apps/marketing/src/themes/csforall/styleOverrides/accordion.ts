@@ -1,11 +1,30 @@
 import {Components, Theme} from '@mui/material/styles';
 
-const ROBOTO_MONO_FONT = 'Roboto Mono';
+import theme from '@/themes/code.org';
+import {FIGTREE_FONT} from '@/themes/code.org/constants/fonts';
 
 export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
   styleOverrides: {
     root: () => ({
-      fontFamily: ROBOTO_MONO_FONT,
+      borderBottom: `1px solid ${theme.palette.text.primary}`,
+      padding: theme.spacing(4, 0),
+      borderRadius: 0,
+      margin: 0,
+      '&:first-of-type': {
+        borderRadius: 0,
+      },
+      '&:last-of-type': {
+        borderRadius: 0,
+      },
+      '&.Mui-expanded': {
+        margin: 0,
+      },
+      '&:has(.Mui-focusVisible)': {
+        outline: `2px solid ${theme.palette.primary.main}`,
+        outlineOffset: '2px',
+        borderRadius: '6px',
+        zIndex: 1,
+      },
     }),
   },
 };
@@ -14,17 +33,30 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
   {
     styleOverrides: {
       root: ({theme}) => ({
-        '&.MuiAccordionSummary-root': {
-          fontFamily: ROBOTO_MONO_FONT,
-          '&.Mui-expanded': {
-            minHeight: '48px',
+        padding: theme.spacing(0, 3, 0, 0),
+        borderRadius: 0,
+        color: theme.palette.text.primary,
+
+        '&:hover': {
+          color: theme.palette.secondary.main,
+
+          '.MuiAccordionSummary-expandIconWrapper .MuiSvgIcon-root': {
+            color: theme.palette.secondary.main,
           },
         },
-        '&.MuiAccordionSummary-content.Mui-expanded': {
-          margin: theme.spacing(1, 0),
+        '&.Mui-focusVisible': {
+          backgroundColor: 'inherit',
         },
-        '&.MuiAccordionSummary-content': {
-          margin: theme.spacing(1, 0),
+        '.MuiAccordionSummary-content': {
+          fontFamily: FIGTREE_FONT,
+          fontStyle: 'normal',
+          fontWeight: 800,
+          fontSize: '2rem', // 32px
+          lineHeight: '2.25rem', // 36px
+        },
+        '.MuiAccordionSummary-expandIconWrapper .MuiSvgIcon-root': {
+          color: theme.palette.text.primary,
+          fontSize: '2rem',
         },
       }),
     },
@@ -33,12 +65,6 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
 export const ACCORDION_DETAILS_OVERRIDES: Components<Theme>['MuiAccordionDetails'] =
   {
     styleOverrides: {
-      root: ({theme}) => ({
-        fontFamily: ROBOTO_MONO_FONT,
-        padding: theme.spacing(2, 3),
-        '&.MuiAccordionDetails-root': {
-          backgroundColor: theme.palette.background.default,
-        },
-      }),
+      root: () => ({}),
     },
   };
