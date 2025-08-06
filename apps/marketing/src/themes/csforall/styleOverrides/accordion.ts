@@ -8,7 +8,7 @@ export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
       border: 'none',
       boxShadow: 'none',
       borderBottom: `1px solid ${theme.palette.text.primary}`,
-      padding: theme.spacing(4, 0),
+      padding: 0,
       borderRadius: 0,
       margin: 0,
       '&:first-of-type': {
@@ -35,11 +35,15 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
   {
     styleOverrides: {
       root: ({theme}) => ({
-        padding: theme.spacing(0, 3, 0, 0),
+        padding: theme.spacing(4, 3, 4, 0),
         margin: 0,
         minHeight: 'unset',
         borderRadius: 0,
         color: theme.palette.text.primary,
+
+        '&.Mui-expanded': {
+          minHeight: 'unset',
+        },
 
         '&:hover': {
           color: theme.palette.secondary.main,
