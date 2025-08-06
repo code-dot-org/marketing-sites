@@ -1,11 +1,12 @@
 import {Components, Theme} from '@mui/material/styles';
 
-import theme from '@/themes/code.org';
 import {FIGTREE_FONT} from '@/themes/code.org/constants/fonts';
 
 export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
   styleOverrides: {
-    root: () => ({
+    root: ({theme}) => ({
+      border: 'none',
+      boxShadow: 'none',
       borderBottom: `1px solid ${theme.palette.text.primary}`,
       padding: theme.spacing(4, 0),
       borderRadius: 0,
@@ -18,6 +19,7 @@ export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
       },
       '&.Mui-expanded': {
         margin: 0,
+        minHeight: 'unset',
       },
       '&:has(.Mui-focusVisible)': {
         outline: `2px solid ${theme.palette.primary.main}`,
@@ -34,6 +36,8 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
     styleOverrides: {
       root: ({theme}) => ({
         padding: theme.spacing(0, 3, 0, 0),
+        margin: 0,
+        minHeight: 'unset',
         borderRadius: 0,
         color: theme.palette.text.primary,
 
@@ -53,6 +57,13 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
           fontWeight: 800,
           fontSize: '2rem', // 32px
           lineHeight: '2.25rem', // 36px
+          margin: 0,
+          minHeight: 'unset',
+
+          '&.Mui-expanded': {
+            margin: 0,
+            minHeight: 'unset',
+          },
         },
         '.MuiAccordionSummary-expandIconWrapper .MuiSvgIcon-root': {
           color: theme.palette.text.primary,
