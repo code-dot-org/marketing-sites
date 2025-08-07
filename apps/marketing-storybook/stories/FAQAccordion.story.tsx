@@ -4,7 +4,7 @@ import FAQAccordionContentful, {
   FAQAccordionContentfulProps,
 } from '@/components/contentful/faqAccordion/FAQAccordion';
 import {Meta, StoryObj} from '@storybook/react';
-import {expect, userEvent} from 'storybook/test';
+import {expect, within, userEvent} from 'storybook/test';
 
 import FAQAccordionMock from './__mocks__/FAQAccordion.json';
 
@@ -19,13 +19,11 @@ type Story = StoryObj<FAQAccordionContentfulProps>;
 
 export const FilledOut: Story = {
   args: FAQAccordionMock as any,
-  play: async ({canvas}) => {
-    // Find all FAQ items (summary elements)
-    let summaryEls: HTMLElement[] = [];
-    // Only use summary elements, do not use role 'button'
-    summaryEls = await canvas.findAllByText((content, element) => {
-      return !!element && element.tagName === 'SUMMARY';
-    });
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const summaryEls = Array.from(canvasElement.querySelectorAll('summary'));
+
     // Open the first FAQ item
     await userEvent.click(summaryEls[0]);
     // Check that the answer is now visible
