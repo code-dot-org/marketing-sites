@@ -1,5 +1,6 @@
 import {Components, Theme} from '@mui/material/styles';
 
+// Empty template for table component overrides in MUI theme.
 export const TABLE_OVERRIDES: Components<Theme>['MuiTable'] = {
   styleOverrides: {
     root: () => ({}),
