@@ -24,15 +24,14 @@ const theme = createTheme({
     },
     text: {
       primary: COLORS.black,
-      secondary: COLORS.whiteFixed,
     },
     divider: COLORS.black,
     common: {
       black: COLORS.black,
+      white: COLORS.white,
     },
     background: {
       default: COLORS.backgroundPrimary,
-      paper: COLORS.whiteFixed,
     },
     grey: {
       200: COLORS.grey200,

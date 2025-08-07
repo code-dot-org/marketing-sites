@@ -1,9 +1,9 @@
 export const COLORS = {
   black: '#15092C',
+  white: '#FFF',
   brandPrimary: '#2C079F',
   brandSecondary: '#CA01E4',
   brandTertiary: '#00CFFF',
   backgroundPrimary: '#F4F3F2',
-  whiteFixed: '#FFF',
   grey200: '#CFCCD1',
 };
