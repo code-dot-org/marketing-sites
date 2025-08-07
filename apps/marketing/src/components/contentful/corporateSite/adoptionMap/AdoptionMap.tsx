@@ -1,5 +1,6 @@
 'use client';
 
+import {useSearchParams} from 'next/navigation';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import Map, {
   FullscreenControl,
@@ -30,7 +31,7 @@ import './adoptionMap.scss';
 import styles from './adoptionMap.module.scss';
 
 // This constant is updated each year to the new census year tileset after its data is
-// confirmed using the update_census_mapbox script.
+// confirmed using the update_census_mapbox script and `tileset` URL parameter.
 const MAP_TILESET_ID = 'censustiles';
 
 const MAP_POINT_LAYER_ID = 'census';
@@ -53,12 +54,8 @@ const AdoptionMap: React.FC<AdoptionMapMapProps> = ({
   onTakeSurveyClick,
 }) => {
   const mapRef = useRef<MapRef>(null);
-  const mapTileset = useMemo(
-    () =>
-      new URLSearchParams(window.location.search).get('tileset') ??
-      MAP_TILESET_ID,
-    [],
-  );
+  const tilesetUrlParam = useSearchParams().get('tileset');
+  const mapTileset = tilesetUrlParam ?? MAP_TILESET_ID;
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [popupData, setPopupData] = useState<{
