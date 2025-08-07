@@ -35,6 +35,7 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
         padding: theme.spacing(1.5, 2.5, 1.5, 2.5),
         borderRadius: 0,
         color: 'var(---text-neutral-primary)',
+        backgroundColor: 'var(--background-neutral-primary)',
         minHeight: 'unset',
 
         '&.Mui-expanded': {
@@ -57,6 +58,7 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
           lineHeight: '148%',
           margin: 0,
           minHeight: 'unset',
+          color: 'var(---text-neutral-primary)',
 
           '&.Mui-expanded': {
             margin: 0,

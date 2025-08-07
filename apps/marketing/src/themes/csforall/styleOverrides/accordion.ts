@@ -80,6 +80,9 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
 export const ACCORDION_DETAILS_OVERRIDES: Components<Theme>['MuiAccordionDetails'] =
   {
     styleOverrides: {
-      root: () => ({}),
+      root: ({theme}) => ({
+        padding: 0,
+        paddingBlockEnd: theme.spacing(4),
+      }),
     },
   };
