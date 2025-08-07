@@ -54,7 +54,7 @@ const FAQAccordionContentful: React.FunctionComponent<
         }
 
         return {
-          id: questionString,
+          id: questionString.replace(' ', '_'),
           label: question,
           questionString,
           content: answer,
@@ -79,18 +79,26 @@ const FAQAccordionContentful: React.FunctionComponent<
 
   return (
     <Box>
-      {faqItems.map(item => (
-        <Accordion
-          key={item.id}
-          role="group"
-          slotProps={{heading: {component: 'h5'}}}
-        >
-          <AccordionSummary component="summary" expandIcon={<ExpandMore />}>
-            {item.label}
-          </AccordionSummary>
-          <AccordionDetails>{item.content}</AccordionDetails>
-        </Accordion>
-      ))}
+      {faqItems.map(item => {
+        const summaryId = `accordion-summary-${item.id}`;
+        const detailsId = `accordion-details-${item.id}`;
+
+        return (
+          <Accordion key={item.id} slotProps={{heading: {component: 'h5'}}}>
+            <AccordionSummary
+              id={summaryId}
+              aria-controls={detailsId}
+              component="summary"
+              expandIcon={<ExpandMore />}
+            >
+              {item.label}
+            </AccordionSummary>
+            <AccordionDetails id={detailsId} aria-labelledby={summaryId}>
+              {item.content}
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
 
       {/* JSON-LD for structured data. Needed for Google SEO.
       (see https://developers.google.com/search/docs/appearance/structured-data/faqpage#json-ld) */}
