@@ -1,6 +1,7 @@
 import {NextRequest, NextFetchEvent, NextResponse} from 'next/server';
 
 import {STALE_WHILE_REVALIDATE_ONE_HOUR} from '@/cache/constants';
+import {Brand} from '@/config/brand';
 import {SUPPORTED_LOCALE_CODES, SUPPORTED_LOCALES_SET} from '@/config/locale';
 import {getStage} from '@/config/stage';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
@@ -197,5 +198,37 @@ describe('withLocale middleware', () => {
     expect(response?.headers.get('location')).toBe(
       'https://test.code.org/zh-TW/engineering/all-the-things',
     );
+  });
+
+  it('should not set language_ cookie or redirect to studio base url when brand is not CODE_DOT_ORG', async () => {
+    jest.mock('@/config/brand', () => ({
+      ...jest.requireActual('@/config/brand'),
+      getBrandFromHostname: jest.fn(() => Brand.CS_FOR_ALL),
+    }));
+
+    const request = {
+      nextUrl: {pathname: '/zh-TW/home'},
+      cookies: {get: jest.fn()},
+      headers: {get: jest.fn()},
+      response: {cookies: {set: jest.fn()}},
+      url: 'https://not-code.org/zh-TW/home',
+    } as unknown as NextRequest;
+
+    SUPPORTED_LOCALES_SET.add('zh-TW');
+    const response = await withLocale(next)(request, mockEvent);
+
+    expect(next).toHaveBeenCalledWith(request, mockEvent);
+    expect(cookieMock.set).not.toHaveBeenCalledWith(
+      'language_',
+      expect.anything(),
+      expect.anything(),
+    );
+    if (
+      response instanceof Object &&
+      response.headers &&
+      typeof response.headers.get === 'function'
+    ) {
+      expect(response.headers.get('location')).not.toContain('studio.code.org');
+    }
   });
 });
