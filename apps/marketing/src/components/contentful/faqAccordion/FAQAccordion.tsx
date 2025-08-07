@@ -84,7 +84,7 @@ const FAQAccordionContentful: React.FunctionComponent<
         const detailsId = `accordion-details-${item.id}`;
 
         return (
-          <Accordion key={item.id} slotProps={{heading: {component: 'h5'}}}>
+          <Accordion key={item.id} slotProps={{heading: {component: 'div'}}}>
             <AccordionSummary
               id={summaryId}
               aria-controls={detailsId}
