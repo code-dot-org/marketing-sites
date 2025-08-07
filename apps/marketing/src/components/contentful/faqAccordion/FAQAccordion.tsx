@@ -25,6 +25,9 @@ const isRichText = (
 ): field is EntryFields.RichText =>
   typeof field === 'object' && field?.nodeType === BLOCKS.DOCUMENT;
 
+const slugify = (str: string) =>
+  encodeURIComponent(str.trim().toLowerCase().replace(/\s+/g, '-'));
+
 const FAQAccordionContentful: React.FunctionComponent<
   FAQAccordionContentfulProps
 > = ({faqs}) => {
@@ -53,8 +56,10 @@ const FAQAccordionContentful: React.FunctionComponent<
           answerString = answer;
         }
 
+        const safeId = slugify(questionString);
+
         return {
-          id: questionString.replace(' ', '_'),
+          id: safeId,
           label: question,
           questionString,
           content: answer,
