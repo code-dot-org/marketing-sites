@@ -80,7 +80,11 @@ const FAQAccordionContentful: React.FunctionComponent<
   return (
     <Box>
       {faqItems.map(item => (
-        <Accordion key={item.id} slotProps={{heading: {component: 'h5'}}}>
+        <Accordion
+          key={item.id}
+          role="group"
+          slotProps={{heading: {component: 'h5'}}}
+        >
           <AccordionSummary component="summary" expandIcon={<ExpandMore />}>
             {item.label}
           </AccordionSummary>
