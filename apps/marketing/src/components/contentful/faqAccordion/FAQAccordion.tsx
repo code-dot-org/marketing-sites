@@ -3,14 +3,13 @@ import {documentToPlainTextString} from '@contentful/rich-text-plain-text-render
 import {BLOCKS} from '@contentful/rich-text-types';
 import {ExpandMore} from '@mui/icons-material';
 import {Accordion, AccordionDetails, AccordionSummary} from '@mui/material';
+import Box from '@mui/material/Box';
 import {EntryFields, BaseEntry} from 'contentful';
 import {useMemo} from 'react';
 import {JsonLd} from 'react-schemaorg';
 import type {FAQPage} from 'schema-dts';
 
 import RichText from '@/components/contentful/richText';
-
-import moduleStyles from './faqAccordion.module.scss';
 
 export type FAQAccordionContentfulProps = {
   faqs?: (BaseEntry & {
@@ -44,11 +43,7 @@ const FAQAccordionContentful: React.FunctionComponent<
         }
 
         if (isRichText(faq.fields.answer)) {
-          answer = (
-            <div className={moduleStyles.faqAccordionAnswer}>
-              <RichText content={faq.fields.answer} />
-            </div>
-          );
+          answer = <RichText content={faq.fields.answer} />;
           // See: https://developers.google.com/search/docs/appearance/structured-data/faqpage#answer
           answerString = documentToHtmlString(faq.fields.answer, {
             preserveWhitespace: true,
@@ -83,7 +78,7 @@ const FAQAccordionContentful: React.FunctionComponent<
   }
 
   return (
-    <div>
+    <Box>
       {faqItems.map(item => (
         <Accordion key={item.id} slotProps={{heading: {component: 'h5'}}}>
           <AccordionSummary expandIcon={<ExpandMore />}>
@@ -109,7 +104,7 @@ const FAQAccordionContentful: React.FunctionComponent<
           })),
         }}
       />
-    </div>
+    </Box>
   );
 };
 
