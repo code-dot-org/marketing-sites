@@ -39,7 +39,7 @@ const config: StorybookConfig = {
       optimizeDeps: {
         include: [
           ...(config.optimizeDeps?.include || []),
-          'react/jsx-dev-runtime',
+          '@mui/icons-material/ExpandMore',
         ],
       },
       ...config,
