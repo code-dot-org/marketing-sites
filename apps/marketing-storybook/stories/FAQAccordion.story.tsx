@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import FAQAccordionContentful, {
   FAQAccordionContentfulProps,
 } from '@/components/contentful/faqAccordion/FAQAccordion';
@@ -18,7 +16,7 @@ export default meta;
 type Story = StoryObj<FAQAccordionContentfulProps>;
 
 export const FilledOut: Story = {
-  args: FAQAccordionMock as any,
+  args: FAQAccordionMock as FAQAccordionContentfulProps,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
