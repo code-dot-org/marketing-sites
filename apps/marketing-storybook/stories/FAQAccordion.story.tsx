@@ -15,28 +15,35 @@ export default meta;
 
 type Story = StoryObj<FAQAccordionContentfulProps>;
 
+const containsText =
+  (text: string) =>
+  (_: string, el: Element | null): boolean =>
+    Boolean(el?.textContent?.includes(text));
+
 export const FilledOut: Story = {
   args: FAQAccordionMock as FAQAccordionContentfulProps,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
 
     const summaryEls = Array.from(canvasElement.querySelectorAll('summary'));
-
-    // Open the first FAQ item
     await userEvent.click(summaryEls[0]);
-    // Check that the answer is now visible
-    const answerText = 'Normal text'; // from mock JSON
-    await expect(canvas.getByText(answerText)).toBeInTheDocument();
 
-    /// Open second FAQ item
+    const firstAnswerEls = canvas.getAllByText(containsText('Normal text'));
+    expect(firstAnswerEls.length).toBeGreaterThan(0);
+    for (const el of firstAnswerEls) {
+      await expect(el).toBeVisible();
+    }
+
     await userEvent.click(summaryEls[1]);
-    // Check that the answer is now visible
-    const secondAnswerText = 'Ordered Item 3'; // from mock JSON
-    await expect(canvas.getByText(secondAnswerText)).toBeInTheDocument();
 
-    /// Open third FAQ item
+    const secondAnswerEls = canvas.getAllByText(containsText('Ordered Item 3'));
+    expect(secondAnswerEls.length).toBeGreaterThan(0);
+    for (const el of secondAnswerEls) {
+      await expect(el).toBeVisible();
+    }
+
     await userEvent.click(summaryEls[2]);
-    // Check that anchor links are present
+
     const links = await canvas.findAllByRole('link');
     expect(links.length).toBeGreaterThan(0);
     for (const link of links) {
