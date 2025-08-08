@@ -28,6 +28,8 @@ type ParagraphProps = RemoveMarginBottomProps & {
   color?: TypographyColor;
   /** ClassName passed by contentful to apply styles that are set through contentful native editor*/
   className?: string;
+  /** Custom styles */
+  sx?: React.CSSProperties;
 };
 
 // Maps Contentful Paragraph visualAppearance values with
@@ -49,12 +51,13 @@ const Paragraph: React.FunctionComponent<ParagraphProps> = ({
   children,
   removeMarginBottom = false,
   className,
+  sx,
 }) => (
   <Typography
     className={classNames(`paragraph--color-${color}`, className)}
     variant={visualAppearanceToMuiTagMap[visualAppearance]}
     gutterBottom={!removeMarginBottom}
-    sx={{fontWeight: isStrong ? 600 : 400}}
+    sx={{...{fontWeight: isStrong ? 600 : 400}, ...sx}}
   >
     {children}
   </Typography>
