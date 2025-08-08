@@ -167,6 +167,18 @@ Resources:
         Comment: Adds Cache-Control if not present
         Runtime: cloudfront-js-2.0
   # For immutable static assets (hashed assets like JS/CSS files), ensure that the Cache-Control header is set to immutable
+  DefaultResponseHeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub "${AWS::StackName}-Default-ResponseHeader-Policy"
+        Comment: "Marketing Sites default response headers policy"
+        SecurityHeadersConfig:
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: false
+            Override: false
+  # For immutable static assets (hashed assets like JS/CSS files), ensure that the Cache-Control header is set to immutable
   ImmutableStaticAssetsResponseHeadersPolicy:
     Type: AWS::CloudFront::ResponseHeadersPolicy
     Properties:
@@ -178,6 +190,11 @@ Resources:
             - Header: cache-control
               Override: false # Do not override the cache control from the origin if it is available
               Value: public, max-age=31536000, immutable
+        SecurityHeadersConfig:
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: false
+            Override: false
   CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -211,6 +228,7 @@ Resources:
             - 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled (Disabled until this distribution becomes the main one instead of daisy chained)
             - !Ref ApplicationCachingPolicy
           OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3" # AllViewer
+          ResponseHeadersPolicyId: !Ref DefaultResponseHeadersPolicy
           FunctionAssociations:
             - EventType: viewer-response
               FunctionARN: !GetAtt ViewerResponseCloudFrontFunction.FunctionARN
@@ -243,6 +261,7 @@ Resources:
               - DELETE
             CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled (APIs are not cached)
             OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3 # AllViewer
+            ResponseHeadersPolicyId: !Ref DefaultResponseHeadersPolicy
             PathPattern: /api/*
             TargetOriginId: marketing-sites-application-origin
             ViewerProtocolPolicy: redirect-to-https
