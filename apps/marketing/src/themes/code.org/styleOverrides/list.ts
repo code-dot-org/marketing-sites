@@ -15,6 +15,9 @@ export const LIST_OVERRIDES: Components<Theme>['MuiList'] = {
         flexDirection: 'column',
         alignItems: 'flex-start',
         margin: theme.spacing(2, 0, 0),
+        '&:first-child, &:empty': {
+          margin: 0,
+        },
       },
     }),
   },
