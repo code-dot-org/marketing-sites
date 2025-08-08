@@ -21,7 +21,7 @@ const variations = Object.entries(variationMatrix).flatMap(
 );
 
 module.exports = {
-  concurrency: 5,
+  concurrency: 10,
   showLogs: !!process.env.APPLITOOLS_SHOW_LOGS,
   appName: 'Marketing Storybook',
   batchName: 'Frontend Eyes Tests',
