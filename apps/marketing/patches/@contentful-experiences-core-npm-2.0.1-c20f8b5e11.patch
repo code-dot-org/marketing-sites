@@ -1,8 +1,8 @@
 diff --git a/dist/index.js b/dist/index.js
-index 47e2924eb269b2161b9350b476b4bb881b635394..a9a6fc39e0b6c45bff0fb8d39cfd9e60097801a3 100644
+index bc6b4e91faa3ea3f01710e479759cbb19a764698..c33d75428fb0175ee1617c91b9923c112219537e 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -2039,7 +2039,7 @@ const buildCfStyles = (values) => {
+@@ -2018,7 +2018,7 @@ const buildCfStyles = (values) => {
          lineHeight: values.cfLineHeight,
          letterSpacing: values.cfLetterSpacing,
          color: values.cfTextColor,
