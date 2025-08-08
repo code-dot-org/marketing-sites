@@ -48,7 +48,7 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
           },
         },
         '&.Mui-focusVisible': {
-          backgroundColor: 'inherit',
+          backgroundColor: 'var(--background-neutral-primary)',
         },
         '.MuiAccordionSummary-content': {
           fontFamily: createFontStack(FIGTREE_FONT, NOTO_FONT),
