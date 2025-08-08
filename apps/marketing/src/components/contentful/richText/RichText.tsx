@@ -12,6 +12,7 @@ import {
   Text,
   Mark,
 } from '@contentful/rich-text-types';
+import MuiBox from '@mui/material/Box';
 import MuiList from '@mui/material/List';
 import MuiListItem from '@mui/material/ListItem';
 import MuiTable from '@mui/material/Table';
@@ -25,7 +26,11 @@ import {ReactNode} from 'react';
 import Link from '@/components/contentful/link';
 import Paragraph from '@/components/contentful/paragraph';
 
-import moduleStyles from './richText.module.scss';
+import {
+  richTextContainerStyles,
+  richTextParagraphStyles,
+  richTextTableStyles,
+} from './richTextStyles';
 
 export interface RichTextProps {
   content?: EntryFields.RichText | Document;
@@ -66,7 +71,7 @@ const extractNodeContent = (node: RichTextNode): ReactNode[] => {
       return [
         <Link
           removeMarginBottom
-          isLinkExternal={node.data.uri.startsWith('http')}
+          isLinkExternal={false}
           key={linkContent.join('-') + node.data.uri}
           href={node.data.uri}
         >
@@ -88,7 +93,7 @@ const richTextRenderOptions: Options = {
       // Replaces empty paragraphs with a <br /> To comply with HTML a11y guidelines.
       return paragraphContent.some(content => content) ? (
         <Paragraph
-          className={moduleStyles.richTextParagraph}
+          sx={richTextParagraphStyles}
           color="primary"
           visualAppearance="body-two"
           removeMarginBottom
@@ -102,11 +107,7 @@ const richTextRenderOptions: Options = {
     },
     [BLOCKS.UL_LIST]: (listNode: Block | Inline) => (
       <>
-        <MuiList
-          className={moduleStyles.richTextList}
-          component="ul"
-          sx={{listStyleType: 'disc'}}
-        >
+        <MuiList component="ul" sx={{listStyleType: 'disc'}}>
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <MuiListItem key={index}>
               <Paragraph removeMarginBottom>
@@ -123,10 +124,7 @@ const richTextRenderOptions: Options = {
         <MuiList component="ol" sx={{listStyleType: 'decimal'}}>
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <MuiListItem key={index} sx={{display: 'list-item'}}>
-              <Paragraph
-                removeMarginBottom
-                className={moduleStyles.richTextParagraph}
-              >
+              <Paragraph removeMarginBottom sx={richTextParagraphStyles}>
                 {extractNodeContent(itemNode)}
               </Paragraph>
             </MuiListItem>
@@ -143,7 +141,7 @@ const richTextRenderOptions: Options = {
 
       const [headerRow, ...bodyRows] = rows;
       return (
-        <MuiTableContainer className={moduleStyles.richTextTable}>
+        <MuiTableContainer sx={richTextTableStyles}>
           <MuiTable>
             <MuiTableHead>
               <MuiTableRow>
@@ -178,9 +176,9 @@ const richTextRenderOptions: Options = {
 
 const RichText: React.FC<RichTextProps> = ({content}) =>
   content ? (
-    <div className={moduleStyles.richText}>
+    <MuiBox sx={richTextContainerStyles}>
       {documentToReactComponents(content, richTextRenderOptions)}
-    </div>
+    </MuiBox>
   ) : (
     <em>
       <strong>📄 Rich Text placeholder.</strong> Please bind a "Rich Text"
