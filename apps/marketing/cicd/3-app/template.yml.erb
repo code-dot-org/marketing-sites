@@ -178,7 +178,7 @@ Resources:
             AccessControlMaxAgeSec: 31536000
             IncludeSubdomains: false
             Override: false
-  # For immutable static assets (hashed assets like JS/CSS files), ensure that the Cache-Control header is set to immutable
+  # Sets HSTS (HTTP Strict Transport Security) security headers for immutable static assets
   ImmutableStaticAssetsResponseHeadersPolicy:
     Type: AWS::CloudFront::ResponseHeadersPolicy
     Properties:
