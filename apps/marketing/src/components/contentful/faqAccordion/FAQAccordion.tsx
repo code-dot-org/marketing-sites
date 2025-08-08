@@ -2,8 +2,10 @@ import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
 import {documentToPlainTextString} from '@contentful/rich-text-plain-text-renderer';
 import {BLOCKS} from '@contentful/rich-text-types';
 import {ExpandMore} from '@mui/icons-material';
-import {Accordion, AccordionDetails, AccordionSummary} from '@mui/material';
-import Box from '@mui/material/Box';
+import MuiAccordion from '@mui/material/Accordion';
+import MuiAccordionDetails from '@mui/material/AccordionDetails';
+import MuiAccordionSummary from '@mui/material/AccordionSummary';
+import MuiBox from '@mui/material/Box';
 import {EntryFields, BaseEntry} from 'contentful';
 import {useMemo} from 'react';
 import {JsonLd} from 'react-schemaorg';
@@ -83,25 +85,25 @@ const FAQAccordionContentful: React.FunctionComponent<
   }
 
   return (
-    <Box>
+    <MuiBox>
       {faqItems.map(item => {
         const summaryId = `accordion-summary-${item.id}`;
         const detailsId = `accordion-details-${item.id}`;
 
         return (
-          <Accordion key={item.id} slotProps={{heading: {component: 'div'}}}>
-            <AccordionSummary
+          <MuiAccordion key={item.id} slotProps={{heading: {component: 'div'}}}>
+            <MuiAccordionSummary
               id={summaryId}
               aria-controls={detailsId}
               component="summary"
               expandIcon={<ExpandMore />}
             >
               {item.label}
-            </AccordionSummary>
-            <AccordionDetails id={detailsId} aria-labelledby={summaryId}>
+            </MuiAccordionSummary>
+            <MuiAccordionDetails id={detailsId} aria-labelledby={summaryId}>
               {item.content}
-            </AccordionDetails>
-          </Accordion>
+            </MuiAccordionDetails>
+          </MuiAccordion>
         );
       })}
 
@@ -121,7 +123,7 @@ const FAQAccordionContentful: React.FunctionComponent<
           })),
         }}
       />
-    </Box>
+    </MuiBox>
   );
 };
 
