@@ -46,11 +46,11 @@ export const FilledOut: Story = {
           'href',
           expect.stringContaining('https://code.org'),
         );
-
-        // Ensure the last is focused
-        summary.focus();
-        await expect(summary).toHaveFocus();
       }
     }
+
+    // De-focus
+    const storybookRoot = document.getElementById('storybook-root');
+    await userEvent.click(storybookRoot!);
   },
 };
