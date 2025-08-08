@@ -7,7 +7,7 @@ import {isDeployedStage} from './utils/stage';
 test.describe('Security Tests', () => {
   test('should have HSTS headers', async ({page, browserName}) => {
     test.skip(browserName !== 'chromium', 'Only runs in Chromium');
-    test.skip(isDeployedStage(), 'Only runs in deployed mode');
+    test.skip(!isDeployedStage(), 'Only runs in deployed mode');
 
     const allTheThingsPage = new AllTheThingsPage(page, {locale: 'en-US'});
     const response = await allTheThingsPage.goto();
@@ -19,7 +19,7 @@ test.describe('Security Tests', () => {
 
   test('should redirect http to https', async ({page, browserName}) => {
     test.skip(browserName !== 'chromium', 'Only runs in Chromium');
-    test.skip(isDeployedStage(), 'Only runs in deployed mode');
+    test.skip(!isDeployedStage(), 'Only runs in deployed mode');
 
     const allTheThingsPage = new AllTheThingsPage(page, {locale: 'en-US'});
     const plainTextPath = allTheThingsPage
