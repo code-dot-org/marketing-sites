@@ -166,7 +166,8 @@ Resources:
       FunctionConfig:
         Comment: Adds Cache-Control if not present
         Runtime: cloudfront-js-2.0
-  # For immutable static assets (hashed assets like JS/CSS files), ensure that the Cache-Control header is set to immutable
+  # Default response headers policy for the marketing sites
+  # This policy sets the Strict-Transport-Security header to ensure that the site is only served over HTTPS
   DefaultResponseHeadersPolicy:
     Type: AWS::CloudFront::ResponseHeadersPolicy
     Properties:
@@ -178,7 +179,7 @@ Resources:
             AccessControlMaxAgeSec: 31536000
             IncludeSubdomains: false
             Override: false
-  # Sets HSTS (HTTP Strict Transport Security) security headers for immutable static assets
+  # For immutable static assets (hashed assets like JS/CSS files), ensure that the Cache-Control header is set to immutable
   ImmutableStaticAssetsResponseHeadersPolicy:
     Type: AWS::CloudFront::ResponseHeadersPolicy
     Properties:
