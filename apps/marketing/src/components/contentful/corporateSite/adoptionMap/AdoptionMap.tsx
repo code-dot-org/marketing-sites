@@ -54,7 +54,7 @@ const AdoptionMap: React.FC<AdoptionMapMapProps> = ({
   onTakeSurveyClick,
 }) => {
   const mapRef = useRef<MapRef>(null);
-  const tilesetUrlParam = useSearchParams().get('tileset');
+  const tilesetUrlParam = useSearchParams()?.get('tileset');
   const mapTileset = tilesetUrlParam ?? MAP_TILESET_ID;
 
   const [mapLoaded, setMapLoaded] = useState(false);
