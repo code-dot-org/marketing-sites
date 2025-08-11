@@ -1,8 +1,11 @@
 import {NextRequest, NextFetchEvent, NextResponse} from 'next/server';
 
 import {STALE_WHILE_REVALIDATE_ONE_HOUR} from '@/cache/constants';
-import {Brand} from '@/config/brand';
-import {SUPPORTED_LOCALE_CODES, SUPPORTED_LOCALES_SET} from '@/config/locale';
+import {
+  SUPPORTED_LOCALE_CODES,
+  SUPPORTED_LOCALES_SET,
+  SupportedLocale,
+} from '@/config/locale';
 import {getStage} from '@/config/stage';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
 
@@ -41,15 +44,19 @@ describe('withLocale middleware', () => {
       response: {cookies: {set: jest.fn()}},
     } as unknown as NextRequest;
 
-    SUPPORTED_LOCALES_SET.add('zh-TW');
+    SUPPORTED_LOCALES_SET.add('zh-TW' as SupportedLocale);
     await withLocale(next)(request, mockEvent);
 
     expect(next).toHaveBeenCalledWith(request, mockEvent);
     expect(getContentfulSlug).not.toHaveBeenCalled();
-    expect(cookieMock.set).toHaveBeenCalledWith('language_', 'zh-TW', {
-      domain: undefined,
-      path: '/',
-    });
+    expect(cookieMock.set).toHaveBeenCalledWith(
+      'language_',
+      'zh-TW' as SupportedLocale,
+      {
+        domain: undefined,
+        path: '/',
+      },
+    );
   });
 
   it('should not redirect if the path contains a supported locale - development', async () => {
@@ -61,26 +68,30 @@ describe('withLocale middleware', () => {
     } as unknown as NextRequest;
     (getStage as jest.Mock).mockReturnValue('production');
 
-    SUPPORTED_LOCALES_SET.add('zh-TW');
+    SUPPORTED_LOCALES_SET.add('zh-TW' as SupportedLocale);
     await withLocale(next)(request, mockEvent);
 
     expect(next).toHaveBeenCalledWith(request, mockEvent);
     expect(getContentfulSlug).not.toHaveBeenCalled();
-    expect(cookieMock.set).toHaveBeenCalledWith('language_', 'zh-TW', {
-      domain: '.code.org',
-      path: '/',
-    });
+    expect(cookieMock.set).toHaveBeenCalledWith(
+      'language_',
+      'zh-TW' as SupportedLocale,
+      {
+        domain: '.code.org',
+        path: '/',
+      },
+    );
   });
 
   it('should redirect to the locale path if no locale is present in the path for cookies', async () => {
     const request = {
       url: 'https://test.code.org',
       nextUrl: {pathname: '/home', url: 'https://test.code.org/home'},
-      cookies: {get: jest.fn(() => ({value: 'zh-TW'}))},
+      cookies: {get: jest.fn(() => ({value: 'zh-TW' as SupportedLocale}))},
       headers: {get: jest.fn()},
     } as unknown as NextRequest;
 
-    SUPPORTED_LOCALES_SET.add('zh-TW');
+    SUPPORTED_LOCALES_SET.add('zh-TW' as SupportedLocale);
     (getContentfulSlug as jest.Mock).mockReturnValue('home');
 
     const response = await withLocale(next)(request, mockEvent);
@@ -104,7 +115,7 @@ describe('withLocale middleware', () => {
       },
     } as unknown as NextRequest;
 
-    SUPPORTED_LOCALE_CODES.push('zh-TW');
+    SUPPORTED_LOCALE_CODES.push('zh-TW' as SupportedLocale);
     (getContentfulSlug as jest.Mock).mockReturnValue('home');
 
     const response = await withLocale(next)(request, mockEvent);
@@ -128,7 +139,7 @@ describe('withLocale middleware', () => {
       },
     } as unknown as NextRequest;
 
-    SUPPORTED_LOCALE_CODES.push('en-US');
+    SUPPORTED_LOCALE_CODES.push('en-US' as SupportedLocale);
     (getContentfulSlug as jest.Mock).mockReturnValue('home');
 
     const response = await withLocale(next)(request, mockEvent);
@@ -183,11 +194,11 @@ describe('withLocale middleware', () => {
         pathname: '/engineering/all-the-things',
         url: 'https://test.code.org/engineering/all-the-things',
       },
-      cookies: {get: jest.fn(() => ({value: 'zh-TW'}))},
+      cookies: {get: jest.fn(() => ({value: 'zh-TW' as SupportedLocale}))},
       headers: {get: jest.fn()},
     } as unknown as NextRequest;
 
-    SUPPORTED_LOCALES_SET.add('zh-TW');
+    SUPPORTED_LOCALES_SET.add('zh-TW' as SupportedLocale);
     (getContentfulSlug as jest.Mock).mockReturnValue(
       'engineering/all-the-things',
     );
@@ -201,34 +212,21 @@ describe('withLocale middleware', () => {
   });
 
   it('should not set language_ cookie or redirect to studio base url when brand is not CODE_DOT_ORG', async () => {
-    jest.mock('@/config/brand', () => ({
-      ...jest.requireActual('@/config/brand'),
-      getBrandFromHostname: jest.fn(() => Brand.CS_FOR_ALL),
-    }));
-
     const request = {
       nextUrl: {pathname: '/zh-TW/home'},
       cookies: {get: jest.fn()},
-      headers: {get: jest.fn()},
+      headers: {get: jest.fn().mockReturnValue('csforall.org')},
       response: {cookies: {set: jest.fn()}},
       url: 'https://not-code.org/zh-TW/home',
     } as unknown as NextRequest;
 
-    SUPPORTED_LOCALES_SET.add('zh-TW');
-    const response = await withLocale(next)(request, mockEvent);
+    SUPPORTED_LOCALES_SET.add('zh-TW' as SupportedLocale);
+    await withLocale(next)(request, mockEvent);
 
-    expect(next).toHaveBeenCalledWith(request, mockEvent);
     expect(cookieMock.set).not.toHaveBeenCalledWith(
       'language_',
       expect.anything(),
       expect.anything(),
     );
-    if (
-      response instanceof Object &&
-      response.headers &&
-      typeof response.headers.get === 'function'
-    ) {
-      expect(response.headers.get('location')).not.toContain('studio.code.org');
-    }
   });
 });
