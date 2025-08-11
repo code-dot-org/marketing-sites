@@ -190,9 +190,12 @@ describe('AdoptionMap', () => {
   it('renders tileset in URL params if present', () => {
     const testTileset = 'TEST_TILESET';
 
-    const defaultPathname = window.location.pathname;
-    window.location.pathname = `${defaultPathname}?tileset=${testTileset}`;
-
+    const useSearchParamsMock = jest.fn(() => ({
+      get: jest.fn(key => (key === 'tileset' ? testTileset : null)),
+    }));
+    jest.mock('next/navigation', () => ({
+      useSearchParams: useSearchParamsMock,
+    }));
     mockMapInstance.querySourceFeatures.mockReturnValueOnce([
       {
         geometry: {
@@ -229,7 +232,7 @@ describe('AdoptionMap', () => {
       },
     );
 
-    window.location.pathname = defaultPathname;
+    useSearchParamsMock.mockClear();
   });
 
   it('calls flyTo when moving to a school location', () => {
