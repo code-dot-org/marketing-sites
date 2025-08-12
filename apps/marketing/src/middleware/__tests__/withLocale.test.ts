@@ -229,4 +229,29 @@ describe('withLocale middleware', () => {
       expect.anything(),
     );
   });
+
+  it('should not infinitely redirect for non-corporate brands when locale is unsupported', async () => {
+    // Simulate CSForAll brand by setting a non-code.org host
+    const request = {
+      url: 'https://csforall.org/en-US/home',
+      nextUrl: {
+        pathname: '/en-US/home',
+        url: 'https://csforall.org/en-US/home',
+      },
+      cookies: {get: jest.fn(() => ({value: 'unsupported-locale'}))},
+      headers: {get: jest.fn().mockReturnValue('csforall.org')},
+    } as unknown as NextRequest;
+
+    (getContentfulSlug as jest.Mock).mockReturnValue('home');
+
+    const response = await withLocale(next)(request, mockEvent);
+
+    expect(response?.headers).toBeUndefined();
+    // Should not set language_ cookie for non-code.org brands
+    expect(cookieMock.set).not.toHaveBeenCalledWith(
+      'language_',
+      expect.anything(),
+      expect.anything(),
+    );
+  });
 });
