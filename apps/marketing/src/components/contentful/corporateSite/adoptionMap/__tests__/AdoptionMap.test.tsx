@@ -190,11 +190,10 @@ describe('AdoptionMap', () => {
   it('renders tileset in URL params if present', () => {
     const testTileset = 'TEST_TILESET';
 
-    const useSearchParamsMock = jest.fn(() => ({
-      get: jest.fn(key => (key === 'tileset' ? testTileset : null)),
-    }));
     jest.mock('next/navigation', () => ({
-      useSearchParams: useSearchParamsMock,
+      useSearchParams: jest.fn(() => ({
+        get: jest.fn().mockReturnValueOnce(testTileset),
+      })),
     }));
     mockMapInstance.querySourceFeatures.mockReturnValueOnce([
       {
@@ -231,8 +230,6 @@ describe('AdoptionMap', () => {
         filter: ['all', ['==', 'school_id', testSchool.nces_id]],
       },
     );
-
-    useSearchParamsMock.mockClear();
   });
 
   it('calls flyTo when moving to a school location', () => {
