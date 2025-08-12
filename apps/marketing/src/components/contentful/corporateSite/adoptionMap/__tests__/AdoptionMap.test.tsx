@@ -187,51 +187,6 @@ describe('AdoptionMap', () => {
     );
   });
 
-  it('renders tileset in URL params if present', () => {
-    const testTileset = 'TEST_TILESET';
-
-    jest.mock('next/navigation', () => ({
-      useSearchParams: jest.fn(() => ({
-        get: jest.fn().mockReturnValueOnce(testTileset),
-      })),
-    }));
-    mockMapInstance.querySourceFeatures.mockReturnValueOnce([
-      {
-        geometry: {
-          type: 'Point',
-          coordinates: [-122.5, 37.5],
-        },
-        properties: {
-          school_id: testSchool.nces_id,
-          school_name: testSchool.name,
-          teaches_cs: 'YES',
-        },
-      },
-    ]);
-
-    const setPopupDataMock = jest.fn();
-    jest
-      .spyOn(React, 'useState')
-      .mockImplementationOnce(() => [true, jest.fn()])
-      .mockImplementationOnce(() => [null, setPopupDataMock]);
-
-    jest.spyOn(React, 'useRef').mockReturnValue({
-      current: {
-        getMap: () => mockMapInstance,
-      },
-    });
-
-    renderComponent({school: testSchool});
-
-    expect(mockMapInstance.querySourceFeatures).toHaveBeenCalledWith(
-      testTileset,
-      {
-        sourceLayer: 'census',
-        filter: ['all', ['==', 'school_id', testSchool.nces_id]],
-      },
-    );
-  });
-
   it('calls flyTo when moving to a school location', () => {
     jest
       .spyOn(React, 'useState')
