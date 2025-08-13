@@ -106,10 +106,14 @@ export const withLocale: MiddlewareFactory = next => {
 
     if (brand === Brand.CODE_DOT_ORG) {
       // Set the language cookie if discovered via Accept-Language header
-      response.cookies.set('language_', getDashboardLocale(locale), {
-        path: '/',
-        domain: getStage() === 'production' ? '.code.org' : undefined,
-      });
+      response.cookies.set(
+        'language_',
+        getDashboardLocale(locale as SupportedLocale),
+        {
+          path: '/',
+          domain: getStage() === 'production' ? '.code.org' : undefined,
+        },
+      );
     }
 
     return response;
