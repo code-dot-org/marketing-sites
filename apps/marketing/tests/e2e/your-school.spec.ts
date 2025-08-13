@@ -14,7 +14,7 @@ test.describe('Adoption Map', () => {
       const marketingPage = new MarketingPage(page);
       await marketingPage.goto('/your-school');
 
-      const adoptionMap = page.getByRole('region', {name: 'Map'});
+      const adoptionMap = page.getByRole('region', {name: 'Map', exact: true});
 
       await expect(adoptionMap).toBeVisible();
     },
