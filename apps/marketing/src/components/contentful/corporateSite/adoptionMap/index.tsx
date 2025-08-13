@@ -2,12 +2,12 @@
 import {Suspense} from 'react';
 
 export {AdoptionMapContentfulComponentDefinition} from './AdoptionMapContentfulDefinition';
-import AdoptionMap from './AdoptionMap';
+import AdoptionMap, {AdoptionMapMapProps} from './AdoptionMap';
 
-const AdoptionMapSuspense = () => {
+const AdoptionMapSuspense = (props: AdoptionMapMapProps) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <AdoptionMap />
+    <Suspense fallback={<div aria-live="polite">Loading adoption map...</div>}>
+      <AdoptionMap {...props} />
     </Suspense>
   );
 };
