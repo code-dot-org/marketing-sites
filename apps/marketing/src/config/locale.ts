@@ -4,7 +4,7 @@ export enum SupportedLocale {
   cs = 'cs',
   de = 'de',
   'es-ES' = 'es-ES',
-  'es-LA' = 'es-LA', // Latin America Spanish
+  'es' = 'es', // Latin America Spanish
   fa = 'fa',
   fr = 'fr',
   hi = 'hi',
@@ -20,8 +20,8 @@ export enum SupportedLocale {
   te = 'te',
   th = 'th',
   tr = 'tr',
-  'zh-CN' = 'zh-CN',
-  'zh-TW' = 'zh-TW',
+  'zh-Hans' = 'zh-Hans',
+  'zh-Hant' = 'zh-Hant',
 }
 
 type LocalizeJsConfig = {
@@ -33,7 +33,7 @@ type LocalizeJsConfig = {
 // The following are LocalizeJS language codes and map 1:1. They are replicated here to ensure compatability in SSR.
 export const LOCALIZE_JS_CONFIG_MAP: LocalizeJsConfig[] = [
   {value: SupportedLocale['en-US'], text: 'English', isRTL: false},
-  {value: SupportedLocale['es-LA'], text: 'Español (LATAM)', isRTL: false},
+  {value: SupportedLocale['es'], text: 'Español (LATAM)', isRTL: false},
   {value: SupportedLocale['es-ES'], text: 'Español (España)', isRTL: false},
   {value: SupportedLocale['ar'], text: 'العربية', isRTL: true},
   {value: SupportedLocale['cs'], text: 'Čeština', isRTL: false},
@@ -53,18 +53,20 @@ export const LOCALIZE_JS_CONFIG_MAP: LocalizeJsConfig[] = [
   {value: SupportedLocale['te'], text: 'తెలుగు', isRTL: false},
   {value: SupportedLocale['th'], text: 'ภาษาไทย', isRTL: false},
   {value: SupportedLocale['tr'], text: 'Türkçe', isRTL: false},
-  {value: SupportedLocale['zh-CN'], text: '简体字', isRTL: false},
-  {value: SupportedLocale['zh-TW'], text: '繁體字', isRTL: false},
+  {value: SupportedLocale['zh-Hans'], text: '简体字', isRTL: false},
+  {value: SupportedLocale['zh-Hant'], text: '繁體字', isRTL: false},
 ];
 
 // Map of supported BCP 47 locale codes to LocalizeJS locale codes
+// When selecting languages here, ensure they are valid BCP 47 codes
+// LocalizeJS has a variety of language codes but we standardize them to ensure compatability with our systems.
 const LOCALIZEJS_LOCALE: {[locale in SupportedLocale]: string} = {
   'en-US': 'en',
   ar: 'ar',
   cs: 'cs',
   de: 'de',
   'es-ES': 'es-ES',
-  'es-LA': 'es-MX',
+  es: 'es',
   fa: 'fa',
   fr: 'fr',
   hi: 'hi',
@@ -80,8 +82,8 @@ const LOCALIZEJS_LOCALE: {[locale in SupportedLocale]: string} = {
   te: 'te',
   th: 'th',
   tr: 'tr',
-  'zh-CN': 'zh-CN',
-  'zh-TW': 'zh-TW',
+  'zh-Hans': 'zh-Hans',
+  'zh-Hant': 'zh-TW',
 };
 
 // Map of LocalizeJS locale codes to Dashboard (studio.code.org) locale codes
@@ -91,7 +93,7 @@ const DASHBOARD_LOCALE_MAP: Record<SupportedLocale, string | undefined> = {
   cs: 'cs-CZ',
   de: 'de-DE',
   'es-ES': 'es-ES',
-  'es-LA': 'es-MX',
+  es: 'es',
   fa: 'fa-IR',
   fr: 'fr-FR',
   hi: 'hi-IN',
@@ -107,8 +109,8 @@ const DASHBOARD_LOCALE_MAP: Record<SupportedLocale, string | undefined> = {
   te: 'te-IN',
   th: 'th-TH',
   tr: 'tr-TR',
-  'zh-CN': 'zh-CN',
-  'zh-TW': 'zh-TW',
+  'zh-Hans': 'zh-CN',
+  'zh-Hant': 'zh-TW',
 };
 
 const LOCALIZEJS_LOCALE_MAP: Record<string, SupportedLocale | undefined> =
