@@ -73,7 +73,7 @@ test.describe(`[${getSiteType()}] All the things`, () => {
           name: 'language_',
           path: '/',
           domain: `.${allTheThingsPage.getCookieDomain()}`,
-          value: 'zh-Hant',
+          value: 'zh-TW',
         },
       ]);
 
