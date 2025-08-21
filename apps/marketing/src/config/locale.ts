@@ -65,8 +65,8 @@ const LOCALIZEJS_LOCALE: {[locale in SupportedLocale]: string} = {
   ar: 'ar',
   cs: 'cs',
   de: 'de',
-  'es-ES': 'es-ES',
-  es: 'es',
+  'es-ES': 'es', // Localize has es-ES as es
+  es: 'es-LA', // es-LA is not a valid ISO code, but this is what Localize uses.
   fa: 'fa',
   fr: 'fr',
   hi: 'hi',
@@ -87,13 +87,13 @@ const LOCALIZEJS_LOCALE: {[locale in SupportedLocale]: string} = {
 };
 
 // Map of LocalizeJS locale codes to Dashboard (studio.code.org) locale codes
-const DASHBOARD_LOCALE_MAP: Record<SupportedLocale, string | undefined> = {
+const DASHBOARD_LOCALE_MAP: Record<string, string> = {
   'en-US': 'en-US',
   ar: 'ar-SA',
   cs: 'cs-CZ',
   de: 'de-DE',
-  'es-ES': 'es-ES',
-  es: 'es',
+  es: 'es-ES',
+  'es-LA': 'es-MX',
   fa: 'fa-IR',
   fr: 'fr-FR',
   hi: 'hi-IN',
