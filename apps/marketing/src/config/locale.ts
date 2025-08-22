@@ -138,7 +138,7 @@ export const SUPPORTED_LOCALES_MAP = new Map(
  * @param supportedLocale - The BCP 47 supported locale code to convert.
  */
 export function getLocalizeJsLocaleFromSupportedLocale(
-  supportedLocale: SupportedLocale,
+  supportedLocale: SupportedLocale | string,
 ) {
   return LOCALIZEJS_LOCALE[supportedLocale as SupportedLocale] || 'en';
 }
