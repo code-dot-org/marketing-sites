@@ -17,7 +17,7 @@
       color 0.15s ease-in-out,
       background-color 0.15s ease-in-out;
 
-    background-color: transparent;
+    background-color: var(--background-neutral-primary);
     border: 1px solid transparent;
     color: var(--text-neutral-primary);
 
@@ -55,7 +55,7 @@
     // Disabled styles
     &:disabled {
       border-color: var(--borders-neutral-disabled);
-      background-color: transparent;
+      background-color: var(--background-neutral-primary);
       color: var(--text-neutral-disabled);
       cursor: not-allowed;
     }
@@ -107,11 +107,18 @@
     }
 
     // Pressed styles
-    &:active {
+    &:not(:disabled):active {
       background-color: var(--background-neutral-tertiary);
       border-color: var(--borders-neutral-primary);
       color: var(--text-neutral-secondary);
     }
+
+    // Disabled styles
+    &:disabled {
+      background-color: var(--background-neutral-primary);
+      border-color: var(--borders-neutral-primary);
+    }
+
   }
 
   // Selected styles
