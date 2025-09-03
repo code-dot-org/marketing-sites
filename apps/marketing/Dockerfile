@@ -5,6 +5,7 @@
 # Code.org marketing app.                                                         #
 ###################################################################################
 
+# See: docker/frontend/base/Dockerfile
 FROM ghcr.io/code-dot-org/frontend-base:latest AS base
 
 ##############################################################################
