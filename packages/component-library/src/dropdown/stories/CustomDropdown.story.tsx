@@ -123,6 +123,6 @@ WithMenuPlacementCustomDropdown.args = {
   name: 'with-menu-placement-dropdown',
   labelText: 'Dropdown with Menu Placement',
   menuPlacement: 'right',
-  menuVerticalPlacement: 'top',
+  menuVerticalPlacement: 'bottom',
   size: 'm',
 };
