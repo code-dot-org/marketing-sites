@@ -135,7 +135,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
                 {partner.title}
                 <Image
                   {...partner.logo}
-                  imageComponent={ImageComponent}
+                  ImageComponent={ImageComponent}
                   hasRoundedCorners={false}
                 />
               </span>
@@ -152,7 +152,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
             {imageProps && !videoProps && (
               <Image
                 {...imageProps}
-                imageComponent={ImageComponent}
+                ImageComponent={ImageComponent}
                 className={classNames(
                   imageProps.className,
                   moduleStyles.heroBannerMediaImage,

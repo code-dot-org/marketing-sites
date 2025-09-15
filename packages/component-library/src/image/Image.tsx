@@ -22,7 +22,7 @@ export interface ImageProps
   /** Image onError callback */
   onError?: () => void;
   /** Custom image component to replace the default <img> element */
-  imageComponent?: JSX.ElementType;
+  ImageComponent?: JSX.ElementType;
 }
 
 /**
@@ -48,11 +48,9 @@ const Image: React.FC<ImageProps> = ({
   className,
   onLoad,
   onError,
-  imageComponent,
+  ImageComponent = 'img',
   ...ImageHTMLAttributes
 }) => {
-  const ImageComponent = imageComponent ? imageComponent : 'img';
-
   return (
     <figure
       className={classNames(

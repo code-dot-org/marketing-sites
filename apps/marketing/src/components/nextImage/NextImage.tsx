@@ -1,12 +1,7 @@
 import BaseNextImage, {ImageProps} from 'next/image';
 
-const NextImage = (props: ImageProps) => {
-  const baseImageProps: ImageProps = {
-    ...props,
-    fill: props?.fill ? props.fill : true, // Fill by default to make responsive and avoid absolute width/height
-  };
-
-  return <BaseNextImage {...baseImageProps} />;
+const NextImage = ({fill = true, ...props}: ImageProps) => {
+  return <BaseNextImage fill={fill} {...props} />;
 };
 
 export default NextImage;
