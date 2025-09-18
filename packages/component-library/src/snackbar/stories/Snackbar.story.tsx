@@ -61,9 +61,12 @@ import Alert from '@code-dot-org/component-library/alert';
 const MultipleTemplate: StoryFn<{
   components: SnackBarRealProps[];
 }> = args => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState({} as {[key: string]: boolean});
   const toggleSnackbar = useCallback(
-    () => setIsOpen(!isOpen),
+    (key: string | number) =>
+      setIsOpen(
+        !isOpen[key] ? {...isOpen, [key]: true} : {...isOpen, [key]: false},
+      ),
     [setIsOpen, isOpen],
   );
 
@@ -102,11 +105,15 @@ import Alert from '@code-dot-org/component-library/alert';
       <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
         {args.components?.map(({alertProps, ...snackbarProps}, index) => (
           <div key={index}>
-            <button type="button" onClick={toggleSnackbar}>
+            <button type="button" onClick={() => toggleSnackbar(index)}>
               Open Snackbar
             </button>
-            <Snackbar open={isOpen} onClose={toggleSnackbar} {...snackbarProps}>
-              <Alert {...alertProps} onClose={toggleSnackbar} />
+            <Snackbar
+              open={isOpen[index]}
+              onClose={() => toggleSnackbar(index)}
+              {...snackbarProps}
+            >
+              <Alert {...alertProps} onClose={() => toggleSnackbar(index)} />
             </Snackbar>
           </div>
         ))}
@@ -164,18 +171,6 @@ SnackBarTypes.args = {
     {alertProps: {text: 'Info', type: 'info', size: 'm'}},
     {alertProps: {text: 'Gray', type: 'gray', size: 'm'}},
     {alertProps: {text: 'Aqua', type: 'aqua', size: 'm'}},
-  ],
-};
-
-export const SnackBarWithIcons = MultipleTemplate.bind({});
-SnackBarWithIcons.args = {
-  components: [
-    {alertProps: {text: 'Primary', type: 'primary', size: 'm', showIcon: true}},
-    {alertProps: {text: 'Success', type: 'success', size: 'm', showIcon: true}},
-    {alertProps: {text: 'Danger', type: 'danger', size: 'm', showIcon: true}},
-    {alertProps: {text: 'Warning', type: 'warning', size: 'm', showIcon: true}},
-    {alertProps: {text: 'Info', type: 'info', size: 'm', showIcon: true}},
-    {alertProps: {text: 'Gray', type: 'gray', size: 'm', showIcon: true}},
   ],
 };
 
