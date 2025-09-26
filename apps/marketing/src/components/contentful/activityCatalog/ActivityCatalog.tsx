@@ -162,6 +162,7 @@ const ActivityCatalog = ({
       where: {
         ...facetFilters,
       },
+      limit: 200,
     });
 
     const nextResults = searchResults.hits.map(hit => hit.document);
