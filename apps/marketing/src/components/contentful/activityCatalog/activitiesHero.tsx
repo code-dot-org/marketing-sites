@@ -35,7 +35,12 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
           : 'Hour of AI Activities'}
       </Typography>
 
-      <Typography variant="body2" sx={{color: 'text.secondary', mb: 1}}>
+      <Typography variant="body2"  sx={theme => ({
+    color: 'text.secondary',
+    mb: 1,
+    '& a': { color: 'primary.main', textDecoration: 'none' },
+    '& a:hover': { color: theme.palette.secondary.dark, textDecoration: 'underline' },
+  })}>
         Teachers:{' '}
         <Link href="/hour-of-ai/partners#host-event">Host an hour</Link> or{' '}
         <Link href="/hour-of-ai/how-to/k-12educator">
