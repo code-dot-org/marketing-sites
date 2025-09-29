@@ -116,7 +116,7 @@ const FacetBar = ({
               '.MuiSelect-select': {
                 minWidth: 'fit-content',
                 padding: 1.8,
-                fontSize: 18,
+                fontSize: 19,
 
                 backgroundColor: hasSelectedValue
                   ? theme.palette.primary.main

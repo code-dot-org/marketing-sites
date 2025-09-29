@@ -1,4 +1,6 @@
 'use client';
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import {Box, Typography} from '@mui/material';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import {ComponentProps} from 'react';
@@ -34,6 +36,14 @@ const FacetDrawer = ({isOpen, onClose, ...props}: FacetDrawerProps) => {
         },
       }}
     >
+      {/* Added Filter text and Icon to drawer top */}
+      <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5, mb: 2}}>
+        <FilterAltOutlinedIcon fontSize="small" color="primary" aria-hidden />
+        <Typography component="h2" variant="h6" sx={{m: 1}}>
+          Filters
+        </Typography>
+      </Box>
+
       <FacetBar {...props} isInDrawer={true} />
       {/* Added Go Button Rather Than Close */}
       <Button
