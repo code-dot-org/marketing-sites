@@ -68,7 +68,7 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
         justifyContent="center"
         alignItems="center"
         spacing={2}
-        sx={{mt: {xs: 2.5, md: 3.5}, flexWrap: 'wrap', rowGap: 1.5}}
+        sx={{mt: {xs: 3.5, md: 3.5}, flexWrap: 'wrap', rowGap: 3}}
       >
         <Button
           component={Link}

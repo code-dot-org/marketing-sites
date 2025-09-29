@@ -22,12 +22,37 @@ const FacetDrawer = ({isOpen, onClose, ...props}: FacetDrawerProps) => {
             width: {xs: '80%', sm: 500}, // explicit width
             maxWidth: '90vw', // never full screen on tiny devices
             overflow: 'auto',
+            p: 3,
+            borderTopLeftRadius: 20,
+            borderBottomLeftRadius: 0,
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+
+            border: 1,
+            mt: 1,
           },
         },
       }}
     >
-      <Button onClick={onClose}>Close</Button>
       <FacetBar {...props} isInDrawer={true} />
+      {/* Added Go Button Rather Than Close */}
+      <Button
+        onClick={onClose}
+        sx={theme => ({
+          justifySelf: 'center',
+          borderRadius: 999,
+          height: 46,
+          width: 20,
+          color: '#fff',
+          ml: 2,
+          backgroundColor: theme.palette.secondary.dark,
+          '&:hover': {backgroundColor: theme.palette.primary.main},
+          textTransform: 'none',
+          fontWeight: 600,
+        })}
+      >
+        Go
+      </Button>
     </Drawer>
   );
 };
