@@ -24,7 +24,7 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
       <Typography
         component="h1"
         sx={{
-          fontSize: {xs: 28, md: 44},
+          fontSize: {xs: 28, md: 50},
           fontWeight: 800,
           letterSpacing: 0.2,
           mb: 1.5,

@@ -1,5 +1,6 @@
 'use client';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import SearchIcon from '@mui/icons-material/Search';
 import {Chip, MenuItem, Select} from '@mui/material';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -148,13 +149,26 @@ const FacetBar = ({
 
   return (
     <Grid container spacing={2} flexDirection={isInDrawer ? 'column' : 'row'}>
+      {/* NEW: Addes border to search bar */}
       <Grid size={isInDrawer ? 12 : 2}>
         <Input
+          disableUnderline
           onChange={onSearchTermChange}
           value={searchTerm}
-          placeholder={'Search...'}
+          placeholder="Search..."
+          startAdornment={<SearchIcon fontSize="small" />}
+          sx={{
+            px: 2,
+            py: 1.4,
+            borderRadius: 999,
+            border: '1px solid',
+            borderColor: 'grey.400',
+            backgroundColor: 'background.paper',
+            fontSize: 19,
+          }}
         />
       </Grid>
+
       <Grid size={isInDrawer ? 12 : 10}>
         {getDropdowns()}
 
