@@ -12,11 +12,11 @@ import FacetDrawer from '@/components/contentful/activityCatalog/facetDrawer/fac
 import Section from '@/components/contentful/section';
 import ActivityCollection from '@/components/csforall/activityCollection/ActivityCollection';
 import {ActivitySchema} from '@/modules/activityCatalog/orama/schema/ActivitySchema';
-import {Activity} from '@/modules/activityCatalog/types/Activity';
+import {OramaActivity} from '@/modules/activityCatalog/types/Activity';
 
 interface ActivityCatalogProps {
   serializedOramaDb: string | ArrayBuffer | Buffer<ArrayBuffer>;
-  activities: InternalTypedDocument<Activity>[];
+  activities: InternalTypedDocument<OramaActivity>[];
   facets: FacetResult | undefined;
 }
 
@@ -28,7 +28,7 @@ const ActivityCatalog = ({
   const allowedFacetSet = new Set(facets ? Object.keys(facets) : []);
 
   const [results, setResults] =
-    useState<InternalTypedDocument<Activity>[]>(activities);
+    useState<InternalTypedDocument<OramaActivity>[]>(activities);
   const [db, setDb] = useState<Orama<typeof ActivitySchema> | undefined>(
     undefined,
   );
@@ -172,6 +172,7 @@ const ActivityCatalog = ({
       where: {
         ...facetFilters,
       },
+      sortBy: {property: 'sortKey', order: 'ASC'},
       limit: 200,
     });
 
