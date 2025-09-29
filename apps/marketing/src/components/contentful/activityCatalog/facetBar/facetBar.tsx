@@ -48,6 +48,7 @@ const FacetBar = ({
     const isSelected = selectedFacetValues?.has(facetValue);
     return (
       <MenuItem key={facetValue} value={facetValue}>
+        {/* NEW, Change chip background color to white when unselected */}
         <Chip
           key={facetValue}
           label={facetValue}
@@ -59,6 +60,10 @@ const FacetBar = ({
           }
           variant={isSelected ? 'filled' : 'outlined'}
           color={isSelected ? 'primary' : 'default'}
+          sx={{
+            backgroundColor: !isSelected ? '#fff' : undefined,
+            '&:hover': {backgroundColor: !isSelected ? '#fff' : undefined},
+          }}
         />
       </MenuItem>
     );

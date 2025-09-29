@@ -37,9 +37,9 @@ const FacetDrawer = ({isOpen, onClose, ...props}: FacetDrawerProps) => {
       }}
     >
       {/* Added Filter text and Icon to drawer top */}
-      <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5, mb: 2}}>
-        <FilterAltOutlinedIcon fontSize="small" color="primary" aria-hidden />
-        <Typography component="h2" variant="h6" sx={{m: 1}}>
+      <Box sx={{display: 'flex', alignItems: 'center', gap: 0, mb: 2}}>
+        <FilterAltOutlinedIcon fontSize="medium" color="primary" aria-hidden />
+        <Typography component="h2" variant="h6" sx={{m: 1, fontWeight: 700}}>
           Filters
         </Typography>
       </Box>
@@ -52,7 +52,7 @@ const FacetDrawer = ({isOpen, onClose, ...props}: FacetDrawerProps) => {
           justifySelf: 'center',
           borderRadius: 999,
           height: 46,
-          width: 20,
+          maxWidth: 20,
           color: '#fff',
           ml: 2,
           backgroundColor: theme.palette.secondary.dark,

@@ -70,20 +70,23 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
         spacing={2}
         sx={{mt: {xs: 3.5, md: 3.5}, flexWrap: 'wrap', rowGap: 3}}
       >
+        {/* Changed the button from outline when on page, to fill when on page */}
         <Button
           component={Link}
-          href={`/activities/hour-of-ai`}
-          variant={activityType === 'hour-of-code' ? 'contained' : 'outlined'}
-          color={'primary'}
+          href="/activities/hour-of-ai"
+          variant={activityType === 'hour-of-ai' ? 'contained' : 'outlined'}
+          color="primary"
+          sx={{textDecoration: 'none'}}
         >
           AI Activities
         </Button>
 
         <Button
           component={Link}
-          href={`/activities/hour-of-code`}
-          variant={activityType === 'hour-of-ai' ? 'contained' : 'outlined'}
-          color={'primary'}
+          href="/activities/hour-of-code"
+          variant={activityType === 'hour-of-code' ? 'contained' : 'outlined'}
+          color="primary"
+          sx={{textDecoration: 'none'}}
         >
           Legacy Hour of Code Activities
         </Button>
