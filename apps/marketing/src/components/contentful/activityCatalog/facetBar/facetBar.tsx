@@ -114,8 +114,8 @@ const FacetBar = ({
               minWidth: 'fit-content',
               '.MuiSelect-select': {
                 minWidth: 'fit-content',
-                padding: 2,
-                fontSize: 20,
+                padding: 1.8,
+                fontSize: 18,
 
                 backgroundColor: hasSelectedValue
                   ? theme.palette.primary.main
@@ -163,7 +163,7 @@ const FacetBar = ({
           onClick={onClearAll}
           sx={{
             borderRadius: 999,
-            py: 2,
+            py: 3,
             mr: {xs: 0, sm: 'auto'},
             ml: {xs: 0, sm: 0},
           }}

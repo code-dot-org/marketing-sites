@@ -39,7 +39,7 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
         variant="body2"
         sx={theme => ({
           color: 'text.secondary',
-          mb: 1,
+          mb: 3,
           '& a': {color: 'primary.main', textDecoration: 'none'},
           '& a:hover': {
             color: theme.palette.secondary.dark,
