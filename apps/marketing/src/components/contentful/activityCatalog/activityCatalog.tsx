@@ -256,7 +256,7 @@ const ActivityCatalog = ({
           <FacetBar {...facetBarProps} />
         </Grid>
 
-        <Grid size={2}>
+        <Grid size={2} sx={{display: {xs: '2', sm: '2', md: 'none'}}}>
           <Button
             onClick={() => toggleFacetDrawer(true)}
             color={'secondary'}
