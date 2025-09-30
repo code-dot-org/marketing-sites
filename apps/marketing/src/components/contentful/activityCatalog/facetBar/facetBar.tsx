@@ -48,7 +48,7 @@ const FacetBar = ({
     const isSelected = selectedFacetValues?.has(facetValue);
     return (
       <MenuItem key={facetValue} value={facetValue}>
-        {/* NEW, Change chip background color to white when unselected */}
+        {/* NEW Change chip background color to white when unselected */}
         <Chip
           key={facetValue}
           label={facetValue}
@@ -107,6 +107,7 @@ const FacetBar = ({
                   backgroundColor: '#E9FAFF',
                   borderRadius: 0.5,
                   boxSizing: 'border-box',
+                  overflow: 'auto',
                 },
               },
               MenuListProps: {
@@ -185,6 +186,7 @@ const FacetBar = ({
             py: 3,
             mr: {xs: 0, sm: 'auto'},
             ml: {xs: 0, sm: 0},
+            pl: 4,
           }}
         >
           Clear All
