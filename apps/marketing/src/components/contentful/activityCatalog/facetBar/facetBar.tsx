@@ -93,13 +93,13 @@ const FacetBar = ({
             onOpen={() => setOpenFacet(facet)}
             onClose={() => setOpenFacet(null)}
             MenuProps={{
-              disablePortal: true,
+              // NEW UX Change: Removed disablePortal, makes the container explicit, give the popover a safe zIndex
               disableScrollLock: true,
               anchorOrigin: {vertical: 'bottom', horizontal: 'left'},
               transformOrigin: {vertical: 'top', horizontal: 'left'},
               PaperProps: {
                 onMouseLeave: () => setOpenFacet(null),
-                sx: {
+                sx: theme => ({
                   p: {xs: 1, sm: 2},
                   pb: {xs: 1, sm: 2},
                   boxShadow: 2,
@@ -108,7 +108,9 @@ const FacetBar = ({
                   borderRadius: 0.5,
                   boxSizing: 'border-box',
                   overflow: 'auto',
-                },
+                  // ✅ Ensure it’s above app bars/drawers
+                  zIndex: theme.zIndex.modal + 1,
+                }),
               },
               MenuListProps: {
                 dense: true,
@@ -154,8 +156,12 @@ const FacetBar = ({
   };
 
   return (
-    <Grid container spacing={2} flexDirection={isInDrawer ? 'column' : 'row'}>
-      {/* NEW: Addes border to search bar */}
+    <Grid
+      container
+      spacing={isInDrawer ? 1 : 2}
+      flexDirection={isInDrawer ? 'column' : 'row'}
+    >
+      {/* NEW: Adds border to search bar */}
       <Grid size={isInDrawer ? 12 : 2}>
         <Input
           disableUnderline
@@ -171,6 +177,7 @@ const FacetBar = ({
             borderColor: 'grey.400',
             backgroundColor: 'background.paper',
             fontSize: 19,
+            width: 'calc(100% + 5px)', // <-- Add this line for larger search bar
           }}
         />
       </Grid>
