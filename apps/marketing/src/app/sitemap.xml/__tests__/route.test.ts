@@ -140,7 +140,7 @@ describe('GET /sitemap.xml', () => {
     const body = await response.text();
     // Should not have double slash
     expect(body).toContain(
-      '<loc>https://code.marketing-sites.localhost/en</loc>',
+      '<loc>https://code.marketing-sites.localhost/en-US</loc>',
     );
     expect(body).toContain(
       '<loc>https://code.marketing-sites.localhost/fr</loc>',
@@ -166,7 +166,7 @@ describe('GET /sitemap.xml', () => {
     const body = await response.text();
     // Check for alternate links for each supported locale
     expect(body).toContain(
-      '<xhtml:link rel="alternate" hreflang="en" href="https://code.marketing-sites.localhost/en/hreftest"',
+      '<xhtml:link rel="alternate" hreflang="en-US" href="https://code.marketing-sites.localhost/en-US/hreftest"',
     );
     expect(body).toContain(
       '<xhtml:link rel="alternate" hreflang="fr" href="https://code.marketing-sites.localhost/fr/hreftest"',
