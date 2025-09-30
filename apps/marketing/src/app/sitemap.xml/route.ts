@@ -34,7 +34,7 @@ function writeSitemapEntry(
   SUPPORTED_LOCALE_CODES.forEach(outerLocaleCode => {
     sitemapStream.write({
       ...overrides,
-      url: `${outerLocaleCode}${slug}`,
+      url: `/${outerLocaleCode}${slug}`,
       changefreq: 'daily',
       links: [
         ...SUPPORTED_LOCALE_CODES.map(localeCode => ({
