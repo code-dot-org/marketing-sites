@@ -154,7 +154,6 @@ const FacetBar = ({
               },
             })}
             displayEmpty
-            // renderValue={() => <span>{FACET_LABELS[facet]}</span>}
             renderValue={() => (
               <span style={{whiteSpace: 'nowrap'}}>{FACET_LABELS[facet]}</span>
             )}
