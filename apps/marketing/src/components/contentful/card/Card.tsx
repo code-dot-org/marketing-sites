@@ -99,7 +99,7 @@ const Card: React.FC<CardProps> = ({
           component={'div'}
         >
           <NextImage
-            alt={title}
+            alt={title || ''}
             src={imageSource}
             style={{objectFit: 'cover'}}
           />
