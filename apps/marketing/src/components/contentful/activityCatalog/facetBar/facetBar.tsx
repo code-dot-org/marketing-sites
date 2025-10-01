@@ -46,7 +46,17 @@ const FacetBar = ({
   ) => {
     const isSelected = selectedFacetValues?.has(facetValue);
     return (
-      <MenuItem key={facetValue} value={facetValue}>
+      <MenuItem
+        key={facetValue}
+        value={facetValue}
+        disableRipple
+        sx={{
+          '&, &:hover, &.Mui-focusVisible, &.Mui-selected, &.Mui-selected:hover':
+            {
+              backgroundColor: 'transparent',
+            },
+        }}
+      >
         <Chip
           key={facetValue}
           label={facetValue}
@@ -110,7 +120,7 @@ const FacetBar = ({
               MenuListProps: {
                 dense: true,
                 disablePadding: true,
-                sx: {p: 0, m: 0},
+                sx: {p: 0, m: 0, width: '100%'},
               },
             }}
             sx={theme => ({
