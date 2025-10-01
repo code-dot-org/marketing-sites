@@ -23,17 +23,16 @@ const FacetDrawer = ({isOpen, onClose, ...props}: FacetDrawerProps) => {
           sx: {
             width: {xs: '80%', sm: 500},
             maxWidth: '90vw',
-            // key changes:
-            height: 'calc(98vh - 8px)', // fallback for older browsers
+            height: 'calc(98vh - 8px)',
             '@supports (height: 1dvh)': {
-              height: 'calc(98dvh - 8px)', // modern, accounts for dynamic UI chrome
+              height: 'calc(98dvh - 8px)',
             },
 
-            mt: 1, // keep your original top offset
+            mt: 1,
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden', // scrolling handled by inner content
-            p: 0, // pad sections individually
+            overflow: 'hidden',
+            p: 0,
             borderTopLeftRadius: 20,
             borderBottomLeftRadius: 20,
             borderTopRightRadius: 0,
@@ -49,8 +48,6 @@ const FacetDrawer = ({isOpen, onClose, ...props}: FacetDrawerProps) => {
           Filters
         </Typography>
       </Box>
-
-      {/* NEW: Scrollable middle section */}
       <Box
         sx={{
           flex: 1,
@@ -61,7 +58,6 @@ const FacetDrawer = ({isOpen, onClose, ...props}: FacetDrawerProps) => {
           pb: 2,
         }}
       >
-        {/* NEW: Made sure all filters are in only one column on xs */}
         <Box
           sx={{
             display: 'grid',
@@ -83,8 +79,6 @@ const FacetDrawer = ({isOpen, onClose, ...props}: FacetDrawerProps) => {
           <FacetBar {...props} isInDrawer />
         </Box>
       </Box>
-
-      {/* NEW: Made Footer with line to help */}
       <Box
         sx={{
           px: {xs: 1, sm: 3},
@@ -105,7 +99,7 @@ const FacetDrawer = ({isOpen, onClose, ...props}: FacetDrawerProps) => {
             borderColor: 'divider',
             background:
               'linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0.85) 60%, rgba(255,255,255,0))',
-            pb: 'calc(12px + env(safe-area-inset-bottom))', // added for iOS safe area
+            pb: 'calc(12px + env(safe-area-inset-bottom))',
           }}
         >
           <Button

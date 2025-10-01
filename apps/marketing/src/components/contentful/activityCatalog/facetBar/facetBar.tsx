@@ -37,7 +37,6 @@ const FacetBar = ({
     onFacetChange(facet, facetValue);
   };
 
-  // NEW: track which facet's dropdown is open
   const [openFacet, setOpenFacet] = useState<string | null>(null);
 
   const getDropdownMenuItem = (
@@ -48,7 +47,6 @@ const FacetBar = ({
     const isSelected = selectedFacetValues?.has(facetValue);
     return (
       <MenuItem key={facetValue} value={facetValue}>
-        {/* NEW Change chip background color to white when unselected */}
         <Chip
           key={facetValue}
           label={facetValue}
@@ -88,12 +86,10 @@ const FacetBar = ({
             multiple
             onChange={e => handleChange(facet, e.target.value[0])}
             value={[]}
-            // NEW: control open/close + close on menu mouse leave
             open={openFacet === facet}
             onOpen={() => setOpenFacet(facet)}
             onClose={() => setOpenFacet(null)}
             MenuProps={{
-              // NEW UX Change: Removed disablePortal, makes the container explicit, give the popover a safe zIndex
               disableScrollLock: true,
               anchorOrigin: {vertical: 'bottom', horizontal: 'left'},
               transformOrigin: {vertical: 'top', horizontal: 'left'},
@@ -108,7 +104,6 @@ const FacetBar = ({
                   borderRadius: 0.5,
                   boxSizing: 'border-box',
                   overflow: 'auto',
-                  // ✅ Ensure it’s above app bars/drawers
                   zIndex: theme.zIndex.modal + 1,
                 }),
               },
@@ -161,7 +156,6 @@ const FacetBar = ({
       spacing={isInDrawer ? 1 : 2}
       flexDirection={isInDrawer ? 'column' : 'row'}
     >
-      {/* NEW: Adds border to search bar */}
       <Grid size={isInDrawer ? 12 : 2}>
         <Input
           disableUnderline
@@ -177,15 +171,13 @@ const FacetBar = ({
             borderColor: 'grey.400',
             backgroundColor: 'background.paper',
             fontSize: 19,
-            width: 'calc(100% + 5px)', // <-- Add this line for larger search bar
+            width: 'calc(100% + 5px)',
           }}
         />
       </Grid>
 
       <Grid size={isInDrawer ? 12 : 10}>
         {getDropdowns()}
-
-        {/* NEW: Removed spacing from button */}
         <Button
           onClick={onClearAll}
           sx={{

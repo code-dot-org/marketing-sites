@@ -31,8 +31,8 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
         }}
       >
         {activityType === ActivityType.HOUR_OF_CODE
-          ? 'Hour of Code Activities'
-          : 'Hour of AI Activities'}
+          ? 'Explore Hour of Code Activities'
+          : 'Explore Hour of AI Activities'}
       </Typography>
 
       <Typography
@@ -53,15 +53,44 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
           read the How-To Guide
         </Link>
       </Typography>
+      {activityType === ActivityType.HOUR_OF_AI && (
+        <>
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 700,
+              color: 'text.primary',
+              maxWidth: 760,
+              mx: 'auto',
+              mb: 1.5,
+            }}
+          >
+            The new Hour of AI activity catalog launches on November 12, 2025,
+            featuring the very best from our partners.
+          </Typography>
 
-      <Typography
-        variant="body2"
-        sx={{color: 'text.secondary', maxWidth: 760, mx: 'auto'}}
-      >
-        The most beloved Hour of Code activities aren’t going anywhere while we
-        focus our efforts on expanding high-quality, hands-on AI education.
-        Explore legacy Hour of Code activities below.
-      </Typography>
+          <Typography
+            variant="body2"
+            sx={{color: 'text.secondary', maxWidth: 760, mx: 'auto', mb: 3}}
+          >
+            And don’t worry — the most beloved Hour of Code activities aren’t
+            going anywhere! While we focus our efforts on expanding
+            high-quality, hands-on AI education, you can still explore the
+            legacy Hour of Code catalog below.
+          </Typography>
+        </>
+      )}
+
+      {activityType === ActivityType.HOUR_OF_CODE && (
+        <Typography
+          variant="body2"
+          sx={{color: 'text.secondary', maxWidth: 760, mx: 'auto'}}
+        >
+          The most beloved Hour of Code activities aren’t going anywhere while
+          we focus our efforts on expanding high-quality, hands-on AI education.
+          Explore legacy Hour of Code activities below.
+        </Typography>
+      )}
 
       <Stack
         direction="row"
@@ -70,7 +99,6 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
         spacing={2}
         sx={{mt: {xs: 3.5, md: 3.5}, flexWrap: 'wrap', rowGap: 3}}
       >
-        {/* Changed the button from outline when on page, to fill when on page */}
         <Button
           component={Link}
           href="/activities/hour-of-ai"
@@ -78,7 +106,7 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
           color="primary"
           sx={{textDecoration: 'none'}}
         >
-          AI Activities
+          Hour of AI Activities
         </Button>
 
         <Button
