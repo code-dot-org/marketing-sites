@@ -12,6 +12,7 @@ import Overline from '@/components/contentful/overline';
 import NextImage from '@/components/nextImage/NextImage';
 import {useStatsigLogger} from '@/providers/statsig/client';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
+import theme from '@/themes/csforall';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
@@ -100,7 +101,7 @@ const Card: React.FC<CardProps> = ({
       className={className}
       raised={false}
       sx={{
-        border: '1px solid #f5f5f5',
+        border: `1px solid ${theme.palette.common.black}`,
         boxShadow: 'none',
         borderRadius: '12px',
         minWidth: 275,
@@ -111,7 +112,7 @@ const Card: React.FC<CardProps> = ({
           sx={{
             height: setImageHeight,
             position: 'relative',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: theme.palette.common.black,
           }}
           component={'div'}
         >
