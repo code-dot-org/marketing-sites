@@ -78,6 +78,8 @@ export class MarketingPage {
   async goto(subPath: string) {
     const response = await this.page.goto(`${this.getBasePath()}${subPath}`);
 
+    // We may encounter a Cloudfront challenge page which has no title. Wait for a title to be set.
+    await this.page.waitForFunction(() => document.title.trim().length > 0);
     await this.loadFonts();
 
     return response;
