@@ -78,7 +78,10 @@ export class MarketingPage {
   async goto(subPath: string) {
     const response = await this.page.goto(`${this.getBasePath()}${subPath}`);
 
-    await this.page.waitForFunction(() => typeof window.__ENV !== 'undefined');
+    // If there's a challenge page, wait for it to clear
+    await this.page.waitForFunction(
+      () => typeof window.awsWafCookieDomainList === 'undefined',
+    );
     await this.loadFonts();
 
     return response;
