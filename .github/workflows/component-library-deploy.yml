@@ -5,8 +5,7 @@ on:
 
     push:
       branches:
-        - staging
-        - staging-next
+        - main
       paths:
         - 'packages/component-library/**'
         - 'packages/component-library-styles/**'

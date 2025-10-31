@@ -9,8 +9,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-        - staging
-        - staging-next
+        - main
     paths:
         - '**'
 
@@ -20,10 +19,10 @@ env:
   IMAGE_NAME: code-dot-org/marketing
 
 concurrency:
-  # For pushes to staging, requests are grouped into the "deploy-marketing" concurrency group to queue them up
+  # For pushes to main, requests are grouped into the "deploy-marketing" concurrency group to queue them up
   # For pull requests, there are no limits to concurrency
   group: ${{ github.run_id }}
-  # For pushes to staging, multiple pushes are queued
+  # For pushes to main, multiple pushes are queued
   # For pull requests, multiple pushes to the same PR cancels previous executions
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
