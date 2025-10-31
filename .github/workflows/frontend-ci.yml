@@ -5,8 +5,7 @@ name: Frontend-CI
 on:
   pull_request:
     branches:
-      - staging
-      - staging-next
+      - main
 
 env:
   APPLITOOLS_BATCH_ID: ${{ github.event.pull_request.head.sha || github.sha }}
