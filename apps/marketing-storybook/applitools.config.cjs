@@ -24,7 +24,7 @@ module.exports = {
   concurrency: 10,
   showLogs: !!process.env.APPLITOOLS_SHOW_LOGS,
   appName: 'Marketing Storybook',
-  batchName: 'Frontend Eyes Tests',
+  batchName: 'Marketing Eyes Tests',
   dontCloseBatches: true,
   browser: [
     {width: 1200, height: 800, name: 'chrome'},

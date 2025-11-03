@@ -30,7 +30,7 @@ export default defineConfig<EyesFixture>({
       // Runner type: 'ufg' for Ultrafast Grid, 'classic' for Classic runner
       type: 'classic',
       batch: {
-        name: 'Frontend Eyes Tests',
+        name: 'Marketing Eyes Tests',
         id: process.env.APPLITOOLS_BATCH_ID,
         notifyOnCompletion: false,
       },

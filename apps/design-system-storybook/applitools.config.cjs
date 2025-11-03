@@ -9,8 +9,8 @@ const isDocker = !!process.env.IS_DOCKER || !!process.env.CI;
 module.exports = {
   concurrency: 5,
   showLogs: !!process.env.APPLITOOLS_SHOW_LOGS,
-  appName: 'Component Library',
-  batchName: 'Frontend Eyes Tests',
+  appName: 'Marketing Component Library',
+  batchName: 'Marketing Eyes Tests',
   dontCloseBatches: true,
   browser: [
     {width: 1200, height: 800, name: 'chrome'},
