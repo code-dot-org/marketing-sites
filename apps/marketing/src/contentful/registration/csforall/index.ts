@@ -16,6 +16,9 @@ import LogoCollection, {
 import PeopleCollection, {
   PeopleCollectionContentfulComponentDefinition,
 } from '@/components/contentful/collections/peopleCollection';
+import TextCollection, {
+  TextCollectionContentfulComponentDefinition,
+} from '@/components/contentful/collections/textCollection';
 import AdoptionMap, {
   AdoptionMapContentfulComponentDefinition,
 } from '@/components/contentful/corporateSite/adoptionMap';
@@ -84,6 +87,10 @@ const contentfulRegistration = {
     {
       component: PeopleCollection,
       definition: PeopleCollectionContentfulComponentDefinition,
+    },
+    {
+      component: TextCollection,
+      definition: TextCollectionContentfulComponentDefinition,
     },
     {
       component: Card,
