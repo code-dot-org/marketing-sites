@@ -1,9 +1,8 @@
-# Code.org Frontend
+# Code.org Marketing Websites
 
-This directory contains packages and applications that power Code.org sites.
+This directory contains packages and applications that power Code.org marketing sites.
 
-**Note**: Most of Code.org's Studio product (student experience, curriculum, teacher tools, etc.) is built in the
-top-level `apps` package and is not currently located in this directory.
+**Note**: Code.org's learn platform (student experience, curriculum, teacher tools, etc.) is built on the [Code.org Main Repository](https://github.com/code-dot-org/code-dot-org).
 
 ## What's inside?
 
@@ -14,26 +13,26 @@ This directory uses [Turborepo](https://turbo.build/) to manage the monorepo and
 
 ### Apps
 
-Open source Code.org applications:
+Open source Code.org marketing applications:
 
-- [@code-dot-org/marketing](apps/marketing): Code.org's marketing site (uses Contentful).
-- [@code-dot-org/design-system-storybook](apps/design-system-storybook): A [Storybook](https://storybook.js.org/)
+- [@code-dot-org/marketing](apps/marketing): Code.org's multi-tenant marketing site (uses Contentful).
+- [@code-dot-org/design-system-storybook](apps/design-system-storybook): A [Storybook](https://storybook.js.org/) for the marketing component library (atomic, molecular) components.
   instance for the Code.org design system (`@code-dot-org/component-library`). Publicly available at
-  [https://code-dot-org.github.io/code-dot-org/component-library-storybook](https://code-dot-org.github.io/code-dot-org/component-library-storybook).
+  [https://code-dot-org.github.io/code-dot-org/marketing-component-library-storybook](https://code-dot-org.github.io/code-dot-org/marketing-component-library-storybook).
 
 ### Packages
 
 Publicly available packages:
 
-- [@code-dot-org/component-library](packages/component-library): The Code.org Design System React component library.
+- [@code-dot-org/component-library](packages/component-library): The Code.org Marketing Design System React component library.
 - [@code-dot-org/component-library-styles](packages/component-library-styles): Common Styles
-  (`variables`, `colors`, `mixins`, `typography styles`, etc) of Code.org Design System
+  (`variables`, `colors`, `mixins`, `typography styles`, etc) of Code.org Marketing Design System
   ([@code-dot-org/component-library](packages/component-library)). Based on [Figma](https://www.figma.com/design/NIVcvUgU3WmXpAmp9U2vVy/DSCO-Variables?node-id=2925-33951&m=dev).
   Used by [@code-dot-org/component-library](packages/component-library), should also be used as
-  a standalone package for styling components with Code.org's Design System styles.
-- [@code-dot-org/lint-config](packages/lint-config): Shared linters configuration for Code.org projects
+  a standalone package for styling components with Code.org's Marketing Design System styles.
+- [@code-dot-org/lint-config](packages/lint-config): Shared linters configuration for Code.org marketing projects
   (includes `eslint`, `lint-staged,` `prettier`, `stylelint`, `typescript` configs).
-- [@code-dot-org/fonts](packages/fonts): Code.org's Design System fonts package.
+- [@code-dot-org/fonts](packages/fonts): Code.org's Marketing Design System fonts package.
 - [@code-dot-org/changelogs](packages/changelogs): [Release-it](https://github.com/release-it/release-it)
   configuration for changelogs automatic generation, package versioning, and publishing.
 
