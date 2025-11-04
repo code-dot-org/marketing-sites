@@ -1,0 +1,173 @@
+{
+  "textCollection": [
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "27jkibac934d"
+          }
+        },
+        "type": "Entry",
+        "id": "1OHTqM3wSU5DqtC4CdI365",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "listItem"
+          }
+        },
+        "revision": 1,
+        "createdAt": "2025-11-04T00:01:38.171Z",
+        "updatedAt": "2025-11-04T00:01:48.140Z",
+        "publishedAt": "2025-11-04T00:01:48.140Z",
+        "firstPublishedAt": "2025-11-04T00:01:48.140Z",
+        "publishedVersion": 2,
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": "10x Velocity",
+        "shortText": "10x Velocity"
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "27jkibac934d"
+          }
+        },
+        "type": "Entry",
+        "id": "5n3N6t7Vz7t0U3euFaLODI",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "listItem"
+          }
+        },
+        "revision": 1,
+        "createdAt": "2025-11-03T23:59:43.065Z",
+        "updatedAt": "2025-11-03T23:59:57.316Z",
+        "publishedAt": "2025-11-03T23:59:57.316Z",
+        "firstPublishedAt": "2025-11-03T23:59:57.316Z",
+        "publishedVersion": 2,
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": "1M1B Foundation",
+        "shortText": "1M1B Foundation"
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "27jkibac934d"
+          }
+        },
+        "type": "Entry",
+        "id": "3xR55KymulOKIKOV2R2wQH",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "listItem"
+          }
+        },
+        "revision": 1,
+        "createdAt": "2025-11-04T00:01:54.997Z",
+        "updatedAt": "2025-11-04T00:02:01.095Z",
+        "publishedAt": "2025-11-04T00:02:01.095Z",
+        "firstPublishedAt": "2025-11-04T00:02:01.095Z",
+        "publishedVersion": 2,
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": "Aarhus University",
+        "shortText": "Aarhus University"
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "27jkibac934d"
+          }
+        },
+        "type": "Entry",
+        "id": "3490V1o0GfgvTfJtxWSGUN",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "listItem"
+          }
+        },
+        "revision": 1,
+        "createdAt": "2025-11-04T00:02:43.404Z",
+        "updatedAt": "2025-11-04T00:02:49.351Z",
+        "publishedAt": "2025-11-04T00:02:49.351Z",
+        "firstPublishedAt": "2025-11-04T00:02:49.351Z",
+        "publishedVersion": 2,
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": "Academy for CS & Education at Florida International University",
+        "shortText": "Academy for CS & Education at Florida International University"
+      }
+    }
+  ],
+  "sortOrder": "alphabetical"
+}
