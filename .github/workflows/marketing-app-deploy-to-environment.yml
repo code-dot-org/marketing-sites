@@ -17,7 +17,7 @@ on:
         required: true
         type: string
       CONTAINER_IMAGE_DIGEST:
-        description: "The sha256 digest of the container image to deploy."
+        description: 'The sha256 digest of the container image to deploy.'
         required: true
         type: string
   workflow_call:
@@ -31,7 +31,7 @@ on:
         required: true
         type: string
       CONTAINER_IMAGE_DIGEST:
-        description: "The sha256 digest of the container image to deploy."
+        description: 'The sha256 digest of the container image to deploy.'
         required: true
         type: string
 
@@ -73,16 +73,16 @@ jobs:
           role-session-name: GithubActions-${{ env.GITHUB_ENVIRONMENT_NAME }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: "Download Built Docker Image"
+      - name: 'Download Built Docker Image'
         run: |
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ inputs.CONTAINER_IMAGE_DIGEST }}
           docker create --name temp ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ inputs.CONTAINER_IMAGE_DIGEST }}
 
-      - name: "Extract Static Assets from Docker"
+      - name: 'Extract Static Assets from Docker'
         run: |
           docker cp temp:/app/apps/marketing/.next/static/ ./static
 
-      - name: "[${{ env.GITHUB_ENVIRONMENT_NAME }}] Upload Static Assets to S3"
+      - name: '[${{ env.GITHUB_ENVIRONMENT_NAME }}] Upload Static Assets to S3'
         env:
           BASE_DOMAIN: ${{ vars.APPLICATION_BASE_DOMAIN }}
           SUBDOMAIN_NAME: ${{ vars.APPLICATION_SUBDOMAIN_NAME }}
@@ -95,7 +95,7 @@ jobs:
           # More details: https://nextjs.org/docs/app/guides/self-hosting#automatic-caching
           aws s3 sync static/ "s3://$BUCKET_NAME/_next/static" --quiet --cache-control "public, max-age=31536000, immutable"
 
-      - name: "[${{ env.GITHUB_ENVIRONMENT_NAME }}] Deploy Marketing App to AWS"
+      - name: '[${{ env.GITHUB_ENVIRONMENT_NAME }}] Deploy Marketing App to AWS'
         working-directory: ./apps/marketing/cicd/3-app
         run: |
           bundle exec ruby deploy.rb --environment_type ${{ vars.ENVIRONMENT_TYPE }} \
@@ -112,16 +112,16 @@ jobs:
             --production_hosted_zone_id "${{ secrets.PRODUCTION_HOSTED_ZONE_ID }}" \
             --web-application-firewall "${{ secrets.WEB_APPLICATION_FIREWALL_ARN }}"
 
-      - name: "[${{ env.GITHUB_ENVIRONMENT_NAME }}] Invalidate CloudFront Cache"
+      - name: '[${{ env.GITHUB_ENVIRONMENT_NAME }}] Invalidate CloudFront Cache'
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
-          STACK_NAME: "${{ vars.APPLICATION_SUBDOMAIN_NAME }}-${{ vars.APPLICATION_BASE_DOMAIN }}"
+          STACK_NAME: '${{ vars.APPLICATION_SUBDOMAIN_NAME }}-${{ vars.APPLICATION_BASE_DOMAIN }}'
         run: |
           CFN_STACK_NAME=$(echo "$STACK_NAME" | tr '.' '-')
           CLOUDFRONT_DISTRIBUTION_ID=$(aws cloudformation describe-stacks --region $AWS_REGION --stack-name $CFN_STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" --output text)
-          
+
           echo "::add-mask::$CLOUDFRONT_DISTRIBUTION_ID"
-          
+
           aws cloudfront create-invalidation \
             --distribution-id $CLOUDFRONT_DISTRIBUTION_ID \
             --paths "/*"
@@ -155,7 +155,7 @@ jobs:
           ENVIRONMENT_TYPE: ${{ vars.ENVIRONMENT_TYPE }}
           CONTENTFUL_SPACE_ID: ${{ vars.CONTENTFUL_SPACE_ID }}
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY}}
-          APPLICATION_BASE_ADDRESS: "${{ vars.APPLICATION_SUBDOMAIN_NAME }}.${{ vars.APPLICATION_BASE_DOMAIN }}"
+          APPLICATION_BASE_ADDRESS: '${{ vars.APPLICATION_SUBDOMAIN_NAME }}.${{ vars.APPLICATION_BASE_DOMAIN }}'
           DRAFT_MODE_TOKEN: ${{ secrets.DRAFT_MODE_TOKEN }}
           GITHUB_ENVIRONMENT_NAME: ${{ env.GITHUB_ENVIRONMENT_NAME }}
           SITE_TYPE: ${{ inputs.SITE_TYPE }}
@@ -163,7 +163,7 @@ jobs:
           SHARD_TOTAL: ${{ matrix.shardTotal }}
 
   merge-reports:
-    needs: [ ui-tests ]
+    needs: [ui-tests]
 
     runs-on: ubuntu-24.04
     steps:

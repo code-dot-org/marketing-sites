@@ -9,9 +9,9 @@ on:
   workflow_dispatch:
   push:
     branches:
-        - main
+      - main
     paths:
-        - '**'
+      - '**'
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
@@ -83,14 +83,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          network: host # This is required for the `turbo` command to work properly in the Dockerfile.
-           # Note TURBO_TOKEN is not a secret because we use a local turbo instance, it is stubbed out for future use only.
+          network:
+            host # This is required for the `turbo` command to work properly in the Dockerfile.
+            # Note TURBO_TOKEN is not a secret because we use a local turbo instance, it is stubbed out for future use only.
           build-args: |
             TURBO_TEAM=${{ vars.TURBO_REPO_TEAM }}
             TURBO_TOKEN=${{ secrets.TURBO_REPO_TOKEN }}
             TURBO_API=${{ vars.TURBO_REPO_API }}
-      
-      # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see "[AUTOTITLE](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds)." 
+
+      # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see "[AUTOTITLE](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds)."
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
@@ -116,7 +117,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        SITE_TYPE: [ corporate, csforall, aiday ]
+        SITE_TYPE: [corporate, csforall, aiday]
 
   # Deploy production environments in parallel, after test environments completes successfully
   deploy-production:
@@ -137,4 +138,4 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        SITE_TYPE: [ corporate, csforall, aiday ]
+        SITE_TYPE: [corporate, csforall, aiday]

@@ -1,10 +1,10 @@
-name: "Install & Setup Frontend Directory"
-description: "Setup for the frontend directory"
+name: 'Install & Setup Frontend Directory'
+description: 'Setup for the frontend directory'
 
 inputs:
   INSTALL_DEPENDENCIES:
-    description: "Whether to install dependencies. Defaults to true"
-    default: "true"
+    description: 'Whether to install dependencies. Defaults to true'
+    default: 'true'
     required: false
 
 runs:
@@ -20,8 +20,8 @@ runs:
     - uses: actions/setup-node@v4
       if: inputs.INSTALL_DEPENDENCIES == 'true'
       with:
-        node-version-file: ".nvmrc"
-        cache: "yarn"
+        node-version-file: '.nvmrc'
+        cache: 'yarn'
         cache-dependency-path: 'yarn.lock'
 
     - name: Install dependencies

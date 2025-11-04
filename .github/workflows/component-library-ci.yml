@@ -4,51 +4,51 @@ on:
   workflow_call:
 
 jobs:
-    build:
-        runs-on: ubuntu-24.04
+  build:
+    runs-on: ubuntu-24.04
 
-        steps:
-            - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Setup Frontend
-              uses: ./.github/actions/frontend/setup
+      - name: Setup Frontend
+        uses: ./.github/actions/frontend/setup
 
-            - name: Install Playwright for Design System Storybook
-              run: npx playwright install --with-deps
-              working-directory: ./apps/design-system-storybook
+      - name: Install Playwright for Design System Storybook
+        run: npx playwright install --with-deps
+        working-directory: ./apps/design-system-storybook
 
-            - name: Build
-              run: yarn build --filter @code-dot-org/component-library --filter @code-dot-org/design-system-storybook
-              working-directory: ./
+      - name: Build
+        run: yarn build --filter @code-dot-org/component-library --filter @code-dot-org/design-system-storybook
+        working-directory: ./
 
-            - name: Lint
-              run: yarn lint --filter @code-dot-org/component-library --filter @code-dot-org/design-system-storybook
-              working-directory: ./
+      - name: Lint
+        run: yarn lint --filter @code-dot-org/component-library --filter @code-dot-org/design-system-storybook
+        working-directory: ./
 
-            - name: Unit Tests
-              run: yarn test --filter @code-dot-org/component-library --filter @code-dot-org/design-system-storybook
-              working-directory: ./
+      - name: Unit Tests
+        run: yarn test --filter @code-dot-org/component-library --filter @code-dot-org/design-system-storybook
+        working-directory: ./
 
-            - name: UI Tests
-              run: yarn test:ui:ci --filter @code-dot-org/component-library --filter @code-dot-org/design-system-storybook
-              working-directory: ./
+      - name: UI Tests
+        run: yarn test:ui:ci --filter @code-dot-org/component-library --filter @code-dot-org/design-system-storybook
+        working-directory: ./
 
-            - name: Upload static files as pages artifact
-              if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
-              id: deployment
-              uses: actions/upload-pages-artifact@v3
-              with:
-                path: apps/design-system-storybook/dist
-                name: component-library-storybook
+      - name: Upload static files as pages artifact
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/design-system-storybook/dist
+          name: marketing-component-library-storybook
 
-    eyes:
-      runs-on: ubuntu-24.04
+  eyes:
+    runs-on: ubuntu-24.04
 
-      permissions:
-        pull-requests: write
-        issues: write
+    permissions:
+      pull-requests: write
+      issues: write
 
-      steps:
+    steps:
       - uses: actions/checkout@v4
 
       - name: Setup Frontend

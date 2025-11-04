@@ -1,10 +1,10 @@
-name: "Merge Playwright Test Reports"
-description: "Merges playwright test reports from multiple shards into one single report"
+name: 'Merge Playwright Test Reports'
+description: 'Merges playwright test reports from multiple shards into one single report'
 
 inputs:
   GITHUB_ENVIRONMENT_NAME:
-    description: "The name of the GitHub environment to use for this action"
-    default: "pr"
+    description: 'The name of the GitHub environment to use for this action'
+    default: 'pr'
     required: false
 
 runs:
