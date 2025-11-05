@@ -181,15 +181,10 @@ describe('getClient', () => {
       </OneTrustContext.Provider>,
     );
 
-    expect(useClientBootstrapInit).toHaveBeenCalledWith(
-      clientKey,
-      undefined,
-      values,
-      {
-        environment: {tier: stage},
-        plugins: plugins,
-      },
-    );
+    expect(useClientBootstrapInit).toHaveBeenCalledWith(clientKey, {}, values, {
+      environment: {tier: stage},
+      plugins: plugins,
+    });
     expect(setCookie).not.toHaveBeenCalled();
   });
 
@@ -213,15 +208,10 @@ describe('getClient', () => {
       </OneTrustContext.Provider>,
     );
 
-    expect(useClientBootstrapInit).toHaveBeenCalledWith(
-      clientKey,
-      undefined,
-      values,
-      {
-        environment: {tier: stage},
-        plugins: plugins,
-      },
-    );
+    expect(useClientBootstrapInit).toHaveBeenCalledWith(clientKey, {}, values, {
+      environment: {tier: stage},
+      plugins: plugins,
+    });
     expect(setCookie).not.toHaveBeenCalled();
   });
 

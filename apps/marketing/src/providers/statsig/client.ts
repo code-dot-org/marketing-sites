@@ -48,9 +48,7 @@ export function getClient(
   // studio.code.org and code.org, otherwise fallback to Statsig SDK's default behavior
   const stableId =
     brand === Brand.CODE_DOT_ORG ? getStatsigStableId() : undefined;
-  const user: StatsigUser | undefined = stableId
-    ? {customIDs: {stableID: stableId}}
-    : undefined;
+  const user: StatsigUser = stableId ? {customIDs: {stableID: stableId}} : {};
   return useClientBootstrapInit(clientKey, user, values, {
     environment: {tier: stage},
     plugins: stage === 'production' ? plugins : undefined,
