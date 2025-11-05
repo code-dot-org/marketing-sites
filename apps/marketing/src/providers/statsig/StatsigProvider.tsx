@@ -3,9 +3,9 @@
 import {StatsigProvider as BaseStatsigProvider} from '@statsig/react-bindings';
 import {ReactNode} from 'react';
 
+import {Brand} from '@/config/brand';
 import {Stage} from '@/config/stage';
 import {getClient} from '@/providers/statsig/client';
-import {Brand} from '@/config/brand';
 
 interface StatsigProviderProps {
   stage: Stage;

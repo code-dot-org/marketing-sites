@@ -3,6 +3,7 @@ import {render} from '@testing-library/react';
 import {setCookie, getCookie} from 'cookies-next/client';
 import {v4 as uuidv4} from 'uuid';
 
+import {Brand} from '@/config/brand';
 import {Stage} from '@/config/stage';
 import OneTrustContext, {
   OneTrustCookieGroup,
@@ -35,7 +36,7 @@ const MockStatsigComponent = ({
   clientKey: string;
   stage: Stage;
   values: string;
-  brand: string;
+  brand: Brand;
 }) => {
   getClient(clientKey, stage, values, brand);
 
@@ -52,7 +53,7 @@ describe('getClient', () => {
     const clientKey = 'test-client-key';
     const stage = 'production';
     const values = 'test-values';
-    const brand = 'codeorg';
+    const brand = Brand.CODE_DOT_ORG;
 
     render(
       <OneTrustContext.Provider
@@ -70,7 +71,7 @@ describe('getClient', () => {
 
     expect(useClientBootstrapInit).toHaveBeenCalledWith(
       clientKey,
-      {userID: 'marketing-user', customIDs: {stableID: 'existing-stable-id'}},
+      {customIDs: {stableID: 'existing-stable-id'}},
       values,
       {
         environment: {tier: stage},
@@ -86,7 +87,7 @@ describe('getClient', () => {
     const clientKey = 'test-client-key';
     const stage = 'production';
     const values = 'test-values';
-    const brand = 'codeorg';
+    const brand = Brand.CODE_DOT_ORG;
 
     render(
       <OneTrustContext.Provider
@@ -104,7 +105,7 @@ describe('getClient', () => {
 
     expect(useClientBootstrapInit).toHaveBeenCalledWith(
       clientKey,
-      {userID: 'marketing-user', customIDs: {stableID: 'new-stable-id'}},
+      {customIDs: {stableID: 'new-stable-id'}},
       values,
       {
         environment: {tier: stage},
@@ -129,7 +130,7 @@ describe('getClient', () => {
     const clientKey = 'test-client-key';
     const stage = 'production';
     const values = 'test-values';
-    const brand = 'codeorg';
+    const brand = Brand.CODE_DOT_ORG;
 
     render(
       <OneTrustContext.Provider
@@ -147,7 +148,7 @@ describe('getClient', () => {
 
     expect(useClientBootstrapInit).toHaveBeenCalledWith(
       clientKey,
-      {userID: 'marketing-user', customIDs: {stableID: 'existing-stable-id'}},
+      {customIDs: {stableID: 'existing-stable-id'}},
       values,
       {
         environment: {tier: stage},
@@ -162,7 +163,7 @@ describe('getClient', () => {
     const clientKey = 'test-client-key';
     const stage = 'production';
     const values = 'test-values';
-    const brand = 'codeorg';
+    const brand = Brand.CODE_DOT_ORG;
 
     render(
       <OneTrustContext.Provider
@@ -182,7 +183,7 @@ describe('getClient', () => {
 
     expect(useClientBootstrapInit).toHaveBeenCalledWith(
       clientKey,
-      {userID: 'marketing-user'},
+      undefined,
       values,
       {
         environment: {tier: stage},
@@ -196,7 +197,7 @@ describe('getClient', () => {
     const clientKey = 'test-client-key';
     const stage = 'production';
     const values = 'test-values';
-    const brand = 'otherbrand';
+    const brand = Brand.CS_FOR_ALL;
 
     render(
       <OneTrustContext.Provider
@@ -214,7 +215,7 @@ describe('getClient', () => {
 
     expect(useClientBootstrapInit).toHaveBeenCalledWith(
       clientKey,
-      {userID: 'marketing-user'},
+      undefined,
       values,
       {
         environment: {tier: stage},
@@ -228,7 +229,7 @@ describe('getClient', () => {
     (getCookie as jest.Mock).mockReturnValue('existing-stable-id');
     const clientKey = 'test-client-key';
     const values = 'test-values';
-    const brand = 'codeorg';
+    const brand = Brand.CODE_DOT_ORG;
 
     // Production: plugins should be set
     render(
@@ -245,7 +246,7 @@ describe('getClient', () => {
     );
     expect(useClientBootstrapInit).toHaveBeenLastCalledWith(
       clientKey,
-      {userID: 'marketing-user', customIDs: {stableID: 'existing-stable-id'}},
+      {customIDs: {stableID: 'existing-stable-id'}},
       values,
       {
         environment: {tier: 'production'},
@@ -268,7 +269,7 @@ describe('getClient', () => {
     );
     expect(useClientBootstrapInit).toHaveBeenLastCalledWith(
       clientKey,
-      {userID: 'marketing-user', customIDs: {stableID: 'existing-stable-id'}},
+      {customIDs: {stableID: 'existing-stable-id'}},
       values,
       {
         environment: {tier: 'development'},
