@@ -5,13 +5,14 @@ import {ReactNode} from 'react';
 
 import {Stage} from '@/config/stage';
 import {getClient} from '@/providers/statsig/client';
+import {Brand} from '@/config/brand';
 
 interface StatsigProviderProps {
   stage: Stage;
   clientKey?: string;
   children: ReactNode;
   values: string;
-  brand: string;
+  brand: Brand;
 }
 
 export default function StatsigProvider({

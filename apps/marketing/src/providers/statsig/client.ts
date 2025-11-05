@@ -13,8 +13,9 @@ import OneTrustContext, {
   OneTrustCookieGroup,
 } from '@/providers/onetrust/context/OneTrustContext';
 import plugins from '@/providers/statsig/plugins';
+import {Brand} from '@/config/brand';
 
-const CODEORG_BRAND = 'codeorg';
+// const CODEORG_BRAND = 'codeorg';
 
 function getStatsigStableId() {
   const onetrustContext = useContext(OneTrustContext);
@@ -43,15 +44,14 @@ export function getClient(
   clientKey: string,
   stage: Stage,
   values: string,
-  brand: string,
+  brand: Brand,
 ) {
   // Add stableID only for code.org brand so we can track users across
   // studio.code.org and code.org, otherwise fallback to Statsig SDK's default behavior
-  const stableId = brand === CODEORG_BRAND ? getStatsigStableId() : undefined;
+  const stableId = brand === Brand.CODE_DOT_ORG ? getStatsigStableId() : undefined;
   const user: StatsigUser = stableId
-    ? {userID: 'marketing-user', customIDs: {stableID: stableId}}
-    : {userID: 'marketing-user'};
-
+    ? {customIDs: {stableID: stableId}}
+    : null;
   return useClientBootstrapInit(clientKey, user, values, {
     environment: {tier: stage},
     plugins: stage === 'production' ? plugins : undefined,
