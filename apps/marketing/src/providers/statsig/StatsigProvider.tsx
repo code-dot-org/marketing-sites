@@ -3,6 +3,7 @@
 import {StatsigProvider as BaseStatsigProvider} from '@statsig/react-bindings';
 import {ReactNode} from 'react';
 
+import {Brand} from '@/config/brand';
 import {Stage} from '@/config/stage';
 import {getClient} from '@/providers/statsig/client';
 
@@ -11,7 +12,7 @@ interface StatsigProviderProps {
   clientKey?: string;
   children: ReactNode;
   values: string;
-  brand: string;
+  brand: Brand;
 }
 
 export default function StatsigProvider({
