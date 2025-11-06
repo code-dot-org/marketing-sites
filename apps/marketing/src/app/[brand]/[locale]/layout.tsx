@@ -1,7 +1,7 @@
 import {ThemeProvider} from '@mui/material';
 import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
 import {GoogleAnalytics} from '@next/third-parties/google';
-import {draftMode} from 'next/headers';
+import {cookies, draftMode} from 'next/headers';
 
 import {getFooter} from '@/components/footer/Footer';
 import {getHeader} from '@/components/header/Header';
@@ -17,6 +17,7 @@ import OneTrustLoader from '@/providers/onetrust/OneTrustLoader';
 import OneTrustProvider from '@/providers/onetrust/OneTrustProvider';
 import {generateBootstrapValues} from '@/providers/statsig/statsig-backend';
 import StatsigProvider from '@/providers/statsig/StatsigProvider';
+import {STATSIG_STABLE_ID_COOKIE_NAME} from '@/providers/statsig/stableId';
 import {getCriticalFonts, getMuiTheme} from '@/themes';
 
 export default async function Layout({
@@ -32,8 +33,14 @@ export default async function Layout({
   const locale = syncParams.locale as SupportedLocale;
 
   await getCriticalFonts(brand);
+  const cookieStore = cookies();
+  const statsigStableId =
+    cookieStore.get(STATSIG_STABLE_ID_COOKIE_NAME)?.value;
   const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId(brand);
-  const statsigBootstrapValues = await generateBootstrapValues();
+  const statsigBootstrapValues = await generateBootstrapValues({
+    brand,
+    stableId: statsigStableId,
+  });
   const statsigClientKey = process.env.STATSIG_CLIENT_KEY;
   const localeConfig = SUPPORTED_LOCALES_MAP.get(locale);
   const theme = getMuiTheme(brand);

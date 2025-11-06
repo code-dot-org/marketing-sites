@@ -1,5 +1,5 @@
 import {render} from '@testing-library/react';
-import {draftMode, headers} from 'next/headers';
+import {cookies, draftMode, headers} from 'next/headers';
 
 import {Brand, getBrandFromHostname} from '@/config/brand';
 import {getGoogleAnalyticsMeasurementId} from '@/config/ga4';
@@ -12,6 +12,7 @@ import Layout from '../layout';
 jest.mock('next/headers', () => ({
   headers: jest.fn(),
   draftMode: jest.fn(),
+  cookies: jest.fn(),
 }));
 
 jest.mock('@/config/brand', () => ({
@@ -71,6 +72,9 @@ jest.mock('next/navigation', () => ({
 describe('Layout', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (cookies as jest.Mock).mockReturnValue({
+      get: jest.fn().mockReturnValue(undefined),
+    });
   });
 
   it('renders the layout with children', async () => {
@@ -103,6 +107,10 @@ describe('Layout', () => {
     expect(
       await findByText(`OrganizationJsonLd for ${brand}`),
     ).toBeInTheDocument();
+    expect(generateBootstrapValues).toHaveBeenCalledWith({
+      brand,
+      stableId: undefined,
+    });
   });
 
   it('does not render GoogleAnalytics if measurement ID is missing', async () => {
@@ -174,5 +182,33 @@ describe('Layout', () => {
     );
 
     expect(container.querySelector('html')?.getAttribute('dir')).toBe('rtl');
+  });
+
+  it('passes the statsig stable id from cookies to bootstrap generation', async () => {
+    const brand = Brand.CODE_DOT_ORG;
+    (cookies as jest.Mock).mockReturnValue({
+      get: jest.fn().mockReturnValue({value: 'stable-cookie-id'}),
+    });
+
+    (headers as jest.Mock).mockResolvedValue({
+      get: jest.fn().mockReturnValue('example.com'),
+    });
+    (getBrandFromHostname as jest.Mock).mockReturnValue(brand);
+    (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue('GA-123456');
+    (getStage as jest.Mock).mockReturnValue('production');
+    (generateBootstrapValues as jest.Mock).mockResolvedValue({});
+
+    await Layout({
+      children: <div>Child Component</div>,
+      params: Promise.resolve({
+        brand: 'code.org' as Brand,
+        locale: 'en-US' as SupportedLocale,
+      }),
+    });
+
+    expect(generateBootstrapValues).toHaveBeenCalledWith({
+      brand,
+      stableId: 'stable-cookie-id',
+    });
   });
 });

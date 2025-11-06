@@ -1,10 +1,23 @@
 import {StatsigUser} from '@statsig/statsig-node-core';
 
+import {Brand} from '@/config/brand';
 import statsig from '@/providers/statsig/statsig';
+import {
+  buildStatsigUserIdentifiers,
+  shouldUseStatsigStableId,
+} from '@/providers/statsig/stableId';
 
 const statsigInitializer = statsig ? statsig.initialize() : undefined;
 
-export async function generateBootstrapValues(): Promise<string> {
+interface GenerateBootstrapValuesArgs {
+  brand: Brand;
+  stableId?: string;
+}
+
+export async function generateBootstrapValues({
+  brand,
+  stableId,
+}: GenerateBootstrapValuesArgs): Promise<string> {
   if (!statsig) {
     console.debug(
       `Missing environment variable STATSIG_SERVER_KEY, Statsig bootstrap will not be provided.`,
@@ -12,7 +25,13 @@ export async function generateBootstrapValues(): Promise<string> {
     return Promise.resolve('');
   }
 
-  const user = new StatsigUser({userID: 'marketing-user', customIDs: {}});
+  const identifiers = shouldUseStatsigStableId(brand)
+    ? buildStatsigUserIdentifiers(stableId)
+    : {};
+  const user = new StatsigUser({
+    userID: 'marketing-user',
+    customIDs: identifiers.customIDs,
+  });
   await statsigInitializer;
 
   return statsig.getClientInitializeResponse(user, {
