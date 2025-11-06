@@ -1,11 +1,11 @@
 import {StatsigUser} from '@statsig/statsig-node-core';
 
 import {Brand} from '@/config/brand';
-import statsig from '@/providers/statsig/statsig';
 import {
   buildStatsigUserIdentifiers,
   shouldUseStatsigStableId,
 } from '@/providers/statsig/stableId';
+import statsig from '@/providers/statsig/statsig';
 
 const statsigInitializer = statsig ? statsig.initialize() : undefined;
 

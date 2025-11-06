@@ -15,9 +15,9 @@ import LocalizeLoader from '@/providers/localize/LocalizeLoader';
 import NewRelicLoader from '@/providers/newrelic/NewRelicLoader';
 import OneTrustLoader from '@/providers/onetrust/OneTrustLoader';
 import OneTrustProvider from '@/providers/onetrust/OneTrustProvider';
+import {STATSIG_STABLE_ID_COOKIE_NAME} from '@/providers/statsig/stableId';
 import {generateBootstrapValues} from '@/providers/statsig/statsig-backend';
 import StatsigProvider from '@/providers/statsig/StatsigProvider';
-import {STATSIG_STABLE_ID_COOKIE_NAME} from '@/providers/statsig/stableId';
 import {getCriticalFonts, getMuiTheme} from '@/themes';
 
 export default async function Layout({
@@ -33,7 +33,7 @@ export default async function Layout({
   const locale = syncParams.locale as SupportedLocale;
 
   await getCriticalFonts(brand);
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const statsigStableId =
     cookieStore.get(STATSIG_STABLE_ID_COOKIE_NAME)?.value;
   const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId(brand);
