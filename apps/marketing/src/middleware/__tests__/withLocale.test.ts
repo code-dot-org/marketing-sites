@@ -102,7 +102,7 @@ describe('withLocale middleware', () => {
     );
   });
 
-  it('should redirect to the locale path if no locale is present in the path but has accept-language haeder', async () => {
+  it('should redirect to the locale path if no locale is present in the path but has accept-language header', async () => {
     const request = {
       url: 'https://test.code.org',
       nextUrl: {
