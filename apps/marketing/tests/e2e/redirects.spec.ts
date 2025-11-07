@@ -33,7 +33,7 @@ test.describe('Redirects', () => {
     expect(redirectStatus).toEqual(307);
     expect(cacheControl).toEqual(STALE_WHILE_REVALIDATE_ONE_HOUR);
     expect(etag).toBeDefined();
-    await page.waitForURL('**/en-US/engineering/all-the-things');
+    await page.waitForURL('**/en-US/engineering/all-the-things?t=14');
   });
 
   test('should do a permanent redirect to an external URL', async ({
