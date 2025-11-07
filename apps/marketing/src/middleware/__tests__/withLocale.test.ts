@@ -34,7 +34,7 @@ describe('withLocale middleware', () => {
 
   it('should not redirect if the path contains a supported locale', async () => {
     const request = {
-      nextUrl: {pathname: '/zh-Hant/home'},
+      nextUrl: {pathname: '/zh-Hant/home', search: ''},
       cookies: {get: jest.fn()},
       headers: {get: jest.fn()},
       response: {cookies: {set: jest.fn()}},
@@ -56,7 +56,7 @@ describe('withLocale middleware', () => {
 
   it('should not redirect if the path contains a supported locale - development', async () => {
     const request = {
-      nextUrl: {pathname: '/zh-Hant/home'},
+      nextUrl: {pathname: '/zh-Hant/home', search: ''},
       cookies: {get: jest.fn()},
       headers: {get: jest.fn()},
       response: {cookies: {set: jest.fn()}},
@@ -80,7 +80,11 @@ describe('withLocale middleware', () => {
   it('should redirect to the locale path if no locale is present in the path for cookies', async () => {
     const request = {
       url: 'https://test.code.org',
-      nextUrl: {pathname: '/home', url: 'https://test.code.org/home'},
+      nextUrl: {
+        pathname: '/home',
+        url: 'https://test.code.org/home',
+        search: '',
+      },
       cookies: {get: jest.fn(() => ({value: 'zh-TW' as SupportedLocale}))},
       headers: {get: jest.fn()},
     } as unknown as NextRequest;
@@ -101,7 +105,11 @@ describe('withLocale middleware', () => {
   it('should redirect to the locale path if no locale is present in the path but has accept-language haeder', async () => {
     const request = {
       url: 'https://test.code.org',
-      nextUrl: {pathname: '/home', url: 'https://test.code.org/home'},
+      nextUrl: {
+        pathname: '/home',
+        url: 'https://test.code.org/home',
+        search: '',
+      },
       cookies: {get: jest.fn()},
       headers: {
         get: jest.fn().mockReturnValue('zh-Hant;q=0.9'),
@@ -125,7 +133,11 @@ describe('withLocale middleware', () => {
   it('should default to "en-US" if the cookie and accept-language locale is not supported', async () => {
     const request = {
       url: 'https://test.code.org',
-      nextUrl: {pathname: '/home', url: 'https://test.code.org/home'},
+      nextUrl: {
+        pathname: '/home',
+        url: 'https://test.code.org/home',
+        search: '',
+      },
       cookies: {get: jest.fn(() => ({value: 'unsupported-locale'}))},
       headers: {
         get: jest.fn().mockReturnValue('unsupported-locale, en-US;q=0.9'),
@@ -145,7 +157,7 @@ describe('withLocale middleware', () => {
 
   it('should redirect to home page if the path is empty', async () => {
     const request = {
-      nextUrl: {pathname: '/'},
+      nextUrl: {pathname: '/', search: ''},
       cookies: {get: jest.fn()},
       headers: {
         get: jest.fn().mockReturnValue('zh-Hant, en-US;q=0.9'),
@@ -167,6 +179,7 @@ describe('withLocale middleware', () => {
       nextUrl: {
         pathname: '/engineering/all-the-things',
         url: 'https://test.code.org/engineering/all-the-things',
+        search: '',
       },
       cookies: {get: jest.fn(() => ({value: 'zh-TW' as SupportedLocale}))},
       headers: {get: jest.fn()},
@@ -213,5 +226,101 @@ describe('withLocale middleware', () => {
     const response = await withLocale(next)(request, mockEvent);
 
     expect(response?.headers).toBeUndefined();
+  });
+
+  it('should redirect to the locale path and preserve query parameters', async () => {
+    const request = {
+      url: 'https://test.code.org',
+      nextUrl: {
+        pathname: '/home',
+        url: 'https://test.code.org/home?utm_source=test',
+        search: '?utm_source=test',
+      },
+      cookies: {get: jest.fn(() => ({value: 'zh-TW' as SupportedLocale}))},
+      headers: {get: jest.fn()},
+    } as unknown as NextRequest;
+
+    (getContentfulSlug as jest.Mock).mockReturnValue('home');
+
+    const response = await withLocale(next)(request, mockEvent);
+
+    expect(response).toBeInstanceOf(NextResponse);
+    expect(response?.headers.get('location')).toBe(
+      'https://test.code.org/zh-Hant/home?utm_source=test',
+    );
+    expect(response?.headers.get('Cache-Control')).toEqual(
+      STALE_WHILE_REVALIDATE_ONE_HOUR,
+    );
+  });
+
+  it('should redirect to the default locale path and preserve query parameters if no locale is present', async () => {
+    const request = {
+      url: 'https://test.code.org',
+      nextUrl: {
+        pathname: '/home',
+        url: 'https://test.code.org/home?utm_source=test',
+        search: '?utm_source=test',
+      },
+      cookies: {get: jest.fn(() => ({value: 'unsupported-locale'}))},
+      headers: {
+        get: jest.fn().mockReturnValue('unsupported-locale, en-US;q=0.9'),
+      },
+    } as unknown as NextRequest;
+
+    SUPPORTED_LOCALE_CODES.push('en-US' as SupportedLocale);
+    (getContentfulSlug as jest.Mock).mockReturnValue('home');
+
+    const response = await withLocale(next)(request, mockEvent);
+
+    expect(response).toBeInstanceOf(NextResponse);
+    expect(response?.headers.get('location')).toBe(
+      'https://test.code.org/en-US/home?utm_source=test',
+    );
+  });
+
+  it('should handle paths with multiple segments and preserve query parameters', async () => {
+    const request = {
+      url: 'https://test.code.org',
+      nextUrl: {
+        pathname: '/engineering/all-the-things',
+        url: 'https://test.code.org/engineering/all-the-things?ref=github',
+        search: '?ref=github',
+      },
+      cookies: {get: jest.fn(() => ({value: 'zh-TW' as SupportedLocale}))},
+      headers: {get: jest.fn()},
+    } as unknown as NextRequest;
+
+    (getContentfulSlug as jest.Mock).mockReturnValue(
+      'engineering/all-the-things',
+    );
+
+    const response = await withLocale(next)(request, mockEvent);
+
+    expect(response).toBeInstanceOf(NextResponse);
+    expect(response?.headers.get('location')).toBe(
+      'https://test.code.org/zh-Hant/engineering/all-the-things?ref=github',
+    );
+  });
+
+  it('should redirect to the root locale path and preserve query parameters', async () => {
+    const request = {
+      nextUrl: {
+        pathname: '/',
+        url: 'https://test.code.org/?campaign=summer',
+        search: '?campaign=summer',
+      },
+      cookies: {get: jest.fn()},
+      headers: {
+        get: jest.fn().mockReturnValue('zh-Hant, en-US;q=0.9'),
+      },
+      url: 'https://test.code.org',
+    } as unknown as NextRequest;
+
+    const response = await withLocale(next)(request, mockEvent);
+
+    expect(response).toBeInstanceOf(NextResponse);
+    expect(response?.headers.get('location')).toBe(
+      'https://test.code.org/zh-Hant?campaign=summer',
+    );
   });
 });
