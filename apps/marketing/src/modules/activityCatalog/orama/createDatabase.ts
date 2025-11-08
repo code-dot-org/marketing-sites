@@ -52,7 +52,7 @@ export function createDatabase(
       // This is passed as a stringified JSON to allow the entry to be passed directly into the ActivityCollection component
       // It will be deserialized there
       primaryLinkRef: JSON.stringify(fields.primaryLinkRef),
-      secondaryLinkRef: JSON.stringify(fields.secondaryLinkRef),
+      secondaryLinkRef: fields.secondaryLinkRef ? JSON.stringify(fields.secondaryLinkRef) : undefined,
       featuredPosition: fields.featuredPosition || FEATURED_POSITION_MAX,
     };
   });

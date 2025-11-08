@@ -9,7 +9,7 @@ export interface Activity {
   shortDescription: string;
   longDescription: string;
   primaryLinkRef: string;
-  secondaryLinkRef: string;
+  secondaryLinkRef?: string;
   technologyClassroom: OramaEnum;
   topic: OramaEnum;
   activityType: OramaEnum;
