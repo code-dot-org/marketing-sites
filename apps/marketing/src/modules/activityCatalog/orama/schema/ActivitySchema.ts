@@ -10,6 +10,7 @@ export const ActivitySchema = {
   shortDescription: 'string',
   longDescription: 'string',
   primaryLinkRef: 'string',
+  secondaryLinkRef: 'string',
   technologyClassroom: 'enum[]',
   topic: 'enum[]',
   activityType: 'enum[]',

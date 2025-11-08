@@ -23,8 +23,15 @@ const ActivityCollection: React.FC<ActivityCollectionProps> = ({
   activities,
 }) => {
   const data = activities.map(activity => {
-    const {title, shortDescription, image, primaryLinkRef, tutorialID, topic} =
-      activity;
+    const {
+      title,
+      shortDescription,
+      image,
+      primaryLinkRef,
+      secondaryLinkRef,
+      tutorialID,
+      topic,
+    } = activity;
 
     return {
       id: title,
@@ -37,6 +44,7 @@ const ActivityCollection: React.FC<ActivityCollectionProps> = ({
             title={title}
             description={shortDescription}
             primaryButton={primaryLinkRef && JSON.parse(primaryLinkRef)}
+            secondaryButton={secondaryLinkRef && JSON.parse(secondaryLinkRef)}
             imageSrc={image}
             imageObjectFit={'contain'}
             primaryButtonEventName={EVENT.CARD_PRIMARY_BUTTON_CLICKED}
