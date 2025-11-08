@@ -23,8 +23,15 @@ const ActivityCollection: React.FC<ActivityCollectionProps> = ({
   activities,
 }) => {
   const data = activities.map(activity => {
-    const {title, shortDescription, image, primaryLinkRef, secondaryLinkRef, tutorialID, topic} =
-      activity;
+    const {
+      title,
+      shortDescription,
+      image,
+      primaryLinkRef,
+      secondaryLinkRef,
+      tutorialID,
+      topic,
+    } = activity;
 
     return {
       id: title,
