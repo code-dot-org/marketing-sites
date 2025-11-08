@@ -1,3 +1,5 @@
+import {draftMode} from 'next/headers';
+
 import {getContentfulClient} from '@/contentful/client';
 import {getAllEntriesForContentType} from '@/contentful/get-entries';
 import {Activity} from '@/modules/activityCatalog/types/Activity';
@@ -9,7 +11,8 @@ import {Entry} from '@/types/contentful/Entry';
  * @returns A promise that resolves to an array of activity entries.
  */
 export async function getContentfulActivities(activityType: string) {
-  const contentfulClient = getContentfulClient();
+  const isDraftModeEnabled = (await draftMode()).isEnabled;
+  const contentfulClient = getContentfulClient(isDraftModeEnabled);
 
   if (!contentfulClient) {
     console.warn(
