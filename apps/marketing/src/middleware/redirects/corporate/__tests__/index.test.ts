@@ -62,6 +62,15 @@ describe('getRedirects', () => {
     );
   });
 
+  it('redirects /api/hour/begin/mc?company=code_org to studio.code.org/api/hour/begin/mc?company=code_org', () => {
+    const req = createMockRequest('/api/hour/begin/mc?company=code_org');
+    getRedirects(req);
+    expect(getCachedRedirectResponse).toHaveBeenCalledWith(
+      new URL('/api/hour/begin/mc?company=code_org', 'https://studio.code.org'),
+      {status: 308},
+    );
+  });
+
   it('returns undefined for unrelated paths', () => {
     const req = createMockRequest('/other/path');
     const result = getRedirects(req);
