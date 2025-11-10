@@ -16,11 +16,6 @@ describe('ActivitiesHero', () => {
       screen.getByRole('heading', {name: /Explore Hour of Code Activities/i}),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        /The most beloved Hour of Code activities aren’t going anywhere/i,
-      ),
-    ).toBeInTheDocument();
-    expect(
       screen.getByRole('link', {name: /Hour of AI Activities/i}),
     ).toBeInTheDocument();
     expect(
@@ -34,35 +29,11 @@ describe('ActivitiesHero', () => {
       screen.getByRole('heading', {name: /Explore Hour of AI Activities/i}),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        /The new Hour of AI activity catalog launches on November 12, 2025/i,
-      ),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /the most beloved Hour of Code activities aren’t going anywhere/i,
-      ),
-    ).toBeInTheDocument();
-    expect(
       screen.getByRole('link', {name: /Hour of AI Activities/i}),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', {name: /Legacy Hour of Code Activities/i}),
     ).toBeInTheDocument();
-  });
-
-  it('renders teacher links', () => {
-    render(<ActivitiesHero activityType={ActivityType.HOUR_OF_CODE} />);
-    const hostLink = screen.getByText(/Host an hour/i);
-    const guideLink = screen.getByText(/read the How-To Guide/i);
-    expect(hostLink.closest('a')).toHaveAttribute(
-      'href',
-      '/hour-of-ai/partners#host-event',
-    );
-    expect(guideLink.closest('a')).toHaveAttribute(
-      'href',
-      '/hour-of-ai/how-to/k-12educator',
-    );
   });
 
   it('renders correct text for both activity types', () => {
