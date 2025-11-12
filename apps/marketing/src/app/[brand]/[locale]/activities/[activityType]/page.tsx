@@ -116,6 +116,7 @@ export default async function ActivitiesPage({
         length: {},
         accessibilitys: {},
         technologyClassroom: {},
+        supportedLanguages: {},
       },
       limit: 100,
     });

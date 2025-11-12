@@ -17,6 +17,7 @@ export const ActivitySchema = {
   length: 'enum[]',
   accessibilitys: 'enum[]',
   languagesText: 'string',
+  supportedLanguages: 'enum[]',
   standards: 'string',
   tutorialID: 'string',
   primaryButton: 'string',
