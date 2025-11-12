@@ -54,6 +54,7 @@ const ActivityCollection: React.FC<ActivityCollectionProps> = ({
               cardTitle: title,
             }}
             chipLabels={[organization] as string[]}
+            imageAspectRatio="4/3"
           />
         </Box>
       ),
