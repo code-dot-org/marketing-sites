@@ -21,9 +21,13 @@ const mockFacets = {
 };
 
 jest.mock('@/components/contentful/activityCatalog/config/facets', () => ({
-  FACET_LABELS: {
-    subject: 'Subject',
-    grade: 'Grade',
+  FACET_CONFIG: {
+    subject: {
+      label: 'Subject',
+    },
+    grade: {
+      label: 'Grade',
+    },
   },
 }));
 
