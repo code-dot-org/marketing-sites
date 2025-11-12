@@ -5,6 +5,7 @@ import {getCachedRedirectResponse} from '@/middleware/utils/getCachedRedirectRes
 
 export function getRedirects(request: NextRequest) {
   const fullPath = request.nextUrl.pathname;
+  const urlQuery = request.nextUrl.search;
   const pathParts = fullPath.split('/').filter(Boolean);
 
   const maybeLocale = pathParts[0];
@@ -44,6 +45,13 @@ export function getRedirects(request: NextRequest) {
   // Permanently redirect /educate/* to studio.code.org/catalog
   if (pathParts[0] === 'educate') {
     const redirectUrl = new URL(`/catalog`, getStudioBaseUrl());
+
+    return getCachedRedirectResponse(redirectUrl, {status: 308});
+  }
+
+  // Permanently redirect /congrats/*?s=course_name_base64 to studio.code.org/congrats/*?s=course_name_base64
+  if (pathParts[0] === 'congrats') {
+    const redirectUrl = new URL(fullPath + urlQuery, getStudioBaseUrl());
 
     return getCachedRedirectResponse(redirectUrl, {status: 308});
   }

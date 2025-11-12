@@ -4,8 +4,9 @@ import {getCachedRedirectResponse} from '@/middleware/utils/getCachedRedirectRes
 
 import {getRedirects} from '../index';
 
+const studioBaseUrl = 'https://studio.code.org';
 jest.mock('@/config/studio', () => ({
-  getStudioBaseUrl: jest.fn(() => 'https://studio.code.org'),
+  getStudioBaseUrl: jest.fn(() => studioBaseUrl),
 }));
 jest.mock('@/middleware/utils/getCachedRedirectResponse', () => ({
   getCachedRedirectResponse: jest.fn((url, opts) => ({
@@ -14,10 +15,15 @@ jest.mock('@/middleware/utils/getCachedRedirectResponse', () => ({
   })),
 }));
 
-function createMockRequest(pathname: string, origin = 'https://example.com') {
+function createMockRequest(
+  pathname: string,
+  search = '',
+  origin = 'https://example.com',
+) {
   return {
     nextUrl: {
       pathname,
+      search,
       origin,
     },
   } as unknown as NextRequest;
@@ -58,6 +64,31 @@ describe('getRedirects', () => {
     getRedirects(req);
     expect(getCachedRedirectResponse).toHaveBeenCalledWith(
       new URL('/catalog', 'https://studio.code.org'),
+      {status: 308},
+    );
+  });
+
+  it('redirects /congrats/:course_name to studio.code.org/congrats/:course_name', () => {
+    const reqPath = '/congrats/course_name';
+    const req = createMockRequest(reqPath);
+
+    getRedirects(req);
+
+    expect(getCachedRedirectResponse).toHaveBeenCalledWith(
+      new URL(reqPath, studioBaseUrl),
+      {status: 308},
+    );
+  });
+
+  it('redirects /congrats?s=course_name_base64 to studio.code.org/congrats?s=course_name_base64', () => {
+    const reqPath = '/congrats';
+    const reqQuery = '?s=course_name_base64';
+    const req = createMockRequest(reqPath, reqQuery);
+
+    getRedirects(req);
+
+    expect(getCachedRedirectResponse).toHaveBeenCalledWith(
+      new URL(reqPath + reqQuery, studioBaseUrl),
       {status: 308},
     );
   });
