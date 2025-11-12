@@ -1,4 +1,4 @@
-import {useClientBootstrapInit} from '@statsig/react-bindings';
+import {StatsigClient} from '@statsig/js-client';
 import {render} from '@testing-library/react';
 import {setCookie, getCookie} from 'cookies-next/client';
 import {v4 as uuidv4} from 'uuid';
@@ -12,8 +12,8 @@ import plugins from '@/providers/statsig/plugins';
 
 import {getClient} from '../client';
 
-jest.mock('@statsig/react-bindings', () => ({
-  useClientBootstrapInit: jest.fn(),
+jest.mock('@statsig/js-client', () => ({
+  StatsigClient: jest.fn(),
 }));
 
 jest.mock('cookies-next/client', () => ({
@@ -30,15 +30,13 @@ jest.mock('@/providers/statsig/plugins', () => ({}));
 const MockStatsigComponent = ({
   clientKey,
   stage,
-  values,
   brand,
 }: {
   clientKey: string;
   stage: Stage;
-  values: string;
   brand: Brand;
 }) => {
-  getClient(clientKey, stage, values, brand);
+  getClient(clientKey, stage, brand);
 
   return <></>;
 };
@@ -52,7 +50,6 @@ describe('getClient', () => {
     (getCookie as jest.Mock).mockReturnValue('existing-stable-id');
     const clientKey = 'test-client-key';
     const stage = 'production';
-    const values = 'test-values';
     const brand = Brand.CODE_DOT_ORG;
 
     render(
@@ -62,17 +59,15 @@ describe('getClient', () => {
         <MockStatsigComponent
           clientKey={clientKey}
           stage={stage}
-          values={values}
           brand={brand}
         />
         <div>Test Child</div>
       </OneTrustContext.Provider>,
     );
 
-    expect(useClientBootstrapInit).toHaveBeenCalledWith(
+    expect(StatsigClient).toHaveBeenCalledWith(
       clientKey,
       {customIDs: {stableID: 'existing-stable-id'}},
-      values,
       {
         environment: {tier: stage},
         plugins: plugins,
@@ -86,7 +81,6 @@ describe('getClient', () => {
     (uuidv4 as jest.Mock).mockReturnValue('new-stable-id');
     const clientKey = 'test-client-key';
     const stage = 'production';
-    const values = 'test-values';
     const brand = Brand.CODE_DOT_ORG;
 
     render(
@@ -96,17 +90,15 @@ describe('getClient', () => {
         <MockStatsigComponent
           clientKey={clientKey}
           stage={stage}
-          values={values}
           brand={brand}
         />
         <div>Test Child</div>
       </OneTrustContext.Provider>,
     );
 
-    expect(useClientBootstrapInit).toHaveBeenCalledWith(
+    expect(StatsigClient).toHaveBeenCalledWith(
       clientKey,
       {customIDs: {stableID: 'new-stable-id'}},
-      values,
       {
         environment: {tier: stage},
         plugins: plugins,
@@ -129,7 +121,6 @@ describe('getClient', () => {
     (getCookie as jest.Mock).mockReturnValue('existing-stable-id');
     const clientKey = 'test-client-key';
     const stage = 'production';
-    const values = 'test-values';
     const brand = Brand.CODE_DOT_ORG;
 
     render(
@@ -139,17 +130,15 @@ describe('getClient', () => {
         <MockStatsigComponent
           clientKey={clientKey}
           stage={stage}
-          values={values}
           brand={brand}
         />
         <div>Test Child</div>
       </OneTrustContext.Provider>,
     );
 
-    expect(useClientBootstrapInit).toHaveBeenCalledWith(
+    expect(StatsigClient).toHaveBeenCalledWith(
       clientKey,
       {customIDs: {stableID: 'existing-stable-id'}},
-      values,
       {
         environment: {tier: stage},
         plugins: plugins,
@@ -162,7 +151,6 @@ describe('getClient', () => {
     (uuidv4 as jest.Mock).mockReturnValue('new-stable-id');
     const clientKey = 'test-client-key';
     const stage = 'production';
-    const values = 'test-values';
     const brand = Brand.CODE_DOT_ORG;
 
     render(
@@ -174,14 +162,13 @@ describe('getClient', () => {
         <MockStatsigComponent
           clientKey={clientKey}
           stage={stage}
-          values={values}
           brand={brand}
         />
         <div>Test Child</div>
       </OneTrustContext.Provider>,
     );
 
-    expect(useClientBootstrapInit).toHaveBeenCalledWith(clientKey, {}, values, {
+    expect(StatsigClient).toHaveBeenCalledWith(clientKey, {}, {
       environment: {tier: stage},
       plugins: plugins,
     });
@@ -191,7 +178,6 @@ describe('getClient', () => {
   it('should not set stableId for non-code.org brands', () => {
     const clientKey = 'test-client-key';
     const stage = 'production';
-    const values = 'test-values';
     const brand = Brand.CS_FOR_ALL;
 
     render(
@@ -201,14 +187,13 @@ describe('getClient', () => {
         <MockStatsigComponent
           clientKey={clientKey}
           stage={stage}
-          values={values}
           brand={brand}
         />
         <div>Test Child</div>
       </OneTrustContext.Provider>,
     );
 
-    expect(useClientBootstrapInit).toHaveBeenCalledWith(clientKey, {}, values, {
+    expect(StatsigClient).toHaveBeenCalledWith(clientKey, {}, {
       environment: {tier: stage},
       plugins: plugins,
     });
@@ -218,7 +203,6 @@ describe('getClient', () => {
   it('should only set plugins in production', () => {
     (getCookie as jest.Mock).mockReturnValue('existing-stable-id');
     const clientKey = 'test-client-key';
-    const values = 'test-values';
     const brand = Brand.CODE_DOT_ORG;
 
     // Production: plugins should be set
@@ -229,15 +213,13 @@ describe('getClient', () => {
         <MockStatsigComponent
           clientKey={clientKey}
           stage={'production'}
-          values={values}
           brand={brand}
         />
       </OneTrustContext.Provider>,
     );
-    expect(useClientBootstrapInit).toHaveBeenLastCalledWith(
+    expect(StatsigClient).toHaveBeenLastCalledWith(
       clientKey,
       {customIDs: {stableID: 'existing-stable-id'}},
-      values,
       {
         environment: {tier: 'production'},
         plugins: plugins,
@@ -252,15 +234,13 @@ describe('getClient', () => {
         <MockStatsigComponent
           clientKey={clientKey}
           stage={'development'}
-          values={values}
           brand={brand}
         />
       </OneTrustContext.Provider>,
     );
-    expect(useClientBootstrapInit).toHaveBeenLastCalledWith(
+    expect(StatsigClient).toHaveBeenLastCalledWith(
       clientKey,
       {customIDs: {stableID: 'existing-stable-id'}},
-      values,
       {
         environment: {tier: 'development'},
         plugins: undefined,

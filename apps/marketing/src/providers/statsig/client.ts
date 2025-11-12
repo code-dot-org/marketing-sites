@@ -1,8 +1,8 @@
 import {
-  useStatsigClient,
-  useClientBootstrapInit,
+  StatsigClient,
   StatsigUser,
-} from '@statsig/react-bindings';
+} from '@statsig/js-client';
+import {useStatsigClient} from '@statsig/react-bindings';
 import {setCookie} from 'cookies-next';
 import {getCookie} from 'cookies-next/client';
 import {useContext} from 'react';
@@ -41,7 +41,6 @@ function getStatsigStableId() {
 export function getClient(
   clientKey: string,
   stage: Stage,
-  values: string,
   brand: Brand,
 ) {
   // Add stableID only for code.org brand so we can track users across
@@ -49,7 +48,7 @@ export function getClient(
   const stableId =
     brand === Brand.CODE_DOT_ORG ? getStatsigStableId() : undefined;
   const user: StatsigUser = stableId ? {customIDs: {stableID: stableId}} : {};
-  return useClientBootstrapInit(clientKey, user, values, {
+  return new StatsigClient(clientKey, user, {
     environment: {tier: stage},
     plugins: stage === 'production' ? plugins : undefined,
   });

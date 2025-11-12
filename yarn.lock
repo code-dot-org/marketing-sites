@@ -1673,9 +1673,9 @@ __metadata:
     "@orama/orama": "npm:^3.1.14"
     "@orama/plugin-data-persistence": "npm:^3.1.14"
     "@playwright/test": "npm:~1.49.1"
-    "@statsig/react-bindings": "npm:^3.14.1"
-    "@statsig/statsig-node-core": "npm:^0.0.8"
-    "@statsig/web-analytics": "npm:^3.14.1"
+    "@statsig/js-client": "npm:^3.30.0"
+    "@statsig/react-bindings": "npm:^3.30.0"
+    "@statsig/web-analytics": "npm:^3.30.0"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/jest-dom": "npm:^6.6.3"
     "@testing-library/react": "npm:^16.2.0"
@@ -7369,130 +7369,42 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@statsig/client-core@npm:3.14.1":
-  version: 3.14.1
-  resolution: "@statsig/client-core@npm:3.14.1"
-  checksum: 10c0/45fa123d6566a22d89a7ff235b91e6585000af0e0ccdc1f9f1a31467f7a7c0ef3aa2b8fca153304878ad3441123644fd9f0159420fc5dd616d8e4738fac0a48b
+"@statsig/client-core@npm:3.30.0":
+  version: 3.30.0
+  resolution: "@statsig/client-core@npm:3.30.0"
+  checksum: 10c0/3d0461ca74921ec6ff2d39a7bcc7dc974f3385facd074092aa647047efd2f78456939b45f3db0bf79d1157e27c24e11d27f039eab0fb2a1824343495b5184f0a
   languageName: node
   linkType: hard
 
-"@statsig/js-client@npm:3.14.1":
-  version: 3.14.1
-  resolution: "@statsig/js-client@npm:3.14.1"
+"@statsig/js-client@npm:3.30.0, @statsig/js-client@npm:^3.30.0":
+  version: 3.30.0
+  resolution: "@statsig/js-client@npm:3.30.0"
   dependencies:
-    "@statsig/client-core": "npm:3.14.1"
-  checksum: 10c0/670207ddfff32a628abc89e74254716c04d519e24ebc030116786ecca88d0b433235e9ffc05e31ac725fd761024722be6a2f1a58243849b6ef75155fdb690643
+    "@statsig/client-core": "npm:3.30.0"
+  checksum: 10c0/7ced5566f5df7d010e5db7ab732e8f3a70057690db8b2251201e8a892c6bd6978069961bb44040cce7fdbbc6e25a93d86006a5406eeb2be1c2059f4fe7f08104
   languageName: node
   linkType: hard
 
-"@statsig/react-bindings@npm:^3.14.1":
-  version: 3.14.1
-  resolution: "@statsig/react-bindings@npm:3.14.1"
+"@statsig/react-bindings@npm:^3.30.0":
+  version: 3.30.0
+  resolution: "@statsig/react-bindings@npm:3.30.0"
   dependencies:
-    "@statsig/client-core": "npm:3.14.1"
-    "@statsig/js-client": "npm:3.14.1"
+    "@statsig/client-core": "npm:3.30.0"
+    "@statsig/js-client": "npm:3.30.0"
   peerDependencies:
     react: ^16.6.3 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/e4b08df703f3b85869e952c71f3fe234892e34ff8a1384704b4ea74e160954336915f8948a6f4e6513ed4b06e0fdd85a087ee42ccfba238d901c7346f20dc998
+  checksum: 10c0/dbe0c454a56c876e90f97f6a74d6c271ed9acd9557072e5bd9e043f52888069e6ea344f53576918247a378fdb4d6aec73225737b6f98c45bd0297dd9683c6378
   languageName: node
   linkType: hard
 
-"@statsig/statsig-node-core-darwin-arm64@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@statsig/statsig-node-core-darwin-arm64@npm:0.0.8"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@statsig/statsig-node-core-darwin-x64@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@statsig/statsig-node-core-darwin-x64@npm:0.0.8"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@statsig/statsig-node-core-linux-arm64-gnu@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@statsig/statsig-node-core-linux-arm64-gnu@npm:0.0.8"
-  conditions: os=linux & cpu=arm64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@statsig/statsig-node-core-linux-arm64-musl@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@statsig/statsig-node-core-linux-arm64-musl@npm:0.0.8"
-  conditions: os=linux & cpu=arm64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@statsig/statsig-node-core-linux-x64-gnu@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@statsig/statsig-node-core-linux-x64-gnu@npm:0.0.8"
-  conditions: os=linux & cpu=x64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@statsig/statsig-node-core-linux-x64-musl@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@statsig/statsig-node-core-linux-x64-musl@npm:0.0.8"
-  conditions: os=linux & cpu=x64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@statsig/statsig-node-core-win32-ia32-msvc@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@statsig/statsig-node-core-win32-ia32-msvc@npm:0.0.8"
-  conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"@statsig/statsig-node-core-win32-x64-msvc@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@statsig/statsig-node-core-win32-x64-msvc@npm:0.0.8"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@statsig/statsig-node-core@npm:^0.0.8":
-  version: 0.0.8
-  resolution: "@statsig/statsig-node-core@npm:0.0.8"
+"@statsig/web-analytics@npm:^3.30.0":
+  version: 3.30.0
+  resolution: "@statsig/web-analytics@npm:3.30.0"
   dependencies:
-    "@statsig/statsig-node-core-darwin-arm64": "npm:0.0.8"
-    "@statsig/statsig-node-core-darwin-x64": "npm:0.0.8"
-    "@statsig/statsig-node-core-linux-arm64-gnu": "npm:0.0.8"
-    "@statsig/statsig-node-core-linux-arm64-musl": "npm:0.0.8"
-    "@statsig/statsig-node-core-linux-x64-gnu": "npm:0.0.8"
-    "@statsig/statsig-node-core-linux-x64-musl": "npm:0.0.8"
-    "@statsig/statsig-node-core-win32-ia32-msvc": "npm:0.0.8"
-    "@statsig/statsig-node-core-win32-x64-msvc": "npm:0.0.8"
-  dependenciesMeta:
-    "@statsig/statsig-node-core-darwin-arm64":
-      optional: true
-    "@statsig/statsig-node-core-darwin-x64":
-      optional: true
-    "@statsig/statsig-node-core-linux-arm64-gnu":
-      optional: true
-    "@statsig/statsig-node-core-linux-arm64-musl":
-      optional: true
-    "@statsig/statsig-node-core-linux-x64-gnu":
-      optional: true
-    "@statsig/statsig-node-core-linux-x64-musl":
-      optional: true
-    "@statsig/statsig-node-core-win32-ia32-msvc":
-      optional: true
-    "@statsig/statsig-node-core-win32-x64-msvc":
-      optional: true
-  checksum: 10c0/8f2fe91a62196360a459d0a648c9c904e4d079a5be88bb401de48c9fb3f7d093a08ec7a5eb18759ae741ebfcf1cc985eb210788e2815024617c67ca44f6459da
-  languageName: node
-  linkType: hard
-
-"@statsig/web-analytics@npm:^3.14.1":
-  version: 3.14.1
-  resolution: "@statsig/web-analytics@npm:3.14.1"
-  dependencies:
-    "@statsig/client-core": "npm:3.14.1"
-    "@statsig/js-client": "npm:3.14.1"
-  checksum: 10c0/ca1638ad2bfc2698486f2d15ac7603878fd6457939dda17ca1620bfaebc6ff6c91a6eea6082fecb5c764cc13e062f51d649d99694fe9217cbd1f581d45bc911c
+    "@statsig/client-core": "npm:3.30.0"
+    "@statsig/js-client": "npm:3.30.0"
+    web-vitals: "npm:5.0.3"
+  checksum: 10c0/335030a2cdb6064b7dd4499ecf0d31633ea8ce0d9d113dd4e12f376fbe4b9787b59fa65c7498b075b9741dd663fde4693dfe557a4c42b6b3e48b1f753e67e245
   languageName: node
   linkType: hard
 
@@ -24618,6 +24530,13 @@ __metadata:
   version: 4.2.4
   resolution: "web-vitals@npm:4.2.4"
   checksum: 10c0/383c9281d5b556bcd190fde3c823aeb005bb8cf82e62c75b47beb411014a4ed13fa5c5e0489ed0f1b8d501cd66b0bebcb8624c1a75750bd5df13e2a3b1b2d194
+  languageName: node
+  linkType: hard
+
+"web-vitals@npm:5.0.3":
+  version: 5.0.3
+  resolution: "web-vitals@npm:5.0.3"
+  checksum: 10c0/9bc6e6673eb913033ad962600b9bdf454aa1cf8dcf2611ecb65d00687d1befbdc85d528cb2d3630204284dc94a623e0daedf29816e7fe07aba595f9fea9d96cb
   languageName: node
   linkType: hard
 
