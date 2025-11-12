@@ -47,6 +47,7 @@ export function createDatabase(
       length: fields.length || [],
       accessibilitys: fields.accessibilitys || [],
       languagesText: fields.languagesText || '',
+      supportedLanguages: fields.supportedLanguages || [],
       standards: fields.standards || '',
       tutorialID: fields.tutorialID || '',
       // This is passed as a stringified JSON to allow the entry to be passed directly into the ActivityCollection component
