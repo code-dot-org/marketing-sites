@@ -1,7 +1,4 @@
-import {
-  StatsigClient,
-  StatsigUser,
-} from '@statsig/js-client';
+import {StatsigClient, StatsigUser} from '@statsig/js-client';
 import {useStatsigClient} from '@statsig/react-bindings';
 import {setCookie} from 'cookies-next';
 import {getCookie} from 'cookies-next/client';
@@ -38,11 +35,7 @@ function getStatsigStableId() {
   return stableId;
 }
 
-export function getClient(
-  clientKey: string,
-  stage: Stage,
-  brand: Brand,
-) {
+export function getClient(clientKey: string, stage: Stage, brand: Brand) {
   // Add stableID only for code.org brand so we can track users across
   // studio.code.org and code.org, otherwise fallback to Statsig SDK's default behavior
   const stableId =

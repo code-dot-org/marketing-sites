@@ -168,10 +168,14 @@ describe('getClient', () => {
       </OneTrustContext.Provider>,
     );
 
-    expect(StatsigClient).toHaveBeenCalledWith(clientKey, {}, {
-      environment: {tier: stage},
-      plugins: plugins,
-    });
+    expect(StatsigClient).toHaveBeenCalledWith(
+      clientKey,
+      {},
+      {
+        environment: {tier: stage},
+        plugins: plugins,
+      },
+    );
     expect(setCookie).not.toHaveBeenCalled();
   });
 
@@ -193,10 +197,14 @@ describe('getClient', () => {
       </OneTrustContext.Provider>,
     );
 
-    expect(StatsigClient).toHaveBeenCalledWith(clientKey, {}, {
-      environment: {tier: stage},
-      plugins: plugins,
-    });
+    expect(StatsigClient).toHaveBeenCalledWith(
+      clientKey,
+      {},
+      {
+        environment: {tier: stage},
+        plugins: plugins,
+      },
+    );
     expect(setCookie).not.toHaveBeenCalled();
   });
 
