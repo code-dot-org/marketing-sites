@@ -16,6 +16,7 @@ export interface Activity {
   length: OramaEnum;
   accessibilitys: OramaEnum;
   languagesText: string;
+  supportedLanguages: OramaEnum;
   standards: string;
   tutorialID: string;
   featuredPosition: number;
