@@ -91,6 +91,31 @@ describe('FacetBar', () => {
     expect(scienceCheckbox.checked).toBe(false);
   });
 
+  it('does not render an accordion if there are no facet values', () => {
+    const emptyFacets = {
+      subject: {
+        values: {},
+      },
+      grade: {
+        values: {},
+      },
+    };
+
+    render(
+      <FacetBar
+        facets={emptyFacets as any}
+        selectedFacets={{}}
+        onFacetChange={onFacetChange}
+        onSearchTermChange={onSearchTermChange}
+        onClearAll={onClearAll}
+        searchTerm=""
+      />,
+    );
+
+    expect(screen.queryByText('Subject')).not.toBeInTheDocument();
+    expect(screen.queryByText('Grade')).not.toBeInTheDocument();
+  });
+
   it('calls onFacetChange when a checkbox is clicked', () => {
     render(
       <FacetBar
