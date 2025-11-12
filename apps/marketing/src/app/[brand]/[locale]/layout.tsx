@@ -15,7 +15,6 @@ import LocalizeLoader from '@/providers/localize/LocalizeLoader';
 import NewRelicLoader from '@/providers/newrelic/NewRelicLoader';
 import OneTrustLoader from '@/providers/onetrust/OneTrustLoader';
 import OneTrustProvider from '@/providers/onetrust/OneTrustProvider';
-import {generateBootstrapValues} from '@/providers/statsig/statsig-backend';
 import StatsigProvider from '@/providers/statsig/StatsigProvider';
 import {getCriticalFonts, getMuiTheme} from '@/themes';
 
@@ -33,7 +32,6 @@ export default async function Layout({
 
   await getCriticalFonts(brand);
   const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId(brand);
-  const statsigBootstrapValues = await generateBootstrapValues();
   const statsigClientKey = process.env.STATSIG_CLIENT_KEY;
   const localeConfig = SUPPORTED_LOCALES_MAP.get(locale);
   const theme = getMuiTheme(brand);
@@ -60,7 +58,6 @@ export default async function Layout({
               <StatsigProvider
                 stage={getStage()}
                 clientKey={statsigClientKey}
-                values={statsigBootstrapValues}
                 brand={brand}
               >
                 {getHeader(brand)}

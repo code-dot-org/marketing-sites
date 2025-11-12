@@ -5,7 +5,6 @@ import {Brand, getBrandFromHostname} from '@/config/brand';
 import {getGoogleAnalyticsMeasurementId} from '@/config/ga4';
 import {SupportedLocale} from '@/config/locale';
 import {getStage} from '@/config/stage';
-import {generateBootstrapValues} from '@/providers/statsig/statsig-backend';
 
 import Layout from '../layout';
 
@@ -25,10 +24,6 @@ jest.mock('@/config/ga4', () => ({
 
 jest.mock('@/config/stage', () => ({
   getStage: jest.fn(),
-}));
-
-jest.mock('@/providers/statsig/statsig-backend', () => ({
-  generateBootstrapValues: jest.fn(),
 }));
 
 jest.mock('@/providers/onetrust/OneTrustLoader', () => () => (
@@ -82,7 +77,6 @@ describe('Layout', () => {
     (getBrandFromHostname as jest.Mock).mockReturnValue(brand);
     (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue('GA-123456');
     (getStage as jest.Mock).mockReturnValue('production');
-    (generateBootstrapValues as jest.Mock).mockResolvedValue({});
     (draftMode as jest.Mock).mockReturnValue(false);
 
     const {findByText} = render(
@@ -112,7 +106,6 @@ describe('Layout', () => {
     (getBrandFromHostname as jest.Mock).mockReturnValue('exampleBrand');
     (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue(null);
     (getStage as jest.Mock).mockReturnValue('production');
-    (generateBootstrapValues as jest.Mock).mockResolvedValue({});
 
     const {queryByText} = render(
       await Layout({
@@ -136,7 +129,6 @@ describe('Layout', () => {
     (getBrandFromHostname as jest.Mock).mockReturnValue('code.org');
     (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue('GA-123456');
     (getStage as jest.Mock).mockReturnValue('production');
-    (generateBootstrapValues as jest.Mock).mockResolvedValue({});
 
     const {container} = render(
       await Layout({
@@ -161,7 +153,6 @@ describe('Layout', () => {
     (getBrandFromHostname as jest.Mock).mockReturnValue('code.org');
     (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue('GA-123456');
     (getStage as jest.Mock).mockReturnValue('production');
-    (generateBootstrapValues as jest.Mock).mockResolvedValue({});
 
     const {container} = render(
       await Layout({
