@@ -30,7 +30,7 @@ const ActivityCollection: React.FC<ActivityCollectionProps> = ({
       primaryLinkRef,
       secondaryLinkRef,
       tutorialID,
-      topic,
+      organization,
     } = activity;
 
     return {
@@ -53,7 +53,7 @@ const ActivityCollection: React.FC<ActivityCollectionProps> = ({
               cardId: tutorialID,
               cardTitle: title,
             }}
-            chipLabels={[...topic] as string[]}
+            chipLabels={[organization] as string[]}
           />
         </Box>
       ),
