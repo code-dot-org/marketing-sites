@@ -5,7 +5,8 @@ import {RedisStringsHandler} from '@trieb.work/nextjs-turbo-redis-cache';
  */
 class RedisCacheHandler {
   static #instance = null;
-  cachedHandler;
+  writeCachedHandler;
+  readCachedHandler;
 
   constructor() {
     if (RedisCacheHandler.#instance) {
@@ -14,27 +15,28 @@ class RedisCacheHandler {
     RedisCacheHandler.#instance = this;
 
     const isRedisCacheEnabled =
-      process.env.REDIS_URL && process.env.NODE_ENV === 'production';
+      process.env.REDIS_READ_URL &&
+      process.env.REDIS_WRITE_URL &&
+      process.env.NODE_ENV === 'production';
 
     if (isRedisCacheEnabled) {
       console.debug(`Using Redis cache`);
-      this.cachedHandler = new RedisStringsHandler({
-        database: 0,
-        keyPrefix: 'marketing-sites::',
-        sharedTagsKey: '__sharedTags__',
-        // Enable TLS if the REDIS_URL starts with 'rediss://'
-        ...(process.env.REDIS_URL.startsWith('rediss://')
-          ? {
-              socketOptions: {
-                tls: true,
-              },
-            }
-          : undefined),
-      });
+      this.writeCachedHandler = this.createCacheHandler(
+        process.env.REDIS_WRITE_URL,
+      );
+      this.readCachedHandler = this.createCacheHandler(
+        process.env.REDIS_READ_URL,
+      );
     } else {
       console.warn('Redis cache disabled, using no-op handler');
       // Create a no-op handler if Redis is disabled
-      this.cachedHandler = {
+      this.readCachedHandler = {
+        get: async () => null,
+        set: async () => {},
+        revalidateTag: async () => {},
+        resetRequestCache: async () => {},
+      };
+      this.writeCachedHandler = {
         get: async () => null,
         set: async () => {},
         revalidateTag: async () => {},
@@ -43,12 +45,29 @@ class RedisCacheHandler {
     }
   }
 
+  createCacheHandler(endpoint) {
+    return new RedisStringsHandler({
+      database: 0,
+      keyPrefix: 'marketing-sites::',
+      sharedTagsKey: '__sharedTags__',
+      redisUrl: endpoint,
+      // Enable TLS if the endpoint starts with 'rediss://'
+      ...(endpoint.startsWith('rediss://')
+        ? {
+            socketOptions: {
+              tls: true,
+            },
+          }
+        : undefined),
+    });
+  }
+
   /**
    * @param {...Parameters<RedisStringsHandler['get']>} args
    * @returns {ReturnType<RedisStringsHandler['get']>}
    */
   get(...args) {
-    return this.cachedHandler.get(...args);
+    return this.readCachedHandler.get(...args);
   }
 
   /**
@@ -56,7 +75,7 @@ class RedisCacheHandler {
    * @returns {ReturnType<RedisStringsHandler['set']>}
    */
   set(...args) {
-    return this.cachedHandler.set(...args);
+    return this.writeCachedHandler.set(...args);
   }
 
   /**
@@ -64,7 +83,10 @@ class RedisCacheHandler {
    * @returns {ReturnType<RedisStringsHandler['revalidateTag']>}
    */
   revalidateTag(...args) {
-    return this.cachedHandler.revalidateTag(...args);
+    return Promise.all([
+      this.readCachedHandler.revalidateTag(...args),
+      this.writeCachedHandler.revalidateTag(...args),
+    ]);
   }
 
   /**
@@ -72,7 +94,10 @@ class RedisCacheHandler {
    * @returns {ReturnType<RedisStringsHandler['resetRequestCache']>}
    */
   resetRequestCache(...args) {
-    return this.cachedHandler.resetRequestCache(...args);
+    return Promise.all([
+      this.readCachedHandler.resetRequestCache(...args),
+      this.writeCachedHandler.resetRequestCache(...args),
+    ]);
   }
 }
 
