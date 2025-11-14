@@ -97,9 +97,9 @@ test.describe('Caching Tests', async () => {
     await allTheThingsPage.enableDraftMode(process.env.DRAFT_MODE_TOKEN);
 
     // Go to the same page with the expEditor=true query param
-    await allTheThingsPage.goto(
-      '/engineering/all-the-things?expEditorMode=true',
-    );
+    await allTheThingsPage.goto('/engineering/all-the-things', {
+      expEditorMode: 'true',
+    });
 
     // Check that <main> exists
     await expect(page.locator('main')).toHaveCount(1);

@@ -1,4 +1,5 @@
 import {type Page} from '@playwright/test';
+import {v4 as uuidv4} from 'uuid';
 
 import {loadFonts, FONT_FAMILY_NAMES} from '@code-dot-org/fonts';
 
@@ -75,8 +76,21 @@ export class MarketingPage {
     return this.getBaseUrl();
   }
 
-  async goto(subPath: string) {
-    const response = await this.page.goto(`${this.getBasePath()}${subPath}`);
+  getQueryParameters(queryParams: Record<string, string> = {}) {
+    const params = new URLSearchParams({
+      utm_source: 'marketing-sites-automated-tests',
+      utm_medium: 'e2e',
+      utm_campaign: 'playwright',
+      utm_content: uuidv4(),
+      ...queryParams,
+    });
+    return `?${params.toString()}`;
+  }
+
+  async goto(subPath: string, queryParams: Record<string, string> = {}) {
+    const response = await this.page.goto(
+      `${this.getBasePath()}${subPath}${this.getQueryParameters(queryParams)}`,
+    );
 
     // If there's a challenge page, wait for it to clear
     await this.page.waitForFunction(
