@@ -17,7 +17,7 @@ test.describe('Home Page', () => {
     const marketingPage = new MarketingPage(page);
     await marketingPage.goto('/');
 
-    await page.waitForURL('**/en-US');
+    await page.waitForURL('**/en-US?**');
   });
 
   test(

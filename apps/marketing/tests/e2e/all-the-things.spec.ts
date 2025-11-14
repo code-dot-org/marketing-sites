@@ -45,7 +45,7 @@ test.describe(`[${getSiteType()}] All the things`, () => {
       const allTheThingsPage = new MarketingPage(page);
       await allTheThingsPage.goto('/engineering/all-the-things');
 
-      await page.waitForURL('**/en-US/engineering/all-the-things');
+      await page.waitForURL('**/en-US/engineering/all-the-things?**');
 
       // Should set the language cookie to en-US
       expect(await context.cookies()).toContainEqual(
@@ -79,7 +79,7 @@ test.describe(`[${getSiteType()}] All the things`, () => {
 
       await allTheThingsPage.goto('/engineering/all-the-things');
 
-      await page.waitForURL('**/zh-Hant/engineering/all-the-things');
+      await page.waitForURL('**/zh-Hant/engineering/all-the-things?**');
     });
 
     test.use({
@@ -108,7 +108,7 @@ test.describe(`[${getSiteType()}] All the things`, () => {
 
       await allTheThingsPage.goto('/engineering/all-the-things');
 
-      await page.waitForURL('**/en-US/engineering/all-the-things');
+      await page.waitForURL('**/en-US/engineering/all-the-things?**');
     });
 
     test('should stay on the same locale if starting from a localized page', async ({
@@ -125,7 +125,7 @@ test.describe(`[${getSiteType()}] All the things`, () => {
 
       // The middleware should send us back to /zh-Hant with the language_ cookie set via the previous visit
       await allTheThingsPage.goto('/engineering/all-the-things');
-      await page.waitForURL('**/zh-Hant/engineering/all-the-things');
+      await page.waitForURL('**/zh-Hant/engineering/all-the-things?**');
     });
 
     test.describe('accept-language header', () => {
@@ -144,7 +144,7 @@ test.describe(`[${getSiteType()}] All the things`, () => {
         const allTheThingsPage = new MarketingPage(page);
         await allTheThingsPage.goto('/engineering/all-the-things');
 
-        await page.waitForURL('**/zh-Hant/engineering/all-the-things');
+        await page.waitForURL('**/zh-Hant/engineering/all-the-things?**');
       });
     });
   });

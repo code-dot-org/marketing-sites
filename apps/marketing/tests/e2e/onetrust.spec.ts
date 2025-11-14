@@ -6,7 +6,9 @@ import {MarketingPage} from './pom/marketing';
 test.describe('OneTrust Tests', () => {
   test('does NOT shows onetrust cookie consent in US', async ({page}) => {
     const marketingPage = new MarketingPage(page);
-    await marketingPage.goto('/en-US/engineering/all-the-things?otgeo=us');
+    await marketingPage.goto('/en-US/engineering/all-the-things', {
+      otgeo: 'us',
+    });
 
     await expect(
       page.getByText(
@@ -17,7 +19,9 @@ test.describe('OneTrust Tests', () => {
 
   test('shows onetrust cookie consent in es', async ({page}) => {
     const marketingPage = new MarketingPage(page);
-    await marketingPage.goto('/en-US/engineering/all-the-things?otgeo=es');
+    await marketingPage.goto('/en-US/engineering/all-the-things', {
+      otgeo: 'es',
+    });
 
     await expect(
       page.getByText(
