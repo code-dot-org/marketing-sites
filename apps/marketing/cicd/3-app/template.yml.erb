@@ -518,8 +518,10 @@ Resources:
               Value: !Ref EnvironmentType
             - Name: NEXT_PUBLIC_INSTRUMENTATION_ENABLED
               Value: "true"
-            - Name: REDIS_URL
+            - Name: REDIS_WRITE_URL
               Value: !Sub "rediss://${RedisCluster.PrimaryEndPoint.Address}:6379"
+            - Name: REDIS_READ_URL
+              Value: !Sub "rediss://${RedisCluster.ReaderEndPoint.Address}:6379"
             # Do not verify that keyspace is available, as it is created by the RedisParameterGroup
             - Name: SKIP_KEYSPACE_CONFIG_CHECK
               Value: "true"
