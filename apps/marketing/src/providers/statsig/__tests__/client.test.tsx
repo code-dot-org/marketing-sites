@@ -1,6 +1,7 @@
 import {StatsigClient} from '@statsig/js-client';
 import {render} from '@testing-library/react';
 import {setCookie, getCookie} from 'cookies-next/client';
+import {useContext} from 'react';
 import {v4 as uuidv4} from 'uuid';
 
 import {Brand} from '@/config/brand';
@@ -12,8 +13,14 @@ import plugins from '@/providers/statsig/plugins';
 
 import {getClient} from '../client';
 
+const mockInitializeAsync = jest.fn().mockResolvedValue(undefined);
+const mockLogEvent = jest.fn();
+
 jest.mock('@statsig/js-client', () => ({
-  StatsigClient: jest.fn(),
+  StatsigClient: jest.fn().mockImplementation(() => ({
+    initializeAsync: mockInitializeAsync,
+    logEvent: mockLogEvent,
+  })),
 }));
 
 jest.mock('cookies-next/client', () => ({
@@ -36,7 +43,8 @@ const MockStatsigComponent = ({
   stage: Stage;
   brand: Brand;
 }) => {
-  getClient(clientKey, stage, brand);
+  const onetrustContext = useContext(OneTrustContext);
+  getClient(clientKey, stage, brand, onetrustContext?.allowedCookies);
 
   return <></>;
 };
@@ -44,6 +52,8 @@ const MockStatsigComponent = ({
 describe('getClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockInitializeAsync.mockClear();
+    mockLogEvent.mockClear();
   });
 
   it('should use the statsig stable id from cookie if exists', () => {

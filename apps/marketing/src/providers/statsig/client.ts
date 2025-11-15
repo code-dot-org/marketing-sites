@@ -2,20 +2,17 @@ import {StatsigClient, StatsigUser} from '@statsig/js-client';
 import {useStatsigClient} from '@statsig/react-bindings';
 import {setCookie} from 'cookies-next';
 import {getCookie} from 'cookies-next/client';
-import {useContext} from 'react';
 import {v4 as uuidv4} from 'uuid';
 
 import {Brand} from '@/config/brand';
 import {Stage} from '@/config/stage';
-import OneTrustContext, {
-  OneTrustCookieGroup,
-} from '@/providers/onetrust/context/OneTrustContext';
+import {OneTrustCookieGroup} from '@/providers/onetrust/context/OneTrustContext';
 import plugins from '@/providers/statsig/plugins';
 
-function getStatsigStableId() {
-  const onetrustContext = useContext(OneTrustContext);
-
-  if (!onetrustContext?.allowedCookies.has(OneTrustCookieGroup.Performance)) {
+function getStatsigStableId(
+  allowedCookies?: Set<OneTrustCookieGroup>,
+) {
+  if (!allowedCookies?.has(OneTrustCookieGroup.Performance)) {
     // If the user has not allowed performance cookies, we do not set a stable ID
     return undefined;
   }
@@ -27,6 +24,7 @@ function getStatsigStableId() {
     setCookie('statsig_stable_id', stableId, {
       path: '/',
       domain: '.code.org',
+      // domain: 'localhost',
       sameSite: 'lax',
       secure: true,
     });
@@ -35,16 +33,25 @@ function getStatsigStableId() {
   return stableId;
 }
 
-export function getClient(clientKey: string, stage: Stage, brand: Brand) {
+export async function getClient(
+  clientKey: string,
+  stage: Stage,
+  brand: Brand,
+  allowedCookies?: Set<OneTrustCookieGroup>,
+) {
   // Add stableID only for code.org brand so we can track users across
   // studio.code.org and code.org, otherwise fallback to Statsig SDK's default behavior
   const stableId =
-    brand === Brand.CODE_DOT_ORG ? getStatsigStableId() : undefined;
+    brand === Brand.CODE_DOT_ORG ? getStatsigStableId(allowedCookies) : undefined;
   const user: StatsigUser = stableId ? {customIDs: {stableID: stableId}} : {};
-  return new StatsigClient(clientKey, user, {
+  const statsigClient = new StatsigClient(clientKey, user, {
     environment: {tier: stage},
     plugins: stage === 'production' ? plugins : undefined,
   });
+
+  await statsigClient.initializeAsync();
+
+  return statsigClient;
 }
 
 // Log events in Statsig
