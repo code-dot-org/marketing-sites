@@ -51,6 +51,7 @@ class RedisCacheHandler {
       keyPrefix: 'marketing-sites::',
       sharedTagsKey: '__sharedTags__',
       redisUrl: endpoint,
+      redisGetDeduplication: false,
       // Enable TLS if the endpoint starts with 'rediss://'
       ...(endpoint.startsWith('rediss://')
         ? {
