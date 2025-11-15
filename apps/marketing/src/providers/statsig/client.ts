@@ -9,9 +9,7 @@ import {Stage} from '@/config/stage';
 import {OneTrustCookieGroup} from '@/providers/onetrust/context/OneTrustContext';
 import plugins from '@/providers/statsig/plugins';
 
-function getStatsigStableId(
-  allowedCookies?: Set<OneTrustCookieGroup>,
-) {
+function getStatsigStableId(allowedCookies?: Set<OneTrustCookieGroup>) {
   if (!allowedCookies?.has(OneTrustCookieGroup.Performance)) {
     // If the user has not allowed performance cookies, we do not set a stable ID
     return undefined;
@@ -42,7 +40,9 @@ export async function getClient(
   // Add stableID only for code.org brand so we can track users across
   // studio.code.org and code.org, otherwise fallback to Statsig SDK's default behavior
   const stableId =
-    brand === Brand.CODE_DOT_ORG ? getStatsigStableId(allowedCookies) : undefined;
+    brand === Brand.CODE_DOT_ORG
+      ? getStatsigStableId(allowedCookies)
+      : undefined;
   const user: StatsigUser = stableId ? {customIDs: {stableID: stableId}} : {};
   const statsigClient = new StatsigClient(clientKey, user, {
     environment: {tier: stage},
