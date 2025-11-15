@@ -1,5 +1,5 @@
-import {StatsigClient, StatsigUser} from '@statsig/js-client';
-import {useStatsigClient} from '@statsig/react-bindings';
+import {StatsigUser} from '@statsig/js-client';
+import {useClientAsyncInit, useStatsigClient} from '@statsig/react-bindings';
 import {setCookie} from 'cookies-next';
 import {getCookie} from 'cookies-next/client';
 import {useContext} from 'react';
@@ -41,7 +41,7 @@ export function getClient(clientKey: string, stage: Stage, brand: Brand) {
   const stableId =
     brand === Brand.CODE_DOT_ORG ? getStatsigStableId() : undefined;
   const user: StatsigUser = stableId ? {customIDs: {stableID: stableId}} : {};
-  return new StatsigClient(clientKey, user, {
+  return useClientAsyncInit(clientKey, user, {
     environment: {tier: stage},
     plugins: stage === 'production' ? plugins : undefined,
   });
