@@ -66,7 +66,6 @@ async function createCacheConfig() {
     handlers: [
       createCompositeHandler({
         handlers: [lruCache, redisCacheHandler],
-        setStrategy: ctx => (ctx?.tags.includes('memory-cache') ? 0 : 1),
       }),
     ],
   };
