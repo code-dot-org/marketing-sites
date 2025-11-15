@@ -522,6 +522,8 @@ Resources:
               Value: !Sub "rediss://${RedisCluster.PrimaryEndPoint.Address}:6379"
             - Name: REDIS_READ_URL
               Value: !Sub "rediss://${RedisCluster.ReaderEndPoint.Address}:6379"
+            - Name: REDIS_SINGLE_CONNECTION
+              Value: "true"
             # Do not verify that keyspace is available, as it is created by the RedisParameterGroup
             - Name: SKIP_KEYSPACE_CONFIG_CHECK
               Value: "true"
