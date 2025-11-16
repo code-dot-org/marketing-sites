@@ -1,5 +1,4 @@
 import {CacheHandler} from '@fortedigital/nextjs-cache-handler';
-import createCompositeHandler from '@fortedigital/nextjs-cache-handler/composite';
 import createLruHandler from '@fortedigital/nextjs-cache-handler/local-lru';
 import createRedisHandler from '@fortedigital/nextjs-cache-handler/redis-strings';
 import {PHASE_PRODUCTION_BUILD} from 'next/constants.js';
@@ -44,6 +43,48 @@ async function setupRedisClient() {
   return null;
 }
 
+function createLRURedisHandler(options) {
+  const lruHandler = options.lruHandler;
+  const redisHandler = options.redisHandler;
+
+  return {
+    name: 'lru-redis',
+    async get(key, ctx) {
+      // Check LRU first
+      const lruResult = await lruHandler.get(key, ctx);
+      if (lruResult !== null) {
+        return lruResult;
+      }
+
+      // Fallback to Redis on miss
+      const redisResult = await redisHandler.get(key, ctx);
+      if (redisResult !== null) {
+        // Auto-populate LRU if found in Redis
+        await lruHandler.set(key, redisResult);
+        return redisResult;
+      }
+
+      // Miss in both
+      return null;
+    },
+    async set(key, value) {
+      await Promise.all([
+        lruHandler.set(key, value),
+        redisHandler.set(key, value),
+      ]);
+    },
+    async revalidateTag(tag) {
+      await Promise.all([
+        lruHandler.revalidateTag(tag),
+        redisHandler.revalidateTag(tag),
+      ]);
+    },
+    async delete(key) {
+      await Promise.all([lruHandler.delete(key), redisHandler.delete(key)]);
+    },
+  };
+}
+
 async function createCacheConfig() {
   const redisClient = await setupRedisClient();
   const lruCache = createLruHandler();
@@ -64,8 +105,9 @@ async function createCacheConfig() {
 
   const config = {
     handlers: [
-      createCompositeHandler({
-        handlers: [lruCache, redisCacheHandler],
+      createLRURedisHandler({
+        lruHandler: lruCache,
+        redisHandler: redisCacheHandler,
       }),
     ],
   };
