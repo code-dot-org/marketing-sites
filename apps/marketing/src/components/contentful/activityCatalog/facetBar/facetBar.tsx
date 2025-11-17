@@ -42,6 +42,11 @@ const FacetBar = ({facets, selectedFacets, onFacetChange}: FacetPanelProps) => {
 
       const facetConfig = FACET_CONFIG[facet];
 
+      // If there are no facet values, don't render the accordion
+      if (facetValues.length === 0) {
+        return null;
+      }
+
       return (
         <Accordion
           defaultExpanded={!facetConfig?.collapsedByDefault}
