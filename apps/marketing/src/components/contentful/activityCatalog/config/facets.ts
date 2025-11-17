@@ -28,4 +28,7 @@ export const FACET_CONFIG: FacetConfig = {
   technologyClassroom: {
     label: 'Classroom Technology',
   },
+  languageProgramming: {
+    label: 'Programming Language',
+  },
 };
