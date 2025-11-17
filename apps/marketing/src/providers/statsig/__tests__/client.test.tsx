@@ -1,4 +1,4 @@
-import {StatsigClient} from '@statsig/js-client';
+import {useClientAsyncInit} from '@statsig/react-bindings';
 import {render} from '@testing-library/react';
 import {setCookie, getCookie} from 'cookies-next/client';
 import {v4 as uuidv4} from 'uuid';
@@ -12,8 +12,8 @@ import plugins from '@/providers/statsig/plugins';
 
 import {getClient} from '../client';
 
-jest.mock('@statsig/js-client', () => ({
-  StatsigClient: jest.fn(),
+jest.mock('@statsig/react-bindings', () => ({
+  useClientAsyncInit: jest.fn(),
 }));
 
 jest.mock('cookies-next/client', () => ({
@@ -65,7 +65,7 @@ describe('getClient', () => {
       </OneTrustContext.Provider>,
     );
 
-    expect(StatsigClient).toHaveBeenCalledWith(
+    expect(useClientAsyncInit).toHaveBeenCalledWith(
       clientKey,
       {customIDs: {stableID: 'existing-stable-id'}},
       {
@@ -96,7 +96,7 @@ describe('getClient', () => {
       </OneTrustContext.Provider>,
     );
 
-    expect(StatsigClient).toHaveBeenCalledWith(
+    expect(useClientAsyncInit).toHaveBeenCalledWith(
       clientKey,
       {customIDs: {stableID: 'new-stable-id'}},
       {
@@ -136,7 +136,7 @@ describe('getClient', () => {
       </OneTrustContext.Provider>,
     );
 
-    expect(StatsigClient).toHaveBeenCalledWith(
+    expect(useClientAsyncInit).toHaveBeenCalledWith(
       clientKey,
       {customIDs: {stableID: 'existing-stable-id'}},
       {
@@ -147,7 +147,7 @@ describe('getClient', () => {
   });
 
   it('should NOT generate a new stableId if performance cookies are disabled', () => {
-    (getCookie as jest.Mock).mockReturnValue(null);
+    (getCookie as jest.Mock).mockReturnValue('abc');
     (uuidv4 as jest.Mock).mockReturnValue('new-stable-id');
     const clientKey = 'test-client-key';
     const stage = 'production';
@@ -168,9 +168,13 @@ describe('getClient', () => {
       </OneTrustContext.Provider>,
     );
 
-    expect(StatsigClient).toHaveBeenCalledWith(
+    expect(useClientAsyncInit).toHaveBeenCalledWith(
       clientKey,
-      {},
+      {
+        customIDs: {
+          stableID: 'abc',
+        },
+      },
       {
         environment: {tier: stage},
         plugins: plugins,
@@ -197,7 +201,7 @@ describe('getClient', () => {
       </OneTrustContext.Provider>,
     );
 
-    expect(StatsigClient).toHaveBeenCalledWith(
+    expect(useClientAsyncInit).toHaveBeenCalledWith(
       clientKey,
       {},
       {
@@ -225,7 +229,7 @@ describe('getClient', () => {
         />
       </OneTrustContext.Provider>,
     );
-    expect(StatsigClient).toHaveBeenLastCalledWith(
+    expect(useClientAsyncInit).toHaveBeenLastCalledWith(
       clientKey,
       {customIDs: {stableID: 'existing-stable-id'}},
       {
@@ -246,7 +250,7 @@ describe('getClient', () => {
         />
       </OneTrustContext.Provider>,
     );
-    expect(StatsigClient).toHaveBeenLastCalledWith(
+    expect(useClientAsyncInit).toHaveBeenLastCalledWith(
       clientKey,
       {customIDs: {stableID: 'existing-stable-id'}},
       {

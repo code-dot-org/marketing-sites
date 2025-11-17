@@ -27,7 +27,7 @@ export default function StatsigProvider({
     return children;
   }
 
-  const client = getClient(clientKey, stage, brand);
+  const {client} = getClient(clientKey, stage, brand);
 
   return <BaseStatsigProvider client={client}>{children}</BaseStatsigProvider>;
 }
