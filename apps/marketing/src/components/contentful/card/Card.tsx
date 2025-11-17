@@ -26,6 +26,8 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   imageSrc?: string;
   /** Height of the image */
   imageHeight?: string;
+  /** Aspect ratio of the image (e.g., 1.5, '16/9') */
+  imageAspectRatio?: string | number;
   /** Image object fit */
   imageObjectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
   /** Card overline */
@@ -53,6 +55,7 @@ const Card: React.FC<CardProps> = ({
   description,
   imageSrc,
   imageHeight,
+  imageAspectRatio,
   imageObjectFit = 'cover',
   overline,
   primaryButton,
@@ -93,6 +96,11 @@ const Card: React.FC<CardProps> = ({
 
   // Customize image height with a default of 300px
   const setImageHeight = useMemo(() => {
+    // Handled by the CSS aspect-ratio property
+    if (imageAspectRatio) {
+      return undefined;
+    }
+
     if (imageHeight) {
       return `${imageHeight}px`;
     }
@@ -114,6 +122,7 @@ const Card: React.FC<CardProps> = ({
         <CardMedia
           sx={{
             height: setImageHeight,
+            aspectRatio: imageAspectRatio || 'auto',
             position: 'relative',
             backgroundColor: theme.palette.common.black,
           }}

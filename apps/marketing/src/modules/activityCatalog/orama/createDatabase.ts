@@ -47,11 +47,15 @@ export function createDatabase(
       length: fields.length || [],
       accessibilitys: fields.accessibilitys || [],
       languagesText: fields.languagesText || '',
+      supportedLanguages: fields.supportedLanguages || [],
       standards: fields.standards || '',
       tutorialID: fields.tutorialID || '',
       // This is passed as a stringified JSON to allow the entry to be passed directly into the ActivityCollection component
       // It will be deserialized there
       primaryLinkRef: JSON.stringify(fields.primaryLinkRef),
+      secondaryLinkRef: fields.secondaryLinkRef
+        ? JSON.stringify(fields.secondaryLinkRef)
+        : undefined,
       featuredPosition: fields.featuredPosition || FEATURED_POSITION_MAX,
     };
   });

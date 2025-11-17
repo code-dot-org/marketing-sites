@@ -82,6 +82,8 @@ export const withLocale: MiddlewareFactory = next => {
 
     const localizedPath = isRootRoute ? `/${locale}` : `/${locale}/${slug}`;
     const redirectUrl = new URL(localizedPath, request.url);
+    // Preserve query parameters
+    redirectUrl.search = request.nextUrl.search;
     const response = getCachedRedirectResponse(redirectUrl);
 
     // Set the language cookie if discovered via Accept-Language header

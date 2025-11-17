@@ -9,12 +9,14 @@ export interface Activity {
   shortDescription: string;
   longDescription: string;
   primaryLinkRef: string;
+  secondaryLinkRef?: string;
   technologyClassroom: OramaEnum;
   topic: OramaEnum;
   activityType: OramaEnum;
   length: OramaEnum;
   accessibilitys: OramaEnum;
   languagesText: string;
+  supportedLanguages: OramaEnum;
   standards: string;
   tutorialID: string;
   featuredPosition: number;

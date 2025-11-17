@@ -113,10 +113,10 @@ export default async function ActivitiesPage({
         ages: {},
         topic: {},
         activityType: {},
-        languageProgramming: {},
         length: {},
         accessibilitys: {},
         technologyClassroom: {},
+        supportedLanguages: {},
       },
       limit: 100,
     });

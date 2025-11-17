@@ -19,12 +19,15 @@ export class AllTheThingsPage extends MarketingPage {
     return await super.enableDraftMode(token, 'engineering/all-the-things');
   }
 
-  async goto(path?: string) {
+  async goto(path?: string, queryParams?: Record<string, string>) {
     if (!path) {
-      return await super.goto(`${await getAllTheThingsPagePath()}?otgeo=us`);
+      return await super.goto(`${await getAllTheThingsPagePath()}`, {
+        otgeo: 'us',
+        ...queryParams,
+      });
     }
 
-    return await super.goto(path);
+    return await super.goto(path, queryParams);
   }
 
   getSectionLocator(heading: Section): Locator {

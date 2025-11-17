@@ -30,7 +30,6 @@ in `config.rb` or when `account-resources.yml.erb` is modified. Must be re-run o
       - CONTENTFUL_REVALIDATE_TOKEN
       - DRAFT_MODE_TOKEN
       - STATSIG_CLIENT_KEY
-      - STATSIG_SERVER_KEY
       - OTEL_EXPORTER_OTLP_HEADERS
 
 1. Assume an AWS Role that had permissions to create most types of Resources (must be admin for environment_type=production):

@@ -13,7 +13,7 @@ import {
 import {FacetResult} from '@orama/orama';
 import {ChangeEvent} from 'react';
 
-import {FACET_LABELS} from '@/components/contentful/activityCatalog/config/facets';
+import {FACET_CONFIG} from '@/components/contentful/activityCatalog/config/facets';
 
 interface FacetPanelProps {
   isInDrawer?: boolean;
@@ -40,9 +40,11 @@ const FacetBar = ({facets, selectedFacets, onFacetChange}: FacetPanelProps) => {
         a.localeCompare(b, undefined, {numeric: true}),
       );
 
+      const facetConfig = FACET_CONFIG[facet];
+
       return (
         <Accordion
-          defaultExpanded
+          defaultExpanded={!facetConfig?.collapsedByDefault}
           sx={{
             bgcolor: 'card.main',
             color: 'card.contrastText',
@@ -54,7 +56,7 @@ const FacetBar = ({facets, selectedFacets, onFacetChange}: FacetPanelProps) => {
             sx={{padding: 1}}
           >
             <Typography variant="subtitle1" sx={{fontWeight: 600}}>
-              {FACET_LABELS[facet]}
+              {facetConfig?.label || facet}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>

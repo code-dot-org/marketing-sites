@@ -188,7 +188,13 @@ Resources:
               - __prerender_bypass # Next.js Draft mode
               - language_ # Used in the withLocale middleware to determine the user's locale and shared with studio.code.org
           QueryStringsConfig:
-            QueryStringBehavior: none
+            QueryStringBehavior: whitelist
+            QueryStrings:
+              - utm_source
+              - utm_medium
+              - utm_campaign
+              - utm_term
+              - utm_content
         Comment: Cache policy for the marketing app
   ViewerResponseCloudFrontFunction:
     Type: AWS::CloudFront::Function
@@ -512,8 +518,10 @@ Resources:
               Value: !Ref EnvironmentType
             - Name: NEXT_PUBLIC_INSTRUMENTATION_ENABLED
               Value: "true"
-            - Name: REDIS_URL
+            - Name: REDIS_WRITE_URL
               Value: !Sub "rediss://${RedisCluster.PrimaryEndPoint.Address}:6379"
+            - Name: REDIS_READ_URL
+              Value: !Sub "rediss://${RedisCluster.ReaderEndPoint.Address}:6379"
             # Do not verify that keyspace is available, as it is created by the RedisParameterGroup
             - Name: SKIP_KEYSPACE_CONFIG_CHECK
               Value: "true"
@@ -555,8 +563,6 @@ Resources:
               ValueFrom: !Sub "${WebApplicationServerSecretsARN}:DRAFT_MODE_TOKEN::"
             - Name: STATSIG_CLIENT_KEY
               ValueFrom: !Sub "${WebApplicationServerSecretsARN}:STATSIG_CLIENT_KEY::"
-            - Name: STATSIG_SERVER_KEY
-              ValueFrom: !Sub "${WebApplicationServerSecretsARN}:STATSIG_SERVER_KEY::"
             - Name: OTEL_EXPORTER_OTLP_HEADERS
               ValueFrom: !Sub "${WebApplicationServerSecretsARN}:OTEL_EXPORTER_OTLP_HEADERS::"
           LogConfiguration:
