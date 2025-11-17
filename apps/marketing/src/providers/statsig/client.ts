@@ -22,7 +22,6 @@ function getStatsigStableId(allowedCookies?: Set<OneTrustCookieGroup>) {
     setCookie('statsig_stable_id', stableId, {
       path: '/',
       domain: '.code.org',
-      // domain: 'localhost',
       sameSite: 'lax',
       secure: true,
     });
