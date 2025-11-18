@@ -93,6 +93,29 @@ describe('getRedirects', () => {
     );
   });
 
+  it('redirects /certificates/:session_id to studio.code.org/api/hour/certificates/:session_id', () => {
+    const sessionID = '_1_537adb90bcf397109ef4358f4c66c493';
+    const req = createMockRequest(`/certificates/${sessionID}`);
+
+    getRedirects(req);
+
+    expect(getCachedRedirectResponse).toHaveBeenCalledWith(
+      new URL(`/api/hour/certificates/${sessionID}`, studioBaseUrl),
+      {status: 308},
+    );
+  });
+
+  it('does not redirect /certificates/blank to studio.code.org/api/hour/certificates/:session_id', () => {
+    const req = createMockRequest('/certificates/blank');
+
+    getRedirects(req);
+
+    expect(getCachedRedirectResponse).not.toHaveBeenCalledWith(
+      new URL('/api/hour/certificates/blank', studioBaseUrl),
+      {status: 308},
+    );
+  });
+
   it('returns undefined for unrelated paths', () => {
     const req = createMockRequest('/other/path');
     const result = getRedirects(req);
