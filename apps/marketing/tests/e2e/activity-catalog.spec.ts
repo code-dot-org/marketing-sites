@@ -74,9 +74,12 @@ test.describe('Activity Catalog', () => {
 
     const marketingPage = new MarketingPage(page);
 
-    await marketingPage.goto(
-      '/en-US/activities/hour-of-code?term=&ages=6-8&topic=Computer%2520Science%2520only&languageProgramming=Blocks',
-    );
+    await marketingPage.goto('/en-US/activities/hour-of-code', {
+      term: '',
+      ages: '6-8',
+      topic: 'Computer Science only',
+      languageProgramming: 'Blocks',
+    });
 
     // Ensure "6-8" checked
     await expect(page.getByLabel('6-8')).toBeChecked();
