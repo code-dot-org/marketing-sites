@@ -1,6 +1,5 @@
 import {useClientAsyncInit} from '@statsig/react-bindings';
 import {render} from '@testing-library/react';
-import {setCookie, getCookie} from 'cookies-next/client';
 import {v4 as uuidv4} from 'uuid';
 
 import {Brand} from '@/config/brand';
@@ -14,11 +13,6 @@ import {getClient} from '../client';
 
 jest.mock('@statsig/react-bindings', () => ({
   useClientAsyncInit: jest.fn(),
-}));
-
-jest.mock('cookies-next/client', () => ({
-  getCookie: jest.fn(),
-  setCookie: jest.fn(),
 }));
 
 jest.mock('uuid', () => ({
@@ -43,11 +37,25 @@ const MockStatsigComponent = ({
 
 describe('getClient', () => {
   beforeEach(() => {
+    Object.defineProperty(global, 'localStorage', {
+      value: {
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn(),
+      },
+      writable: true,
+    });
     jest.clearAllMocks();
   });
 
-  it('should use the statsig stable id from cookie if exists', () => {
-    (getCookie as jest.Mock).mockReturnValue('existing-stable-id');
+  it('should use the statsig stable id from local storage if exists', () => {
+    (global.localStorage.getItem as jest.Mock).mockImplementation(key => {
+      if (key === 'STATSIG_LOCAL_STORAGE_STABLE_ID') {
+        return 'existing-stable-id';
+      }
+      return null;
+    });
     const clientKey = 'test-client-key';
     const stage = 'production';
     const brand = Brand.CODE_DOT_ORG;
@@ -73,52 +81,15 @@ describe('getClient', () => {
         plugins: plugins,
       },
     );
-    expect(setCookie).not.toHaveBeenCalled();
-  });
-
-  it('should generate a new stableId if none exists', () => {
-    (getCookie as jest.Mock).mockReturnValue(null);
-    (uuidv4 as jest.Mock).mockReturnValue('new-stable-id');
-    const clientKey = 'test-client-key';
-    const stage = 'production';
-    const brand = Brand.CODE_DOT_ORG;
-
-    render(
-      <OneTrustContext.Provider
-        value={{allowedCookies: new Set([OneTrustCookieGroup.Performance])}}
-      >
-        <MockStatsigComponent
-          clientKey={clientKey}
-          stage={stage}
-          brand={brand}
-        />
-        <div>Test Child</div>
-      </OneTrustContext.Provider>,
-    );
-
-    expect(useClientAsyncInit).toHaveBeenCalledWith(
-      clientKey,
-      {customIDs: {stableID: 'new-stable-id'}},
-      {
-        environment: {tier: stage},
-        plugins: plugins,
-      },
-    );
-
-    expect(setCookie).toHaveBeenCalledWith(
-      'statsig_stable_id',
-      'new-stable-id',
-      {
-        path: '/',
-        domain: '.code.org',
-        sameSite: 'lax',
-        secure: true,
-      },
+    expect(global.localStorage.getItem).toHaveBeenCalledWith(
+      'STATSIG_LOCAL_STORAGE_STABLE_ID',
     );
   });
 
   it('should use the correct environment tier based on the stage', () => {
-    (getCookie as jest.Mock).mockReturnValue('existing-stable-id');
+    (global.localStorage.getItem as jest.Mock).mockReturnValue(
+      'existing-stable-id',
+    );
     const clientKey = 'test-client-key';
     const stage = 'production';
     const brand = Brand.CODE_DOT_ORG;
@@ -147,7 +118,7 @@ describe('getClient', () => {
   });
 
   it('should NOT generate a new stableId if performance cookies are disabled', () => {
-    (getCookie as jest.Mock).mockReturnValue('abc');
+    (global.localStorage.getItem as jest.Mock).mockReturnValue('abc');
     (uuidv4 as jest.Mock).mockReturnValue('new-stable-id');
     const clientKey = 'test-client-key';
     const stage = 'production';
@@ -180,7 +151,7 @@ describe('getClient', () => {
         plugins: plugins,
       },
     );
-    expect(setCookie).not.toHaveBeenCalled();
+    expect(global.localStorage.setItem).not.toHaveBeenCalled();
   });
 
   it('should not set stableId for non-code.org brands', () => {
@@ -209,11 +180,13 @@ describe('getClient', () => {
         plugins: plugins,
       },
     );
-    expect(setCookie).not.toHaveBeenCalled();
+    expect(global.localStorage.setItem).not.toHaveBeenCalled();
   });
 
   it('should only set plugins in production', () => {
-    (getCookie as jest.Mock).mockReturnValue('existing-stable-id');
+    (global.localStorage.getItem as jest.Mock).mockReturnValue(
+      'existing-stable-id',
+    );
     const clientKey = 'test-client-key';
     const brand = Brand.CODE_DOT_ORG;
 
@@ -258,5 +231,94 @@ describe('getClient', () => {
         plugins: undefined,
       },
     );
+  });
+
+  it('should handle localStorage throwing an error gracefully', () => {
+    const originalLocalStorage = global.localStorage;
+    Object.defineProperty(global, 'localStorage', {
+      value: {
+        getItem: jest.fn(() => {
+          throw new Error('localStorage error');
+        }),
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn(),
+        key: jest.fn(),
+        length: 0,
+      },
+      writable: true,
+    });
+
+    const clientKey = 'test-client-key';
+    const stage = 'production';
+    const brand = Brand.CODE_DOT_ORG;
+
+    expect(() => {
+      render(
+        <OneTrustContext.Provider
+          value={{allowedCookies: new Set([OneTrustCookieGroup.Performance])}}
+        >
+          <MockStatsigComponent
+            clientKey={clientKey}
+            stage={stage}
+            brand={brand}
+          />
+        </OneTrustContext.Provider>,
+      );
+    }).not.toThrow();
+
+    expect(useClientAsyncInit).toHaveBeenCalledWith(
+      clientKey,
+      {},
+      {
+        environment: {tier: stage},
+        plugins: plugins,
+      },
+    );
+
+    global.localStorage = originalLocalStorage;
+  });
+
+  it('should handle localStorage being undefined gracefully', () => {
+    const originalLocalStorage = global.localStorage;
+    Object.defineProperty(global, 'localStorage', {
+      value: {
+        getItem: jest.fn(() => null),
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn(),
+        key: jest.fn(),
+        length: 0,
+      },
+      writable: true,
+    });
+
+    const clientKey = 'test-client-key';
+    const stage = 'production';
+    const brand = Brand.CODE_DOT_ORG;
+
+    render(
+      <OneTrustContext.Provider
+        value={{allowedCookies: new Set([OneTrustCookieGroup.Performance])}}
+      >
+        <MockStatsigComponent
+          clientKey={clientKey}
+          stage={stage}
+          brand={brand}
+        />
+        <div>Test Child</div>
+      </OneTrustContext.Provider>,
+    );
+
+    expect(useClientAsyncInit).toHaveBeenCalledWith(
+      clientKey,
+      {},
+      {
+        environment: {tier: stage},
+        plugins: plugins,
+      },
+    );
+
+    global.localStorage = originalLocalStorage;
   });
 });
