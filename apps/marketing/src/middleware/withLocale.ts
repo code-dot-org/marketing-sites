@@ -67,6 +67,11 @@ export const withLocale: MiddlewareFactory = next => {
       return response;
     }
 
+    // Do not localize static asset directories
+    if (pathname.startsWith('/assets')) {
+      return await next(request, event);
+    }
+
     const slug = isRootRoute ? '' : getContentfulSlug(pathParts);
 
     const cookieLocale = getLanguageFromCookie(request);

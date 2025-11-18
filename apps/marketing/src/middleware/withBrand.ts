@@ -1,5 +1,5 @@
 import {draftMode} from 'next/headers';
-import {NextRequest, NextResponse} from 'next/server';
+import {NextFetchEvent, NextRequest, NextResponse} from 'next/server';
 
 import {getBrandFromHostname} from '@/config/brand';
 import {PREVIEW_HOSTNAMES} from '@/config/preview';
@@ -16,9 +16,14 @@ import {MiddlewareFactory} from './types';
  *
  * localhost.code.org:3001/en-US/home -> /localhost.code.org:3001/en-US/home
  */
-export const withBrand: MiddlewareFactory = () => {
-  return async (request: NextRequest) => {
-    const url = request.nextUrl;
+export const withBrand: MiddlewareFactory = next => {
+  return async (request: NextRequest, event: NextFetchEvent) => {
+    const {pathname} = request.nextUrl;
+
+    // Do not add brand for static asset directories
+    if (pathname.startsWith('/assets')) {
+      return await next(request, event);
+    }
 
     // Get hostname of request (e.g. test.code.org, code.org, localhost.code.org:3001)
     const hostname = request.headers.get('host');
@@ -32,7 +37,7 @@ export const withBrand: MiddlewareFactory = () => {
 
     const searchParams = request.nextUrl.searchParams.toString();
     // Get the pathname of the request.est (e.g. /, /about, /blog/first-post)
-    const path = `${url.pathname}${
+    const path = `${pathname}${
       searchParams.length > 0 ? `?${searchParams}` : ''
     }`;
 
