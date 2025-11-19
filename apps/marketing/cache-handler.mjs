@@ -1,104 +1,173 @@
-import {RedisStringsHandler} from '@trieb.work/nextjs-turbo-redis-cache';
+import {CacheHandler} from '@fortedigital/nextjs-cache-handler';
+import createLruHandler from '@fortedigital/nextjs-cache-handler/local-lru';
+import createRedisHandler from '@fortedigital/nextjs-cache-handler/redis-strings';
+import {PHASE_PRODUCTION_BUILD} from 'next/constants.js';
+import {createClient} from 'redis';
 
 /**
- * @typedef {import('@trieb.work/nextjs-turbo-redis-cache').RedisStringsHandler} RedisStringsHandler
+ * Sets up a Redis client. Can be a read or write client.
+ * @param {string} endpoint - The Redis server endpoint.
+ * @returns {Promise<RedisClient|null>} - The Redis client or null if not in production.
  */
-class RedisCacheHandler {
-  static #instance = null;
-  writeCachedHandler;
-  readCachedHandler;
-
-  constructor() {
-    if (RedisCacheHandler.#instance) {
-      return RedisCacheHandler.#instance;
-    }
-    RedisCacheHandler.#instance = this;
-
-    const isRedisCacheEnabled =
-      process.env.REDIS_READ_URL &&
-      process.env.REDIS_WRITE_URL &&
-      process.env.NODE_ENV === 'production';
-
-    if (isRedisCacheEnabled) {
-      console.debug(`Using Redis cache`);
-      this.writeCachedHandler = this.createCacheHandler(
-        process.env.REDIS_WRITE_URL,
-      );
-      this.readCachedHandler = this.createCacheHandler(
-        process.env.REDIS_READ_URL,
-      );
-    } else {
-      console.warn('Redis cache disabled, using no-op handler');
-      // Create a no-op handler if Redis is disabled
-      this.readCachedHandler = {
-        get: async () => null,
-        set: async () => {},
-        revalidateTag: async () => {},
-        resetRequestCache: async () => {},
-      };
-      this.writeCachedHandler = {
-        get: async () => null,
-        set: async () => {},
-        revalidateTag: async () => {},
-        resetRequestCache: async () => {},
-      };
-    }
+async function setupRedisClient(endpoint) {
+  if (PHASE_PRODUCTION_BUILD === process.env.NEXT_PHASE) {
+    return null;
   }
 
-  createCacheHandler(endpoint) {
-    return new RedisStringsHandler({
-      database: 0,
-      keyPrefix: 'marketing-sites::',
-      sharedTagsKey: '__sharedTags__',
-      redisUrl: endpoint,
-      // Enable TLS if the endpoint starts with 'rediss://'
-      ...(endpoint.startsWith('rediss://')
-        ? {
-            socketOptions: {
-              tls: true,
-            },
-          }
-        : undefined),
+  if (!endpoint) {
+    console.warn(
+      'No Redis endpoint provided. Skipping Redis cache layer setup.',
+    );
+    return null;
+  }
+
+  try {
+    const redisClient = createClient({
+      url: endpoint,
+      pingInterval: 10000,
     });
-  }
 
-  /**
-   * @param {...Parameters<RedisStringsHandler['get']>} args
-   * @returns {ReturnType<RedisStringsHandler['get']>}
-   */
-  get(...args) {
-    return this.readCachedHandler.get(...args);
-  }
+    redisClient.on('error', e => {
+      if (process.env.NEXT_PRIVATE_DEBUG_CACHE !== undefined) {
+        console.warn('Redis error', e);
+      }
 
-  /**
-   * @param {...Parameters<RedisStringsHandler['set']>} args
-   * @returns {ReturnType<RedisStringsHandler['set']>}
-   */
-  set(...args) {
-    return this.writeCachedHandler.set(...args);
-  }
+      global.cacheHandlerConfig = null;
+      global.cacheHandlerConfigPromise = null;
+    });
 
-  /**
-   * @param {...Parameters<RedisStringsHandler['revalidateTag']>} args
-   * @returns {ReturnType<RedisStringsHandler['revalidateTag']>}
-   */
-  revalidateTag(...args) {
-    return Promise.all([
-      this.readCachedHandler.revalidateTag(...args),
-      this.writeCachedHandler.revalidateTag(...args),
-    ]);
-  }
+    console.info('Connecting Redis client to', endpoint);
+    await redisClient.connect();
+    console.info('Redis client connected to', endpoint);
 
-  /**
-   * @param {...Parameters<RedisStringsHandler['resetRequestCache']>} args
-   * @returns {ReturnType<RedisStringsHandler['resetRequestCache']>}
-   */
-  resetRequestCache(...args) {
-    return Promise.all([
-      this.readCachedHandler.resetRequestCache(...args),
-      this.writeCachedHandler.resetRequestCache(...args),
-    ]);
+    if (!redisClient.isReady) {
+      console.error('Failed to initialize caching layer to Redis', endpoint);
+    }
+
+    return redisClient;
+  } catch (error) {
+    console.warn('Failed to connect Redis client:', endpoint, error);
   }
 }
 
-export default RedisCacheHandler;
+/**
+ * Creates a composite cache handler that uses LRU cache first, then falls back to Redis.
+ * If a value is found in Redis, it populates the LRU cache for future requests.
+ * @param options
+ * @returns LRU + Redis composite cache handler
+ */
+function createLRURedisHandler(options) {
+  const lruHandler = options.lruHandler;
+  const redisHandler = options.redisHandler;
+
+  return {
+    name: 'lru-redis',
+    /**
+     * Retrieves a value from the cache. Checks LRU first, then Redis.
+     * @param key - The cache key.
+     * @param ctx - The request context.
+     * @returns - The cached value or null if not found.
+     */
+    async get(key, ctx) {
+      // Check LRU first
+      const lruResult = await lruHandler.get(key, ctx);
+      if (lruResult !== null) {
+        return lruResult;
+      }
+
+      // Fallback to Redis on miss
+      const redisResult = await redisHandler.get(key, ctx);
+      if (redisResult !== null) {
+        // Auto-populate LRU if found in Redis
+        await lruHandler.set(key, redisResult);
+        return redisResult;
+      }
+
+      // Miss in both
+      return null;
+    },
+    /**
+     * Sets a value in the cache.
+     * @param key - The cache key.
+     * @param value - The cache value.
+     */
+    async set(key, value) {
+      await Promise.all([
+        lruHandler.set(key, value),
+        redisHandler.set(key, value),
+      ]);
+    },
+    /**
+     * Revalidates a cache entry by its tag.
+     * @param tag - The cache tag.
+     */
+    async revalidateTag(tag) {
+      await Promise.all([
+        lruHandler.revalidateTag(tag),
+        redisHandler.revalidateTag(tag),
+      ]);
+    },
+    /**
+     * Deletes a cache entry.
+     * @param key - The cache key.
+     */
+    async delete(key) {
+      await Promise.all([lruHandler.delete(key), redisHandler.delete(key)]);
+    },
+  };
+}
+
+/**
+ * Creates a cache configuration.
+ * @returns {Promise<CacheHandlerConfig>} - The cache handler configuration.
+ */
+async function createCacheConfig() {
+  const redisClient = await setupRedisClient(process.env.REDIS_WRITE_URL);
+  const lruCache = createLruHandler();
+
+  // If no Redis, (e.g. Redis is down), use LRU only to avoid latency and downtime.
+  if (!redisClient) {
+    const config = {handlers: [lruCache]};
+    global.cacheHandlerConfigPromise = null;
+    global.cacheHandlerConfig = config;
+
+    return config;
+  }
+
+  const redisCacheHandler = createRedisHandler({
+    client: redisClient,
+    keyPrefix: 'marketing-sites:::',
+  });
+
+  const config = {
+    handlers: [
+      createLRURedisHandler({
+        lruHandler: lruCache,
+        redisHandler: redisCacheHandler,
+      }),
+    ],
+  };
+
+  // Ensure singleton pattern for cache handler config to avoid multiple Redis connections.
+  global.cacheHandlerConfigPromise = null;
+  global.cacheHandlerConfig = config;
+
+  return config;
+}
+
+CacheHandler.onCreation(() => {
+  // Ensure singleton pattern for cache handler config to avoid multiple Redis connections.
+  if (global.cacheHandlerConfig) {
+    return global.cacheHandlerConfig;
+  }
+  if (global.cacheHandlerConfigPromise) {
+    return global.cacheHandlerConfigPromise;
+  }
+
+  const promise = createCacheConfig();
+  global.cacheHandlerConfigPromise = promise;
+
+  return promise;
+});
+
+export default CacheHandler;
