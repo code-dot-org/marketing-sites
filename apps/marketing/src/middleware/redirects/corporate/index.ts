@@ -60,7 +60,7 @@ export function getRedirects(request: NextRequest) {
   // The :session_id parameter always starts with an underscore (e.g., "_1_537adb90bcf397109ef4358f4c66c493")
   if (pathParts[0] === 'certificates' && pathParts[1].startsWith('_')) {
     const redirectUrl = new URL(
-      `/api/hour/${fullPath}` + urlQuery,
+      `/api/hour${fullPath}` + urlQuery,
       getStudioBaseUrl(),
     );
 
