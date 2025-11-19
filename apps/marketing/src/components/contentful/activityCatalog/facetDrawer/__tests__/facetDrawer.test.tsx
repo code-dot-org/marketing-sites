@@ -12,6 +12,19 @@ const mockFacetBarProps: any = {
   searchTerm: '',
 };
 
+jest.mock('@/components/contentful/activityCatalog/config/facets', () => ({
+  FACET_CONFIG: {
+    subject: {
+      label: 'Subject',
+      type: 'checkbox',
+    },
+    grade: {
+      label: 'Grade',
+      type: 'checkbox',
+    },
+  },
+}));
+
 describe('FacetDrawer', () => {
   it('renders Drawer when isOpen is true', () => {
     render(

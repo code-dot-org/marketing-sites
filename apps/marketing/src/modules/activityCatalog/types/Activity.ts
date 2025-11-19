@@ -1,9 +1,9 @@
-type OramaEnum = (string | number)[];
+export type OramaEnum = (string | number)[];
 
 export interface Activity {
   title: string;
   image: string;
-  organization: string;
+  organization: OramaEnum;
   ages: OramaEnum;
   languageProgramming: OramaEnum;
   shortDescription: string;
