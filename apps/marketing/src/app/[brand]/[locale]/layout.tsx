@@ -42,7 +42,7 @@ export default async function Layout({
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <EnvironmentLoader />
+            <EnvironmentLoader brand={brand} />
             <NewRelicLoader />
             <OneTrustLoader brand={brand} />
             <LocalizeLoader

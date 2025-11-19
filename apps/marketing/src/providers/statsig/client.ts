@@ -1,46 +1,29 @@
 import {StatsigUser} from '@statsig/js-client';
 import {useClientAsyncInit, useStatsigClient} from '@statsig/react-bindings';
-import {setCookie} from 'cookies-next';
-import {getCookie} from 'cookies-next/client';
-import {useContext} from 'react';
-import {v4 as uuidv4} from 'uuid';
 
 import {Brand} from '@/config/brand';
 import {Stage} from '@/config/stage';
-import OneTrustContext, {
-  OneTrustCookieGroup,
-} from '@/providers/onetrust/context/OneTrustContext';
 import plugins from '@/providers/statsig/plugins';
 
 function getStatsigStableId(brand: Brand) {
-  const onetrustContext = useContext(OneTrustContext);
-  let stableId = getCookie('statsig_stable_id');
-
-  if (!onetrustContext?.allowedCookies.has(OneTrustCookieGroup.Performance)) {
-    // If the user has not allowed performance cookies, we do not set a stable ID
-    // For the Code.org brand, the stable ID is retrieved from cookie to track users across subdomains
-    // For the other brand, we do not set a stable ID as we do not need cross-domain tracking
-    return brand === Brand.CODE_DOT_ORG ? stableId : undefined;
+  if (brand !== Brand.CODE_DOT_ORG) {
+    return undefined;
   }
+  try {
+    if (typeof localStorage === 'undefined') {
+      return undefined;
+    }
 
-  if (!stableId) {
-    stableId = uuidv4();
-    setCookie('statsig_stable_id', stableId, {
-      path: '/',
-      domain: '.code.org',
-      sameSite: 'lax',
-      secure: true,
-    });
+    return localStorage.getItem('STATSIG_LOCAL_STORAGE_STABLE_ID') || undefined;
+  } catch {
+    return undefined;
   }
-
-  return stableId;
 }
 
 export function getClient(clientKey: string, stage: Stage, brand: Brand) {
   // Add stableID only for code.org brand so we can track users across
   // studio.code.org and code.org, otherwise fallback to Statsig SDK's default behavior
-  const stableId =
-    brand === Brand.CODE_DOT_ORG ? getStatsigStableId(brand) : undefined;
+  const stableId = getStatsigStableId(brand);
   const user: StatsigUser = stableId ? {customIDs: {stableID: stableId}} : {};
   return useClientAsyncInit(clientKey, user, {
     environment: {tier: stage},
