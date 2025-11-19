@@ -345,7 +345,10 @@ Resources:
             TargetOriginId: marketing-sites-application-origin
             ViewerProtocolPolicy: redirect-to-https
             ResponseHeadersPolicyId: !Ref DefaultResponseHeadersPolicy
-            OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3 # AllViewer
+            OriginRequestPolicyId: !If
+              - IsCorporateSite
+              - 216adef6-5c7f-47e4-b989-5492eafa07d3 # AllViewer until this distribution becomes the main one instead of daisy chained
+              - !Ref "AWS::NoValue"
 <% if options[:web_application_firewall] %>
         WebACLId: <%= options[:web_application_firewall] %>
 <% end %>
