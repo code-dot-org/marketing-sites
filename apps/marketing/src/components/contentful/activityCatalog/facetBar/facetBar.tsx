@@ -75,19 +75,9 @@ const FacetBar = ({facets, selectedFacets, onFacetChange}: FacetPanelProps) => {
           />
         )}
         slotProps={{
-          paper: {
-            sx: {
-              width: '300px',
-            },
-          },
           listbox: {
             sx: {
-              typography: 'body3',
-              '& .MuiAutocomplete-option': {
-                display: 'block',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              },
+              typography: 'body4',
             },
           },
         }}
