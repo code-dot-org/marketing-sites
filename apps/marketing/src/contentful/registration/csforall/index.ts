@@ -157,9 +157,7 @@ const contentfulRegistration = {
       },
     },
   ],
-  options: {
-    enabledBuiltInComponents: [],
-  },
+  options: {},
 };
 
 export default contentfulRegistration;
