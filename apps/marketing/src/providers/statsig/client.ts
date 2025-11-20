@@ -1,4 +1,4 @@
-import {StatsigUser} from '@statsig/js-client';
+import {StatsigClient, StatsigUser} from '@statsig/js-client';
 import {useClientAsyncInit, useStatsigClient} from '@statsig/react-bindings';
 
 import {Brand} from '@/config/brand';
@@ -25,10 +25,20 @@ export function getClient(clientKey: string, stage: Stage, brand: Brand) {
   // studio.code.org and code.org, otherwise fallback to Statsig SDK's default behavior
   const stableId = getStatsigStableId(brand);
   const user: StatsigUser = stableId ? {customIDs: {stableID: stableId}} : {};
-  return useClientAsyncInit(clientKey, user, {
+
+  const statsigOptions = {
     environment: {tier: stage},
     plugins: stage === 'production' ? plugins : undefined,
-  });
+  };
+
+  // For server-side rendering, we stub out a statsig client but never initialize it.
+  // This allows us to avoid sending any statsig requests from the server while still
+  // being able to use the same code paths on server and client and having a shell statsig provider.
+  if (typeof window === 'undefined') {
+    return {client: new StatsigClient(clientKey, user, statsigOptions)};
+  }
+
+  return useClientAsyncInit(clientKey, user, statsigOptions);
 }
 
 // Log events in Statsig
