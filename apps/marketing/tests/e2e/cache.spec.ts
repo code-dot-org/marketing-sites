@@ -17,7 +17,7 @@ test.describe('Caching Tests', async () => {
 
       const cacheControlHeader = response?.headers()['cache-control'];
       expect(cacheControlHeader).toMatch(
-        /^s-maxage=900, stale-while-revalidate=\d+$/,
+        /^s-maxage=900, stale-while-revalidate=\d, stale-if-error=\d$/,
       );
     });
   });
