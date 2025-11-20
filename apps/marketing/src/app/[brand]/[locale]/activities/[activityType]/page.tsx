@@ -110,6 +110,7 @@ export default async function ActivitiesPage({
   const getSearchFacets = async () => {
     const facetResults: Results<Activity> = await search(db, {
       facets: {
+        organization: {},
         ages: {},
         topic: {},
         activityType: {},

@@ -53,7 +53,7 @@ const ActivityCollection: React.FC<ActivityCollectionProps> = ({
               cardId: tutorialID,
               cardTitle: title,
             }}
-            chipLabels={[organization] as string[]}
+            chipLabels={[organization as unknown as string]}
             imageAspectRatio="4/3"
           />
         </Box>

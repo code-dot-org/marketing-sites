@@ -4,7 +4,7 @@
 export const ActivitySchema = {
   title: 'string',
   image: 'string',
-  organization: 'string',
+  organization: 'enum[]',
   ages: 'enum[]',
   languageProgramming: 'enum[]',
   shortDescription: 'string',

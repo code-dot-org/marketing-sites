@@ -4,6 +4,7 @@ import {ActivitySchema} from '@/modules/activityCatalog/orama/schema/ActivitySch
 import {
   Activity,
   OramaActivity,
+  OramaEnum,
 } from '@/modules/activityCatalog/types/Activity';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {Entry} from '@/types/contentful/Entry';
@@ -36,7 +37,7 @@ export function createDatabase(
       sortKey,
       title: fields.title || '',
       image: getAbsoluteImageUrl(fields.image) || '',
-      organization: fields.organization || '',
+      organization: new Array(fields.organization) as unknown as OramaEnum,
       ages: fields.ages || [],
       languageProgramming: fields.languageProgramming || [],
       shortDescription: fields.shortDescription || '',

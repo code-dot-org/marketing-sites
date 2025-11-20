@@ -16,6 +16,8 @@ import ActivityCollection from '@/components/csforall/activityCollection/Activit
 import {ActivitySchema} from '@/modules/activityCatalog/orama/schema/ActivitySchema';
 import {OramaActivity} from '@/modules/activityCatalog/types/Activity';
 
+import {FACET_CONFIG} from './config/facets';
+
 interface ActivityCatalogProps {
   serializedOramaDb: string | ArrayBuffer | Buffer<ArrayBuffer>;
   activities: InternalTypedDocument<OramaActivity>[];
@@ -202,7 +204,15 @@ const ActivityCatalog = ({
    * @param facetName - The name of the facet being changed.
    * @param facetValue - The value of the facet being toggled.
    */
-  const handleFacetChange = (facetName: string, facetValue: string) => {
+  const handleCheckboxFacetChange = (
+    facetName: string,
+    facetValue: string | string[],
+  ) => {
+    if (Array.isArray(facetValue)) {
+      // If an array is passed, we only handle single value toggles for checkboxes
+      return;
+    }
+
     const newSelectedFacets = {...selectedFacets};
 
     // Initialize the set for this facet if it doesn't exist yet
@@ -222,6 +232,45 @@ const ActivityCatalog = ({
     setSelectedFacets(newSelectedFacets);
     // Update the URL query parameters
     serializeClientState(searchTerm, newSelectedFacets);
+  };
+
+  /**
+   * Handles changes to dropdown facet selections.
+   * @param facetName - The name of the facet being changed.
+   * @param facetValue - The value of the facet being selected.
+   */
+  const handleDropdownFacetChange = (
+    facetName: string,
+    facetValue: string | string[],
+  ) => {
+    if (!Array.isArray(facetValue)) {
+      // For dropdowns, we expect an array of selected values
+      return;
+    }
+
+    const newSelectedFacets = {...selectedFacets};
+
+    newSelectedFacets[facetName] = new Set<string>(facetValue);
+
+    setSelectedFacets(newSelectedFacets);
+    // Update the URL query parameters
+    serializeClientState(searchTerm, newSelectedFacets);
+  };
+
+  const handleFacetChange = (
+    facetName: string,
+    facetValue: string | string[],
+  ) => {
+    const facetConfig = FACET_CONFIG[facetName];
+
+    switch (facetConfig?.type) {
+      case 'checkbox':
+        return handleCheckboxFacetChange(facetName, facetValue);
+      case 'dropdown':
+        return handleDropdownFacetChange(facetName, facetValue);
+      default:
+        return;
+    }
   };
 
   const handleClearAll = () => {

@@ -9,6 +9,8 @@ import {
   FormControlLabel,
   FormGroup,
   Typography,
+  Autocomplete,
+  TextField,
 } from '@mui/material';
 import {FacetResult} from '@orama/orama';
 import {ChangeEvent} from 'react';
@@ -20,7 +22,7 @@ interface FacetPanelProps {
   facets: FacetResult | undefined;
   selectedFacets: Record<string, Set<string>>;
   searchTerm: string | undefined;
-  onFacetChange: (facet: string, facetValue: string) => void;
+  onFacetChange: (facet: string, facetValue: string | string[]) => void;
   onSearchTermChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onClearAll: () => void;
 }
@@ -29,8 +31,69 @@ const FacetBar = ({facets, selectedFacets, onFacetChange}: FacetPanelProps) => {
     return null;
   }
 
-  const handleChange = (facet: string, facetValue: string) => {
+  const handleChange = (facet: string, facetValue: string | string[]) => {
     onFacetChange(facet, facetValue);
+  };
+
+  const getCheckboxFacets = (facet: string, facetValues: string[]) => {
+    return (
+      <FormGroup>
+        {facetValues.map(facetValue => {
+          return (
+            <FormControlLabel
+              key={facetValue}
+              control={
+                <Checkbox
+                  checked={selectedFacets[facet]?.has(facetValue) || false}
+                  onChange={() => handleChange(facet, facetValue)}
+                  sx={{color: 'muted.contrastText'}}
+                />
+              }
+              label={<Typography variant="body4">{facetValue}</Typography>}
+            />
+          );
+        })}
+      </FormGroup>
+    );
+  };
+
+  const getDropdownFacets = (facet: string, facetValues: string[]) => {
+    return (
+      <Autocomplete
+        multiple
+        options={facetValues}
+        value={Array.from(selectedFacets[facet] ?? [])}
+        onChange={(_, newValue) => {
+          handleChange(facet, newValue);
+        }}
+        renderInput={params => (
+          <TextField
+            {...params}
+            variant="outlined"
+            aria-label={FACET_CONFIG[facet]?.label || facet}
+            size="small"
+          />
+        )}
+        slotProps={{
+          listbox: {
+            sx: {
+              typography: 'body4',
+            },
+          },
+        }}
+      />
+    );
+  };
+
+  const getFacetComponent = (facet: string, facetValues: string[]) => {
+    switch (FACET_CONFIG[facet]?.type) {
+      case 'checkbox':
+        return getCheckboxFacets(facet, facetValues);
+      case 'dropdown':
+        return getDropdownFacets(facet, facetValues);
+      default:
+        return undefined;
+    }
   };
 
   const getDropdowns = () => {
@@ -65,27 +128,7 @@ const FacetBar = ({facets, selectedFacets, onFacetChange}: FacetPanelProps) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <FormGroup>
-              {facetValues.map(facetValue => {
-                return (
-                  <FormControlLabel
-                    key={facetValue}
-                    control={
-                      <Checkbox
-                        checked={
-                          selectedFacets[facet]?.has(facetValue) || false
-                        }
-                        onChange={() => handleChange(facet, facetValue)}
-                        sx={{color: 'muted.contrastText'}}
-                      />
-                    }
-                    label={
-                      <Typography variant="body4">{facetValue}</Typography>
-                    }
-                  />
-                );
-              })}
-            </FormGroup>
+            {getFacetComponent(facet, facetValues)}
           </AccordionDetails>
         </Accordion>
       );
