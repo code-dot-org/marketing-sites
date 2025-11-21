@@ -1,5 +1,6 @@
 'use client';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import {Alert} from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -41,6 +42,7 @@ const ActivityCatalog = ({
   >({});
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isFacetDrawerOpen, setIsFacetDrawerOpen] = useState<boolean>(false);
+  const [isClientLoading, setIsClientLoading] = useState<boolean>(true);
 
   const searchParams = useSearchParams();
   const db = createDatabase(contentfulActivities);
@@ -65,6 +67,8 @@ const ActivityCatalog = ({
 
     // Restore the search results based on the restored state
     updateSearchResults(termFromSearchParam, facetsFromUrl);
+
+    setIsClientLoading(false);
   };
 
   /**
@@ -328,6 +332,11 @@ const ActivityCatalog = ({
             </Button>
           </Box>
           <ActivityCollection activities={results} />
+          {isClientLoading && (
+            <Alert severity="info" sx={{justifyContent: 'center', mt: 2}}>
+              Loading more activities...
+            </Alert>
+          )}
         </Grid>
       </Grid>
     </Box>
