@@ -323,4 +323,21 @@ describe('withLocale middleware', () => {
       'https://test.code.org/zh-Hant?campaign=summer',
     );
   });
+
+  it('should not redirect if the pathname matches an exclusion rule', async () => {
+    const request = {
+      nextUrl: {
+        pathname: '/assets/abc',
+        url: 'https://test.code.org/assets/abc',
+        search: '',
+      },
+      cookies: {get: jest.fn()},
+      headers: {get: jest.fn()},
+      url: 'https://test.code.org/assets/health',
+    } as unknown as NextRequest;
+
+    await withLocale(next)(request, mockEvent);
+
+    expect(next).toHaveBeenCalledWith(request, mockEvent);
+  });
 });
