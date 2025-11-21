@@ -20,8 +20,10 @@ export const withBrand: MiddlewareFactory = next => {
   return async (request: NextRequest, event: NextFetchEvent) => {
     const {pathname} = request.nextUrl;
 
-    // Do not add brand for static asset directories
-    if (pathname.startsWith('/assets')) {
+    // Do not add brand for static asset directories in development
+    // /assets does not exist in production, it is only used by Next.js dev server
+    // Those assets are served via /_next/static/
+    if (process.env.NODE_ENV === 'development' && pathname.startsWith('/assets')) {
       return await next(request, event);
     }
 
