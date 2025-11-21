@@ -1,5 +1,4 @@
 import {Results, search} from '@orama/orama';
-import {persist} from '@orama/plugin-data-persistence';
 import {Metadata} from 'next';
 import {notFound} from 'next/navigation';
 import {Suspense} from 'react';
@@ -90,19 +89,14 @@ export default async function ActivitiesPage({
   }
 
   // Fetch activities from Contentful
-  const contentfulActivities = await getContentfulActivities(activityType);
+  const contentfulActivities = (await getContentfulActivities(
+    activityType,
+  )) as unknown as Entry<Activity>[];
 
   // Create Orama database from Contentful activities
   const db = createDatabase(
     contentfulActivities as unknown as Entry<Activity>[],
   );
-
-  /**
-   * Serializes the Orama database for client-side use
-   */
-  const getSerializedOramaDatabase = async () => {
-    return await persist(db, 'json');
-  };
 
   /**
    * Finds all unique values for each facet in the Orama database.
@@ -132,7 +126,7 @@ export default async function ActivitiesPage({
   const getAllActivities = async () => {
     const allActivityResults = await search(db, {
       term: '',
-      limit: 200,
+      limit: 8,
       sortBy: {property: 'sortKey', order: 'ASC'},
     });
 
@@ -144,7 +138,7 @@ export default async function ActivitiesPage({
       <ActivitiesHero activityType={activityType as ActivityType} />
       <Suspense>
         <ActivityCatalog
-          serializedOramaDb={await getSerializedOramaDatabase()}
+          contentfulActivities={contentfulActivities}
           activities={await getAllActivities()}
           facets={await getSearchFacets()}
         />

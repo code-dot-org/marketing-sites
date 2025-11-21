@@ -44,6 +44,9 @@ test.describe('Activity Catalog', () => {
       page.getByRole('heading', {name: 'Explore Hour of Code Activities'}),
     ).toBeVisible();
     await expect(page.getByPlaceholder('Search...')).toBeVisible();
+    await expect(
+      page.getByText('Loading more activities...'),
+    ).not.toBeVisible();
 
     // Click the "13-18" label element
     await page.locator('label').filter({hasText: '13-18'}).click();
