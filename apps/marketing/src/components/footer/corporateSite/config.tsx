@@ -35,6 +35,11 @@ export const SITE_LINKS_CORPORATE_SITE = [
     href: '/about',
   },
   {
+    key: 'careers',
+    label: 'Careers',
+    href: '/about/careers',
+  },
+  {
     key: 'partners',
     label: 'Partners',
     href: '/partners',
