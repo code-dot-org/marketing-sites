@@ -125,7 +125,6 @@ const FooterMui: React.FC<FooterProps> = ({
           size={12}
           display="flex"
           justifyContent="space-between"
-          alignItems="center"
           flexWrap="wrap-reverse"
           gap={4}
         >
