@@ -753,11 +753,19 @@ Resources:
       ReplicationGroupId: !Sub "marketing-sites-${SubdomainName}-${EnvironmentType}"
       CacheParameterGroupName: !Ref RedisParameterGroup
       EngineVersion: 7.1
+      # In production, the c7gn.large instance type is used because the marketing sites application is network-bound rather than CPU or memory-bound.
+      # The c7gn.large instance type provides high network baseline performance and an even more generous network burst capability.
+      # This Redis cluster is only used to store Next.js full page router cache and some internal data caching, both of which are network-intensive operations.
+      # In non-production environments, the t4g.micro instance type is sufficient to handle the lower traffic levels.
       CacheNodeType: !If
         - IsProductionEnvironment
-        - cache.r7g.large
+        - cache.c7gn.large
         - cache.t4g.micro
       NumNodeGroups: 1
+      # One read replica to offload read traffic from the primary node.
+      # The primary nodes handles write traffic only.
+      # In case of failover, the replica is promoted to primary.
+      # In case of horizontal scaling, more replicas can be added to distribute read traffic.
       ReplicasPerNodeGroup: 1
       SecurityGroupIds:
         - !Ref RedisSecurityGroup
