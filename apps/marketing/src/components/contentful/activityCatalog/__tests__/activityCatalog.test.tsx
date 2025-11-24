@@ -29,15 +29,14 @@ jest.mock(
 
 // Mock Orama and plugin-data-persistence
 jest.mock('@orama/orama', () => ({
+  create: jest.fn(),
+  insertMultiple: jest.fn(),
   search: jest.fn().mockResolvedValue({
     hits: [
       {document: {id: 1, title: 'Test Activity', languagesText: 'English'}},
       {document: {id: 2, title: 'Another Activity', languagesText: 'Spanish'}},
     ],
   }),
-}));
-jest.mock('@orama/plugin-data-persistence', () => ({
-  restore: jest.fn().mockResolvedValue({}),
 }));
 
 // Mock next/navigation
@@ -56,6 +55,84 @@ const mockFacets: any = {
 
 const useSearchParamsMock = useSearchParams as jest.Mock;
 
+// Adjust mockContentfulActivities to match the Activity type
+const mockContentfulActivities: any = [
+  {
+    sys: {
+      id: '1',
+      type: 'Entry',
+      createdAt: '2025-01-01T00:00:00Z',
+      updatedAt: '2025-01-01T00:00:00Z',
+      locale: 'en-US',
+      contentType: {
+        sys: {id: 'activity', type: 'Link', linkType: 'ContentType'},
+      },
+      revision: 1,
+      space: {sys: {id: 'space-id', type: 'Link', linkType: 'Space'}},
+      environment: {sys: {id: 'env-id', type: 'Link', linkType: 'Environment'}},
+      publishedVersion: 1,
+    },
+    metadata: {tags: []},
+    fields: {
+      title: 'Test Activity',
+      image: 'https://localhost/test-image.jpg',
+      organization: ['Test Organization'],
+      ages: ['10-12'],
+      languageProgramming: ['JavaScript'],
+      shortDescription: 'A short description.',
+      longDescription: 'A long description.',
+      primaryLinkRef: 'https://example.com',
+      technologyClassroom: ['Tech'],
+      topic: ['Topic'],
+      activityType: ['hour-of-code'],
+      length: ['1 hour'],
+      accessibilitys: ['Accessible'],
+      languagesText: 'English',
+      supportedLanguages: ['English'],
+      standards: 'Standard',
+      tutorialID: 'tutorial-1',
+      featuredPosition: 1,
+    },
+  },
+  {
+    sys: {
+      id: '2',
+      type: 'Entry',
+      createdAt: '2025-01-02T00:00:00Z',
+      updatedAt: '2025-01-02T00:00:00Z',
+      locale: 'en-US',
+      contentType: {
+        sys: {id: 'activity', type: 'Link', linkType: 'ContentType'},
+      },
+      revision: 1,
+      space: {sys: {id: 'space-id', type: 'Link', linkType: 'Space'}},
+      environment: {sys: {id: 'env-id', type: 'Link', linkType: 'Environment'}},
+      publishedVersion: 1,
+    },
+    metadata: {tags: []},
+    fields: {
+      title: 'Another Activity',
+      image: 'https://localhost/another-image.jpg',
+      organization: ['Another Organization'],
+      ages: ['13-15'],
+      languageProgramming: ['Python'],
+      shortDescription: 'Another short description.',
+      longDescription: 'Another long description.',
+      primaryLinkRef: 'https://example.org',
+      technologyClassroom: ['Another Tech'],
+      topic: ['Another Topic'],
+      activityType: ['hour-of-ai'],
+      length: ['2 hours'],
+      accessibilitys: ['Accessible'],
+      languagesText: 'Spanish',
+      supportedLanguages: ['Spanish'],
+      standards: 'Another Standard',
+      tutorialID: 'tutorial-2',
+      featuredPosition: 2,
+    },
+  },
+];
+
 describe('ActivityCatalog', () => {
   beforeEach(() => {
     useSearchParamsMock.mockReturnValue({
@@ -72,7 +149,7 @@ describe('ActivityCatalog', () => {
   it('renders FacetDrawer, FacetBar, and ActivityCollection', async () => {
     render(
       <ActivityCatalog
-        serializedOramaDb="{}"
+        contentfulActivities={mockContentfulActivities}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -85,7 +162,7 @@ describe('ActivityCatalog', () => {
   it('updates searchTerm when typing in search box', async () => {
     render(
       <ActivityCatalog
-        serializedOramaDb="{}"
+        contentfulActivities={mockContentfulActivities}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -101,7 +178,7 @@ describe('ActivityCatalog', () => {
   it('opens and closes facet drawer', () => {
     render(
       <ActivityCatalog
-        serializedOramaDb="{}"
+        contentfulActivities={mockContentfulActivities}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -124,7 +201,7 @@ describe('ActivityCatalog', () => {
     });
     render(
       <ActivityCatalog
-        serializedOramaDb="{}"
+        contentfulActivities={mockContentfulActivities}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -145,7 +222,7 @@ describe('ActivityCatalog', () => {
     });
     render(
       <ActivityCatalog
-        serializedOramaDb="{}"
+        contentfulActivities={mockContentfulActivities}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -161,7 +238,7 @@ describe('ActivityCatalog', () => {
   it('renders with undefined facets', () => {
     render(
       <ActivityCatalog
-        serializedOramaDb="{}"
+        contentfulActivities={mockContentfulActivities}
         activities={mockActivities}
         facets={undefined}
       />,
@@ -173,7 +250,7 @@ describe('ActivityCatalog', () => {
   it('search box has correct aria-label', () => {
     render(
       <ActivityCatalog
-        serializedOramaDb="{}"
+        contentfulActivities={mockContentfulActivities}
         activities={mockActivities}
         facets={mockFacets}
       />,

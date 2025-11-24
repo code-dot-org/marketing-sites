@@ -1,11 +1,11 @@
 'use client';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import {Alert} from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import {FacetResult, InternalTypedDocument, Orama, search} from '@orama/orama';
-import {restore} from '@orama/plugin-data-persistence';
+import {FacetResult, InternalTypedDocument, search} from '@orama/orama';
 import {useSearchParams} from 'next/navigation';
 import {ChangeEvent, ComponentProps, useEffect, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
@@ -13,19 +13,23 @@ import {useDebouncedCallback} from 'use-debounce';
 import FacetBar from '@/components/contentful/activityCatalog/facetBar/facetBar';
 import FacetDrawer from '@/components/contentful/activityCatalog/facetDrawer/facetDrawer';
 import ActivityCollection from '@/components/csforall/activityCollection/ActivityCollection';
-import {ActivitySchema} from '@/modules/activityCatalog/orama/schema/ActivitySchema';
-import {OramaActivity} from '@/modules/activityCatalog/types/Activity';
+import {createDatabase} from '@/modules/activityCatalog/orama/createDatabase';
+import {
+  Activity,
+  OramaActivity,
+} from '@/modules/activityCatalog/types/Activity';
+import {Entry} from '@/types/contentful/Entry';
 
 import {FACET_CONFIG} from './config/facets';
 
 interface ActivityCatalogProps {
-  serializedOramaDb: string | ArrayBuffer | Buffer<ArrayBuffer>;
+  contentfulActivities: Entry<Activity>[];
   activities: InternalTypedDocument<OramaActivity>[];
   facets: FacetResult | undefined;
 }
 
 const ActivityCatalog = ({
-  serializedOramaDb,
+  contentfulActivities,
   activities,
   facets,
 }: ActivityCatalogProps) => {
@@ -33,34 +37,20 @@ const ActivityCatalog = ({
 
   const [results, setResults] =
     useState<InternalTypedDocument<OramaActivity>[]>(activities);
-  const [db, setDb] = useState<Orama<typeof ActivitySchema> | undefined>(
-    undefined,
-  );
   const [selectedFacets, setSelectedFacets] = useState<
     Record<string, Set<string>>
   >({});
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isFacetDrawerOpen, setIsFacetDrawerOpen] = useState<boolean>(false);
+  const [isClientLoading, setIsClientLoading] = useState<boolean>(true);
 
   const searchParams = useSearchParams();
-
-  // On load, restore the Orama database from the serialized data from the server on the browser.
-  useEffect(() => {
-    restore<Orama<typeof ActivitySchema>>('json', serializedOramaDb).then(
-      restoredDb => {
-        setDb(restoredDb);
-        deserializeClientState();
-      },
-    );
-  }, []);
+  const db = createDatabase(contentfulActivities);
 
   // Populate selected facets and search term from the URL search params on load and when they change.
   useEffect(() => {
-    // The database may not be loaded yet, only hydrate when it is.
-    if (db) {
-      deserializeClientState();
-    }
-  }, [db, searchParams]);
+    deserializeClientState();
+  }, [searchParams]);
 
   /**
    * Hydrates the client state (search term and selected facets) from the URL search params.
@@ -77,6 +67,8 @@ const ActivityCatalog = ({
 
     // Restore the search results based on the restored state
     updateSearchResults(termFromSearchParam, facetsFromUrl);
+
+    setIsClientLoading(false);
   };
 
   /**
@@ -340,6 +332,11 @@ const ActivityCatalog = ({
             </Button>
           </Box>
           <ActivityCollection activities={results} />
+          {isClientLoading && (
+            <Alert severity="info" sx={{justifyContent: 'center', mt: 2}}>
+              Loading more activities...
+            </Alert>
+          )}
         </Grid>
       </Grid>
     </Box>
