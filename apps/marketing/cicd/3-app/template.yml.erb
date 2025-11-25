@@ -763,7 +763,7 @@ Resources:
         - cache.t4g.micro
       NumNodeGroups: 1
       # One read replica to offload read traffic from the primary node.
-      # The primary nodes handles write traffic only.
+      # The primary node handles write traffic only.
       # In case of failover, the replica is promoted to primary.
       # In case of horizontal scaling, more replicas can be added to distribute read traffic.
       ReplicasPerNodeGroup: 1
