@@ -347,6 +347,15 @@ Resources:
         WebACLId: <%= options[:web_application_firewall] %>
 <% end %>
 
+  # Enable AWS Shield Advanced protection for the CloudFront Distribution in production environments
+  # For cost optimization, Shield Advanced is only enabled in production environments as this environment is the most likely to be targeted by DDoS attacks.
+  ShieldProtection:
+    Type: AWS::Shield::Protection
+    Condition: IsProductionEnvironment
+    Properties:
+      Name: !Sub "${AWS::StackName}-Shield"
+      ResourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}"
+
   ####################################
   # Load Balancer Resources          #
   ####################################
