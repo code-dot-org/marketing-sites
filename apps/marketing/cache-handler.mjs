@@ -58,7 +58,8 @@ async function setupRedisClient(endpoint) {
  */
 function createLRURedisHandler(options) {
   const lruHandler = options.lruHandler;
-  const redisHandler = options.redisHandler;
+  const redisReadHandler = options.redisReadHandler;
+  const redisWriteHandler = options.redisWriteHandler;
 
   return {
     name: 'lru-redis',
@@ -76,7 +77,7 @@ function createLRURedisHandler(options) {
       }
 
       // Fallback to Redis on miss
-      const redisResult = await redisHandler.get(key, ctx);
+      const redisResult = await redisReadHandler.get(key, ctx);
       if (redisResult !== null) {
         // Auto-populate LRU if found in Redis
         await lruHandler.set(key, redisResult);
@@ -94,7 +95,7 @@ function createLRURedisHandler(options) {
     async set(key, value) {
       await Promise.all([
         lruHandler.set(key, value),
-        redisHandler.set(key, value),
+        redisWriteHandler.set(key, value),
       ]);
     },
     /**
@@ -104,7 +105,7 @@ function createLRURedisHandler(options) {
     async revalidateTag(tag) {
       await Promise.all([
         lruHandler.revalidateTag(tag),
-        redisHandler.revalidateTag(tag),
+        redisWriteHandler.revalidateTag(tag),
       ]);
     },
     /**
@@ -112,7 +113,10 @@ function createLRURedisHandler(options) {
      * @param key - The cache key.
      */
     async delete(key) {
-      await Promise.all([lruHandler.delete(key), redisHandler.delete(key)]);
+      await Promise.all([
+        lruHandler.delete(key),
+        redisWriteHandler.delete(key),
+      ]);
     },
   };
 }
@@ -122,11 +126,15 @@ function createLRURedisHandler(options) {
  * @returns {Promise<CacheHandlerConfig>} - The cache handler configuration.
  */
 async function createCacheConfig() {
-  const redisClient = await setupRedisClient(process.env.REDIS_WRITE_URL);
+  const redisWriteClient = await setupRedisClient(process.env.REDIS_WRITE_URL);
+  const redisReadClient = await setupRedisClient(process.env.REDIS_READ_URL);
   const lruCache = createLruHandler();
 
   // If no Redis, (e.g. Redis is down), use LRU only to avoid latency and downtime.
-  if (!redisClient) {
+  if (!redisReadClient || !redisWriteClient) {
+    console.debug(
+      `Using LRU cache only as Redis is not configured or unavailable.`,
+    );
     const config = {handlers: [lruCache]};
     global.cacheHandlerConfigPromise = null;
     global.cacheHandlerConfig = config;
@@ -134,8 +142,13 @@ async function createCacheConfig() {
     return config;
   }
 
-  const redisCacheHandler = createRedisHandler({
-    client: redisClient,
+  const redisReadCacheHandler = createRedisHandler({
+    client: redisReadClient,
+    keyPrefix: 'marketing-sites:::',
+  });
+
+  const redisWriteCacheHandler = createRedisHandler({
+    client: redisWriteClient,
     keyPrefix: 'marketing-sites:::',
   });
 
@@ -143,7 +156,8 @@ async function createCacheConfig() {
     handlers: [
       createLRURedisHandler({
         lruHandler: lruCache,
-        redisHandler: redisCacheHandler,
+        redisReadHandler: redisReadCacheHandler,
+        redisWriteHandler: redisWriteCacheHandler,
       }),
     ],
   };
