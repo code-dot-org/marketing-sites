@@ -1,0 +1,66 @@
+<%
+# Determine if production domain should be enabled
+is_production = options[:environment_type] == 'production'
+has_production_domain = options[:production_domain_name] && !options[:production_domain_name].empty?
+has_production_hosted_zone = options[:production_hosted_zone_id] && !options[:production_hosted_zone_id].empty?
+enable_production_domain = is_production && has_production_domain && has_production_hosted_zone
+
+# Build the domain display string for the description
+base_domain_url = "https://#{options[:subdomain_name]}.#{options[:base_domain_name]}"
+domain_display = enable_production_domain ?
+  "https://#{options[:production_domain_name]} and #{base_domain_url}" :
+  base_domain_url
+%>
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Provision CloudFront access logs to S3 for a marketing site (<%=domain_display%>) in us-east-1 (Cloudfront is a global service; its log configurations must be in us-east-1).
+
+# Market site domain names use this naming convention:
+# https://docs.google.com/spreadsheets/d/1abCYr1tFEs-Ag5lyq5m0r5zQi_ioGgr-Th3NAdocQPQ/edit?pli=1&gid=0#gid=0
+Parameters:
+  SubdomainName:
+    Type: String
+    Description: Subdomain name for this marketing site (e.g. 'hourofcode' in 'hourofcode.marketing-sites.test-code.org').
+  EnvironmentType:
+    Type: String
+    Default: development
+    Description: Is this a 'development', 'test', or 'production' system?
+  CloudFrontDistributionId:
+    Type: String
+    Description: AWS CloudFront Distribution ID to provision access logs.
+
+Conditions:
+  IsUSEast1: !Equals [!Ref "AWS::Region", "us-east-1"]
+
+Resources:
+  CloudFrontLogsDeliveryDestination:
+    Condition: IsUSEast1
+    Type: AWS::Logs::DeliveryDestination
+    Properties:
+      Name: !Sub "CFLogsDest-${AWS::StackName}"
+      DestinationResourceArn: !Sub "arn:${AWS::Partition}:s3:::cdo-logs"
+      DeliveryDestinationType: S3
+      OutputFormat: parquet
+      Tags:
+        - Key: Name
+          Value: !Sub "marketing-sites-${SubdomainName}-${EnvironmentType}-cf-logs-dest"
+  CloudFrontLogsDeliverySource:
+    Condition: IsUSEast1
+    Type: AWS::Logs::DeliverySource
+    Properties:
+      Name: !Sub "CFLogsSource-${AWS::StackName}"
+      ResourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId}'
+      LogType: ACCESS_LOGS
+      Tags:
+        - Key: Name
+          Value: !Sub "marketing-sites-${SubdomainName}-${EnvironmentType}-cf-logs-source"
+  CloudFrontLogsDelivery:
+    Condition: IsUSEast1
+    Type: AWS::Logs::Delivery
+    Properties:
+      DeliveryDestinationArn: !GetAtt CloudFrontLogsDeliveryDestination.Arn
+      DeliverySourceName: !Ref CloudFrontLogsDeliverySource
+      S3SuffixPath: !Sub '/{DistributionId}/{yyyy}/{MM}/{dd}/{HH}'
+      Tags:
+        - Key: Name
+          Value: !Sub "marketing-sites-${SubdomainName}-${EnvironmentType}-cf-logs-delivery"

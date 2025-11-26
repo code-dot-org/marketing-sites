@@ -11,6 +11,7 @@ require_relative '../config'
 # Hard-coded template paths
 MARKETING_SITE_TEMPLATE_FILE = 'template.yml.erb'
 CERTIFICATE_TEMPLATE_FILE = 'cloudfront-certificate.yml.erb'
+CLOUDFRONT_LOGS_TEMPLATE_FILE = 'cloudfront-logs.yml.erb'
 
 # Default options
 options = {
@@ -175,7 +176,7 @@ def execute_command(command, description)
 
   if status.success?
     puts "Success: #{description}"
-    puts stdout unless stdout.empty?
+    puts stdout unless ENV["CI"] == 'true' || stdout.empty?
     return stdout
   else
     puts "Error: #{description} failed"
@@ -331,6 +332,7 @@ begin
   puts "Deployment configuration:"
   puts "  Marketing Site Template: #{MARKETING_SITE_TEMPLATE_FILE}"
   puts "  Certificate Template: #{CERTIFICATE_TEMPLATE_FILE}"
+  puts "  CloudFront Logs Template: #{CLOUDFRONT_LOGS_TEMPLATE_FILE}"
   options.each do |key, value|
     # Only show production domain options if they have values
     production_domain_options = [:production_domain_name, :production_hosted_zone_id]
@@ -432,6 +434,42 @@ begin
         'site-type' => options[:site_type]
       },
       capabilities: %w(CAPABILITY_IAM CAPABILITY_NAMED_IAM) # Marketing Sites templates creates ECS Task / Task Exec Roles.
+    )
+
+    # Step 6: Get Cloudfront distribution id from stack output.
+    puts "\n=== Step 6: Getting CloudFront Distribution ID ==="
+    cloudfront_distribution_id = get_stack_output(options[:stack_name], "CloudFrontDistributionId", options[:region])
+
+    # Generate Cloudfront Logs stack name
+    fully_qualified_domain_name = "#{options[:subdomain_name]}.#{options[:base_domain_name]}"
+    cloudfront_logs_stack_name = "#{fully_qualified_domain_name.tr('.', '-')}-cf-logs"
+
+    # Step 7: Process CloudFront Logs template.
+    puts "\n=== Step 7: Processing CloudFront Logs Template ==="
+    cloudfront_logs_template_path = process_template(
+      CLOUDFRONT_LOGS_TEMPLATE_FILE,
+      "cloudfront_logs_template_#{Time.now.to_i}.yml",
+      binding
+    )
+
+    # Step 8: Deploy CloudFront Logs stack.
+    puts "\n=== Step 8: Deploying CloudFront Logs Stack in us-east-1 (always) ==="
+    cloudfront_logs_stack_parameters = {
+      "SubdomainName" => options[:subdomain_name],
+      "EnvironmentType" => options[:environment_type],
+      "CloudFrontDistributionId" => cloudfront_distribution_id
+    }
+
+    deploy_stack(
+      stack_name: cloudfront_logs_stack_name,
+      template_file: cloudfront_logs_template_path,
+      parameters: cloudfront_logs_stack_parameters,
+      region: 'us-east-1',
+      role_arn: options[:role_arn],
+      tags: {
+        'environment-type' => options[:environment_type],
+        'site-type' => options[:site_type]
+      }
     )
 
     puts "\nDeployment process completed successfully!"

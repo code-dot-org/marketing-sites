@@ -1262,6 +1262,38 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:shield::${AWS::AccountId}:protection/*"
                   - !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/*"
+
+              # Cloudfront Log Delivery
+              - Sid: CloudFrontLogs
+                Effect: Allow
+                Action:
+                  - logs:GetDeliverySource
+                  - logs:DeleteDeliverySource
+                  - logs:PutDeliverySource
+                  - logs:TagResource
+                  - logs:ListTagsForResource
+                  - cloudfront:AllowVendedLogDeliveryForResource
+                  - logs:GetDeliveryDestination
+                  - logs:PutDeliveryDestination
+                  - logs:DeleteDeliveryDestination
+                  - logs:GetDelivery
+                  - logs:CreateDelivery
+                  - logs:DeleteDelivery
+                  - logs:UpdateDeliveryConfiguration
+                  - logs:DeleteResourcePolicy
+                Resource:
+                  - !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/*"
+                  - !Sub "arn:aws:logs:*:${AWS::AccountId}:delivery:*"
+<%    all_hyphenated_domains.each do |hyphenated_domain| %>
+                  - !Sub "arn:aws:logs:*:${AWS::AccountId}:delivery-source:CFLogsSource-*<%=hyphenated_domain%>-cf-logs"
+                  - !Sub "arn:aws:logs:*:${AWS::AccountId}:delivery-destination:CFLogsDest-*<%=hyphenated_domain%>-cf-logs"
+<%    end %>
+
+              - Sid: CloudFrontLogDelivery
+                Effect: Allow
+                Action:
+                  - logs:DescribeDeliveries
+                Resource: '*'
 <% end %>
 
 Outputs:
