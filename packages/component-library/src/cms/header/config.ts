@@ -112,7 +112,7 @@ export function getDefaultHeaderProps({
       {
         key: 'musicLab',
         label: 'Music Lab',
-        href: `${studioUrl}/projects/music/new`,
+        href: '/music',
         image: musicLabImage,
         description: 'Create music with code',
       },
