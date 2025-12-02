@@ -16,6 +16,7 @@ import {CollectionProps} from '../types';
 
 type ItemFields = {
   title: EntryFields.Text;
+  subtitle: EntryFields.Text;
   actionBlockOverline: EntryFields.Text;
   shortDescription: EntryFields.Text;
   image: ExperienceAsset;
@@ -65,6 +66,7 @@ const CardCollection: React.FC<CardCollectionProps> = ({
       const {
         actionBlockOverline,
         title,
+        subtitle,
         shortDescription,
         image,
         primaryLinkRef,
@@ -87,6 +89,7 @@ const CardCollection: React.FC<CardCollectionProps> = ({
               id={tutorialID}
               overline={actionBlockOverline ? actionBlockOverline : undefined}
               title={title}
+              subtitle={subtitle}
               description={shortDescription}
               imageSrc={!hideImages ? getAbsoluteImageUrl(resolvedImage) : ''}
               primaryButton={
