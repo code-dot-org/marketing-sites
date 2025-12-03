@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {search} from '@orama/orama';
 import {render, screen, fireEvent, waitFor} from '@testing-library/react';
 import {useSearchParams} from 'next/navigation';
 
@@ -29,7 +30,7 @@ jest.mock(
 
 // Mock Orama and plugin-data-persistence
 jest.mock('@orama/orama', () => ({
-  create: jest.fn(),
+  create: jest.fn().mockReturnValue({}),
   insertMultiple: jest.fn(),
   search: jest.fn().mockResolvedValue({
     hits: [
@@ -192,7 +193,7 @@ describe('ActivityCatalog', () => {
 
   it('serializes and deserializes selected facets correctly', async () => {
     useSearchParamsMock.mockReturnValue({
-      get: (key: string) => (key === 'term' ? 'abc' : null),
+      get: (key: string) => (key === 'term' ? '' : null),
       toString: () => 'subject=Math%2CScience&grade=1',
       forEach: (cb: (value: string, key: string) => void) => {
         cb('Math%2CScience', 'subject');
@@ -256,5 +257,47 @@ describe('ActivityCatalog', () => {
       />,
     );
     expect(screen.getByLabelText('Search activities')).toBeInTheDocument();
+  });
+  it('excludes activities from specified organizations', async () => {
+    useSearchParamsMock.mockReturnValue({
+      get: (key: string) => (key === 'term' ? 'abc' : null),
+      toString: () =>
+        'organization=Test%20Organization&excludedOrganizations=Test%20Organization',
+    });
+
+    // Mock Orama search to return activities from "Test Organization"
+    jest.mocked(search).mockResolvedValueOnce({
+      hits: [
+        {
+          document: {
+            id: 1,
+            title: 'Test Activity',
+            organization: ['Test Organization'],
+            languagesText: 'English',
+          },
+        },
+        {
+          document: {
+            id: 2,
+            title: 'Another Activity',
+            organization: ['Another Organization'],
+            languagesText: 'Spanish',
+          },
+        },
+      ],
+    } as any);
+
+    render(
+      <ActivityCatalog
+        contentfulActivities={mockContentfulActivities}
+        activities={mockActivities}
+        facets={mockFacets}
+      />,
+    );
+    // Wait for "Test Activity" to not be on screen as it was excluded by organization
+    await waitFor(() => {
+      expect(screen.queryByText(/Test Activity/)).not.toBeInTheDocument();
+      expect(screen.getByText(/Another Activity/)).toBeInTheDocument();
+    });
   });
 });
