@@ -43,6 +43,16 @@ export const CardContentfulComponentDefinition: ComponentDefinition = {
         bindingSourceType: ['entry', 'manual'],
       },
     },
+    subtitle: {
+      displayName: 'Subtitle',
+      type: 'Text',
+      group: 'content',
+      description: 'The subtitle of the card.',
+      defaultValue: 'Card Subtitle',
+      validations: {
+        bindingSourceType: ['entry', 'manual'],
+      },
+    },
     description: {
       displayName: 'Description',
       type: 'Text',

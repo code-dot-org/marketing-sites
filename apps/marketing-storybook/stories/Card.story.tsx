@@ -13,6 +13,7 @@ type Story = StoryObj<typeof meta>;
 
 const defaultArgs = {
   title: 'Card Title',
+  subtitle: 'Card Subtitle',
   description: 'Card Description',
   imageSrc:
     '//contentful-images.code.org/90t6bu6vlf76/6fdNRFZbNXpiXQd6v7fHen/d6328a3a965b3daca5fb0375caf72064/image-component.png',
@@ -43,6 +44,8 @@ export const Default: Story = {
   play: async ({canvas}) => {
     const cardTitle = canvas.getByText('Card Title');
     await expect(cardTitle).toBeInTheDocument();
+
+    await expect(canvas.getByText('Card Subtitle')).toBeInTheDocument();
 
     const linkElements = canvas.getAllByRole('link');
     await expect(linkElements).toHaveLength(2);

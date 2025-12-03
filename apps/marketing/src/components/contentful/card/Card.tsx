@@ -20,6 +20,8 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   id?: string;
   /** Card title */
   title?: string;
+  /** Card subtitle */
+  subtitle?: string;
   /** Card description */
   description?: string;
   /** Card image */
@@ -51,6 +53,7 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 const Card: React.FC<CardProps> = ({
   id,
   title,
+  subtitle,
   chipLabels,
   description,
   imageSrc,
@@ -144,6 +147,16 @@ const Card: React.FC<CardProps> = ({
         <Typography variant="h6" component="h3" gutterBottom>
           {title}
         </Typography>
+        {subtitle && (
+          <Typography
+            variant="subtitle1"
+            component="h4"
+            gutterBottom
+            fontWeight="bolder"
+          >
+            {subtitle}
+          </Typography>
+        )}
         {chipLabels && chipLabels.length > 0 && (
           <div
             style={{marginBottom: 8, display: 'flex', gap: 4, flexWrap: 'wrap'}}

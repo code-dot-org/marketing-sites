@@ -13,6 +13,7 @@ jest.mock('@/providers/statsig/client', () => ({
 
 const defaultProps: CardProps = {
   title: 'Test Title',
+  subtitle: 'Test Subtitle',
   description: 'Test Description',
   imageSrc: '//images.code.org/test-image.jpg',
   imageHeight: '250',
@@ -41,9 +42,10 @@ describe('Card', () => {
     mockLogEvent.mockClear();
   });
 
-  it('renders title, description, and overline', () => {
+  it('renders title, subtitle, description, and overline', () => {
     render(<Card {...defaultProps} />);
     expect(screen.getByText('Test Title')).toBeInTheDocument();
+    expect(screen.getByText('Test Subtitle')).toBeInTheDocument();
     expect(screen.getByText('Test Description')).toBeInTheDocument();
     expect(screen.getByText('Test Overline')).toBeInTheDocument();
   });
