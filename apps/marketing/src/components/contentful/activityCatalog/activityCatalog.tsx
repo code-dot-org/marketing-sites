@@ -34,6 +34,9 @@ const ActivityCatalog = ({
   facets,
 }: ActivityCatalogProps) => {
   const allowedFacetSet = new Set(facets ? Object.keys(facets) : []);
+  // Add 'excludedOrganizations' to the allowed facet set because it is used as a post-filter
+  // (not as a search filter), so we need to recognize it during deserialization but exclude it from search queries.
+  allowedFacetSet.add('excludedOrganizations');
 
   const [results, setResults] =
     useState<InternalTypedDocument<OramaActivity>[]>(activities);
@@ -152,6 +155,11 @@ const ActivityCatalog = ({
      */
     const facetFilters = Object.entries(searchFacets).reduce(
       (acc, [facetName, _facetValues]) => {
+        if (facetName === 'excludedOrganizations') {
+          // Do not include excludedOrganizations in the search filters, it is a post-filter
+          return acc;
+        }
+
         const facetValues = _facetValues as Set<string>;
         if (facetValues.size > 0) {
           acc[facetName] = {containsAny: [...facetValues]};
@@ -172,7 +180,24 @@ const ActivityCatalog = ({
       limit: 200,
     });
 
-    const nextResults = searchResults.hits.map(hit => hit.document);
+    const nextResults = searchResults.hits
+      .filter(hit => {
+        // Remove activities from excluded organizations
+        const excludedOrganizations = searchFacets['excludedOrganizations'];
+
+        if (excludedOrganizations && excludedOrganizations.size > 0) {
+          if (Array.isArray(hit.document.organization)) {
+            for (const organization of hit.document.organization) {
+              if (excludedOrganizations.has(organization as string)) {
+                return false;
+              }
+            }
+          }
+        }
+
+        return true;
+      })
+      .map(hit => hit.document);
     setResults(nextResults);
   };
 
