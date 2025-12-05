@@ -9,6 +9,9 @@ interface ActivitiesHeroProps {
 }
 
 export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
+  const activityName =
+    activityType === ActivityType.HOUR_OF_CODE ? 'Hour of Code' : 'Hour of AI';
+
   return (
     <Box
       sx={{
@@ -29,9 +32,12 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
           mb: 1.5,
         }}
       >
-        {activityType === ActivityType.HOUR_OF_CODE
-          ? 'Explore Hour of Code Activities'
-          : 'Explore Hour of AI Activities'}
+        Explore {activityName} Activities
+      </Typography>
+
+      <Typography component="p" variant="body2">
+        Dive into the {activityName} activities below! As you explore, preview
+        each activity to find the ones that best match your learners' needs.
       </Typography>
 
       <Stack
