@@ -653,7 +653,7 @@ Resources:
       MaxCapacity: 20 # Upper limit for scaling, can be increased as needed
       MinCapacity:  !If
         - IsProductionEnvironment
-        - 3 # High Availability for production
+        - 6 # TODO: https://codedotorg.atlassian.net/browse/INF-1993 - Temporarily minimum of 6 during Hour of AI. 3 under normal usage. High Availability for production
         - 1
       ResourceId: !Sub "service/${EcsCluster}/${FargateService.Name}"
       RoleARN: !GetAtt ECSAutoScalingRole.Arn
