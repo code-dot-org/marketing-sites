@@ -72,7 +72,7 @@ const SHARED_LINKS = {
   },
   STATE_OF_AI_CS_REPORT: {
     href: 'https://advocacy.code.org/stateofaics/',
-    label: 'State of AI + CS Report'
+    label: 'State of AI + CS Report',
   },
   TAKE_ACTION: {
     href: '/take-action',
@@ -118,7 +118,7 @@ export const TOP_LEVEL_LINKS: {linkList: LinkItemProps[]} = {
     createLinkItem(SHARED_LINKS.TAKE_ACTION, {typography: 'h4'}),
     createLinkItem(SHARED_LINKS.HOUR_OF_AI, {typography: 'h4'}),
     // Marketing does not have permission to collect donations yet
-    //createLinkItem(SHARED_LINKS.DONATE, {typography: 'h4'}),
+    // createLinkItem(SHARED_LINKS.DONATE, {typography: 'h4'}),
     createLinkItem(SHARED_LINKS.NEWS_AND_RESOURCES, {typography: 'h4'}),
   ],
 };
@@ -173,10 +173,10 @@ export const MAIN_MENU_DESKTOP_ITEMS = [
     dropdownConfig: HOUR_OF_AI_LINKS,
   },
   // Marketing does not have permission to collect donations yet
-  //{
-  //type: 'button' as const,
-  //topLevelLink: donateLink,
-  //},
+  // {
+  //   type: 'button' as const,
+  //   topLevelLink: donateLink,
+  // },
   {
     type: 'button' as const,
     topLevelLink: newsLink,
