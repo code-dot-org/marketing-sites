@@ -136,7 +136,7 @@ export const INITIATIVES_LINKS: {linkList: LinkItemProps[]} = {
 export const TAKE_ACTION_LINKS: {linkList: LinkItemProps[]} = {
   linkList: [
     createLinkItem(SHARED_LINKS.UNLOCK8_PETITION),
-    createLinkItem(SHARED_LINKS.STATE_OF_CS_AI_REPORT),
+    createLinkItem(SHARED_LINKS.STATE_OF_AI_CS_REPORT),
   ],
 };
 
