@@ -70,9 +70,9 @@ const SHARED_LINKS = {
     href: '/privacy-policy',
     label: 'Privacy Policy',
   },
-  STATE_OF_CS_REPORT: {
-    href: 'https://advocacy.code.org/stateofcs/',
-    label: 'State of CS Report',
+  STATE_OF_AI_CS_REPORT: {
+    href: 'https://advocacy.code.org/stateofaics/',
+    label: 'State of AI + CS Report'
   },
   TAKE_ACTION: {
     href: '/take-action',
@@ -136,7 +136,7 @@ export const INITIATIVES_LINKS: {linkList: LinkItemProps[]} = {
 export const TAKE_ACTION_LINKS: {linkList: LinkItemProps[]} = {
   linkList: [
     createLinkItem(SHARED_LINKS.UNLOCK8_PETITION),
-    createLinkItem(SHARED_LINKS.STATE_OF_CS_REPORT),
+    createLinkItem(SHARED_LINKS.STATE_OF_CS_AI_REPORT),
   ],
 };
 
