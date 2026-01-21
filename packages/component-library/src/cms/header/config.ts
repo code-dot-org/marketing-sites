@@ -2,6 +2,7 @@ import {HeaderProps} from './Header';
 
 interface DefaultProps {
   logoImage: string;
+  musicDanceAiImage: string;
   spriteLabImage: string;
   artistImage: string;
   appLabImage: string;
@@ -15,6 +16,7 @@ interface DefaultProps {
 
 export function getDefaultHeaderProps({
   logoImage,
+  musicDanceAiImage,
   spriteLabImage,
   artistImage,
   appLabImage,
@@ -88,6 +90,13 @@ export function getDefaultHeaderProps({
       menu: 'Projects menu',
     },
     projectsLinks: [
+      {
+        key: 'musicDanceAi',
+        label: 'Mix & Move with AI',
+        href: '/mix-move-ai',
+        image: musicDanceAiImage,
+        description: 'Mix & Move with AI Description',
+      },
       {
         key: 'spriteLab',
         label: 'Sprite Lab',

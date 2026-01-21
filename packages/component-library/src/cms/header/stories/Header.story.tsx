@@ -4,6 +4,7 @@ import appLabImage from '@public/images/header-app-lab-icon.png';
 import artistImage from '@public/images/header-artist-icon.png';
 import dancePartyImage from '@public/images/header-dance-party-icon.png';
 import gameLabImage from '@public/images/header-game-lab-icon.png';
+import musicDanceAiImage from '@public/images/header-music-dance-ai-icon.png';
 import musicLabImage from '@public/images/header-music-lab-icon.png';
 import pythonLabImage from '@public/images/header-python-lab-icon.png';
 import spriteLabImage from '@public/images/header-sprite-lab-icon.png';
@@ -39,6 +40,7 @@ export default {
 
 const defaultArgs = getDefaultHeaderProps({
   logoImage,
+  musicDanceAiImage,
   spriteLabImage,
   artistImage,
   appLabImage,

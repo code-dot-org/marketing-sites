@@ -18,9 +18,11 @@ import gameLabImage from '@public/images/header-game-lab-icon.webp';
 import musicLabImage from '@public/images/header-music-lab-icon.webp';
 import pythonLabImage from '@public/images/header-python-lab-icon.webp';
 import spriteLabImage from '@public/images/header-sprite-lab-icon.webp';
+import musicDanceAiImage from '@public/images/header-music-dance-ai-icon.webp';
 
 const defaultProps = getDefaultHeaderProps({
   logoImage: logoImage.src,
+  musicDanceAiImage: musicDanceAiImage.src,
   spriteLabImage: spriteLabImage.src,
   artistImage: artistImage.src,
   appLabImage: appLabImage.src,
