@@ -95,7 +95,7 @@ export function getDefaultHeaderProps({
         label: 'Mix & Move with AI',
         href: '/mix-move-ai',
         image: musicDanceAiImage,
-        description: 'Mix & Move with AI Description',
+        description: 'Create your character, remix, and dance',
       },
       {
         key: 'spriteLab',
