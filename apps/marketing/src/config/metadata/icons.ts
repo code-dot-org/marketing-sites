@@ -18,18 +18,6 @@ function getFavIconImage(brand: Brand) {
 }
 
 export function getIcons(brand: Brand): Array<Icon> {
-  // Temporary favicon location for Pegasus compatability.
-  // Remove when Pegasus is deprecated.
-  // TODO: https://codedotorg.atlassian.net/browse/CMS-731
-  if (brand === Brand.CODE_DOT_ORG) {
-    return [
-      {
-        url: '/images/favicon.ico',
-        href: '/images/favicon.ico',
-      },
-    ];
-  }
-
   const favIcon = getFavIconImage(brand);
 
   return [
