@@ -1,9 +1,11 @@
 <%
 # Determine if production domain should be enabled
 is_production = options[:environment_type] == 'production'
+is_test = options[:environment_type] == 'test'
 has_production_domain = options[:production_domain_name] && !options[:production_domain_name].empty?
 has_production_hosted_zone = options[:production_hosted_zone_id] && !options[:production_hosted_zone_id].empty?
 enable_production_domain = is_production && has_production_domain && has_production_hosted_zone
+enable_corporate_preprod_subdomains = is_test && options[:site_type] == 'corporate'
 
 # Build the domain display string for the description
 base_domain_url = "https://#{options[:subdomain_name]}.#{options[:base_domain_name]}"
@@ -58,6 +60,11 @@ Resources:
 <% if enable_production_domain %>
         - !Ref ProductionDomainName
 <% end %>
+<% if enable_corporate_preprod_subdomains %>
+        # The corporate website has two special subdomains for preproduction test environments, staging and test.
+        - !Sub "staging.${ProductionDomainName}"
+        - !Sub "test.${ProductionDomainName}"
+<% end %>
       DomainValidationOptions:
         - DomainName: !Sub "${SubdomainName}.${BaseDomainName}"
           HostedZoneId: !Ref HostedZoneId
@@ -65,6 +72,14 @@ Resources:
           HostedZoneId: !Ref HostedZoneId
 <% if enable_production_domain %>
         - DomainName: !Ref ProductionDomainName
+          HostedZoneId: !Ref ProductionHostedZoneId
+<% end %>
+<% if enable_corporate_preprod_subdomains %>
+        # The corporate website has two special subdomains for preproduction test environments, staging and test.
+        # The validation uses the production hosted zone (code.org) since those environments use the production domain.
+        - DomainName: !Sub "staging.${ProductionDomainName}"
+          HostedZoneId: !Ref ProductionHostedZoneId
+        - DomainName: !Sub "test.${ProductionDomainName}"
           HostedZoneId: !Ref ProductionHostedZoneId
 <% end %>
       ValidationMethod: DNS
