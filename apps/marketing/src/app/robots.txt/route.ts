@@ -1,7 +1,7 @@
 import {eTag} from '@tinyhttp/etag';
 
 import {STALE_WHILE_REVALIDATE_ONE_DAY} from '@/cache/constants';
-import {getBrandFromHostname} from '@/config/brand';
+import {Brand, getBrandFromHostname} from '@/config/brand';
 import {isAllowedProductionCanonicalHostname} from '@/config/host';
 import {getStage} from '@/config/stage';
 
@@ -22,7 +22,10 @@ export async function GET(request: Request) {
 
   if (
     stage !== 'production' ||
-    !isAllowedProductionCanonicalHostname(brand, host)
+    // For Code.org, it uses a daisy chained Cloudfront distribution which erases the original host.
+    // Until the daisy chain is removed, we allow crawling even on non-canonical hostnames for Code.org.
+    (brand !== Brand.CODE_DOT_ORG &&
+      !isAllowedProductionCanonicalHostname(brand, host))
   ) {
     return new Response(DISALLOW_ALL_RULE, {
       status: 200,
