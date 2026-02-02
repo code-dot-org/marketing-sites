@@ -42,9 +42,26 @@ describe('robots.txt GET', () => {
     expect(res.status).toBe(200);
   });
 
+  it('disallows all crawling in production on a non-canonical hostname', async () => {
+    getStageMock.mockReturnValue('production');
+    const req = makeRequest('csforall.marketing-sites.dev-code.org');
+    const res = await GET(req);
+    expect(await res.text()).toBe(DISALLOW_ALL_RULE);
+    expect(res.status).toBe(200);
+  });
+
   it('returns empty response in production with allowed canonical hostname', async () => {
     getStageMock.mockReturnValue('production');
     const req = makeRequest('code.org');
+    const res = await GET(req);
+    expect(await res.text()).toBe('');
+    expect(res.status).toBe(200);
+    expect(res.headers.get('Content-Type')).toEqual('text/plain');
+  });
+
+  it('returns empty response in production with even with disallowed canonical hostname', async () => {
+    getStageMock.mockReturnValue('production');
+    const req = makeRequest('code.marketing-sites.dev-code.org');
     const res = await GET(req);
     expect(await res.text()).toBe('');
     expect(res.status).toBe(200);
