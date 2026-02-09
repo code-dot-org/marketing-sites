@@ -67,7 +67,6 @@ Parameters:
 
 Conditions:
   IsProductionEnvironment: !Equals [!Ref EnvironmentType, production]
-  IsCorporateSite: !Equals [ !Ref SiteType, corporate ]
 
 Mappings:
   # A mapping of AWS Regions to their Origin Shield Regions. Not all regions have Origin Shield enabled and may require
@@ -275,10 +274,7 @@ Resources:
           TargetOriginId: marketing-sites-application-origin
           ViewerProtocolPolicy: redirect-to-https
           Compress: true
-          CachePolicyId: !If
-            - IsCorporateSite
-            - 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled (Disabled until this distribution becomes the main one instead of daisy chained)
-            - !Ref ApplicationCachingPolicy
+          CachePolicyId: !Ref ApplicationCachingPolicy
           OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3" # AllViewer
           ResponseHeadersPolicyId: !Ref DefaultResponseHeadersPolicy
           FunctionAssociations:
@@ -315,10 +311,7 @@ Resources:
               - GET
               - HEAD
               - OPTIONS
-            CachePolicyId: !If
-              - IsCorporateSite
-              - 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled (Disabled until this distribution becomes the main one instead of daisy chained)
-              - 658327ea-f89d-4fab-a63d-7e88639e58f6 # Managed-CachingOptimized
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # Managed-CachingOptimized
             Compress: true
             PathPattern: /_next/static/*
             TargetOriginId: marketing-sites-static-assets-origin
@@ -330,19 +323,12 @@ Resources:
               - GET
               - HEAD
               - OPTIONS
-            CachePolicyId: !If
-              - IsCorporateSite
-              - 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled (Disabled until this distribution becomes the main one instead of daisy chained)
-              - 1c6db51a-a33f-469a-8245-dae26771f530 # Managed-Amplify-ImageOptimization (Optimized for image optimization)
+            CachePolicyId: 1c6db51a-a33f-469a-8245-dae26771f530 # Managed-Amplify-ImageOptimization (Optimized for image optimization)
             Compress: true
             PathPattern: /_next/image
             TargetOriginId: marketing-sites-application-origin
             ViewerProtocolPolicy: redirect-to-https
             ResponseHeadersPolicyId: !Ref DefaultResponseHeadersPolicy
-            OriginRequestPolicyId: !If
-              - IsCorporateSite
-              - 216adef6-5c7f-47e4-b989-5492eafa07d3 # AllViewer until this distribution becomes the main one instead of daisy chained
-              - !Ref "AWS::NoValue"
 <% if options[:web_application_firewall] %>
         WebACLId: <%= options[:web_application_firewall] %>
 <% end %>
