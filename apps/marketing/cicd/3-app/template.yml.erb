@@ -7,6 +7,8 @@ is_production = options[:environment_type] == 'production'
 has_production_domain = options[:production_domain_name] && !options[:production_domain_name].empty?
 has_production_hosted_zone = options[:production_hosted_zone_id] && !options[:production_hosted_zone_id].empty?
 enable_production_domain = is_production && has_production_domain && has_production_hosted_zone
+# The corporate website has a manual R53 DNS record
+enable_production_dns_validation = enable_production_domain && options[:site_type] != 'corporate'
 
 base_domain_url = "https://#{options[:subdomain_name]}.#{options[:base_domain_name]}"
 domain_display = enable_production_domain ?
@@ -137,7 +139,7 @@ Resources:
       HostedZoneId: !Ref HostedZoneId
       Name: !Sub "preview-${SubdomainName}.${BaseDomainName}"
       Type: A
-<% if enable_production_domain %>
+<% if enable_production_dns_validation %>
   # Avoid complex CloudFormation template string concatenation logic (subdomain + basedomain) to handle a fully
   # qualified domain name for production sites typically not having a subdomain, by explicitly specifying the
   # production domain name when it's just a top level domain.
