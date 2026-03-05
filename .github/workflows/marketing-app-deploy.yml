@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - sandbox
     paths:
       - '**'
 
@@ -117,7 +117,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        SITE_TYPE: [corporate, csforall]
+        SITE_TYPE: [aiday]
 
   # Deploy production environments in parallel, after test environments completes successfully
   deploy-production:
@@ -138,4 +138,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
+<<<<<<< HEAD
         SITE_TYPE: [corporate, csforall]
+=======
+        SITE_TYPE: [aiday]
+>>>>>>> 20c3eb0e... chore(sandbox): initialize sandbox ci
