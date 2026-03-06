@@ -4,6 +4,7 @@ import {notFound} from 'next/navigation';
 import {Suspense} from 'react';
 
 import ActivityCatalog from '@/components/contentful/activityCatalog';
+import ActivitiesFooter from '@/components/contentful/activityCatalog/activitiesFooter';
 import ActivitiesHero from '@/components/contentful/activityCatalog/activitiesHero';
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
@@ -143,6 +144,7 @@ export default async function ActivitiesPage({
           facets={await getSearchFacets()}
         />
       </Suspense>
+      <ActivitiesFooter activityType={activityType as ActivityType} />
     </main>
   );
 }
