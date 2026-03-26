@@ -591,11 +591,8 @@ Resources:
             SampledRequestsEnabled: true
 
   # ------------------------------------------------------------
-  # GitHub OIDC Provider and IAM Resources
+  # IAM Resources for GitHub Actions OIDC-based deployments
   # ------------------------------------------------------------
-
-  # GitHubOpenIDConnectProvider has been migrated to the shared infrastructure repo.
-  # See: https://github.com/code-dot-org/infrastructure/pull/134
 
   CloudFormationPolicy:
     Type: AWS::IAM::ManagedPolicy
@@ -934,6 +931,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
+              # OIDC provider lives in code-dot-org/infrastructure
               Federated: !Sub "arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com"
             Action: sts:AssumeRoleWithWebIdentity
             Condition:
