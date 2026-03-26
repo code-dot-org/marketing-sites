@@ -16,8 +16,6 @@ options = {
   account_template_file: 'account-resources.yml.erb',
   region_stack_name: 'marketing-sites-region-resources',
   region_template_file: 'region-resources.yml.erb',
-  # https://github.blog/changelog/2022-01-13-github-actions-update-on-oidc-based-deployments-to-aws/
-  github_intermediate_cert_thumbprints: '6938fd4d98bab03faadb97b34396831e3780aea1,1c58a3a8518e8759bf075b76b750d4f2df264fcd',
   template_s3_bucket: nil # Required
 }
 
@@ -49,15 +47,6 @@ opt_parser = OptionParser.new do |opts|
     "Default: marketing-sites-region-resources"
   ) do |name|
     options[:region_stack_name] = name
-  end
-
-  opts.on(
-    '--github-thumbprints THUMBPRINTS',
-    String,
-    "Comma-separated list of GitHub intermediate certificate thumbprints",
-    "Default: 6938fd4d98bab03faadb97b34396831e3780aea1,1c58a3a8518e8759bf075b76b750d4f2df264fcd"
-  ) do |thumbprints|
-    options[:github_intermediate_cert_thumbprints] = thumbprints
   end
 
   opts.on(
@@ -350,15 +339,11 @@ def deploy_account_resources(options)
   validate_template(processed_template_path, options[:template_s3_bucket], clients)
 
   puts "\n=== Step 3: Deploying Account-Level Stack in US East 1 ==="
-  parameters = {
-    "GitHubIntermediateCertificateThumbprintList" => options[:github_intermediate_cert_thumbprints]
-  }
-
   # For account resources
   deploy_stack(
     stack_name: options[:account_stack_name],
     template_file: processed_template_path,
-    parameters: parameters,
+    parameters: {},
     region: 'us-east-1',
     cloudformation_role_arn: options[:cloudformation_role_arn],
     capabilities: ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND"],
