@@ -56,6 +56,18 @@ Initialize the frontend package:
 yarn install
 ```
 
+### AI-Assisted Setup
+
+If you are using AI-assist for spec, planning, or Contentful work, initialize
+the Contentful MCP before relying on inferred content models.
+
+Use the official Contentful MCP documentation and server repo for setup:
+
+- [Contentful MCP server repository](https://github.com/contentful/contentful-mcp-server)
+
+In this repo, setup a read-only OAuth or equivalent read-only access pattern
+for Content Types and related schema inspection.
+
 ### Build
 
 Turborepo will automatically detect changed sub-directories and appropriately cache to avoid duplicate work.

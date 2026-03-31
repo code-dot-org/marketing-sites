@@ -14,6 +14,20 @@ Contentful API Keys and other secrets will need to be populated for this applica
 
 **Note**: `.env` must not be committed to source. It is git ignored by default.
 
+### AI-Assisted Contentful Setup
+
+If you are using AI-assist to inspect Contentful schema, entries, or assets,
+use the official Contentful MCP setup and permissions docs:
+
+- [Contentful MCP server repository](https://github.com/contentful/contentful-mcp-server)
+- [Content permissions](https://www.contentful.com/help/roles/space-roles-and-permissions/content-permissions/)
+- [Environment permissions](https://www.contentful.com/help/environments/environments-permissions/)
+
+For this project, prefer read-only OAuth or equivalent read-only access for
+Content Types and related schema inspection. If a schema, entry, or asset
+change is needed, show the proposed change to a human, have the human confirm
+or apply it, then re-read Contentful to verify the final state.
+
 ### Developing
 
 First, run the development server:
