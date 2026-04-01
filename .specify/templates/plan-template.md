@@ -22,6 +22,7 @@
 **Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
 **Contentful Data Model**: [existing type reused / existing type extended / new type proposed / no Contentful change needed]  
 **MUI / Legacy DS Plan**: [direct MUI implementation / legacy DS retained temporarily / contained migration from legacy DS to MUI]  
+**SEO / Indexing Plan**: [metadata only / metadata + structured data / non-indexable / sitemap review needed / existing Experience sitemap flow unchanged]  
 **Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
@@ -69,8 +70,11 @@
   the final state after the change. If the feature introduces new or changed
   structured data, document the Contentful data-model review, whether an
   existing content type can be reused or extended, and the justification for
-  any proposed new content type, then document any complexity that requires
-  justification below.
+  any proposed new content type. Document whether SEO metadata, canonical,
+  indexing, structured-data, or sitemap behavior changes. For standard
+  Contentful Experience pages, note when the existing sitemap flow already
+  covers the page and no special sitemap work is needed, then document any
+  complexity that requires justification below.
 
 ## Project Structure
 

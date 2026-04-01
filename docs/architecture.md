@@ -13,6 +13,7 @@ Related conventions:
 - [Performance Convention](./performance-convention.md)
 - [Contentful Component Convention](./contentful-component-convention.md)
 - [Security And Privacy Guardrails](./security-and-privacy-guardrails.md)
+- [SEO Convention](./seo-convention.md)
 - [Project Constitution](../.specify/memory/constitution.md)
 
 ## Availability First
@@ -194,6 +195,15 @@ The main request path in `apps/marketing` is:
 - Theming and branding
   - `src/themes/*`, `src/components/header/*`, and `src/components/footer/*`
     swap implementations by brand.
+- SEO and search surfaces
+  - `src/metadata/seo.ts` derives page metadata for Contentful Experience
+    pages.
+  - `src/app/sitemap.xml/route.ts` emits runtime sitemap entries from
+    Contentful Experience pages and selected programmatic routes.
+  - `src/app/robots.txt/route.ts` controls crawl behavior by environment and
+    hostname.
+  - `src/config/jsonLd/*` and selected components emit structured data for
+    supported page types.
 - Cache and revalidation
   - `cache-handler.mjs` composes local LRU and Redis caching.
   - `src/cache/constants.ts` defines CDN-facing cache policies.
@@ -223,6 +233,9 @@ MCP-confirmed content shapes over code inference when schema detail matters.
 When a touched marketing component still depends on the deprecated design
 system, planning should also evaluate whether a contained, low-risk MUI
 migration can be completed without broad downstream impact.
+Standard Contentful Experience pages already participate in sitemap generation
+when they have a slug and are not marked `noindex`, so custom sitemap work is
+usually only needed for non-Experience routes or intentionally special cases.
 
 ### 2. Localization and branding
 

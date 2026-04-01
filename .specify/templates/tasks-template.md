@@ -62,7 +62,8 @@ review surface is not needed, state why it is omitted.
 - [ ] T006 Confirm local runtime, hostname, and preview/draft implications
 - [ ] T007 [P] Identify required Storybook, page-preview, and CI review surfaces
 - [ ] T008 [P] Identify affected runtime flows, integration points, and cache or infrastructure sync points
-- [ ] T009 [P] Identify availability, performance, security, privacy-policy, and SSR guardrails that must remain unchanged
+- [ ] T009 [P] Review SEO impact, including metadata, canonical, indexing, structured-data, and whether sitemap behavior changes or remains covered by the existing Experience-page sitemap flow
+- [ ] T010 [P] Identify availability, performance, security, privacy-policy, and SSR guardrails that must remain unchanged
 
 ---
 
@@ -74,13 +75,13 @@ review surface is not needed, state why it is omitted.
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T010 Establish base TypeScript types, content models, or shared interfaces required by all stories
-- [ ] T011 [P] Set up required route, provider, or middleware scaffolding in `apps/marketing/src/`
-- [ ] T012 [P] Set up required package exports, shared styles, or MUI/theme scaffolding in `packages/*`
-- [ ] T013 Configure error handling, logging, and observability hooks
-- [ ] T014 Configure required environment variables, feature flags, or local setup updates
-- [ ] T015 [P] Establish required observability, analytics, privacy, consent, FERPA/student-data, or security guardrails
-- [ ] T016 [P] Add required server-rendering, Contentful registration, cache, or infrastructure contract scaffolding
+- [ ] T011 Establish base TypeScript types, content models, or shared interfaces required by all stories
+- [ ] T012 [P] Set up required route, provider, or middleware scaffolding in `apps/marketing/src/`
+- [ ] T013 [P] Set up required package exports, shared styles, or MUI/theme scaffolding in `packages/*`
+- [ ] T014 Configure error handling, logging, and observability hooks
+- [ ] T015 Configure required environment variables, feature flags, or local setup updates
+- [ ] T016 [P] Establish required observability, analytics, privacy, consent, FERPA/student-data, or security guardrails
+- [ ] T017 [P] Add required server-rendering, Contentful registration, cache, or infrastructure contract scaffolding
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -97,22 +98,23 @@ Examples of foundational tasks (adjust based on your project):
 > **NOTE: Write these tests or review fixtures FIRST, ensure they fail or expose
 > the missing behavior before implementation**
 
-- [ ] T017 [P] [US1] Storybook story, fixture, or preview coverage for [component/flow]
-- [ ] T018 [P] [US1] Jest or route-handler test for [behavior] in `apps/marketing/src/**/__tests__/[name].test.ts`
-- [ ] T019 [P] [US1] Integration or Playwright coverage for [user journey] in `apps/marketing/tests/[name].spec.ts`
+- [ ] T018 [P] [US1] Storybook story, fixture, or preview coverage for [component/flow]
+- [ ] T019 [P] [US1] Jest or route-handler test for [behavior] in `apps/marketing/src/**/__tests__/[name].test.ts`
+- [ ] T020 [P] [US1] Integration or Playwright coverage for [user journey] in `apps/marketing/tests/[name].spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T020 [P] [US1] Add or update shared types/models in `apps/marketing/src/types/` or `packages/*`
-- [ ] T021 [P] [US1] Add or update component implementation in `apps/marketing/src/components/` or `packages/component-library/src/`
-- [ ] T022 [US1] Implement runtime behavior in `apps/marketing/src/app/`, `apps/marketing/src/contentful/`, or `apps/marketing/src/providers/`
-- [ ] T023 [US1] Add validation, fallback, and error handling
-- [ ] T024 [US1] Add logging, metrics, analytics, or privacy-safe instrumentation for user story 1
-- [ ] T025 [US1] Update SSR/client boundaries, Contentful registration, cache, infrastructure sync points, and Storybook CI coverage if required
-- [ ] T026 [US1] Review any new or changed user story 1 data for Contentful modeling, prefer reuse or extension of existing content types, and document any need for a new content type
-- [ ] T027 [US1] Prefer direct MUI implementation for user story 1 UI work, keep legacy design-system usage only when migration has not happened yet, and migrate touched legacy components when the MUI swap is limited in scope and low risk
-- [ ] T028 [US1] Confirm privacy-policy alignment, data minimization, redacted/synthetic fixtures, and MCP-confirmed Contentful model details for user story 1 if applicable
-- [ ] T029 [US1] If Contentful writes are needed, show the exact proposed schema/content changes for human confirmation and re-read the final Contentful state
+- [ ] T021 [P] [US1] Add or update shared types/models in `apps/marketing/src/types/` or `packages/*`
+- [ ] T022 [P] [US1] Add or update component implementation in `apps/marketing/src/components/` or `packages/component-library/src/`
+- [ ] T023 [US1] Implement runtime behavior in `apps/marketing/src/app/`, `apps/marketing/src/contentful/`, or `apps/marketing/src/providers/`
+- [ ] T024 [US1] Add validation, fallback, and error handling
+- [ ] T025 [US1] Add logging, metrics, analytics, or privacy-safe instrumentation for user story 1
+- [ ] T026 [US1] Update SSR/client boundaries, Contentful registration, cache, infrastructure sync points, and Storybook CI coverage if required
+- [ ] T027 [US1] Review any new or changed user story 1 data for Contentful modeling, prefer reuse or extension of existing content types, and document any need for a new content type
+- [ ] T028 [US1] Prefer direct MUI implementation for user story 1 UI work, keep legacy design-system usage only when migration has not happened yet, and migrate touched legacy components when the MUI swap is limited in scope and low risk
+- [ ] T029 [US1] Review user story 1 SEO needs, including page metadata, canonical, indexing, structured data, and whether sitemap behavior changes or remains covered by the existing Experience-page sitemap flow
+- [ ] T030 [US1] Confirm privacy-policy alignment, data minimization, redacted/synthetic fixtures, and MCP-confirmed Contentful model details for user story 1 if applicable
+- [ ] T031 [US1] If Contentful writes are needed, show the exact proposed schema/content changes for human confirmation and re-read the final Contentful state
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -126,18 +128,19 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T030 [P] [US2] Storybook story, fixture, or preview coverage for [component/flow]
-- [ ] T031 [P] [US2] Jest or route-handler test for [behavior] in `apps/marketing/src/**/__tests__/[name].test.ts`
-- [ ] T032 [P] [US2] Integration or Playwright coverage for [user journey] in `apps/marketing/tests/[name].spec.ts`
+- [ ] T032 [P] [US2] Storybook story, fixture, or preview coverage for [component/flow]
+- [ ] T033 [P] [US2] Jest or route-handler test for [behavior] in `apps/marketing/src/**/__tests__/[name].test.ts`
+- [ ] T034 [P] [US2] Integration or Playwright coverage for [user journey] in `apps/marketing/tests/[name].spec.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T033 [P] [US2] Add or update shared types/models in `apps/marketing/src/types/` or `packages/*`
-- [ ] T034 [US2] Implement feature behavior in `apps/marketing/src/app/`, `apps/marketing/src/contentful/`, `apps/marketing-storybook/`, or `packages/*`
-- [ ] T035 [US2] Update runtime contracts, registrations, or providers as needed
-- [ ] T036 [US2] Review any new or changed user story 2 data for Contentful modeling, prefer reuse or extension of existing content types, and document any need for a new content type
-- [ ] T037 [US2] Prefer direct MUI implementation for user story 2 UI work, keep legacy design-system usage only when migration has not happened yet, and migrate touched legacy components when the MUI swap is limited in scope and low risk
-- [ ] T038 [US2] Integrate with User Story 1 components or routes if needed
+- [ ] T035 [P] [US2] Add or update shared types/models in `apps/marketing/src/types/` or `packages/*`
+- [ ] T036 [US2] Implement feature behavior in `apps/marketing/src/app/`, `apps/marketing/src/contentful/`, `apps/marketing-storybook/`, or `packages/*`
+- [ ] T037 [US2] Update runtime contracts, registrations, or providers as needed
+- [ ] T038 [US2] Review any new or changed user story 2 data for Contentful modeling, prefer reuse or extension of existing content types, and document any need for a new content type
+- [ ] T039 [US2] Prefer direct MUI implementation for user story 2 UI work, keep legacy design-system usage only when migration has not happened yet, and migrate touched legacy components when the MUI swap is limited in scope and low risk
+- [ ] T040 [US2] Review user story 2 SEO needs, including page metadata, canonical, indexing, structured data, and whether sitemap behavior changes or remains covered by the existing Experience-page sitemap flow
+- [ ] T041 [US2] Integrate with User Story 1 components or routes if needed
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -151,17 +154,18 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T039 [P] [US3] Storybook story, fixture, or preview coverage for [component/flow]
-- [ ] T040 [P] [US3] Jest or route-handler test for [behavior] in `apps/marketing/src/**/__tests__/[name].test.ts`
-- [ ] T041 [P] [US3] Integration or Playwright coverage for [user journey] in `apps/marketing/tests/[name].spec.ts`
+- [ ] T042 [P] [US3] Storybook story, fixture, or preview coverage for [component/flow]
+- [ ] T043 [P] [US3] Jest or route-handler test for [behavior] in `apps/marketing/src/**/__tests__/[name].test.ts`
+- [ ] T044 [P] [US3] Integration or Playwright coverage for [user journey] in `apps/marketing/tests/[name].spec.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T042 [P] [US3] Add or update shared types/models in `apps/marketing/src/types/` or `packages/*`
-- [ ] T043 [US3] Implement feature behavior in `apps/marketing/src/app/`, `apps/marketing/src/contentful/`, `apps/marketing-storybook/`, or `packages/*`
-- [ ] T044 [US3] Review any new or changed user story 3 data for Contentful modeling, prefer reuse or extension of existing content types, and document any need for a new content type
-- [ ] T045 [US3] Prefer direct MUI implementation for user story 3 UI work, keep legacy design-system usage only when migration has not happened yet, and migrate touched legacy components when the MUI swap is limited in scope and low risk
-- [ ] T046 [US3] Integrate final user-facing behavior and runtime contracts
+- [ ] T045 [P] [US3] Add or update shared types/models in `apps/marketing/src/types/` or `packages/*`
+- [ ] T046 [US3] Implement feature behavior in `apps/marketing/src/app/`, `apps/marketing/src/contentful/`, `apps/marketing-storybook/`, or `packages/*`
+- [ ] T047 [US3] Review any new or changed user story 3 data for Contentful modeling, prefer reuse or extension of existing content types, and document any need for a new content type
+- [ ] T048 [US3] Prefer direct MUI implementation for user story 3 UI work, keep legacy design-system usage only when migration has not happened yet, and migrate touched legacy components when the MUI swap is limited in scope and low risk
+- [ ] T049 [US3] Review user story 3 SEO needs, including page metadata, canonical, indexing, structured data, and whether sitemap behavior changes or remains covered by the existing Experience-page sitemap flow
+- [ ] T050 [US3] Integrate final user-facing behavior and runtime contracts
 
 **Checkpoint**: All user stories should now be independently functional
 

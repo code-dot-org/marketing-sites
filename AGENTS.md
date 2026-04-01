@@ -14,6 +14,7 @@ This is a high-traffic public site. In all work:
 
 See [docs/performance-convention.md](docs/performance-convention.md) and
 [docs/architecture.md](docs/architecture.md).
+See [docs/seo-convention.md](docs/seo-convention.md).
 
 ## Security And Privacy
 
@@ -53,6 +54,7 @@ Keep specs and plans explicit about:
 - Contentful data-model review for any new or changed feature data, including
   whether existing content types can be reused before proposing a new one
 - cache and revalidation impact
+- SEO metadata, canonical, indexing, structured-data, and sitemap impact
 - required Storybook, test, and CI surfaces
 
 ## Repo Shape
@@ -72,6 +74,11 @@ Keep specs and plans explicit about:
 - Do not weaken preview, draft, redirect, or revalidation protections.
 - If touching public caching, preserve SWR (`stale-while-revalidate`) and SIE
   (`stale-if-error`) semantics unless the spec documents an exception.
+- Preserve existing SEO behavior unless the spec calls for an intentional
+  change.
+- Standard Contentful Experience pages are already covered by the runtime
+  sitemap when they have a slug and are not marked `noindex`; non-Experience
+  routes still require explicit sitemap review.
 - Do not use real personal data in Contentful, Storybook, fixtures, or tests.
 - All new React components MUST use MUI.
 - Prefer marketing components that are built directly with MUI.
@@ -111,6 +118,8 @@ layers:
 See [docs/contentful-component-convention.md](docs/contentful-component-convention.md).
 
 See [docs/security-and-privacy-guardrails.md](docs/security-and-privacy-guardrails.md).
+
+See [docs/seo-convention.md](docs/seo-convention.md).
 
 ## Useful Commands
 

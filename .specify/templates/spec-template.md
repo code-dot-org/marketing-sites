@@ -131,11 +131,15 @@
   MUST define the human confirmation step, describe the proposed change for a
   human to apply or approve, and require a re-read of the resulting Contentful
   state.
+- **FR-016**: Specification MUST identify any SEO impact, including page-level
+  metadata, canonical behavior, indexing behavior, structured data, and whether
+  sitemap behavior changes or remains covered by the existing Experience-page
+  sitemap flow.
 
 *Example of marking unclear requirements:*
 
-- **FR-016**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-017**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-017**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
+- **FR-018**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
 ## Integration Points *(mandatory when external systems or cross-workspace changes are involved)*
 
@@ -157,6 +161,7 @@
 - [Call out any availability, caching, security, privacy-policy, or SSR guardrails that must remain intact]
 - [Call out which Contentful content types, entries, or assets were confirmed via MCP if applicable]
 - [Call out whether any Contentful changes are read-only analysis, human-applied changes, or human-confirmed writes followed by MCP re-read]
+- [Call out SEO metadata, canonical, indexing, structured-data, and sitemap expectations]
 
 ### Key Entities *(include if feature involves data)*
 
