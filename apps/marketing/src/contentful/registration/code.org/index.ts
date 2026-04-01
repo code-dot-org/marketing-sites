@@ -33,6 +33,9 @@ import Button, {
 } from '@/components/contentful/corporateSite/buttonLegacy';
 import {DoubleTheDonationContentfulComponentDefinition} from '@/components/contentful/corporateSite/doubleTheDonation';
 import DoubleTheDonation from '@/components/contentful/corporateSite/doubleTheDonation/DoubleTheDonation';
+import StateGapMap, {
+  StateGapMapContentfulComponentDefinition,
+} from '@/components/contentful/corporateSite/stateGapMap';
 import YourSchool, {
   YourSchoolContentfulComponentDefinition,
 } from '@/components/contentful/corporateSite/yourSchool';
@@ -150,6 +153,13 @@ const contentfulRegistration = {
     {
       component: DoubleTheDonation,
       definition: DoubleTheDonationContentfulComponentDefinition,
+    },
+    {
+      component: StateGapMap,
+      definition: StateGapMapContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+      },
     },
 
     {

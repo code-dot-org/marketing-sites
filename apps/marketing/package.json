@@ -47,6 +47,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fortedigital/nextjs-cache-handler": "^2.3.0",
+    "@mirawision/usa-map-react": "^2.0.2",
     "@mui/icons-material": "^7.1.2",
     "@mui/material": "^7.1.2",
     "@mui/material-nextjs": "^7.1.1",
