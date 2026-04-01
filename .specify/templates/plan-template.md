@@ -20,6 +20,7 @@
 **Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
 **Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
 **Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Contentful Data Model**: [existing type reused / existing type extended / new type proposed / no Contentful change needed]  
 **Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
@@ -61,7 +62,10 @@
   Contentful models or entries are in scope, note what was confirmed through
   Contentful MCP versus what is still inferred from code. If Contentful writes
   may be needed, document the human confirmation step and the plan to re-read
-  the final state after the change, then document any complexity that requires
+  the final state after the change. If the feature introduces new or changed
+  structured data, document the Contentful data-model review, whether an
+  existing content type can be reused or extended, and the justification for
+  any proposed new content type, then document any complexity that requires
   justification below.
 
 ## Project Structure

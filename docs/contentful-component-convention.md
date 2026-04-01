@@ -75,6 +75,21 @@ default even if write-capable tooling is later scaffolded.
   final Contentful state through MCP instead of assuming the change landed as
   intended.
 
+## Data Modeling Rules
+
+- Where practical, new structured marketing data SHOULD be modeled in
+  Contentful rather than ad hoc application-only structures.
+- When feature work introduces new or changed structured data, perform a
+  Contentful data-model review during planning even if the conclusion is that no
+  Contentful change is needed.
+- Prefer extending an existing content type before creating a new one.
+- If a new content type is proposed, document why an existing type cannot be
+  reused or extended without making authoring or validation meaningfully worse.
+- Optimize models for human-friendly editorial storage while minimizing the
+  total number of content types in the space.
+- Maintain a strong preference for reuse and consolidation because content type
+  count is limited.
+
 ## Studio Guardrails
 
 - Keep the overall page SSR-first even though Studio requires a client boundary
@@ -107,6 +122,9 @@ default even if write-capable tooling is later scaffolded.
   `packages/component-library`.
 - If the component is a marketing-specific composition or Contentful building
   block, build it in `apps/marketing/src/components/contentful/...`.
+- If the feature introduces new or changed structured data, first review
+  whether the data should live in Contentful and whether an existing content
+  type can be reused or extended.
 - If the change depends on Contentful schema details, confirm the target
   content type or entry shape through MCP before implementation.
 - If the change proposes schema updates, prepare a human-readable change list
@@ -147,6 +165,8 @@ default even if write-capable tooling is later scaffolded.
 - If new or changed fields are required, present the field ids, names, types,
   validations, localization settings, and requiredness for human confirmation,
   then re-read the content type after the change.
+- If a new content type is proposed, document the reuse options that were
+  considered first and why the new type is still the clearest editor model.
 
 ### 5. Preserve editor compatibility
 
@@ -195,6 +215,7 @@ complete:
 - Contentful definition
 - brand registration
 - MCP-confirmed content model assumptions when schema detail matters
+- data-model review for any new or changed structured feature data
 - human-confirmed or human-applied Contentful write steps when schema/content
   changes are required
 - Storybook review surface
@@ -217,6 +238,8 @@ complete:
   authoring.
 - Do not silently mutate Contentful content types, entries, or assets from an
   AI-assisted workflow. Recommend, confirm, then re-read.
+- Do not create a new content type for implementation convenience alone when an
+  existing type can be extended without harming editor clarity.
 
 ## Official References
 

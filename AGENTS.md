@@ -50,6 +50,8 @@ Keep specs and plans explicit about:
 - brands, locales, preview/draft behavior
 - Contentful registration impact
 - MCP-confirmed Contentful schema or entry assumptions
+- Contentful data-model review for any new or changed feature data, including
+  whether existing content types can be reused before proposing a new one
 - cache and revalidation impact
 - required Storybook, test, and CI surfaces
 
@@ -91,6 +93,7 @@ layers:
 - component implementation
 - Contentful definition
 - brand registration
+- data-model review when the feature adds or changes structured content
 - MCP confirmation of schema details when needed
 - human confirmation path for Contentful writes when needed
 - Storybook coverage and mocks
