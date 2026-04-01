@@ -80,6 +80,9 @@ way.
   - Built with `tsup`, CSS modules, and generated type declarations.
   - This design system is intentionally forked for marketing autonomy so the
     team can iterate without waiting on other Code.org frontend constraints.
+  - Parts of this legacy design system remain in use, but new marketing-facing
+    component work should prefer direct MUI implementations and only keep
+    legacy usage where migration has not yet happened.
 - `packages/component-library-styles`
   - Shared SCSS variables, semantic tokens, typography, and mixins.
 - `packages/fonts`
@@ -217,6 +220,9 @@ route handling, component definitions, registration, mocks, Storybook, and
 revalidation. It should still keep data fetching and first render on the server
 unless an isolated interactive island is truly required. Planning should prefer
 MCP-confirmed content shapes over code inference when schema detail matters.
+When a touched marketing component still depends on the deprecated design
+system, planning should also evaluate whether a contained, low-risk MUI
+migration can be completed without broad downstream impact.
 
 ### 2. Localization and branding
 

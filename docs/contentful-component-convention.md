@@ -111,6 +111,15 @@ default even if write-capable tooling is later scaffolded.
 - `apps/marketing-storybook` is for higher-level marketing components composed
   from design-system components and Contentful payloads.
 - All new React components MUST use MUI.
+- Marketing components SHOULD be built directly with MUI rather than the
+  deprecated legacy design-system components whenever practical.
+- Legacy design-system components may still be used when an equivalent
+  component has not yet been migrated to MUI.
+- If a touched legacy component can be replaced with a MUI equivalent through a
+  limited, low-risk migration that does not force broader downstream changes,
+  prefer making that migration in the same work.
+- MUI replacements for migrated components SHOULD preserve the current visual
+  appearance 1:1 unless the spec explicitly calls for a design change.
 - If a design-system change is required, land that work first and ensure the
   design-system Storybook CI checks pass before building on it in marketing.
 
@@ -135,6 +144,10 @@ default even if write-capable tooling is later scaffolded.
 - Add the React component in the correct marketing contentful directory.
 - Use MUI and shared design-system components instead of introducing new local
   primitives.
+- Prefer direct MUI-based marketing implementations over wrapping deprecated
+  design-system components for new work.
+- If a touched legacy design-system dependency can be swapped to a contained
+  MUI equivalent without broad fallout, prefer doing so during the change.
 - Include accessibility behavior that meets or exceeds WCAG AA.
 - Keep the component compatible with Studio rendering expectations.
 - If registration will disable the default wrapper, ensure the component
@@ -240,6 +253,9 @@ complete:
   AI-assisted workflow. Recommend, confirm, then re-read.
 - Do not create a new content type for implementation convenience alone when an
   existing type can be extended without harming editor clarity.
+- Do not keep a touched marketing component on the deprecated design system by
+  default when a low-risk, visually equivalent MUI migration is already within
+  scope.
 
 ## Official References
 

@@ -74,6 +74,14 @@ Keep specs and plans explicit about:
   (`stale-if-error`) semantics unless the spec documents an exception.
 - Do not use real personal data in Contentful, Storybook, fixtures, or tests.
 - All new React components MUST use MUI.
+- Prefer marketing components that are built directly with MUI.
+- The legacy design system is deprecated; continue using it only when the
+  needed component has not yet been migrated to MUI.
+- If a legacy design-system component can be migrated to a MUI equivalent with
+  limited, low-risk scope and without affecting other components, prefer making
+  that migration as part of the work.
+- MUI replacements for migrated components SHOULD remain visually 1:1 unless
+  the spec explicitly calls for a design change.
 - All React components MUST meet or exceed WCAG AA.
 - Prefer shared package changes before app-level duplication.
 

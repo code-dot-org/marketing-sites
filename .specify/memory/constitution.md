@@ -1,22 +1,20 @@
 <!--
 Sync Impact Report
-Version change: 1.6.0 -> 1.7.0
+Version change: 1.7.0 -> 1.8.0
 Modified principles:
-- V. Spec-Driven Incremental Delivery -> V. Spec-Driven Incremental Delivery
+- II. Shared System First And SSR By Default -> II. Shared System First And SSR By Default
 Added sections:
 - None
 Removed sections:
 - None
 Templates requiring updates:
 - ✅ updated .specify/templates/plan-template.md
-- ✅ updated .specify/templates/spec-template.md
 - ✅ updated .specify/templates/tasks-template.md
+- ✅ reviewed .specify/templates/spec-template.md
 - ✅ reviewed .specify/templates/agent-file-template.md
-- ✅ added docs/architecture.md
-- ✅ added docs/performance-convention.md
-- ✅ added docs/contentful-component-convention.md
-- ✅ added docs/security-and-privacy-guardrails.md
-- ⚠ pending .specify/templates/commands/*.md (directory not present in this repository)
+- ✅ updated AGENTS.md
+- ✅ updated docs/architecture.md
+- ✅ updated docs/contentful-component-convention.md
 Follow-up TODOs:
 - None
 -->
@@ -63,7 +61,13 @@ packages before new local forks are introduced. New runtime code and React
 surfaces MUST render on the server by default. Client-only boundaries such as
 `use client`, browser API access, client-side data fetching, or hydration-heavy
 composition MUST be treated as exceptions, kept as small as possible, and
-explicitly justified in the spec and plan.
+explicitly justified in the spec and plan. All new React components MUST use
+MUI. Marketing-facing components SHOULD prefer direct MUI implementations over
+the deprecated legacy design-system components, while legacy components MAY
+remain in use where migration has not yet happened. If a touched legacy
+component can be migrated to a visually equivalent MUI implementation with
+limited scope and without affecting other components, the plan and tasks SHOULD
+prefer that migration over adding more dependency on the deprecated surface.
 
 ### III. WCAG AA And Layered Storybook UX
 Every net-new or materially changed UI surface MUST define how it will be
@@ -134,6 +138,14 @@ quickly without skipping cross-package coordination.
   server-rendered shell, and MUST minimize hydration scope.
 - All new React components MUST use MUI and compose from this repository's
   shared design-system packages whenever possible.
+- Marketing-facing components SHOULD prefer direct MUI implementations over the
+  deprecated legacy design system. Legacy design-system usage MAY continue only
+  where the needed component has not yet been migrated.
+- If a touched legacy component can be migrated to a MUI equivalent with
+  limited, low-risk scope and without affecting other components, contributors
+  SHOULD prefer making that migration in the same work.
+- MUI replacements for migrated components SHOULD remain visually 1:1 unless a
+  documented spec calls for an intentional design change.
 - Secrets MUST remain out of source control, and local setup documentation MUST
   use ignored environment files or platform secret stores.
 - Contributors MUST not introduce new collection, storage, display, or
@@ -237,4 +249,4 @@ not change enforcement. Compliance MUST be reviewed during planning, task
 generation, code review, and any post-incident remediation that reveals a gap in
 these rules.
 
-**Version**: 1.7.0 | **Ratified**: 2026-03-31 | **Last Amended**: 2026-04-01
+**Version**: 1.8.0 | **Ratified**: 2026-03-31 | **Last Amended**: 2026-04-01

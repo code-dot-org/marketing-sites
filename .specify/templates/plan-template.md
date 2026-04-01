@@ -21,6 +21,7 @@
 **Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
 **Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
 **Contentful Data Model**: [existing type reused / existing type extended / new type proposed / no Contentful change needed]  
+**MUI / Legacy DS Plan**: [direct MUI implementation / legacy DS retained temporarily / contained migration from legacy DS to MUI]  
 **Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
@@ -44,7 +45,10 @@
   versus app-specific code, note any brand-specific switchboards involved,
   justify any intentional duplication, and call out all required client-side
   boundaries, hydration costs, or browser-only dependencies that prevent the
-  change from remaining server-rendered by default.
+  change from remaining server-rendered by default. For UI work, document
+  whether the implementation is direct MUI, whether any deprecated legacy
+  design-system component remains in use, and whether a contained, low-risk
+  migration to a visually equivalent MUI implementation should happen now.
 - **WCAG AA And Layered Storybook UX**: List the Storybook stories, fixtures,
   or preview surfaces that will demonstrate the change, including
   `apps/design-system-storybook`, `apps/marketing-storybook`, or page-level
