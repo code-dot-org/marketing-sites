@@ -9,10 +9,9 @@ privacy policy and escalate for review instead of guessing.
 
 ## Purpose
 
-This repository serves a high-traffic public website for an education nonprofit.
+This repository serves a high-traffic public website for a K-12 education nonprofit.
 Security and privacy are product requirements. They are also policy and legal
-requirements because Code.org handles school-linked users and may process data
-that falls under FERPA and similar student privacy laws.
+requirements because Code.org handles school-linked users and processes data for children under the age of 13 which falls under FERPA, COPPA, and similar student privacy laws.
 
 This document translates the official
 [Code.org Privacy Policy](https://code.org/en-US/privacy) into engineering
