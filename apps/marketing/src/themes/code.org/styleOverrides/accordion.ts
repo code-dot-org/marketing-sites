@@ -13,6 +13,9 @@ export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
       padding: 0,
       margin: 0,
       marginBottom: theme.spacing(2),
+      '&::before': {
+        display: 'none',
+      },
       '&:hover': {
         backgroundColor: 'var(--background-neutral-secondary)',
       },
@@ -33,13 +36,15 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
     styleOverrides: {
       root: ({theme}) => ({
         padding: theme.spacing(1.5, 2.5, 1.5, 2.5),
-        borderRadius: 0,
-        color: 'var(---text-neutral-primary)',
+        borderRadius: '4px',
+        color: 'var(--text-neutral-primary)',
         backgroundColor: 'var(--background-neutral-primary)',
         minHeight: 'unset',
 
         '&.Mui-expanded': {
           minHeight: 'unset',
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
         },
 
         '&:hover': {
@@ -82,6 +87,8 @@ export const ACCORDION_DETAILS_OVERRIDES: Components<Theme>['MuiAccordionDetails
         padding: theme.spacing(2.5), // 20px
         borderTop: '1px solid var(--borders-neutral-primary)',
         backgroundColor: 'var(--background-neutral-secondary)',
+        borderBottomLeftRadius: '4px',
+        borderBottomRightRadius: '4px',
       }),
     },
   };
