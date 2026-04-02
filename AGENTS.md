@@ -92,6 +92,18 @@ Keep specs and plans explicit about:
 - All React components MUST meet or exceed WCAG AA.
 - Prefer shared package changes before app-level duplication.
 
+## Implementation Preference
+
+- Prefer first-party implementations by default to reduce bundle size, keep
+  control local, and avoid unnecessary third-party runtime and maintenance
+  costs.
+- Use a vetted third-party library when the first-party option becomes too
+  difficult or expensive to maintain, or when the library materially improves
+  accessibility, SSR compatibility, safety, or long-term maintainability.
+- Hand-maintained SVG implementations are a common example of a first-party
+  approach that may become too costly to maintain once interaction,
+  accessibility, or geography complexity grows.
+
 ## Contentful Work
 
 If AI-assist has the Contentful MCP available, initialize it first and use it
@@ -121,6 +133,8 @@ See [docs/security-and-privacy-guardrails.md](docs/security-and-privacy-guardrai
 
 See [docs/seo-convention.md](docs/seo-convention.md).
 
+See [docs/ui-convention.md](docs/ui-convention.md).
+
 ## Useful Commands
 
 - `yarn build`
@@ -134,3 +148,16 @@ See [docs/seo-convention.md](docs/seo-convention.md).
 
 - brand URL: `http://[brand].marketing-sites.localhost:3001`
 - preview URL: `http://preview-[brand].marketing-sites.localhost:3001`
+
+## Active Technologies
+- TypeScript with React 18 on Next.js 15 + Next.js App Router, MUI, existing marketing app testing stack, vetted npm React US map package, and repo-managed structured data file (003-gap-analysis-map)
+- Repo-managed structured data file; no runtime persistence (003-gap-analysis-map)
+
+## Recent Changes
+- 003-gap-analysis-map: Added TypeScript with React 18 on Next.js 15 + Next.js App Router, MUI, existing marketing app testing stack, vetted npm React US map package, and repo-managed structured data file
+
+## UI Guidance
+
+- Follow [docs/ui-convention.md](docs/ui-convention.md) for React/UI component structure, theme inheritance, interaction patterns, Storybook `play` coverage, and interactive layout-stability rules.
+- Interactive components MUST not introduce width or height shifts between default, hover, focus, selected, and locked states, especially in stacked mobile layouts.
+- Components that honor `data-theme` or similar inherited presentation context MUST derive text, surface, divider, and icon colors from that inherited mode rather than assuming the active MUI theme already matches it.

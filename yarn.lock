@@ -1660,6 +1660,7 @@ __metadata:
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.0"
     "@fortedigital/nextjs-cache-handler": "npm:^2.3.0"
+    "@mirawision/usa-map-react": "npm:^2.0.2"
     "@mui/icons-material": "npm:^7.1.2"
     "@mui/material": "npm:^7.1.2"
     "@mui/material-nextjs": "npm:^7.1.1"
@@ -4693,6 +4694,16 @@ __metadata:
     "@types/react": ">=16"
     react: ">=16"
   checksum: 10c0/381ed1211ba2b8491bf0ad9ef0d8d1badcdd114e1931d55d44019d4b827cc2752586708f9c7d2f9c3244150ed81f1f671a6ca95fae0edd5797fb47a22e06ceca
+  languageName: node
+  linkType: hard
+
+"@mirawision/usa-map-react@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@mirawision/usa-map-react@npm:2.0.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/60c9ebba09712c0bf86bcfb63965f49517330976b8b12770fcf6ae859d406cd776cdf82f7652676fa845812b26e100f6e297df00db779861365c9734c23ff00b
   languageName: node
   linkType: hard
 
