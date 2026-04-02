@@ -8,7 +8,7 @@ export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
   styleOverrides: {
     root: ({theme}) => ({
       boxShadow: 'none',
-      borderRadius: '4px',
+      borderRadius: theme.shape.borderRadius,
       border: '1px solid var(--borders-neutral-primary)',
       padding: 0,
       margin: 0,
@@ -36,7 +36,7 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
     styleOverrides: {
       root: ({theme}) => ({
         padding: theme.spacing(1.5, 2.5, 1.5, 2.5),
-        borderRadius: '4px',
+        borderRadius: theme.shape.borderRadius,
         color: 'var(--text-neutral-primary)',
         backgroundColor: 'var(--background-neutral-primary)',
         minHeight: 'unset',
@@ -87,8 +87,8 @@ export const ACCORDION_DETAILS_OVERRIDES: Components<Theme>['MuiAccordionDetails
         padding: theme.spacing(2.5), // 20px
         borderTop: '1px solid var(--borders-neutral-primary)',
         backgroundColor: 'var(--background-neutral-secondary)',
-        borderBottomLeftRadius: '4px',
-        borderBottomRightRadius: '4px',
+        borderBottomLeftRadius: theme.shape.borderRadius,
+        borderBottomRightRadius: theme.shape.borderRadius,
       }),
     },
   };
