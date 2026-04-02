@@ -1,28 +1,25 @@
 <!--
 Sync Impact Report
-Version change: 1.7.0 -> 1.8.0
+Version change: 1.8.0 -> 1.8.1
 Modified principles:
-- II. Shared System First And SSR By Default -> II. Shared System First And SSR By Default
+- III. WCAG AA And Layered Storybook UX -> III. WCAG AA And Layered Storybook UX
 Added sections:
 - None
 Removed sections:
 - None
 Templates requiring updates:
-- ✅ updated .specify/templates/plan-template.md
-- ✅ updated .specify/templates/tasks-template.md
-- ✅ reviewed .specify/templates/spec-template.md
-- ✅ reviewed .specify/templates/agent-file-template.md
 - ✅ updated AGENTS.md
-- ✅ updated docs/architecture.md
-- ✅ updated docs/contentful-component-convention.md
+- ✅ added docs/ui-convention.md
 Follow-up TODOs:
 - None
 -->
+
 # Code.org Marketing Websites Constitution
 
 ## Core Principles
 
 ### I. Availability, Cached, Secure, Observable, and Privacy-Safe Operations
+
 Production-affecting features MUST preserve or improve operational visibility
 through structured logs, metrics, traceability, or documented monitoring hooks
 appropriate to the touched surface. Instrumentation MUST avoid exposing secrets,
@@ -47,6 +44,7 @@ downstream sharing, consent or opt-in path, retention/deletion expectations,
 and escalation to privacy/security owners when the policy impact is unclear.
 
 ### II. Shared System First And SSR By Default
+
 Changes that affect reusable presentation, styling, or content modeling MUST be
 implemented in the shared package or design-system layer before app-level
 overrides are introduced. New duplication across `apps/*` and `packages/*` MUST
@@ -70,6 +68,7 @@ limited scope and without affecting other components, the plan and tasks SHOULD
 prefer that migration over adding more dependency on the deprecated surface.
 
 ### III. WCAG AA And Layered Storybook UX
+
 Every net-new or materially changed UI surface MUST define how it will be
 verified in `apps/design-system-storybook`, `apps/marketing-storybook`,
 page-level previews, or an equivalent reviewable fixture. Contentful-backed UI
@@ -79,10 +78,15 @@ review surface for atomic and molecular components. `apps/marketing-storybook`
 is the review surface for higher-level marketing components composed from the
 design system and Contentful payloads. All React components MUST meet or exceed
 WCAG AA standards, including semantic structure, keyboard access where
-applicable, sufficient contrast, and localized-content resilience. This is
-non-negotiable because marketing work is visual, reusable, and public-facing.
+applicable, sufficient contrast, and localized-content resilience. Interactive
+UI states MUST also preserve layout stability across default, hover, selected,
+and locked states, especially in stacked mobile layouts, and MUST correctly
+honor inherited presentation context such as `data-theme` even when the outer
+wrapper theme does not match the active MUI provider. This is non-negotiable
+because marketing work is visual, reusable, and public-facing.
 
 ### IV. Quality Gates Are Release Gates
+
 Work MUST pass the smallest meaningful automated validation set before merge:
 linting, type checks, and tests covering the changed behavior. When a change
 alters rendering, content composition, or tenant-specific behavior, the spec and
@@ -99,6 +103,7 @@ This principle prevents regressions in a fast-moving monorepo with multiple
 apps and shared packages.
 
 ### V. Spec-Driven Incremental Delivery
+
 All substantial work MUST begin with a spec, plan, and task breakdown that can
 ship value in independently testable slices. Plans MUST identify the affected
 workspaces, reuse opportunities, request/data flows, required quality gates, and
@@ -249,4 +254,4 @@ not change enforcement. Compliance MUST be reviewed during planning, task
 generation, code review, and any post-incident remediation that reveals a gap in
 these rules.
 
-**Version**: 1.8.0 | **Ratified**: 2026-03-31 | **Last Amended**: 2026-04-01
+**Version**: 1.8.1 | **Ratified**: 2026-03-31 | **Last Amended**: 2026-04-02

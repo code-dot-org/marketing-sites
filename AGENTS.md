@@ -66,6 +66,11 @@ Keep specs and plans explicit about:
 - `packages/component-library*`, `packages/fonts`, `packages/lint-config`:
   shared foundations
 
+## Code Guidance
+
+- Follow [docs/code-convention.md](docs/code-convention.md) for repo-wide code
+  maintainability guidance, including comments and JSDoc expectations.
+
 ## Non-Negotiables
 
 - Preserve cacheability, availability, and security guardrails.
@@ -91,6 +96,18 @@ Keep specs and plans explicit about:
   the spec explicitly calls for a design change.
 - All React components MUST meet or exceed WCAG AA.
 - Prefer shared package changes before app-level duplication.
+
+## Implementation Preference
+
+- Prefer first-party implementations by default to reduce bundle size, keep
+  control local, and avoid unnecessary third-party runtime and maintenance
+  costs.
+- Use a vetted third-party library when the first-party option becomes too
+  difficult or expensive to maintain, or when the library materially improves
+  accessibility, SSR compatibility, safety, or long-term maintainability.
+- Hand-maintained SVG implementations are a common example of a first-party
+  approach that may become too costly to maintain once interaction,
+  accessibility, or geography complexity grows.
 
 ## Contentful Work
 
@@ -121,16 +138,58 @@ See [docs/security-and-privacy-guardrails.md](docs/security-and-privacy-guardrai
 
 See [docs/seo-convention.md](docs/seo-convention.md).
 
+See [docs/code-convention.md](docs/code-convention.md).
+
+See [docs/ui-convention.md](docs/ui-convention.md).
+
 ## Useful Commands
 
 - `yarn build`
 - `yarn lint`
+- `yarn lint:fix`
 - `yarn test`
 - `yarn release:dryrun`
+- `yarn test:ui:ci`
+- `yarn test:ui:local`
 - `yarn workspace @code-dot-org/design-system-storybook test:ui:ci`
 - `yarn workspace @code-dot-org/marketing-storybook test:ui:ci`
+
+## Validation Expectations
+
+- Use root `yarn lint:fix` when touched files need repo-standard autofixes before
+  final validation.
+- Use root `yarn release:dryrun` as a final validation step for substantial
+  changes unless the task is docs-only or the user explicitly scopes validation
+  down.
+- `yarn release:dryrun` currently runs Turbo `build`, `lint`, and `test`.
+- Use root `yarn test:ui:ci` as the standard optional final browser-validation
+  step when Storybook or other UI coverage should also run from the repo root.
+- Use root `yarn test:ui:local` only for local workflows that intentionally
+  point tests at an already running local app or Storybook server.
+- For Storybook-focused changes, make it explicit whether the relevant
+  Storybook `test:ui:ci` fanout passed, even if the full root `yarn test:ui:ci`
+  run also includes unrelated UI suites with separate environment or visual-test
+  requirements.
+- If root `yarn test:ui:ci` fails outside the touched Storybook surface, report
+  that clearly and separately from the status of the Storybook fanout that
+  covers the changed stories.
 
 ## Local Runtime
 
 - brand URL: `http://[brand].marketing-sites.localhost:3001`
 - preview URL: `http://preview-[brand].marketing-sites.localhost:3001`
+
+## Active Technologies
+
+- TypeScript with React 18 on Next.js 15 + Next.js App Router, MUI, existing marketing app testing stack, vetted npm React US map package, and repo-managed structured data file (003-gap-analysis-map)
+- Repo-managed structured data file; no runtime persistence (003-gap-analysis-map)
+
+## Recent Changes
+
+- 003-gap-analysis-map: Added TypeScript with React 18 on Next.js 15 + Next.js App Router, MUI, existing marketing app testing stack, vetted npm React US map package, and repo-managed structured data file
+
+## UI Guidance
+
+- Follow [docs/ui-convention.md](docs/ui-convention.md) for React/UI component structure, theme inheritance, interaction patterns, Storybook `play` coverage, and interactive layout-stability rules.
+- Interactive components MUST not introduce width or height shifts between default, hover, focus, selected, and locked states, especially in stacked mobile layouts.
+- Components that honor `data-theme` or similar inherited presentation context MUST derive text, surface, divider, and icon colors from that inherited mode rather than assuming the active MUI theme already matches it.
