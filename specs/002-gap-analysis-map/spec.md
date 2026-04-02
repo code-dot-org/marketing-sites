@@ -11,7 +11,7 @@ This feature introduces an interactive, map-based data visualization component t
 
 The component is designed to be embedded on a Code.org advocacy page and serves as a compelling, high-information companion to the existing static report downloads.
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Explore State Metrics via Map (Priority: P1)
 
@@ -88,7 +88,7 @@ A user on a small screen or using assistive technology cannot or does not intera
 - How is the SVG map handled if it fails to load or render in a browser? The component should degrade to the fallback state-selection interface used for small viewports.
 - Which parts of the feature remain server-rendered? The initial map render (states with tier-based fill colors) is server-rendered. The hover-tracking, panel visibility state, and lock behavior are client-only and require an isolated hydration boundary that is explicitly justified in the implementation plan.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -114,7 +114,7 @@ A user on a small screen or using assistive technology cannot or does not intera
 - **FR-020**: The visual design MUST use a dark-mode aesthetic (consistent with the PoC reference) using the MUI-based design token system where applicable. A standalone dark theme for this component is acceptable if the page context is an isolated dark-background embed.
 - **FR-021**: No Contentful schema changes are required for v1. If a future phase moves data to Contentful, the specification MUST identify what was confirmed via Contentful MCP vs. inferred, and any write operations MUST require a human confirmation step followed by a re-read of the resulting state.
 
-## Integration Points *(mandatory when external systems or cross-workspace changes are involved)*
+## Integration Points _(mandatory when external systems or cross-workspace changes are involved)_
 
 ### Systems and Contracts
 
@@ -141,7 +141,7 @@ A user on a small screen or using assistive technology cannot or does not intera
 - **PolicyTier**: A categorical value with at least three levels (e.g., "foundation", "building", "leader") that maps to a distinct fill color on the map and a human-readable badge label in the data panel; determines visual hierarchy at a glance
 - **GapMetric**: A derived display value (access % minus participation %) computed from StateDataRecord fields at render time; represents the "implementation gap" between institutional availability and actual student uptake
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

@@ -139,7 +139,7 @@ export default function StateGapMapPanel({
                 spacing={{xs: 0.75, md: 1}}
               >
                 <Stack spacing={{xs: 0.5, md: 0.75}}>
-                  <Typography variant="h5" sx={{color: textColors.primary}}>
+                  <Typography variant="h4" sx={{color: textColors.primary}}>
                     {stateRecord.name}
                   </Typography>
                   <Chip
@@ -234,7 +234,7 @@ export default function StateGapMapPanel({
             </>
           ) : (
             <Stack spacing={{xs: 1, md: 1.5}}>
-              <Typography variant="h5" sx={{color: textColors.primary}}>
+              <Typography variant="h4" sx={{color: textColors.primary}}>
                 Select a state
               </Typography>
               <Typography variant="body2" sx={{color: textColors.secondary}}>

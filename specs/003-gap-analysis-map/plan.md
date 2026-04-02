@@ -29,7 +29,7 @@ Add a standalone, state-by-state US gap analysis map to the advocacy experience 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - **Availability, Cached, Secure, Observable, and Privacy-Safe Operations**: Pass. The plan keeps the feature on a cacheable public page without adding a per-request API or tokenized runtime map dependency. No new logging, analytics, consent, or telemetry is required for v1. No new personal data, Student Records, or FERPA-sensitive data is introduced; the feature only renders aggregate public metrics and visitor-initiated links to already public state assets.
 - **Shared System First And SSR By Default**: Pass. Affected workspaces are [`apps/marketing`](/var/home/sliang/git-workspaces/marketing-sites/apps/marketing) and [`apps/marketing-storybook`](/var/home/sliang/git-workspaces/marketing-sites/apps/marketing-storybook). The feature remains a higher-level marketing component rather than a shared atomic primitive. The page shell and data composition stay server-rendered; only the interactive map and floating panel behavior use a client boundary. The implementation will use direct MUI composition and will not add more legacy design-system dependency.

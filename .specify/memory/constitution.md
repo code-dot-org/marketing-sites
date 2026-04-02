@@ -13,11 +13,13 @@ Templates requiring updates:
 Follow-up TODOs:
 - None
 -->
+
 # Code.org Marketing Websites Constitution
 
 ## Core Principles
 
 ### I. Availability, Cached, Secure, Observable, and Privacy-Safe Operations
+
 Production-affecting features MUST preserve or improve operational visibility
 through structured logs, metrics, traceability, or documented monitoring hooks
 appropriate to the touched surface. Instrumentation MUST avoid exposing secrets,
@@ -42,6 +44,7 @@ downstream sharing, consent or opt-in path, retention/deletion expectations,
 and escalation to privacy/security owners when the policy impact is unclear.
 
 ### II. Shared System First And SSR By Default
+
 Changes that affect reusable presentation, styling, or content modeling MUST be
 implemented in the shared package or design-system layer before app-level
 overrides are introduced. New duplication across `apps/*` and `packages/*` MUST
@@ -65,6 +68,7 @@ limited scope and without affecting other components, the plan and tasks SHOULD
 prefer that migration over adding more dependency on the deprecated surface.
 
 ### III. WCAG AA And Layered Storybook UX
+
 Every net-new or materially changed UI surface MUST define how it will be
 verified in `apps/design-system-storybook`, `apps/marketing-storybook`,
 page-level previews, or an equivalent reviewable fixture. Contentful-backed UI
@@ -82,6 +86,7 @@ wrapper theme does not match the active MUI provider. This is non-negotiable
 because marketing work is visual, reusable, and public-facing.
 
 ### IV. Quality Gates Are Release Gates
+
 Work MUST pass the smallest meaningful automated validation set before merge:
 linting, type checks, and tests covering the changed behavior. When a change
 alters rendering, content composition, or tenant-specific behavior, the spec and
@@ -98,6 +103,7 @@ This principle prevents regressions in a fast-moving monorepo with multiple
 apps and shared packages.
 
 ### V. Spec-Driven Incremental Delivery
+
 All substantial work MUST begin with a spec, plan, and task breakdown that can
 ship value in independently testable slices. Plans MUST identify the affected
 workspaces, reuse opportunities, request/data flows, required quality gates, and

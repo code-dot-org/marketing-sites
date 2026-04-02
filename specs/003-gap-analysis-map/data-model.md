@@ -6,27 +6,27 @@ Represents a single selectable geography in the map experience.
 
 ### Fields
 
-| Field | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | Yes | Stable geography identifier used by the map and data contract. |
-| `code` | string | Yes | Two-letter postal-style abbreviation used for labels and matching geometry. |
-| `name` | string | Yes | Public display name for the geography. |
-| `tier` | enum | Yes | Policy progress classification shown in the heatmap and panel. |
-| `accessPercent` | number | Yes | Aggregate percentage representing institutional access. |
-| `participationPercent` | number | Yes | Aggregate percentage representing student participation. |
-| `reportUrl` | string | No | Public destination for the state's report asset. |
-| `presentationUrl` | string | No | Public destination for the state's presentation asset. |
-| `isSelectable` | boolean | Yes | Indicates whether the geography should respond to interaction; defaults to true for valid records. |
-| `displayRegion` | enum | Yes | Identifies whether the geography belongs in the contiguous map, the Alaska inset, or the Hawaii inset. |
+| Field                  | Type    | Required | Description                                                                                            |
+| ---------------------- | ------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| `id`                   | string  | Yes      | Stable geography identifier used by the map and data contract.                                         |
+| `code`                 | string  | Yes      | Two-letter postal-style abbreviation used for labels and matching geometry.                            |
+| `name`                 | string  | Yes      | Public display name for the geography.                                                                 |
+| `tier`                 | enum    | Yes      | Policy progress classification shown in the heatmap and panel.                                         |
+| `accessPercent`        | number  | Yes      | Aggregate percentage representing institutional access.                                                |
+| `participationPercent` | number  | Yes      | Aggregate percentage representing student participation.                                               |
+| `reportUrl`            | string  | No       | Public destination for the state's report asset.                                                       |
+| `presentationUrl`      | string  | No       | Public destination for the state's presentation asset.                                                 |
+| `isSelectable`         | boolean | Yes      | Indicates whether the geography should respond to interaction; defaults to true for valid records.     |
+| `displayRegion`        | enum    | Yes      | Identifies whether the geography belongs in the contiguous map, the Alaska inset, or the Hawaii inset. |
 
 ### Derived Values
 
-| Derived field | Rule |
-|--------------|------|
-| `gapPercent` | `accessPercent - participationPercent` |
-| `hasReport` | `reportUrl` is present and valid |
-| `hasPresentation` | `presentationUrl` is present and valid |
-| `isDataComplete` | Required metric and tier fields are present |
+| Derived field     | Rule                                        |
+| ----------------- | ------------------------------------------- |
+| `gapPercent`      | `accessPercent - participationPercent`      |
+| `hasReport`       | `reportUrl` is present and valid            |
+| `hasPresentation` | `presentationUrl` is present and valid      |
+| `isDataComplete`  | Required metric and tier fields are present |
 
 ### Validation Rules
 
@@ -43,12 +43,12 @@ Describes the categorical status used by the heatmap and panel treatment.
 
 ### Fields
 
-| Field | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | Yes | Stable tier key. |
-| `label` | string | Yes | Public-facing label, such as lagging, progressing, or leading. |
-| `description` | string | No | Optional explanatory text for stories, tooltips, or future editorial context. |
-| `themeTokens` | object | Yes | Semantic visual treatment values that remain legible on inherited light or dark themes. |
+| Field         | Type   | Required | Description                                                                             |
+| ------------- | ------ | -------- | --------------------------------------------------------------------------------------- |
+| `id`          | string | Yes      | Stable tier key.                                                                        |
+| `label`       | string | Yes      | Public-facing label, such as lagging, progressing, or leading.                          |
+| `description` | string | No       | Optional explanatory text for stories, tooltips, or future editorial context.           |
+| `themeTokens` | object | Yes      | Semantic visual treatment values that remain legible on inherited light or dark themes. |
 
 ### Validation Rules
 
@@ -61,13 +61,13 @@ Describes the rendered selectable region metadata for a geography.
 
 ### Fields
 
-| Field | Type | Required | Description |
-|------|------|----------|-------------|
-| `geographyId` | string | Yes | Links geometry to a `State Metric Record`. |
-| `regionType` | enum | Yes | `contiguous`, `alaskaInset`, `hawaiiInset`, or `smallStateCallout` if needed by final rendering. |
-| `rendererSource` | string | Yes | Identifies the renderer package or source used to draw the geography. |
-| `hitAreaStrategy` | string | No | Optional note describing any package-level or wrapper-level treatment used to preserve small-state selectability. |
-| `labelAnchor` | object | No | Optional anchor point for labels or callouts if the selected renderer needs local overrides. |
+| Field             | Type   | Required | Description                                                                                                       |
+| ----------------- | ------ | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| `geographyId`     | string | Yes      | Links geometry to a `State Metric Record`.                                                                        |
+| `regionType`      | enum   | Yes      | `contiguous`, `alaskaInset`, `hawaiiInset`, or `smallStateCallout` if needed by final rendering.                  |
+| `rendererSource`  | string | Yes      | Identifies the renderer package or source used to draw the geography.                                             |
+| `hitAreaStrategy` | string | No       | Optional note describing any package-level or wrapper-level treatment used to preserve small-state selectability. |
+| `labelAnchor`     | object | No       | Optional anchor point for labels or callouts if the selected renderer needs local overrides.                      |
 
 ### Validation Rules
 
@@ -81,24 +81,24 @@ Represents the current interaction state of the floating data panel.
 
 ### Fields
 
-| Field | Type | Required | Description |
-|------|------|----------|-------------|
-| `mode` | enum | Yes | `default`, `preview`, or `locked`. |
-| `activeGeographyId` | string | No | The currently hovered or locked geography. |
-| `activeSource` | enum | No | `hover`, `click`, `keyboard`, or `touch`. |
+| Field               | Type   | Required | Description                                |
+| ------------------- | ------ | -------- | ------------------------------------------ |
+| `mode`              | enum   | Yes      | `default`, `preview`, or `locked`.         |
+| `activeGeographyId` | string | No       | The currently hovered or locked geography. |
+| `activeSource`      | enum   | No       | `hover`, `click`, `keyboard`, or `touch`.  |
 
 ### State Transitions
 
-| From | Event | To |
-|------|-------|----|
-| `default` | Hover a valid geography | `preview` |
-| `default` | Click/tap/keyboard activate a valid geography | `locked` |
-| `preview` | Hover a different valid geography | `preview` |
-| `preview` | Leave interactive geography | `default` |
-| `preview` | Click/tap/keyboard activate current geography | `locked` |
-| `locked` | Interact with panel actions | `locked` |
-| `locked` | Activate a different geography | `locked` with new `activeGeographyId` |
-| `locked` | Close panel or outside click | `default` |
+| From      | Event                                         | To                                    |
+| --------- | --------------------------------------------- | ------------------------------------- |
+| `default` | Hover a valid geography                       | `preview`                             |
+| `default` | Click/tap/keyboard activate a valid geography | `locked`                              |
+| `preview` | Hover a different valid geography             | `preview`                             |
+| `preview` | Leave interactive geography                   | `default`                             |
+| `preview` | Click/tap/keyboard activate current geography | `locked`                              |
+| `locked`  | Interact with panel actions                   | `locked`                              |
+| `locked`  | Activate a different geography                | `locked` with new `activeGeographyId` |
+| `locked`  | Close panel or outside click                  | `default`                             |
 
 ## Entity: State Asset Link
 
@@ -106,12 +106,12 @@ Represents a public document destination associated with a geography.
 
 ### Fields
 
-| Field | Type | Required | Description |
-|------|------|----------|-------------|
-| `geographyId` | string | Yes | Links the asset to a geography. |
-| `kind` | enum | Yes | `report` or `presentation`. |
-| `url` | string | Yes | Public destination URL. |
-| `label` | string | Yes | Visitor-facing action label. |
+| Field         | Type   | Required | Description                     |
+| ------------- | ------ | -------- | ------------------------------- |
+| `geographyId` | string | Yes      | Links the asset to a geography. |
+| `kind`        | enum   | Yes      | `report` or `presentation`.     |
+| `url`         | string | Yes      | Public destination URL.         |
+| `label`       | string | Yes      | Visitor-facing action label.    |
 
 ### Validation Rules
 

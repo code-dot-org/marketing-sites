@@ -85,8 +85,8 @@ export default function StateGapMapRenderer({
     const svg = root.querySelector<SVGSVGElement>('svg.usa-map');
 
     if (svg) {
-      svg.setAttribute('role', 'img');
-      svg.setAttribute('aria-label', 'United States state gap analysis map');
+      svg.removeAttribute('role');
+      svg.removeAttribute('aria-label');
     }
 
     // The third-party map renders the state shapes but does not expose the full
@@ -131,6 +131,8 @@ export default function StateGapMapRenderer({
   return (
     <Box
       ref={containerRef}
+      role="group"
+      aria-label="United States state gap analysis map"
       onMouseLeave={onClearHover}
       onKeyDownCapture={event => {
         const target = event.target as HTMLElement | null;

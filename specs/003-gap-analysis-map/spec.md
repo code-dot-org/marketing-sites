@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "Generate the product specifications and component architecture for an interactive, map-based data visualization tool designed to display geographical gaps in educational metrics."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Preview a State by Hovering (Priority: P1)
 
@@ -85,7 +85,7 @@ A first-time visitor wants to understand which parts of the country are lagging,
 - The feature must not expose preview-only, draft-only, or non-public data on a public page.
 - The feature must not collect, infer, or transmit personal data, Student Records, or school-directed data.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -114,7 +114,7 @@ A first-time visitor wants to understand which parts of the country are lagging,
 - **FR-021**: The feature MUST define review coverage through story-driven mocks, focused automated tests for the interaction model, and page-level verification sufficient to confirm accessibility, state selection behavior, and graceful handling of missing data.
 - **FR-022**: If the feature later adopts Contentful-managed state data or editor-controlled link sets, the follow-on plan MUST confirm the relevant content model and entry assumptions through Contentful MCP before implementation and MUST require human confirmation for any Contentful writes.
 
-## Integration Points *(mandatory when external systems or cross-workspace changes are involved)*
+## Integration Points _(mandatory when external systems or cross-workspace changes are involved)_
 
 ### Systems and Contracts
 
@@ -133,14 +133,14 @@ A first-time visitor wants to understand which parts of the country are lagging,
 - No Contentful schema or entry assumption has been confirmed for v1 because the requested feature can be specified against a structured local dataset. If structured content is later moved into Contentful, that work requires separate MCP confirmation and human-approved schema changes.
 - The feature deals only in aggregate public metrics and public asset destinations; it must not mix in personal data or non-public reporting.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **State Metric Record**: A public, aggregate description of one geography's policy tier, access value, participation value, and state-specific asset destinations.
 - **Policy Progress Tier**: The categorical status used to color the map and summarize where a state sits on the policy rubric.
 - **Selection Panel State**: The current interaction mode of the panel: default, hover preview, or locked selection.
 - **State Asset Link**: A public destination for a state report or presentation deck associated with the selected geography.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

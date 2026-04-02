@@ -30,7 +30,9 @@ describe('StateGapMap', () => {
 
     fireEvent.mouseEnter(screen.getByRole('button', {name: /California/i}));
     fireEvent.mouseLeave(
-      screen.getByRole('img', {name: /United States state gap analysis map/i}),
+      screen.getByRole('group', {
+        name: /United States state gap analysis map/i,
+      }),
     );
 
     expect(screen.queryByText('California')).not.toBeInTheDocument();

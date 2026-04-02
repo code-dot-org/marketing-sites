@@ -146,10 +146,33 @@ See [docs/ui-convention.md](docs/ui-convention.md).
 
 - `yarn build`
 - `yarn lint`
+- `yarn lint:fix`
 - `yarn test`
 - `yarn release:dryrun`
+- `yarn test:ui:ci`
+- `yarn test:ui:local`
 - `yarn workspace @code-dot-org/design-system-storybook test:ui:ci`
 - `yarn workspace @code-dot-org/marketing-storybook test:ui:ci`
+
+## Validation Expectations
+
+- Use root `yarn lint:fix` when touched files need repo-standard autofixes before
+  final validation.
+- Use root `yarn release:dryrun` as a final validation step for substantial
+  changes unless the task is docs-only or the user explicitly scopes validation
+  down.
+- `yarn release:dryrun` currently runs Turbo `build`, `lint`, and `test`.
+- Use root `yarn test:ui:ci` as the standard optional final browser-validation
+  step when Storybook or other UI coverage should also run from the repo root.
+- Use root `yarn test:ui:local` only for local workflows that intentionally
+  point tests at an already running local app or Storybook server.
+- For Storybook-focused changes, make it explicit whether the relevant
+  Storybook `test:ui:ci` fanout passed, even if the full root `yarn test:ui:ci`
+  run also includes unrelated UI suites with separate environment or visual-test
+  requirements.
+- If root `yarn test:ui:ci` fails outside the touched Storybook surface, report
+  that clearly and separately from the status of the Storybook fanout that
+  covers the changed stories.
 
 ## Local Runtime
 
@@ -157,10 +180,12 @@ See [docs/ui-convention.md](docs/ui-convention.md).
 - preview URL: `http://preview-[brand].marketing-sites.localhost:3001`
 
 ## Active Technologies
+
 - TypeScript with React 18 on Next.js 15 + Next.js App Router, MUI, existing marketing app testing stack, vetted npm React US map package, and repo-managed structured data file (003-gap-analysis-map)
 - Repo-managed structured data file; no runtime persistence (003-gap-analysis-map)
 
 ## Recent Changes
+
 - 003-gap-analysis-map: Added TypeScript with React 18 on Next.js 15 + Next.js App Router, MUI, existing marketing app testing stack, vetted npm React US map package, and repo-managed structured data file
 
 ## UI Guidance

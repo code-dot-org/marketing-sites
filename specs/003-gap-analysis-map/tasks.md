@@ -17,9 +17,9 @@
 
 **Purpose**: Confirm the concrete marketing-app integration surface, add feature scaffolding, and lock the non-negotiable cache/SSR/accessibility constraints before implementation.
 
-- [X] T001 Confirm the catch-all Experience route and component-registration integration approach in `apps/marketing/src/app/[brand]/[locale]/[[...paths]]/page.tsx` and `apps/marketing/src/contentful/registration/index.ts`
-- [X] T002 [P] Create the feature directory scaffold in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/index.ts`, `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`, and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/`
-- [X] T003 [P] Create the Storybook scaffold in `apps/marketing-storybook/stories/StateGapMap.story.tsx` and `apps/marketing-storybook/stories/__mocks__/stateGapMapData.ts`
+- [x] T001 Confirm the catch-all Experience route and component-registration integration approach in `apps/marketing/src/app/[brand]/[locale]/[[...paths]]/page.tsx` and `apps/marketing/src/contentful/registration/index.ts`
+- [x] T002 [P] Create the feature directory scaffold in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/index.ts`, `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`, and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/`
+- [x] T003 [P] Create the Storybook scaffold in `apps/marketing-storybook/stories/StateGapMap.story.tsx` and `apps/marketing-storybook/stories/__mocks__/stateGapMapData.ts`
 - [ ] T004 [P] Document the no-Contentful-schema decision and synthetic-fixture requirement in `specs/003-gap-analysis-map/plan.md` and `specs/003-gap-analysis-map/quickstart.md` if implementation details evolve
 - [ ] T005 [P] Record the validation commands and CI surfaces for this feature in `specs/003-gap-analysis-map/quickstart.md`
 
@@ -31,14 +31,14 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [X] T006 Create the repo-managed data contract in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/data.ts`
-- [X] T007 [P] Create the feature types and derived-value helpers in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/types.ts` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/utils.ts`
-- [X] T008 [P] Create the static geometry and inset metadata in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/geometry.ts`
-- [X] T009 [P] Create theme token mapping for tier colors and inherited `data-theme` support in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/theme.ts`
-- [X] T010 [P] Add dataset/schema validation tests in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/stateGapMap.data.test.ts`
-- [X] T011 Add the Contentful component definition in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapContentfulDefinition.ts`
-- [X] T012 Register the new component for the Code.org runtime in `apps/marketing/src/contentful/registration/code.org/index.ts`
-- [X] T013 [P] Add a smoke registration test for the new component in `apps/marketing/src/contentful/registration/__tests__/index.test.ts`
+- [x] T006 Create the repo-managed data contract in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/data.ts`
+- [x] T007 [P] Create the feature types and derived-value helpers in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/types.ts` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/utils.ts`
+- [x] T008 [P] Create the static geometry and inset metadata in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/geometry.ts`
+- [x] T009 [P] Create theme token mapping for tier colors and inherited `data-theme` support in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/theme.ts`
+- [x] T010 [P] Add dataset/schema validation tests in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/stateGapMap.data.test.ts`
+- [x] T011 Add the Contentful component definition in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapContentfulDefinition.ts`
+- [x] T012 Register the new component for the Code.org runtime in `apps/marketing/src/contentful/registration/code.org/index.ts`
+- [x] T013 [P] Add a smoke registration test for the new component in `apps/marketing/src/contentful/registration/__tests__/index.test.ts`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -52,18 +52,18 @@
 
 ### Tests for User Story 1
 
-- [X] T014 [P] [US1] Add default and hover-preview Storybook coverage in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
-- [X] T015 [P] [US1] Add interaction tests for hover preview, active highlighting, and derived gap display in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMap.test.tsx`
-- [X] T016 [P] [US1] Add accessibility assertions for state labeling and panel announcement in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMapRenderer.test.tsx`
+- [x] T014 [P] [US1] Add default and hover-preview Storybook coverage in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
+- [x] T015 [P] [US1] Add interaction tests for hover preview, active highlighting, and derived gap display in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMap.test.tsx`
+- [x] T016 [P] [US1] Add accessibility assertions for state labeling and panel announcement in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMapRenderer.test.tsx`
 
 ### Implementation for User Story 1
 
-- [X] T017 [P] [US1] Implement the client component boundary and conventional entry structure in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/index.ts`
-- [X] T018 [P] [US1] Implement the package-backed geographic renderer plus hover hit areas in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapRenderer.tsx`
-- [X] T019 [P] [US1] Implement the floating preview panel shell in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
-- [X] T020 [US1] Wire hover state management, derived metric display, and default empty-state behavior in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
-- [X] T021 [US1] Add neutral unavailable-state handling for incomplete records in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
-- [X] T022 [US1] Add synthetic Storybook fixture data that matches the schema contract in `apps/marketing-storybook/stories/__mocks__/stateGapMapData.ts`
+- [x] T017 [P] [US1] Implement the client component boundary and conventional entry structure in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/index.ts`
+- [x] T018 [P] [US1] Implement the package-backed geographic renderer plus hover hit areas in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapRenderer.tsx`
+- [x] T019 [P] [US1] Implement the floating preview panel shell in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
+- [x] T020 [US1] Wire hover state management, derived metric display, and default empty-state behavior in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
+- [x] T021 [US1] Add neutral unavailable-state handling for incomplete records in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
+- [x] T022 [US1] Add synthetic Storybook fixture data that matches the schema contract in `apps/marketing-storybook/stories/__mocks__/stateGapMapData.ts`
 
 **Checkpoint**: User Story 1 should be functional and independently testable
 
@@ -77,15 +77,15 @@
 
 ### Tests for User Story 2
 
-- [X] T023 [P] [US2] Add locked-state and download-action Storybook coverage in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
-- [X] T024 [P] [US2] Add Jest coverage for click-to-lock, lock transfer, and hidden invalid links in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMap.test.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMapPanel.test.tsx`
+- [x] T023 [P] [US2] Add locked-state and download-action Storybook coverage in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
+- [x] T024 [P] [US2] Add Jest coverage for click-to-lock, lock transfer, and hidden invalid links in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMap.test.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMapPanel.test.tsx`
 
 ### Implementation for User Story 2
 
-- [X] T025 [P] [US2] Implement locked-selection state transitions in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
-- [X] T026 [P] [US2] Implement state-specific action rendering and external-link behavior in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
-- [X] T027 [US2] Ensure hover no longer overrides a locked state and allow click-to-transfer lock in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
-- [X] T028 [US2] Add link-validity guards and CTA suppression for incomplete assets in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/utils.ts` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
+- [x] T025 [P] [US2] Implement locked-selection state transitions in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
+- [x] T026 [P] [US2] Implement state-specific action rendering and external-link behavior in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
+- [x] T027 [US2] Ensure hover no longer overrides a locked state and allow click-to-transfer lock in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
+- [x] T028 [US2] Add link-validity guards and CTA suppression for incomplete assets in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/utils.ts` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
 
 **Checkpoint**: User Stories 1 and 2 should both work independently
 
@@ -99,14 +99,14 @@
 
 ### Tests for User Story 3
 
-- [X] T029 [P] [US3] Add reset-behavior Storybook coverage in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
-- [X] T030 [P] [US3] Add Jest coverage for close-button reset, outside-click reset, and resumed hover behavior in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMap.test.tsx`
+- [x] T029 [P] [US3] Add reset-behavior Storybook coverage in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
+- [x] T030 [P] [US3] Add Jest coverage for close-button reset, outside-click reset, and resumed hover behavior in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMap.test.tsx`
 
 ### Implementation for User Story 3
 
-- [X] T031 [P] [US3] Implement the close control and locked-panel dismiss behavior in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
-- [X] T032 [P] [US3] Implement outside-click detection and reset behavior with React/MUI click-away composition in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
-- [X] T033 [US3] Restore default preview behavior after reset, including keyboard and touch activation parity, in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
+- [x] T031 [P] [US3] Implement the close control and locked-panel dismiss behavior in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`
+- [x] T032 [P] [US3] Implement outside-click detection and reset behavior with React/MUI click-away composition in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
+- [x] T033 [US3] Restore default preview behavior after reset, including keyboard and touch activation parity, in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
 
 **Checkpoint**: User Stories 1 through 3 should be independently functional
 
@@ -120,15 +120,15 @@
 
 ### Tests for User Story 4
 
-- [X] T034 [P] [US4] Add at-a-glance, small-state, inset, and theme-variation stories in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
-- [X] T035 [P] [US4] Add Jest coverage for tier styling, East Coast hit areas, and Alaska/Hawaii inset rendering in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMapRenderer.test.tsx`
+- [x] T034 [P] [US4] Add at-a-glance, small-state, inset, and theme-variation stories in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
+- [x] T035 [P] [US4] Add Jest coverage for tier styling, East Coast hit areas, and Alaska/Hawaii inset rendering in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/StateGapMapRenderer.test.tsx`
 
 ### Implementation for User Story 4
 
-- [X] T036 [P] [US4] Implement tier-based default fills and theme-inheriting visual tokens in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapRenderer.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/theme.ts`
-- [X] T037 [P] [US4] Implement East Coast small-state visibility and enlarged selectable hit areas in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapRenderer.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/geometry.ts`
-- [X] T038 [P] [US4] Implement Alaska and Hawaii West Coast inset placement in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapRenderer.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/geometry.ts`
-- [X] T039 [US4] Add any at-a-glance legend or tier explanation needed for non-interactive comprehension in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapLegend.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
+- [x] T036 [P] [US4] Implement tier-based default fills and theme-inheriting visual tokens in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapRenderer.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/theme.ts`
+- [x] T037 [P] [US4] Implement East Coast small-state visibility and enlarged selectable hit areas in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapRenderer.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/geometry.ts`
+- [x] T038 [P] [US4] Implement Alaska and Hawaii West Coast inset placement in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapRenderer.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/geometry.ts`
+- [x] T039 [US4] Add any at-a-glance legend or tier explanation needed for non-interactive comprehension in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapLegend.tsx` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -139,10 +139,10 @@
 **Purpose**: Complete page integration, regression coverage, and release-quality validation across all stories
 
 - [ ] T040 Integrate the new component into the targeted advocacy-facing page composition in `apps/marketing/src/app/[brand]/[locale]/[[...paths]]/page.tsx`
-- [X] T041 [P] Add any page-composition glue needed for the new component in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/index.ts` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
+- [x] T041 [P] Add any page-composition glue needed for the new component in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/index.ts` and `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMap.tsx`
 - [ ] T042 [P] Add a focused page-level Playwright regression only if the embedded experience needs end-to-end protection in `apps/marketing/tests/e2e/state-gap-map.spec.ts`
-- [X] T043 [P] Run and fix focused marketing tests in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/` and `apps/marketing/tests/e2e/state-gap-map.spec.ts`
-- [X] T044 [P] Run and fix Storybook review coverage in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
+- [x] T043 [P] Run and fix focused marketing tests in `apps/marketing/src/components/contentful/corporateSite/stateGapMap/__tests__/` and `apps/marketing/tests/e2e/state-gap-map.spec.ts`
+- [x] T044 [P] Run and fix Storybook review coverage in `apps/marketing-storybook/stories/StateGapMap.story.tsx`
 - [ ] T045 [P] Validate quickstart scenarios and update any implementation-specific steps in `specs/003-gap-analysis-map/quickstart.md`
 - [ ] T046 [P] Verify cache, SEO, preview/draft, privacy, and SSR behavior remain unchanged in `apps/marketing/src/app/[brand]/[locale]/[[...paths]]/page.tsx`, `apps/marketing/src/app/sitemap.xml/route.ts`, and `apps/marketing/src/app/robots.txt/route.ts`
 
