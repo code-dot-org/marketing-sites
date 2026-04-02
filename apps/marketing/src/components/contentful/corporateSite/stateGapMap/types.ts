@@ -1,4 +1,5 @@
 export type StateGapMapTierId = 'lagging' | 'progressing' | 'leading';
+export type StateGapMapDataStatus = 'complete' | 'unavailable';
 
 export type StateGapMapDisplayRegion =
   | 'contiguous'
@@ -27,6 +28,8 @@ export interface StateGapMapRecord {
   accessPercent: number;
   /** Percentage of students participating in the tracked program. */
   participationPercent: number;
+  /** Marks records whose metrics should render as unavailable rather than as a tier. */
+  dataStatus?: StateGapMapDataStatus;
   /** State-specific report download URL shown in the locked panel. */
   reportUrl?: string;
   /** State-specific presentation deck URL shown in the locked panel. */
@@ -42,13 +45,6 @@ export interface StateGapMapDataset {
   tiers: StateGapMapTier[];
   /** One entry per state or district rendered in the experience. */
   states: StateGapMapRecord[];
-}
-
-export interface StateGapMapGeometry {
-  /** Two-letter geography code for the rendered shape. */
-  code: string;
-  /** Region bucket used to distinguish contiguous states from insets. */
-  displayRegion: StateGapMapDisplayRegion;
 }
 
 export type StateGapMapMode = 'default' | 'preview' | 'locked';

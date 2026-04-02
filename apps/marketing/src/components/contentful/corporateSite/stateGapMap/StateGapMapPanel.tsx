@@ -12,12 +12,11 @@ import {
 } from '@mui/material';
 import {useTheme} from '@mui/material/styles';
 
-import {getModeTextColors, getTierColors} from './theme';
+import {getModeTextColors, getTierColors, getUnavailableColors} from './theme';
 import {StateGapMapDataset, StateGapMapMode, StateGapMapRecord} from './types';
 import {
   computeGapPercent,
   formatPercent,
-  getTier,
   hasValidUrl,
   isRecordComplete,
 } from './utils';
@@ -55,13 +54,20 @@ export default function StateGapMapPanel({
 }: StateGapMapPanelProps) {
   const theme = useTheme();
   const textColors = getModeTextColors(theme, inheritedMode);
-  const tier = stateRecord ? getTier(dataset, stateRecord.tier) : undefined;
+  const tier = stateRecord
+    ? dataset.tiers.find(entry => entry.id === stateRecord.tier)
+    : undefined;
   const isComplete = stateRecord ? isRecordComplete(stateRecord) : false;
   const colors = stateRecord
-    ? getTierColors(theme, stateRecord.tier, inheritedMode, {
-        active: mode !== 'default',
-        locked: mode === 'locked',
-      })
+    ? isComplete
+      ? getTierColors(theme, stateRecord.tier, inheritedMode, {
+          active: mode !== 'default',
+          locked: mode === 'locked',
+        })
+      : getUnavailableColors(theme, inheritedMode, {
+          active: mode !== 'default',
+          locked: mode === 'locked',
+        })
     : undefined;
 
   return (
@@ -143,7 +149,11 @@ export default function StateGapMapPanel({
                     {stateRecord.name}
                   </Typography>
                   <Chip
-                    label={tier?.label ?? stateRecord.tier}
+                    label={
+                      isComplete
+                        ? (tier?.label ?? stateRecord.tier)
+                        : 'Data unavailable'
+                    }
                     sx={{
                       alignSelf: 'flex-start',
                       bgcolor: colors?.badgeBg,

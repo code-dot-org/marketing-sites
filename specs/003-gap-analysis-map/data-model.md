@@ -14,6 +14,7 @@ Represents a single selectable geography in the map experience.
 | `tier`                 | enum    | Yes      | Policy progress classification shown in the heatmap and panel.                                         |
 | `accessPercent`        | number  | Yes      | Aggregate percentage representing institutional access.                                                |
 | `participationPercent` | number  | Yes      | Aggregate percentage representing student participation.                                               |
+| `dataStatus`           | enum    | No       | `complete` or `unavailable`; unavailable records render neutrally and suppress metric display.         |
 | `reportUrl`            | string  | No       | Public destination for the state's report asset.                                                       |
 | `presentationUrl`      | string  | No       | Public destination for the state's presentation asset.                                                 |
 | `isSelectable`         | boolean | Yes      | Indicates whether the geography should respond to interaction; defaults to true for valid records.     |
@@ -21,12 +22,12 @@ Represents a single selectable geography in the map experience.
 
 ### Derived Values
 
-| Derived field     | Rule                                        |
-| ----------------- | ------------------------------------------- |
-| `gapPercent`      | `accessPercent - participationPercent`      |
-| `hasReport`       | `reportUrl` is present and valid            |
-| `hasPresentation` | `presentationUrl` is present and valid      |
-| `isDataComplete`  | Required metric and tier fields are present |
+| Derived field     | Rule                                                                     |
+| ----------------- | ------------------------------------------------------------------------ |
+| `gapPercent`      | `accessPercent - participationPercent`                                   |
+| `hasReport`       | `reportUrl` is present and valid                                         |
+| `hasPresentation` | `presentationUrl` is present and valid                                   |
+| `isDataComplete`  | Required metric fields are present and `dataStatus` is not `unavailable` |
 
 ### Validation Rules
 
@@ -34,6 +35,7 @@ Represents a single selectable geography in the map experience.
 - `name` must be unique across all records in the published dataset.
 - `tier` must match one of the supported policy tiers.
 - `accessPercent` and `participationPercent` must be numeric percentage values suitable for public display.
+- `dataStatus: unavailable` takes precedence over tier styling and metric display, even if placeholder numeric values are present in the source dataset.
 - Missing `reportUrl` or `presentationUrl` is allowed and suppresses the related action.
 - Invalid or incomplete records must degrade to a neutral unavailable presentation rather than rendering misleading values.
 
@@ -54,6 +56,18 @@ Describes the categorical status used by the heatmap and panel treatment.
 
 - Tier IDs must be stable and reusable across all records.
 - Tier styles must remain distinguishable in both light and dark inherited theme contexts.
+
+## Entity: Data Availability State
+
+Describes the neutral treatment used when a selectable geography has incomplete public metrics.
+
+### Fields
+
+| Field   | Type   | Required | Description                                                                 |
+| ------- | ------ | -------- | --------------------------------------------------------------------------- |
+| `id`    | string | Yes      | Stable state key, currently `unavailable`.                                  |
+| `label` | string | Yes      | Public-facing label used in the legend and panel chip.                      |
+| `style` | object | Yes      | Neutral visual tokens that remain distinct from the three policy tier keys. |
 
 ## Entity: Map Geometry Record
 

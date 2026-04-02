@@ -17,6 +17,18 @@ export default meta;
 
 type Story = StoryObj<typeof StateGapMap>;
 
+const getStateElement = (canvasElement: HTMLElement, code: string) => {
+  const element = canvasElement.querySelector<SVGElement>(
+    `[data-name="${code}"]`,
+  );
+
+  if (!element) {
+    throw new Error(`Missing state element for ${code}`);
+  }
+
+  return element;
+};
+
 export const Playground: Story = {
   args: {
     dataset: stateGapMapStoryData,
@@ -38,7 +50,7 @@ export const HoverPreview: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    await userEvent.hover(canvas.getByRole('button', {name: /California/i}));
+    await userEvent.hover(getStateElement(canvasElement, 'CA'));
     await expect(canvas.getByText('California')).toBeInTheDocument();
   },
 };
@@ -49,10 +61,27 @@ export const LockedSelection: Story = {
   },
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByRole('button', {name: /California/i}));
+    await userEvent.click(getStateElement(canvasElement, 'CA'));
     await expect(canvas.getByText('California')).toBeInTheDocument();
     await expect(
       canvas.getByRole('link', {name: 'Download State Report'}),
+    ).toBeInTheDocument();
+  },
+};
+
+export const UnavailableData: Story = {
+  args: {
+    dataset: stateGapMapStoryData,
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.hover(getStateElement(canvasElement, 'DC'));
+    await expect(canvas.getByText('Washington, D.C.')).toBeInTheDocument();
+    await expect(canvas.getAllByText('Data unavailable')).toHaveLength(2);
+    await expect(
+      canvas.getByText(
+        'Data unavailable for this state in the current dataset.',
+      ),
     ).toBeInTheDocument();
   },
 };
@@ -91,13 +120,8 @@ export const GeographyCoverage: Story = {
     dataset: stateGapMapStoryData,
   },
   play: async ({canvasElement}) => {
-    const canvas = within(canvasElement);
-    await expect(
-      canvas.getByRole('button', {name: /Rhode Island/i}),
-    ).toBeInTheDocument();
-    await expect(canvas.getByRole('button', {name: /Alaska/i})).toHaveAttribute(
-      'data-display-region',
-      'alaskaInset',
-    );
+    await expect(getStateElement(canvasElement, 'RI')).toBeInTheDocument();
+    await expect(getStateElement(canvasElement, 'AK')).toBeInTheDocument();
+    await expect(getStateElement(canvasElement, 'DC')).toBeInTheDocument();
   },
 };

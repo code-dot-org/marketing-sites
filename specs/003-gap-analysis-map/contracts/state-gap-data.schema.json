@@ -67,6 +67,11 @@
           "participationPercent": {
             "type": "number"
           },
+          "dataStatus": {
+            "type": "string",
+            "enum": ["complete", "unavailable"],
+            "default": "complete"
+          },
           "reportUrl": {
             "type": "string",
             "format": "uri"

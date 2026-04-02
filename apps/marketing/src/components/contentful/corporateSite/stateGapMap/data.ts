@@ -37,6 +37,7 @@ export const stateGapMapData: StateGapMapDataset = {
       tier: 'lagging',
       accessPercent: 34,
       participationPercent: 0,
+      dataStatus: 'unavailable',
       reportUrl:
         'https://drive.google.com/file/d/1HsLGphsUQc2Leq_Hj_HIpxSwsFH-rcmr/view?usp=sharing',
       presentationUrl:
@@ -93,6 +94,7 @@ export const stateGapMapData: StateGapMapDataset = {
       tier: 'progressing',
       accessPercent: 66,
       participationPercent: 0,
+      dataStatus: 'unavailable',
       reportUrl:
         'https://drive.google.com/file/d/1r65Ldlk1R7Pg1b-eVPOi38z7-J2iRVWo/view?usp=sharing',
       presentationUrl:
@@ -121,6 +123,7 @@ export const stateGapMapData: StateGapMapDataset = {
       tier: 'progressing',
       accessPercent: 63,
       participationPercent: 0,
+      dataStatus: 'unavailable',
       reportUrl:
         'https://drive.google.com/file/d/1ovZbNHST7QShaSBTFv_yXGYZyXY_Vyht/view?usp=sharing',
       presentationUrl:
@@ -275,6 +278,7 @@ export const stateGapMapData: StateGapMapDataset = {
       tier: 'lagging',
       accessPercent: 59,
       participationPercent: 0,
+      dataStatus: 'unavailable',
       reportUrl:
         'https://drive.google.com/file/d/1VmnHsk6691fqEUG624iaG0vaOHdaO6ui/view?usp=sharing',
       presentationUrl:
@@ -317,6 +321,7 @@ export const stateGapMapData: StateGapMapDataset = {
       tier: 'lagging',
       accessPercent: 55,
       participationPercent: 0,
+      dataStatus: 'unavailable',
       reportUrl:
         'https://drive.google.com/file/d/1qTeojtOwI5dSNatFSwEGc4wORB5AOHzx/view?usp=sharing',
       presentationUrl:
@@ -401,6 +406,7 @@ export const stateGapMapData: StateGapMapDataset = {
       tier: 'leading',
       accessPercent: 98,
       participationPercent: 0,
+      dataStatus: 'unavailable',
       reportUrl:
         'https://drive.google.com/file/d/1KCuPMDBnX_I1x3B1nfClL6NUWqiWkd6D/view?usp=sharing',
       presentationUrl:
@@ -415,6 +421,7 @@ export const stateGapMapData: StateGapMapDataset = {
       tier: 'progressing',
       accessPercent: 94,
       participationPercent: 0,
+      dataStatus: 'unavailable',
       reportUrl:
         'https://drive.google.com/file/d/12CqPoZyeZvvtqadDpNMTOX3hhuf3-SLZ/view?usp=sharing',
       presentationUrl:
@@ -583,6 +590,7 @@ export const stateGapMapData: StateGapMapDataset = {
       tier: 'lagging',
       accessPercent: 54,
       participationPercent: 0,
+      dataStatus: 'unavailable',
       reportUrl:
         'https://drive.google.com/file/d/1zIEDRWOt2plIPkF5dJ6dS6HkNWvUknln/view?usp=sharing',
       presentationUrl:
@@ -723,6 +731,7 @@ export const stateGapMapData: StateGapMapDataset = {
       tier: 'lagging',
       accessPercent: 60,
       participationPercent: 0,
+      dataStatus: 'unavailable',
       reportUrl:
         'https://drive.google.com/file/d/1SjdCE_SqgUZaQIsDHNpAURdzSw6LK5C8/view?usp=sharing',
       presentationUrl:

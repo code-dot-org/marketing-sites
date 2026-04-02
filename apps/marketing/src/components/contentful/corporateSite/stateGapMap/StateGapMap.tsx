@@ -10,7 +10,6 @@ import StateGapMapPanel from './StateGapMapPanel';
 import StateGapMapRenderer from './StateGapMapRenderer';
 import {getModeTextColors} from './theme';
 import {StateGapMapDataset} from './types';
-import {getPanelMode, getStateRecord} from './utils';
 
 export interface StateGapMapProps {
   /** Optional dataset override for Storybook, tests, or future CMS wiring. */
@@ -36,8 +35,10 @@ export default function StateGapMap({
   }, []);
 
   const activeCode = lockedCode ?? hoveredCode;
-  const mode = getPanelMode(lockedCode, hoveredCode);
-  const activeState = getStateRecord(dataset, activeCode);
+  const mode = lockedCode ? 'locked' : hoveredCode ? 'preview' : 'default';
+  const activeState = activeCode
+    ? dataset.states.find(state => state.code === activeCode)
+    : undefined;
   const textColors = getModeTextColors(theme, inheritedMode);
   const clearSelection = () => {
     setLockedCode(null);

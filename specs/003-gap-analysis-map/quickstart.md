@@ -8,10 +8,10 @@ Verify the interactive gap analysis map works as a cache-friendly, theme-aware m
 
 - A higher-level marketing component lives in [`apps/marketing`](/var/home/sliang/git-workspaces/marketing-sites/apps/marketing).
 - Review fixtures live in [`apps/marketing-storybook`](/var/home/sliang/git-workspaces/marketing-sites/apps/marketing-storybook).
-- The component reads from a structured in-repo dataset that matches [state-gap-data.schema.json](/var/home/sliang/git-workspaces/marketing-sites/specs/003-gap-analysis-map/contracts/state-gap-data.schema.json).
+- The component reads from a structured in-repo dataset that matches [state-gap-data.schema.json](/var/home/sliang/git-workspaces/marketing-sites/specs/003-gap-analysis-map/contracts/state-gap-data.schema.json), including explicit unavailable-state metadata when metrics are incomplete.
 - The US geography is rendered through a vetted npm React map package wrapped locally for theming, keyboard support, and ARIA labeling rather than through hand-maintained SVG path geometry.
 - Interaction state should prefer React and MUI composition utilities, such as click-away helpers or an explicit React backdrop reset surface, over raw global event listeners when the same behavior is available.
-- The component folder should follow existing marketing conventions: `StateGapMap.tsx` as the interactive entry point, `StateGapMapContentfulDefinition.ts` for registration metadata, `index.ts` for exports, and generic helper modules such as `data.ts`, `types.ts`, `utils.ts`, `theme.ts`, and `geometry.ts`.
+- The component folder should follow existing marketing conventions: `StateGapMap.tsx` as the interactive entry point, `StateGapMapContentfulDefinition.ts` for registration metadata, `index.ts` for exports, and generic helper modules such as `data.ts`, `types.ts`, `utils.ts`, and `theme.ts`.
 - The containing page remains server-rendered; only the map interaction surface hydrates on the client.
 
 ## Local verification
@@ -25,7 +25,8 @@ Verify the interactive gap analysis map works as a cache-friendly, theme-aware m
 7. Verify each small East Coast state remains individually selectable.
 8. Verify Alaska and Hawaii render in West Coast insets and are selectable.
 9. Verify states with missing links hide unavailable actions.
-10. Verify the component is legible on transparent/light presentation and also within an inherited dark `data-theme` context if a story or page fixture provides one.
+10. Verify states with incomplete metrics render the neutral unavailable treatment in both the map legend and selected-state panel.
+11. Verify the component is legible on transparent/light presentation and also within an inherited dark `data-theme` context if a story or page fixture provides one.
 
 ## Storybook verification
 
@@ -35,6 +36,7 @@ Verify the interactive gap analysis map works as a cache-friendly, theme-aware m
    - hover preview
    - locked panel
    - missing-data fallback
+   - neutral unavailable legend treatment
    - East Coast small-state targeting
    - Alaska/Hawaii inset layout
    - light/transparent and dark inherited theme presentation

@@ -67,7 +67,7 @@ A first-time visitor wants to understand which parts of the country are lagging,
 **Acceptance Scenarios**:
 
 1. **Given** the component first loads, **When** the visitor sees the map, **Then** each state is already styled according to its assigned policy tier.
-2. **Given** multiple states belong to different policy tiers, **When** the visitor compares them visually, **Then** the tier treatments are distinct enough to tell them apart in the default dark presentation.
+2. **Given** multiple states belong to different policy tiers, **When** the visitor compares them visually, **Then** the tier treatments are distinct enough to tell them apart and incomplete records remain visibly neutral instead of borrowing a tier treatment.
 3. **Given** the component is viewed on a smaller screen, **When** the layout adapts, **Then** the state tiering remains understandable and the panel content remains readable.
 4. **Given** a visitor is exploring densely packed East Coast states, **When** they move between those geographies, **Then** each small state remains individually visible and selectable rather than collapsing into an unusable cluster.
 
@@ -91,7 +91,7 @@ A first-time visitor wants to understand which parts of the country are lagging,
 
 - **FR-001**: The public State of AI + CS experience MUST provide a standalone, map-based United States visualization as the primary way to explore state-by-state disparities between institutional access and student participation.
 - **FR-002**: The visualization MUST preserve the current public experience's state-specific download purpose by exposing state report and state presentation actions from the selected state's detail panel instead of requiring separate dropdown-based selectors.
-- **FR-003**: Each geography in scope MUST display a categorical policy tier in the default map view so visitors can understand national policy progress before any interaction.
+- **FR-003**: Each geography in scope MUST display either its categorical policy tier or a neutral unavailable treatment in the default map view so visitors can understand national policy progress without mistaking incomplete records for tiered states.
 - **FR-004**: Hovering a geography MUST preview that geography's state name, policy tier, access metric, participation metric, and computed gap in a floating information panel.
 - **FR-005**: Clicking a geography MUST lock the panel to that geography until the visitor explicitly clears the selection.
 - **FR-006**: The locked state MUST remain stable while the visitor moves the pointer away from the map or interacts with actions inside the panel.
@@ -112,6 +112,7 @@ A first-time visitor wants to understand which parts of the country are lagging,
 - **FR-019**: The feature MUST preserve existing SEO behavior for the containing page unless a later plan intentionally changes metadata, canonical behavior, indexing, structured data, or sitemap inclusion.
 - **FR-020**: The feature MUST not introduce new collection of personal data, Student Records, school-directed data, or new third-party data egress beyond visitor-initiated navigation to already approved external state assets.
 - **FR-021**: The feature MUST define review coverage through story-driven mocks, focused automated tests for the interaction model, and page-level verification sufficient to confirm accessibility, state selection behavior, and graceful handling of missing data.
+- **FR-023**: The legend and panel chip MUST distinguish neutral unavailable records from the lagging, progressing, and leading policy tiers so incomplete data is never presented as policy status.
 - **FR-022**: If the feature later adopts Contentful-managed state data or editor-controlled link sets, the follow-on plan MUST confirm the relevant content model and entry assumptions through Contentful MCP before implementation and MUST require human confirmation for any Contentful writes.
 
 ## Integration Points _(mandatory when external systems or cross-workspace changes are involved)_
@@ -137,6 +138,7 @@ A first-time visitor wants to understand which parts of the country are lagging,
 
 - **State Metric Record**: A public, aggregate description of one geography's policy tier, access value, participation value, and state-specific asset destinations.
 - **Policy Progress Tier**: The categorical status used to color the map and summarize where a state sits on the policy rubric.
+- **Data Availability State**: A neutral presentation state used when a geography remains selectable but its current dataset is incomplete.
 - **Selection Panel State**: The current interaction mode of the panel: default, hover preview, or locked selection.
 - **State Asset Link**: A public destination for a state report or presentation deck associated with the selected geography.
 
@@ -147,6 +149,7 @@ A first-time visitor wants to understand which parts of the country are lagging,
 - **SC-001**: In acceptance testing, a visitor can identify any hovered state's policy tier, access value, participation value, and gap from the panel within 5 seconds of moving to that state.
 - **SC-002**: In scripted interaction testing, 100% of lock-and-interact scenarios keep the selected state's panel stable until the visitor explicitly clears it.
 - **SC-003**: In content validation, 100% of in-scope geographies render the correct categorical tier from the configured dataset on initial load.
+- **SC-003A**: In content validation, 100% of incomplete records render the neutral unavailable treatment in both the map legend and selected-state panel instead of appearing as lagging, progressing, or leading.
 - **SC-004**: In link validation, 100% of configured state report and state presentation actions open the correct destination for the selected state, and 0 unavailable actions are shown.
 - **SC-005**: In responsive review, the component remains understandable and operable on desktop and touch-sized layouts without losing access to the selected state's metrics or actions.
 - **SC-006**: In interaction review, each small East Coast state can be individually selected and read without requiring a fallback dropdown or off-map workaround.

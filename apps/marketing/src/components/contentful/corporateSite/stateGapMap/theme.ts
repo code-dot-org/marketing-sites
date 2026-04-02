@@ -61,6 +61,30 @@ export function getTierColors(
   };
 }
 
+export function getUnavailableColors(
+  theme: Theme,
+  inheritedMode?: string | null,
+  state: StateVisualState = {active: false, locked: false},
+) {
+  const mode = getResolvedMode(theme, inheritedMode);
+  const base =
+    mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(15, 23, 42, 0.28)';
+  const fill =
+    mode === 'dark'
+      ? alpha('#ffffff', state.active || state.locked ? 0.14 : 0.08)
+      : alpha('#0f172a', state.active || state.locked ? 0.12 : 0.08);
+
+  return {
+    fill,
+    stroke: state.locked ? theme.palette.text.primary : base,
+    label:
+      mode === 'dark' ? theme.palette.common.white : theme.palette.text.primary,
+    badgeBg: fill,
+    badgeText:
+      mode === 'dark' ? theme.palette.common.white : theme.palette.text.primary,
+  };
+}
+
 export function getModeTextColors(theme: Theme, inheritedMode?: string | null) {
   const mode = getResolvedMode(theme, inheritedMode);
 

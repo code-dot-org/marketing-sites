@@ -17,40 +17,47 @@ describe('StateGapMapPanel', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows neutral panel copy for incomplete data', () => {
+  it('shows a neutral unavailable state when metrics are marked unavailable', () => {
     const dataset = {
       ...stateGapMapData,
       states: stateGapMapData.states.map(state =>
         state.code === 'CA'
-          ? {...state, accessPercent: 0, participationPercent: 0}
+          ? {
+              ...state,
+              accessPercent: 0,
+              participationPercent: 0,
+              dataStatus: 'unavailable',
+            }
           : state,
       ),
     };
-    const incompleteCalifornia = dataset.states.find(
+    const unavailableCalifornia = dataset.states.find(
       state => state.code === 'CA',
     );
 
     render(
       <StateGapMapPanel
         dataset={dataset}
-        mode="hover"
-        stateRecord={incompleteCalifornia}
+        mode="preview"
+        stateRecord={unavailableCalifornia}
       />,
     );
 
     expect(screen.getByText('California')).toBeInTheDocument();
+    expect(screen.getByText('Data unavailable')).toBeInTheDocument();
     expect(
       screen.getByText(
         'Data unavailable for this state in the current dataset.',
       ),
     ).toBeInTheDocument();
+    expect(screen.queryByText('Access')).not.toBeInTheDocument();
   });
 
   it('shows hover-preview action guidance when the state is not locked', () => {
     render(
       <StateGapMapPanel
         dataset={stateGapMapData}
-        mode="hover"
+        mode="preview"
         stateRecord={california}
       />,
     );

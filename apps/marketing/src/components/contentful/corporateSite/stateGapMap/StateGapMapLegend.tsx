@@ -1,7 +1,7 @@
 import {Box, Stack, Typography} from '@mui/material';
 import {useTheme} from '@mui/material/styles';
 
-import {getModeTextColors, getTierColors} from './theme';
+import {getModeTextColors, getTierColors, getUnavailableColors} from './theme';
 import {StateGapMapDataset} from './types';
 
 interface StateGapMapLegendProps {
@@ -15,14 +15,16 @@ export default function StateGapMapLegend({
 }: StateGapMapLegendProps) {
   const theme = useTheme();
   const textColors = getModeTextColors(theme, inheritedMode);
+  const unavailableColors = getUnavailableColors(theme, inheritedMode);
 
   return (
     <Stack
+      role="group"
       direction={{xs: 'column', sm: 'row'}}
       spacing={1.5}
       useFlexGap
       flexWrap="wrap"
-      aria-label="Policy tier legend"
+      aria-label="Policy tier and availability legend"
     >
       {dataset.tiers.map(tier => {
         const colors = getTierColors(theme, tier.id, inheritedMode);
@@ -44,6 +46,20 @@ export default function StateGapMapLegend({
           </Stack>
         );
       })}
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Box
+          sx={{
+            width: 14,
+            height: 14,
+            borderRadius: 999,
+            bgcolor: unavailableColors.fill,
+            border: `1px solid ${unavailableColors.stroke}`,
+          }}
+        />
+        <Typography variant="body2" sx={{color: textColors.primary}}>
+          Data unavailable
+        </Typography>
+      </Stack>
     </Stack>
   );
 }

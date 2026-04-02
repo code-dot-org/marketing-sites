@@ -1,4 +1,4 @@
-import {act, fireEvent, render, screen} from '@testing-library/react';
+import {fireEvent, render} from '@testing-library/react';
 
 import {stateGapMapData} from '../data';
 import StateGapMapRenderer from '../StateGapMapRenderer';
@@ -17,50 +17,47 @@ describe('StateGapMapRenderer', () => {
       />,
     );
 
-  it('exposes interactive state regions by role and name', () => {
-    renderComponent();
+  const getStateElement = (container: HTMLElement, code: string) => {
+    const element = container.querySelector<SVGElement>(
+      `[data-name="${code}"]`,
+    );
 
-    expect(screen.getByRole('button', {name: /Alabama/i})).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', {name: /Washington, D\.C\./i}),
-    ).toBeInTheDocument();
+    if (!element) {
+      throw new Error(`Missing state element for ${code}`);
+    }
+
+    return element;
+  };
+
+  it('renders state elements for the default U.S. map', () => {
+    const {container} = renderComponent();
+
+    expect(getStateElement(container, 'AL')).toBeInTheDocument();
+    expect(getStateElement(container, 'AK')).toBeInTheDocument();
+    expect(getStateElement(container, 'HI')).toBeInTheDocument();
   });
 
-  it('allows keyboard selection for a state', () => {
+  it('forwards click selection for a state', () => {
     const onSelect = jest.fn();
-    renderComponent({onSelect});
+    const {container} = renderComponent({onSelect});
 
-    const california = screen.getByRole('button', {name: /California/i});
-    act(() => {
-      california.focus();
-    });
-    fireEvent.keyDown(california, {key: 'Enter'});
+    fireEvent.click(getStateElement(container, 'CA'));
 
     expect(onSelect).toHaveBeenCalledWith('CA');
   });
 
-  it('renders Alaska and Hawaii as inset regions', () => {
-    renderComponent();
+  it('keeps Alaska and Hawaii on the rendered map', () => {
+    const {container} = renderComponent();
 
-    expect(screen.getByRole('button', {name: /Alaska/i})).toHaveAttribute(
-      'data-display-region',
-      'alaskaInset',
-    );
-    expect(screen.getByRole('button', {name: /Hawaii/i})).toHaveAttribute(
-      'data-display-region',
-      'hawaiiInset',
-    );
+    expect(getStateElement(container, 'AK')).toBeInTheDocument();
+    expect(getStateElement(container, 'HI')).toBeInTheDocument();
   });
 
   it('renders small East Coast states as selectable regions', () => {
-    renderComponent();
+    const {container} = renderComponent();
 
-    expect(
-      screen.getByRole('button', {name: /Rhode Island/i}),
-    ).toBeInTheDocument();
-    expect(screen.getByRole('button', {name: /Delaware/i})).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', {name: /Washington, D\.C\./i}),
-    ).toBeInTheDocument();
+    expect(getStateElement(container, 'RI')).toBeInTheDocument();
+    expect(getStateElement(container, 'DE')).toBeInTheDocument();
+    expect(getStateElement(container, 'DC')).toBeInTheDocument();
   });
 });
