@@ -13,6 +13,7 @@ import {StateGapMapDataset} from './types';
 import {getPanelMode, getStateRecord} from './utils';
 
 export interface StateGapMapProps {
+  /** Optional dataset override for Storybook, tests, or future CMS wiring. */
   dataset?: StateGapMapDataset;
 }
 
@@ -26,6 +27,8 @@ export default function StateGapMap({
   const [inheritedMode, setInheritedMode] = useState<string | null>(null);
 
   useEffect(() => {
+    // This feature inherits presentation from the nearest data-theme wrapper
+    // because Storybook and embedded CMS surfaces may not share the same MUI mode.
     const parentTheme = containerRef.current
       ?.closest('[data-theme]')
       ?.getAttribute('data-theme');
@@ -82,6 +85,8 @@ export default function StateGapMap({
               data-testid="state-gap-map-backdrop"
               onClick={clearSelection}
               onMouseDown={clearSelection}
+              // The fixed reset surface lets us implement click-away dismissal
+              // without raw document listeners.
               sx={{
                 position: 'fixed',
                 inset: 0,

@@ -89,6 +89,8 @@ export default function StateGapMapRenderer({
       svg.setAttribute('aria-label', 'United States state gap analysis map');
     }
 
+    // The third-party map renders the state shapes but does not expose the full
+    // semantics this feature needs, so we annotate the generated SVG elements here.
     const interactiveStates = root.querySelectorAll<SVGElement>('[data-name]');
 
     for (const element of interactiveStates) {
@@ -106,6 +108,9 @@ export default function StateGapMapRenderer({
       }
 
       if (code === 'DC' && element.tagName.toLowerCase() !== 'circle') {
+        // The package renders both a path and an inset callout for D.C. We keep
+        // only the circle target interactive to avoid duplicate screen-reader
+        // announcements and overlapping hit areas.
         element.setAttribute('aria-hidden', 'true');
         element.removeAttribute('role');
         element.removeAttribute('tabindex');
@@ -137,6 +142,8 @@ export default function StateGapMapRenderer({
 
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
+          // The library emits focus and pointer hooks, but keyboard activation
+          // still needs to be normalized for button-like SVG targets.
           onSelect(stateCode);
         }
       }}

@@ -66,6 +66,11 @@ Keep specs and plans explicit about:
 - `packages/component-library*`, `packages/fonts`, `packages/lint-config`:
   shared foundations
 
+## Code Guidance
+
+- Follow [docs/code-convention.md](docs/code-convention.md) for repo-wide code
+  maintainability guidance, including comments and JSDoc expectations.
+
 ## Non-Negotiables
 
 - Preserve cacheability, availability, and security guardrails.
@@ -132,6 +137,8 @@ See [docs/contentful-component-convention.md](docs/contentful-component-conventi
 See [docs/security-and-privacy-guardrails.md](docs/security-and-privacy-guardrails.md).
 
 See [docs/seo-convention.md](docs/seo-convention.md).
+
+See [docs/code-convention.md](docs/code-convention.md).
 
 See [docs/ui-convention.md](docs/ui-convention.md).
 

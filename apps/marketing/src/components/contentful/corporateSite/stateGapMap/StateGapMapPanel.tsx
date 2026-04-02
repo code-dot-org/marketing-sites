@@ -23,10 +23,13 @@ import {
 } from './utils';
 
 interface StateGapMapPanelProps {
+  /** Structured dataset supplies tier labels for the selected record. */
   dataset: StateGapMapDataset;
   inheritedMode?: string | null;
   mode: StateGapMapMode;
+  /** Active record for hover preview or locked detail view. */
   stateRecord?: StateGapMapRecord;
+  /** Close handler is only passed for locked states. */
   onClose?: () => void;
 }
 
@@ -82,6 +85,8 @@ export default function StateGapMapPanel({
       <Box sx={{display: 'grid'}}>
         <Box
           aria-hidden="true"
+          // This hidden scaffold keeps the mobile stacked layout from jumping
+          // when the panel swaps between default, preview, and locked content.
           sx={{
             gridArea: '1 / 1',
             visibility: 'hidden',
@@ -194,6 +199,8 @@ export default function StateGapMapPanel({
                         href={stateRecord.reportUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        // The icon inherits button text color so light/dark
+                        // theme changes do not leave a mismatched default fill.
                         endIcon={<OpenInNewIcon sx={{color: 'inherit'}} />}
                         variant="contained"
                       >
@@ -206,6 +213,8 @@ export default function StateGapMapPanel({
                         href={stateRecord.presentationUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        // The icon inherits button text color so light/dark
+                        // theme changes do not leave a mismatched default fill.
                         endIcon={<OpenInNewIcon sx={{color: 'inherit'}} />}
                         variant="outlined"
                       >
