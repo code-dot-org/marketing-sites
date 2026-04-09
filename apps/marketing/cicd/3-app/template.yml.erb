@@ -10,7 +10,7 @@ enable_production_domain = is_production && has_production_domain && has_product
 
 # TODO: Remove SiteType condition when www.csforall.org redirect is migrated from the
 # code-dot-org/infrastructure repository to this stack.
-enable_www_redirect = enable_production_domain && options[:site_type] != 'csforall'
+enable_www_redirect = !(is_production && options[:site_type] == 'csforall')
 
 base_domain_url = "https://#{options[:subdomain_name]}.#{options[:base_domain_name]}"
 domain_display = enable_production_domain ?
@@ -350,9 +350,9 @@ Resources:
   ####################################################
   # www. Redirect Resources                          #
   #                                                  #
-  # Redirects https://www.<ProductionDomainName>/... #
-  # to https://<ProductionDomainName>/...            #
-  # preserving the path and query string.            #
+  # Redirects https://www.<domain>/... to            #
+  # https://<domain>/... preserving the path and     #
+  # query string.                                    #
   ####################################################
 
   WwwRedirectCloudFrontFunction:
@@ -374,7 +374,7 @@ Resources:
           };
         }
       FunctionConfig:
-        Comment: !Sub 'Redirects www.${ProductionDomainName} to ${ProductionDomainName}'
+        Comment: !Sub 'Redirects www.${SubdomainName}.${BaseDomainName} to ${SubdomainName}.${BaseDomainName}'
         Runtime: cloudfront-js-2.0
 
   WwwRedirectDistribution:
@@ -382,12 +382,15 @@ Resources:
     Properties:
       DistributionConfig:
         Enabled: true
-        Comment: !Sub 'Redirect www.${ProductionDomainName} to ${ProductionDomainName}'
+        Comment: !Sub 'Redirect www.${SubdomainName}.${BaseDomainName} to ${SubdomainName}.${BaseDomainName}'
         HttpVersion: http2
         # Minimal edge locations — www. redirect traffic is expected to be very low.
         PriceClass: PriceClass_100
         Aliases:
+          - !Sub "www.${SubdomainName}.${BaseDomainName}"
+<% if enable_production_domain %>
           - !Sub "www.${ProductionDomainName}"
+<% end %>
         Origins:
           # CloudFront requires at least one origin, but the CloudFront Function returns
           # a 301 response directly on viewer-request so no traffic reaches this origin.
@@ -415,9 +418,20 @@ Resources:
       AliasTarget:
         DNSName: !GetAtt WwwRedirectDistribution.DomainName
         HostedZoneId: Z2FDTNDATAQYW2 # Cloudfront Hosted Zone ID
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub "www.${SubdomainName}.${BaseDomainName}"
+      Type: A
+<% if enable_production_domain %>
+  WwwRedirectProductionDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      AliasTarget:
+        DNSName: !GetAtt WwwRedirectDistribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2 # Cloudfront Hosted Zone ID
       HostedZoneId: !Ref ProductionHostedZoneId
       Name: !Sub "www.${ProductionDomainName}"
       Type: A
+<% end %>
 <% end # enable_www_redirect %>
 
   ####################################

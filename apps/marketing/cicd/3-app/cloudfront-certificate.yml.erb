@@ -7,7 +7,7 @@ enable_production_domain = is_production && has_production_domain && has_product
 
 # TODO: Remove SiteType condition when www.csforall.org redirect is migrated from the
 # code-dot-org/infrastructure repository to this stack.
-enable_www_redirect = enable_production_domain && options[:site_type] != 'csforall'
+enable_www_redirect = !(is_production && options[:site_type] == 'csforall')
 
 # Build the domain display string for the description
 base_domain_url = "https://#{options[:subdomain_name]}.#{options[:base_domain_name]}"
@@ -63,6 +63,9 @@ Resources:
         - !Ref ProductionDomainName
 <% end %>
 <% if enable_www_redirect %>
+        - !Sub "www.${SubdomainName}.${BaseDomainName}"
+<% end %>
+<% if enable_www_redirect && enable_production_domain %>
         - !Sub "www.${ProductionDomainName}"
 <% end %>
       DomainValidationOptions:
@@ -70,11 +73,15 @@ Resources:
           HostedZoneId: !Ref HostedZoneId
         - DomainName: !Sub "preview-${SubdomainName}.${BaseDomainName}"
           HostedZoneId: !Ref HostedZoneId
+<% if enable_www_redirect %>
+        - DomainName: !Sub "www.${SubdomainName}.${BaseDomainName}"
+          HostedZoneId: !Ref HostedZoneId
+<% end %>
 <% if enable_production_domain %>
         - DomainName: !Ref ProductionDomainName
           HostedZoneId: !Ref ProductionHostedZoneId
 <% end %>
-<% if enable_www_redirect %>
+<% if enable_www_redirect && enable_production_domain %>
         - DomainName: !Sub "www.${ProductionDomainName}"
           HostedZoneId: !Ref ProductionHostedZoneId
 <% end %>
