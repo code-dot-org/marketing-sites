@@ -73,7 +73,11 @@ describe('www redirect CloudFront Function', () => {
 
   it('preserves query string parameters', () => {
     const result = handler(
-      makeEvent('www.code.org', '/donate', 'utm_source=email&utm_campaign=spring'),
+      makeEvent(
+        'www.code.org',
+        '/donate',
+        'utm_source=email&utm_campaign=spring',
+      ),
     );
     expect(result.headers.location.value).toBe(
       'https://code.org/donate?utm_source=email&utm_campaign=spring',
@@ -82,11 +86,7 @@ describe('www redirect CloudFront Function', () => {
 
   it('preserves path and query string together', () => {
     const result = handler(
-      makeEvent(
-        'www.example.net',
-        '/my/path/here',
-        'queryOne=two&queryTwo=3',
-      ),
+      makeEvent('www.example.net', '/my/path/here', 'queryOne=two&queryTwo=3'),
     );
     expect(result.headers.location.value).toBe(
       'https://example.net/my/path/here?queryOne=two&queryTwo=3',
