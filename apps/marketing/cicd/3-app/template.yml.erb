@@ -8,10 +8,6 @@ has_production_domain = options[:production_domain_name] && !options[:production
 has_production_hosted_zone = options[:production_hosted_zone_id] && !options[:production_hosted_zone_id].empty?
 enable_production_domain = is_production && has_production_domain && has_production_hosted_zone
 
-# TODO: Remove SiteType condition when www.csforall.org redirect is migrated from the
-# code-dot-org/infrastructure repository to this stack.
-enable_www_redirect = !(is_production && options[:site_type] == 'csforall')
-
 base_domain_url = "https://#{options[:subdomain_name]}.#{options[:base_domain_name]}"
 domain_display = enable_production_domain ?
   "https://#{options[:production_domain_name]} and #{base_domain_url}" :
@@ -346,7 +342,6 @@ Resources:
       Name: !Sub "${AWS::StackName}-Shield"
       ResourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}"
 
-<% if enable_www_redirect %>
   ####################################################
   # www. Redirect Resources                          #
   #                                                  #
@@ -432,7 +427,6 @@ Resources:
       Name: !Sub "www.${ProductionDomainName}"
       Type: A
 <% end %>
-<% end # enable_www_redirect %>
 
   ####################################
   # Load Balancer Resources          #
