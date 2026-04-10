@@ -348,6 +348,13 @@ Resources:
   # Redirects https://www.<domain>/... to            #
   # https://<domain>/... preserving the path and     #
   # query string.                                    #
+  #
+  # NOTE: Changes to this function are not #
+  # automatically unit tested unless you copy the    #
+  # code to "www-redirect-function.test.ts".         #
+  #
+  # TODO: extract this javascript into a testable    #
+  # file to prevent divergence.                      #
   ####################################################
 
   WwwRedirectCloudFrontFunction:
@@ -399,7 +406,7 @@ Resources:
           CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled
           FunctionAssociations:
             - EventType: viewer-request
-              FunctionARN: !GetAtt WwwRedirectCloudFrontFunction.FunctionARN
+              FunctionARN: !Ref WwwRedirectCloudFrontFunction
         ViewerCertificate:
           AcmCertificateArn: !Ref CloudFrontTLSCertificateArn
           SslSupportMethod: sni-only
