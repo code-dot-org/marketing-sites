@@ -53,15 +53,15 @@ function makeEvent(
 }
 
 describe('www redirect CloudFront Function', () => {
-  it('redirects www.code.org to code.org', () => {
-    const result = handler(makeEvent('www.code.org', '/'));
+  it('redirects www.example.net to example.net', () => {
+    const result = handler(makeEvent('www.example.net', '/'));
     expect(result.statusCode).toBe(301);
-    expect(result.headers.location.value).toBe('https://code.org/');
+    expect(result.headers.location.value).toBe('https://example.net/');
   });
 
   it('preserves the path', () => {
-    const result = handler(makeEvent('www.code.org', '/about'));
-    expect(result.headers.location.value).toBe('https://code.org/about');
+    const result = handler(makeEvent('www.example.net', '/about'));
+    expect(result.headers.location.value).toBe('https://example.net/about');
   });
 
   it('preserves a deeply nested path', () => {
@@ -74,13 +74,13 @@ describe('www redirect CloudFront Function', () => {
   it('preserves query string parameters', () => {
     const result = handler(
       makeEvent(
-        'www.code.org',
+        'www.example.net',
         '/donate',
         'utm_source=email&utm_campaign=spring',
       ),
     );
     expect(result.headers.location.value).toBe(
-      'https://code.org/donate?utm_source=email&utm_campaign=spring',
+      'https://example.net/donate?utm_source=email&utm_campaign=spring',
     );
   });
 
@@ -94,32 +94,32 @@ describe('www redirect CloudFront Function', () => {
   });
 
   it('omits the ? when there is no query string', () => {
-    const result = handler(makeEvent('www.code.org', '/about', ''));
-    expect(result.headers.location.value).toBe('https://code.org/about');
+    const result = handler(makeEvent('www.example.net', '/about', ''));
+    expect(result.headers.location.value).toBe('https://example.net/about');
   });
 
   it('is case-insensitive for the www. prefix', () => {
-    const result = handler(makeEvent('WWW.code.org', '/'));
-    expect(result.headers.location.value).toBe('https://code.org/');
+    const result = handler(makeEvent('WWW.example.net', '/'));
+    expect(result.headers.location.value).toBe('https://example.net/');
   });
 
-  it('works for any domain, not just code.org', () => {
-    const result = handler(makeEvent('www.csforall.org', '/'));
-    expect(result.headers.location.value).toBe('https://csforall.org/');
+  it('works for any domain', () => {
+    const result = handler(makeEvent('www.example.org', '/'));
+    expect(result.headers.location.value).toBe('https://example.org/');
   });
 
   it('always returns a 301 Moved Permanently', () => {
-    const result = handler(makeEvent('www.code.org', '/'));
+    const result = handler(makeEvent('www.example.net', '/'));
     expect(result.statusCode).toBe(301);
     expect(result.statusDescription).toBe('Moved Permanently');
   });
 
   it('preserves encoded characters in query string', () => {
     const result = handler(
-      makeEvent('www.code.org', '/search', 'q=hello%20world&lang=en'),
+      makeEvent('www.example.net', '/search', 'q=hello%20world&lang=en'),
     );
     expect(result.headers.location.value).toBe(
-      'https://code.org/search?q=hello%20world&lang=en',
+      'https://example.net/search?q=hello%20world&lang=en',
     );
   });
 });
