@@ -3,7 +3,7 @@ import {Stage} from '@/config/stage';
 
 const ALLOWED_PRODUCTION_CANONICAL_HOSTNAMES: {[brand in Brand]: Set<string>} =
   {
-    [Brand.CODE_DOT_ORG]: new Set(['code.org', 'aiday.org']),
+    [Brand.CODE_DOT_ORG]: new Set(['code.org']),
     [Brand.CS_FOR_ALL]: new Set(['csforall.org']),
     [Brand.HOUR_OF_CODE]: new Set(['hourofcode.com']),
   };
