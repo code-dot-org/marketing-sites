@@ -397,7 +397,7 @@ Resources:
           # CloudFront requires at least one origin, but the CloudFront Function returns
           # a 301 response directly on viewer-request so no traffic reaches this origin.
           - Id: unused-origin
-            DomainName: !Sub "${SubdomainName}.${BaseDomainName}"
+            DomainName: unused.example.net
             CustomOriginConfig:
               OriginProtocolPolicy: https-only
         DefaultCacheBehavior:
