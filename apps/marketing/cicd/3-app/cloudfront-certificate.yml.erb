@@ -47,7 +47,7 @@ Conditions:
   IsUSEast1: !Equals [!Ref "AWS::Region", "us-east-1"]
 
 Resources:
-  # Wildcard TLS Cert for CloudFront Distribution (must be in us-east-1)
+  # Wildcard TLS Cert for CloudFront Distribution (must be in us-east-1);
   CloudFrontTLSCertificate:
     Condition: IsUSEast1
     Type: AWS::CertificateManager::Certificate
@@ -55,16 +55,22 @@ Resources:
       DomainName: !Sub "${SubdomainName}.${BaseDomainName}"
       SubjectAlternativeNames:
         - !Sub "preview-${SubdomainName}.${BaseDomainName}"
+        - !Sub "www.${SubdomainName}.${BaseDomainName}"
 <% if enable_production_domain %>
         - !Ref ProductionDomainName
+        - !Sub "www.${ProductionDomainName}"
 <% end %>
       DomainValidationOptions:
         - DomainName: !Sub "${SubdomainName}.${BaseDomainName}"
           HostedZoneId: !Ref HostedZoneId
         - DomainName: !Sub "preview-${SubdomainName}.${BaseDomainName}"
           HostedZoneId: !Ref HostedZoneId
+        - DomainName: !Sub "www.${SubdomainName}.${BaseDomainName}"
+          HostedZoneId: !Ref HostedZoneId
 <% if enable_production_domain %>
         - DomainName: !Ref ProductionDomainName
+          HostedZoneId: !Ref ProductionHostedZoneId
+        - DomainName: !Sub "www.${ProductionDomainName}"
           HostedZoneId: !Ref ProductionHostedZoneId
 <% end %>
       ValidationMethod: DNS
