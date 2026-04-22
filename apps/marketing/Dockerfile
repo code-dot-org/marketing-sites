@@ -51,6 +51,12 @@ ENV TURBO_TOKEN=$TURBO_TOKEN
 ARG TURBO_API
 ENV TURBO_API=$TURBO_API
 
+# Git SHA passed from CI, surfaced to both the server process and client bundle as NEXT_PUBLIC_SENTRY_RELEASE.
+# Used by Sentry.init(release: ...) to tag events with the release so Sentry's UI can group/track per-deploy.
+# Safe to bake into the image — non-secret, matches the same value sentry-cli uses when uploading source maps.
+ARG GIT_SHA
+ENV NEXT_PUBLIC_SENTRY_RELEASE=$GIT_SHA
+
 # Enable corepack
 RUN corepack enable
 
@@ -60,7 +66,8 @@ WORKDIR /app
 COPY --link --from=source-code /app/out/json/ .
 RUN yarn install
 
-# Build the project
+# Build the project. The build output is pristine — Sentry debug-ID injection and source-map upload happen
+# later in the deploy workflow's S3 sync step (see .github/workflows/marketing-app-deploy-to-environment.yml).
 COPY --link --from=source-code /app/out/full/ .
 RUN yarn turbo run build
 
@@ -84,6 +91,16 @@ WORKDIR /app
 # connection that Node.js has already terminated.
 # See: https://nextjs.org/docs/app/api-reference/cli/next#configuring-a-timeout-for-downstream-proxies
 ENV KEEP_ALIVE_TIMEOUT 70000
+
+# Enable Node's native source-map support so server-side stack traces (SSR crashes, API routes, server actions)
+# are unminified before they reach Sentry. The .map files next to each compiled .js file are read on demand.
+ENV NODE_OPTIONS=--enable-source-maps
+
+# Re-declare for the runner stage so the server process sees NEXT_PUBLIC_SENTRY_RELEASE at runtime. (Build-stage
+# ENVs don't propagate across FROM boundaries.) Also causes Next.js to inline the value into any build-time
+# references, but since SentryLoader reads via window.__ENV the runtime value is authoritative on the client too.
+ARG GIT_SHA
+ENV NEXT_PUBLIC_SENTRY_RELEASE=$GIT_SHA
 
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs

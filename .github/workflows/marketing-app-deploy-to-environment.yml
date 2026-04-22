@@ -73,14 +73,15 @@ jobs:
           role-session-name: GithubActions-${{ env.GITHUB_ENVIRONMENT_NAME }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: 'Download Built Docker Image'
-        run: |
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ inputs.CONTAINER_IMAGE_DIGEST }}
-          docker create --name temp ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ inputs.CONTAINER_IMAGE_DIGEST }}
-
-      - name: 'Extract Static Assets from Docker'
-        run: |
-          docker cp temp:/app/apps/marketing/.next/static/ ./static
+      # The static/ tree was extracted from the pushed image, injected with Sentry debug IDs, and uploaded to
+      # Sentry (all once) by the parent workflow's `prepare-static-assets` job. We download the same artifact
+      # here so every environment's S3 bucket gets byte-identical content, matching the source maps uploaded
+      # to Sentry. No docker pull needed in this job.
+      - name: 'Download static assets artifact'
+        uses: actions/download-artifact@v4
+        with:
+          name: marketing-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ./static
 
       - name: '[${{ env.GITHUB_ENVIRONMENT_NAME }}] Upload Static Assets to S3'
         env:

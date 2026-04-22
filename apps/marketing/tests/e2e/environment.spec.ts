@@ -18,6 +18,10 @@ test.describe('Environment Variable Tests', () => {
     // The window['__ENV'] variable should be set to the appropriate environment variables
     await expect(page.evaluate(() => window['__ENV'])).resolves.toEqual({
       NEXT_PUBLIC_STAGE: getAppStageFromTestStage(),
+      // Populated by EnvironmentLoader so SentryLoader can read them via getEnv() after hydration.
+      NEXT_PUBLIC_SENTRY_DSN: expect.any(String),
+      // May be empty string in local Docker builds where GIT_SHA build-arg wasn't passed.
+      NEXT_PUBLIC_SENTRY_RELEASE: expect.any(String),
     });
   });
 });
