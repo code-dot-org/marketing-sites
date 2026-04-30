@@ -12,9 +12,9 @@ import {SUPPORTED_LOCALES_MAP, SupportedLocale} from '@/config/locale';
 import {getStage} from '@/config/stage';
 import EnvironmentLoader from '@/providers/environment';
 import LocalizeLoader from '@/providers/localize/LocalizeLoader';
-import NewRelicLoader from '@/providers/newrelic/NewRelicLoader';
 import OneTrustLoader from '@/providers/onetrust/OneTrustLoader';
 import OneTrustProvider from '@/providers/onetrust/OneTrustProvider';
+import SentryLoader from '@/providers/sentry/SentryLoader';
 import StatsigProvider from '@/providers/statsig/StatsigProvider';
 import {getCriticalFonts, getMuiTheme} from '@/themes';
 
@@ -43,7 +43,7 @@ export default async function Layout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <EnvironmentLoader brand={brand} />
-            <NewRelicLoader />
+            <SentryLoader />
             <OneTrustLoader brand={brand} />
             <LocalizeLoader
               brand={brand}

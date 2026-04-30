@@ -185,7 +185,9 @@ The main request path in `apps/marketing` is:
   - `src/providers/localize/*` loads LocalizeJS.
   - `src/providers/onetrust/*` loads OneTrust scripts and exposes consent state.
   - `src/providers/statsig/*` initializes experimentation and analytics.
-  - `src/providers/newrelic/*` initializes browser monitoring.
+  - Browser error monitoring is initialized in `src/instrumentation-client.ts`
+    using `@sentry/nextjs`, gated on `getStage()` resolving to `test` or
+    `production`.
   - `src/providers/environment/*` exposes environment values to the client.
   - These are the main places where browser-only concerns legitimately cross
     into the client runtime.

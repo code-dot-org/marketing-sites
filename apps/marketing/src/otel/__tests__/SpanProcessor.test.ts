@@ -1,68 +1,98 @@
-import {Span, Context} from '@opentelemetry/api';
+import {Context} from '@opentelemetry/api';
+import {
+  BatchSpanProcessor,
+  type ReadableSpan,
+  type Span,
+} from '@opentelemetry/sdk-trace-base';
 
 import SpanProcessor from '../SpanProcessor';
 
+type MutableSpan = {
+  spanContext: () => {traceId: string};
+  attributes: Record<string, unknown>;
+  name: string;
+  updateName: jest.Mock;
+};
+
+function makeSpan(traceId: string, name = ''): MutableSpan {
+  return {
+    spanContext: jest.fn(() => ({traceId})),
+    attributes: {},
+    name,
+    updateName: jest.fn(),
+  };
+}
+
 describe('SpanProcessor', () => {
   let spanProcessor: SpanProcessor;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockSpan: any;
-  let mockParentContext: Context;
+  let parentContext: Context;
 
   beforeEach(() => {
     spanProcessor = SpanProcessor.getInstance();
-    mockSpan = {
-      spanContext: jest.fn(() => ({traceId: 'test-trace-id'})),
-      attributes: {},
-      name: '',
-      updateName: jest.fn(),
-    } as unknown as Span;
-
-    mockParentContext = {} as Context;
+    parentContext = {} as Context;
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    // Clear the map on after each test
-    spanProcessor.onEnd(mockSpan);
   });
 
-  it('should store the root span when a span starts', () => {
-    spanProcessor.onStart(mockSpan, mockParentContext);
+  it('renames the first-seen span of a trace when a BaseServer.handleRequest child starts', () => {
+    const rootSpan = makeSpan('trace-1');
+    const childSpan = makeSpan('trace-1', 'GET /en-US/home');
+    childSpan.attributes['next.span_type'] = 'BaseServer.handleRequest';
 
-    const rootSpan = spanProcessor.getRootSpan('test-trace-id');
-    expect(rootSpan).toBe(mockSpan);
+    spanProcessor.onStart(
+      rootSpan as unknown as Span & ReadableSpan,
+      parentContext,
+    );
+    spanProcessor.onStart(
+      childSpan as unknown as Span & ReadableSpan,
+      parentContext,
+    );
+
+    expect(rootSpan.updateName).toHaveBeenCalledWith('GET /en-US/home');
+
+    spanProcessor.onEnd(childSpan as unknown as Span & ReadableSpan);
+    spanProcessor.onEnd(rootSpan as unknown as Span & ReadableSpan);
   });
 
-  it('should update the root span name if the span is a Next.js request handler', () => {
-    mockSpan.attributes['next.span_type'] = 'BaseServer.handleRequest';
-    mockSpan.name = 'GET /en-US/home';
+  it('does not forward spans with the next.bubble attribute to the exporter pipeline', () => {
+    const bubbleSpan = makeSpan('trace-2');
+    bubbleSpan.attributes['next.bubble'] = true;
 
-    spanProcessor.onStart(mockSpan, mockParentContext);
+    const batchOnEnd = jest.spyOn(BatchSpanProcessor.prototype, 'onEnd');
 
-    const rootSpan = spanProcessor.getRootSpan('test-trace-id');
-    expect(rootSpan?.updateName).toHaveBeenCalledWith('GET /en-US/home');
+    spanProcessor.onEnd(bubbleSpan as unknown as Span & ReadableSpan);
+
+    expect(batchOnEnd).not.toHaveBeenCalled();
+    batchOnEnd.mockRestore();
   });
 
-  it('should remove the root span when the span ends', () => {
-    spanProcessor.onStart(mockSpan, mockParentContext);
-    spanProcessor.onEnd(mockSpan);
+  it('clears the root span tracking when the root span ends so later traces start fresh', () => {
+    const firstRoot = makeSpan('trace-3');
+    spanProcessor.onStart(
+      firstRoot as unknown as Span & ReadableSpan,
+      parentContext,
+    );
+    spanProcessor.onEnd(firstRoot as unknown as Span & ReadableSpan);
 
-    const rootSpan = spanProcessor.getRootSpan('test-trace-id');
-    expect(rootSpan).toBeUndefined();
-  });
+    const newRoot = makeSpan('trace-3');
+    const handler = makeSpan('trace-3', 'GET /en-US/other');
+    handler.attributes['next.span_type'] = 'BaseServer.handleRequest';
 
-  it('should filter out spans with the "next.bubble" attribute', () => {
-    mockSpan.attributes['next.bubble'] = true;
+    spanProcessor.onStart(
+      newRoot as unknown as Span & ReadableSpan,
+      parentContext,
+    );
+    spanProcessor.onStart(
+      handler as unknown as Span & ReadableSpan,
+      parentContext,
+    );
 
-    const spyOnEnd = jest.spyOn(spanProcessor, 'onEnd');
-    spanProcessor.onEnd(mockSpan);
+    expect(newRoot.updateName).toHaveBeenCalledWith('GET /en-US/other');
+    expect(firstRoot.updateName).not.toHaveBeenCalled();
 
-    expect(spyOnEnd).toHaveBeenCalled();
-    expect(spanProcessor.getRootSpan('test-trace-id')).toBeUndefined();
-  });
-
-  it('should return undefined for non-existent trace IDs', () => {
-    const rootSpan = spanProcessor.getRootSpan('non-existent-trace-id');
-    expect(rootSpan).toBeUndefined();
+    spanProcessor.onEnd(handler as unknown as Span & ReadableSpan);
+    spanProcessor.onEnd(newRoot as unknown as Span & ReadableSpan);
   });
 });

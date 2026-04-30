@@ -7,6 +7,8 @@ import {PUBLIC_ENV_KEY} from '@/providers/environment/constants';
 const EnvironmentLoader = ({brand}: {brand: Brand}) => {
   const publicEnvironmentVariables = {
     NEXT_PUBLIC_STAGE: process.env.NEXT_PUBLIC_STAGE,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_SENTRY_RELEASE: process.env.NEXT_PUBLIC_SENTRY_RELEASE,
   };
 
   return (

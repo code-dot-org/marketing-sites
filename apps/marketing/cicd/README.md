@@ -30,7 +30,9 @@ in `config.rb` or when `account-resources.yml.erb` is modified. Must be re-run o
       - CONTENTFUL_REVALIDATE_TOKEN
       - DRAFT_MODE_TOKEN
       - STATSIG_CLIENT_KEY
-      - OTEL_EXPORTER_OTLP_HEADERS
+      - NEXT_PUBLIC_SENTRY_DSN
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      - OTEL_EXPORTER_OTLP_TRACES_HEADERS
 
 1. Assume an AWS Role that had permissions to create most types of Resources (must be admin for environment_type=production):
    `export AWS_PROFILE=cdo`
@@ -48,3 +50,40 @@ cd 3-app
             --web_application_server_secrets_arn arn:aws:secretsmanager:my-region-2:123456789:secret:marketing-sites/development/marketing-sites.dev-code.org/code-abc123 \
             --cloudformation_role_boundary arn:aws:iam::123456789:policy/marketing-sites-role-permissions-boundary-development
 ```
+
+## Logging
+
+Application logs are written to stdout by `pino` and captured by the Fargate task's `awslogs` log driver, which
+forwards them to CloudWatch Logs under `/aws/ecs/<stack-name>`.
+
+## Sentry Source-Map Upload
+
+### Debug IDs, not URL-based matching
+
+Sentry resolves stack frames to original source via **debug IDs** — a UUID embedded in each compiled JS chunk
+(and its paired `.map`) that Sentry stores its uploaded maps under. When an error event arrives, the SDK reads
+the debug ID out of the loaded code and Sentry looks up the map by that ID. No URL fetching, no reliance on
+`sourceMappingURL` comments, no fragility around hostnames or release naming.
+
+- **Client:** the browser loads chunks from CloudFront/S3; the SDK reads the embedded ID and tags outgoing events
+  with it.
+- **Server:** Node's `--enable-source-maps` flag (set in the Dockerfile runner stage) reads the `.map` files next
+  to the compiled server code on disk, so stack traces are already unminified when they reach
+  `Sentry.captureRequestError`. No separate server upload is needed for readable traces.
+
+Because matching is ID-based, the only end-to-end requirement is that the chunks running at runtime carry the
+same debug IDs as the maps uploaded to Sentry.
+
+### Docker build vs. GitHub Actions
+
+The **Docker build** does not run any Sentry tooling — `next build` produces pristine output and the image
+ships no Sentry tokens. **GitHub Actions** owns every Sentry-specific step:
+
+1. `prepare-static-assets` extracts `.next/static/` from the pushed image, runs `@sentry/cli sourcemaps inject`
+   to write deterministic debug IDs into each chunk and its `.map`, publishes the injected tree as a workflow
+   artifact, and then runs `@sentry/cli sourcemaps upload` tagged with the commit SHA — **once per deploy**.
+2. Each per-environment deploy job downloads the same artifact and `aws s3 sync`s it to its S3 bucket — so every
+   environment serves byte-identical chunks whose debug IDs are already registered in Sentry.
+
+`SENTRY_AUTH_TOKEN` lives only in the one upload step; it never touches the Docker build, the image, or any
+per-env job.

@@ -618,10 +618,13 @@ Resources:
               Value: gzip
             - Name: OTEL_EXPORTER_OTLP_PROTOCOL
               Value: http/protobuf
-            - Name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-              Value: delta
-            - Name: OTEL_EXPORTER_OTLP_ENDPOINT
-              Value: https://otlp.nr-data.net
+            # Honor incoming `traceparent` for distributed traces; apply the ratio only at trace roots.
+            # See: https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/
+            - Name: OTEL_TRACES_SAMPLER
+              Value: parentbased_traceidratio
+            # Ratio (0.0 - 1.0) applied to trace roots. 0.01 = 1% of root requests are traced.
+            - Name: OTEL_TRACES_SAMPLER_ARG
+              Value: "0.01"
 <% MarketingSites::Configuration.site_config(options[:site_type], options[:environment_type])[:environment_variables].each do |name, value| %>
             - Name: <%= name %>
               Value: <%= value %>
@@ -648,8 +651,12 @@ Resources:
               ValueFrom: !Sub "${WebApplicationServerSecretsARN}:DRAFT_MODE_TOKEN::"
             - Name: STATSIG_CLIENT_KEY
               ValueFrom: !Sub "${WebApplicationServerSecretsARN}:STATSIG_CLIENT_KEY::"
-            - Name: OTEL_EXPORTER_OTLP_HEADERS
-              ValueFrom: !Sub "${WebApplicationServerSecretsARN}:OTEL_EXPORTER_OTLP_HEADERS::"
+            - Name: NEXT_PUBLIC_SENTRY_DSN
+              ValueFrom: !Sub "${WebApplicationServerSecretsARN}:NEXT_PUBLIC_SENTRY_DSN::"
+            - Name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+              ValueFrom: !Sub "${WebApplicationServerSecretsARN}:OTEL_EXPORTER_OTLP_TRACES_ENDPOINT::"
+            - Name: OTEL_EXPORTER_OTLP_TRACES_HEADERS
+              ValueFrom: !Sub "${WebApplicationServerSecretsARN}:OTEL_EXPORTER_OTLP_TRACES_HEADERS::"
           LogConfiguration:
             LogDriver: awslogs
             Options:

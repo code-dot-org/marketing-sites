@@ -90,6 +90,7 @@ jobs:
             TURBO_TEAM=${{ vars.TURBO_REPO_TEAM }}
             TURBO_TOKEN=${{ secrets.TURBO_REPO_TOKEN }}
             TURBO_API=${{ vars.TURBO_REPO_API }}
+            GIT_SHA=${{ github.sha }}
 
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see "[AUTOTITLE](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds)."
       - name: Generate artifact attestation
@@ -99,11 +100,76 @@ jobs:
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
 
+  # Extracts the client static assets from the pushed image, injects Sentry debug IDs, uploads the source maps
+  # to Sentry ONCE, and publishes the injected static/ tree as a workflow artifact for the per-env deploy jobs
+  # to consume. Runs once per deploy regardless of site_type matrix, so the Sentry upload isn't duplicated.
+  prepare-static-assets:
+    needs: build-and-push-image
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Frontend
+        uses: ./.github/actions/frontend/setup
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3.3.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract static/ from pushed image
+        run: |
+          IMAGE="${{ needs.build-and-push-image.outputs.fullImageUri }}"
+          NAME="extract-${{ github.run_id }}-${{ github.run_attempt }}"
+          # Always clean up, even if docker cp fails — avoids name-collision on workflow retries.
+          trap 'docker rm -f "$NAME" >/dev/null 2>&1 || true' EXIT
+          docker pull "$IMAGE"
+          docker create --name "$NAME" "$IMAGE"
+          docker cp "$NAME":/app/apps/marketing/.next/static/ ./static
+
+      # Writes deterministic debug IDs into each client chunk and its .map. Skipped cleanly when Sentry isn't
+      # configured — the artifact will still be published; deploys will S3-sync pristine files.
+      - name: Inject Sentry debug IDs
+        if: ${{ vars.SENTRY_ORG != '' && vars.SENTRY_PROJECT != '' }}
+        run: yarn workspace @code-dot-org/marketing exec sentry-cli sourcemaps inject ../../static
+
+      # Publish the (injected) static/ as an artifact that per-env deploy jobs pull down and sync to their S3
+      # bucket — guarantees the bytes on every environment's S3 match the bytes whose maps we upload to Sentry.
+      - name: Upload static artifact
+        uses: actions/upload-artifact@v4
+        with:
+          # Use a stable name (run_id, not run_attempt) so a "re-run failed jobs" that re-runs only the
+          # downstream deploy matrix still finds the artifact uploaded on the original attempt. Overwrite
+          # protects the case where this job itself is re-run.
+          name: marketing-static-${{ github.run_id }}
+          path: ./static
+          retention-days: 1
+          if-no-files-found: error
+          overwrite: true
+
+      # Single Sentry upload per deploy — matrix envs do not repeat this work.
+      - name: Upload source maps to Sentry
+        if: ${{ vars.SENTRY_ORG != '' && vars.SENTRY_PROJECT != '' }}
+        env:
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          yarn workspace @code-dot-org/marketing exec sentry-cli sourcemaps upload \
+            --release="${GITHUB_SHA}" \
+            ../../static
+
   # Deploy test environments in parallel
   deploy-test:
     needs:
       - ci
       - build-and-push-image
+      - prepare-static-assets
     uses: ./.github/workflows/marketing-app-deploy-to-environment.yml
     secrets: inherit
     # Do not allow other deployments to deploy while this deployment is in progress.
@@ -124,6 +190,7 @@ jobs:
     needs:
       - ci
       - build-and-push-image
+      - prepare-static-assets
       - deploy-test
     uses: ./.github/workflows/marketing-app-deploy-to-environment.yml
     secrets: inherit
