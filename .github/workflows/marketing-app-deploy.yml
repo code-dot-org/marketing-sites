@@ -143,11 +143,14 @@ jobs:
       - name: Upload static artifact
         uses: actions/upload-artifact@v4
         with:
-          # Include run_attempt so workflow re-runs don't collide on the artifact name.
-          name: marketing-static-${{ github.run_id }}-${{ github.run_attempt }}
+          # Use a stable name (run_id, not run_attempt) so a "re-run failed jobs" that re-runs only the
+          # downstream deploy matrix still finds the artifact uploaded on the original attempt. Overwrite
+          # protects the case where this job itself is re-run.
+          name: marketing-static-${{ github.run_id }}
           path: ./static
           retention-days: 1
           if-no-files-found: error
+          overwrite: true
 
       # Single Sentry upload per deploy — matrix envs do not repeat this work.
       - name: Upload source maps to Sentry

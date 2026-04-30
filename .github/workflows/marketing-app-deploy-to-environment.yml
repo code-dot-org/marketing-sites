@@ -80,7 +80,7 @@ jobs:
       - name: 'Download static assets artifact'
         uses: actions/download-artifact@v4
         with:
-          name: marketing-static-${{ github.run_id }}-${{ github.run_attempt }}
+          name: marketing-static-${{ github.run_id }}
           path: ./static
 
       - name: '[${{ env.GITHUB_ENVIRONMENT_NAME }}] Upload Static Assets to S3'
