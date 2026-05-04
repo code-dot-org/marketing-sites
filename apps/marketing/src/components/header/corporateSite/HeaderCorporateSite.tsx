@@ -9,7 +9,7 @@ import DSCOHeader, {
 import {getStage} from '@/config/stage';
 import {getStudioBaseUrl} from '@/config/studio';
 import {getCookieNameByStage} from '@/cookies/getCookie';
-import logoImage from '@public/images/cdo-logo-inverse.svg';
+import logoImage from '@public/images/codeai-logo-inverse.svg';
 import allProjectsImage from '@public/images/header-all-projects-icon.webp';
 import appLabImage from '@public/images/header-app-lab-icon.webp';
 import artistImage from '@public/images/header-artist-icon.webp';
