@@ -6,7 +6,7 @@ const copyrightYear = new Date().getFullYear();
 
 // Copyright text
 export const COPYRIGHT_TEXT_CORPORATE_SITE = {
-  value: `© Code.org, ${copyrightYear}. Code.org, the CODE logo, Hour of Code and CS Discoveries are trademarks of Code.org. Built on GitHub from Microsoft.`,
+  value: `© CodeAI, ${copyrightYear}. CodeAI, the CodeAI logo, Hour of AI, and CS Discoveries are trademarks of CodeAI. "Code.org" is a former trademark of CodeAI. Built on GitHub from Microsoft.`,
   showIcon: false,
 };
 
