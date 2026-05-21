@@ -1,0 +1,129 @@
+// Logo Transition Overlay.
+// Full-viewport modal that plays a one-shot logo-transition video, fades
+// out, and hands off to an existing on-page SVG element via a FLIP-style
+// animation. The component is intentionally chrome-light: no title, no
+// description, no action buttons -- just the video, the layered SVG, and a
+// single close button.
+// Phase sequence (post-video):
+//   1. 'fading' (DEFAULT_FADE_OUT_MS):
+//        video opacity 1 -> 0
+//        modal box opacity 1 -> 0
+//        SVG opacity 0 -> 1
+//        backdrop stays full (dark) so the transparent SVG reveals cleanly
+//   2. 'handoff' (DEFAULT_HANDOFF_MS):
+//        SVG translates+resizes from modal center to header destination
+//        backdrop fades from rgba(0,0,0,0.9) -> rgba(0,0,0,0)
+//        (these run simultaneously)
+
+.overlayRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; // Above the standard header (which uses default z-index stack)
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Dim backdrop over the rest of the site. The backdrop fades to fully
+  // transparent during the 'handoff' phase via background-color (NOT
+  // opacity) so the SVG -- which is a sibling of this stacking context
+  // -- stays fully visible.
+  background-color: rgba(0, 0, 0, 0.9);
+  transition: background-color 1500ms ease-out;
+  // Allow keyboard focus to remain inside while the overlay is mounted.
+  outline: none;
+}
+
+.overlayRoot--fading {
+  pointer-events: none;
+}
+
+// Applied during 'handoff' so the backdrop disappears while the SVG flies
+// to the header.
+.overlayRoot--backdropFading {
+  background-color: rgba(0, 0, 0, 0);
+  pointer-events: none;
+}
+
+.videoWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  // Modal box: white background, 60px symmetric padding so the video
+  // floats with even breathing room on all sides. Opacity fades during
+  // 'fading' alongside the video.
+  background-color: #fff;
+  padding: 60px;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
+  z-index: 1;
+  transition: opacity 1200ms ease-out;
+}
+
+.videoWrapper--fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.videoElement {
+  display: block;
+  // The video is rendered at its intrinsic width per design (834px); on
+  // viewports narrower than 834 + padding, it scales down to fit.
+  width: 834px;
+  height: auto;
+  max-width: 100%;
+  // Slowed to 1200ms so the video fades out together with the modal box
+  // (and the SVG fades in over the same window).
+  transition: opacity 1200ms ease-out;
+  position: relative;
+  z-index: 2;
+}
+
+.videoElement--fading {
+  opacity: 0;
+}
+
+// The SVG is rendered as a sibling of .videoWrapper (NOT a child) so that
+// opacity inheritance from the fading modal box does not cascade to it.
+// It starts at opacity 0 and crossfades to 1 during the 'fading' phase
+// over 1200ms (matching the video's fade-out rate). Position is fixed
+// to the viewport via inline style at the video's end-frame logo rect.
+.handoffSvg {
+  position: absolute;
+  transform-origin: top left;
+  opacity: 0;
+  z-index: 10;
+  transition: opacity 1200ms ease-out;
+}
+
+.handoffSvg--visible {
+  opacity: 1;
+}
+
+.handoffSvg--running {
+  // During the FLIP transit the SVG slides + resizes to the header
+  // destination. We animate left/top together with width/height so the
+  // SVG's position transitions smoothly instead of snapping to the
+  // destination corner while only size animates. Duration must stay in
+  // sync with DEFAULT_HANDOFF_MS.
+  transition:
+    left 1500ms cubic-bezier(0.4, 0, 0.2, 1),
+    top 1500ms cubic-bezier(0.4, 0, 0.2, 1),
+    width 1500ms cubic-bezier(0.4, 0, 0.2, 1),
+    height 1500ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 250ms ease-out;
+}
+
+.closeButton {
+  position: absolute;
+  inset-block-start: 16px;
+  inset-inline-end: 16px;
+  z-index: 11; // Above the modal box and the in-transit SVG.
+  // Fade together with the modal box.
+  transition: opacity 1200ms ease-out;
+}
+
+.closeButton--fading {
+  opacity: 0;
+  pointer-events: none;
+}

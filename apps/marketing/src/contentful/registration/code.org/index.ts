@@ -99,6 +99,9 @@ import Testimonial, {
 import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
+import LogoTransitionModal, {
+  LogoTransitionModalContentfulComponentDefinition,
+} from '@/components/contentful/logoTransitionModal';
 
 const contentfulRegistration = {
   componentRegistrations: [
@@ -265,6 +268,13 @@ const contentfulRegistration = {
     {
       component: YourSchool,
       definition: YourSchoolContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+      },
+    },
+    {
+      component: LogoTransitionModal,
+      definition: LogoTransitionModalContentfulComponentDefinition,
       options: {
         wrapContainerWidth: '100%',
       },
