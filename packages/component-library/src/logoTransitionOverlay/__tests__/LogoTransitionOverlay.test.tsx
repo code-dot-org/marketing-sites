@@ -1,7 +1,13 @@
 import {act, fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-import {DEFAULT_HANDOFF_TRIGGER_MS} from '../constants';
+import {
+  DEFAULT_HANDOFF_TRIGGER_MS,
+  DEFAULT_MAX_SHOWS_PER_WINDOW,
+  DEFAULT_SHOW_WINDOW_MS,
+  LOGO_TRANSITION_OVERLAY_SESSION_STORAGE_KEY,
+  LOGO_TRANSITION_OVERLAY_SHOWS_STORAGE_KEY,
+} from '../constants';
 import LogoTransitionOverlay, {
   LogoTransitionOverlayProps,
   __resetSingletonForTests,
@@ -91,8 +97,17 @@ let storageSnapshot: {
   sessionKeys: string[];
 };
 
-// Match the constant in src/logoTransitionOverlay/constants.ts.
-const PLAYED_STORAGE_KEY = 'logo-transition-overlay:played';
+// Throttle storage keys (imported so the tests can't drift from the source).
+const SESSION_KEY = LOGO_TRANSITION_OVERLAY_SESSION_STORAGE_KEY;
+const SHOWS_KEY = LOGO_TRANSITION_OVERLAY_SHOWS_STORAGE_KEY;
+
+// Seed `count` show timestamps that all fall within the rolling window, as the
+// component would have written them on prior shows.
+const seedRecentShows = (count: number) => {
+  const now = Date.now();
+  const shows = Array.from({length: count}, (_, i) => now - i * 1000);
+  window.localStorage.setItem(SHOWS_KEY, JSON.stringify(shows));
+};
 
 beforeEach(() => {
   jest.useFakeTimers();
@@ -112,9 +127,10 @@ beforeEach(() => {
     }),
   });
   mockMatchMedia(false);
-  // Start every test with an empty localStorage so the played-flag skip
+  // Start every test with empty local/session storage so throttle state
   // doesn't bleed across tests.
   window.localStorage.clear();
+  window.sessionStorage.clear();
   // capture storage baseline so each test can assert no writes
   storageSnapshot = {
     cookies: document.cookie,
@@ -128,6 +144,7 @@ afterEach(() => {
   document.body.innerHTML = '';
   __resetSingletonForTests();
   window.localStorage.clear();
+  window.sessionStorage.clear();
 });
 
 // Strict assertion: no storage of any kind changed. Use for tests that
@@ -140,19 +157,27 @@ const expectNoStorageWritten = () => {
   );
 };
 
-// Permissive assertion: cookies + sessionStorage are unchanged; the only
-// allowed localStorage addition is the played flag. Use for tests that
-// commit to playing (where markPlayed fires).
-const expectOnlyPlayedFlagWritten = () => {
+// Permissive assertion: no cookies written; the only new sessionStorage key is
+// the session flag and the only new localStorage key is the shows list (with at
+// least one recent timestamp). Use for tests that commit to playing (where
+// recordShow fires) starting from cleared storage.
+const expectThrottleStateRecorded = () => {
   expect(document.cookie).toBe(storageSnapshot.cookies);
-  expect(Object.keys(window.sessionStorage)).toEqual(
-    storageSnapshot.sessionKeys,
+
+  const newSessionKeys = Object.keys(window.sessionStorage).filter(
+    k => !storageSnapshot.sessionKeys.includes(k),
   );
+  expect(newSessionKeys).toEqual([SESSION_KEY]);
+  expect(window.sessionStorage.getItem(SESSION_KEY)).toBe('1');
+
   const newLocalKeys = Object.keys(window.localStorage).filter(
     k => !storageSnapshot.localKeys.includes(k),
   );
-  expect(newLocalKeys).toEqual([PLAYED_STORAGE_KEY]);
-  expect(window.localStorage.getItem(PLAYED_STORAGE_KEY)).toBe('1');
+  expect(newLocalKeys).toEqual([SHOWS_KEY]);
+  const shows = JSON.parse(window.localStorage.getItem(SHOWS_KEY) ?? '[]');
+  expect(Array.isArray(shows)).toBe(true);
+  expect(shows.length).toBeGreaterThanOrEqual(1);
+  shows.forEach((ts: unknown) => expect(typeof ts).toBe('number'));
 };
 
 describe('LogoTransitionOverlay', () => {
@@ -188,8 +213,8 @@ describe('LogoTransitionOverlay', () => {
     expect(c1.querySelector('[role="dialog"]')).not.toBeNull();
     // Second instance is null.
     expect(c2).toBeEmptyDOMElement();
-    // Only the first instance committed to playing, so only the played flag.
-    expectOnlyPlayedFlagWritten();
+    // Only the first instance committed to playing, so only its throttle state.
+    expectThrottleStateRecorded();
   });
 
   // 3. Successful play -> hold -> fade -> handoff
@@ -221,7 +246,7 @@ describe('LogoTransitionOverlay', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(onDismiss).toHaveBeenCalled();
     // Played flag set when the decode-gate committed; nothing else written.
-    expectOnlyPlayedFlagWritten();
+    expectThrottleStateRecorded();
   });
 
   // 4. Close-button dismissal: overlay disappears immediately, no fade.
@@ -285,9 +310,9 @@ describe('LogoTransitionOverlay', () => {
     });
     // The AVIF must not have begun fading (phase stayed 'playing').
     expect(getMediaWrapper()?.className).not.toContain('mediaWrapper--fading');
-    // Committing to play stamps the played flag; only that entry should be
-    // in localStorage, and nothing in cookies / sessionStorage.
-    expectOnlyPlayedFlagWritten();
+    // Committing to play records the throttle state (session flag + shows
+    // list); nothing in cookies.
+    expectThrottleStateRecorded();
   });
 
   // 7. Outside-pointer clicks do not dismiss
@@ -305,7 +330,7 @@ describe('LogoTransitionOverlay', () => {
     });
     // The AVIF must not have begun fading (phase stayed 'playing').
     expect(getMediaWrapper()?.className).not.toContain('mediaWrapper--fading');
-    expectOnlyPlayedFlagWritten();
+    expectThrottleStateRecorded();
   });
 
   // 8. Decode failure -> skip the overlay + warning
@@ -380,14 +405,14 @@ describe('LogoTransitionOverlay', () => {
       expect.stringContaining('destination-not-found'),
     );
     consoleWarn.mockRestore();
-    // Committing to play stamps the played flag; that's the only expected
+    // Committing to play records the throttle state; that's the only expected
     // write.
-    expectOnlyPlayedFlagWritten();
+    expectThrottleStateRecorded();
   });
 
-  // 11. Storage discipline: cookies and sessionStorage are untouched; only
-  // the played flag may appear in localStorage.
-  it('writes nothing to cookies or sessionStorage; localStorage limited to the played flag', async () => {
+  // 11. Storage discipline: no cookies written; sessionStorage gains only the
+  // session flag and localStorage only the shows-timestamp list.
+  it('writes no cookies; records only the session flag and shows list on commit', async () => {
     mountDestination();
     render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
     await revealOverlay();
@@ -399,13 +424,13 @@ describe('LogoTransitionOverlay', () => {
     // Inline one explicit assertion so jest/expect-expect can see it; the
     // helper below covers the full equivalence check.
     expect(document.cookie).toBe(storageSnapshot.cookies);
-    expectOnlyPlayedFlagWritten();
+    expectThrottleStateRecorded();
   });
 
-  // 12. Once-per-browser: when the played flag is already set, the
-  // overlay short-circuits and never becomes active.
-  it('does not render if a played flag is already set in localStorage', () => {
-    window.localStorage.setItem(PLAYED_STORAGE_KEY, '1');
+  // 12. Once-per-session: when the session flag is already set, the overlay
+  // short-circuits, never becomes active, and writes nothing.
+  it('does not render if already shown this session', () => {
+    window.sessionStorage.setItem(SESSION_KEY, '1');
     const onDismiss = jest.fn();
     const onActiveChange = jest.fn();
     const {container} = render(
@@ -419,32 +444,103 @@ describe('LogoTransitionOverlay', () => {
     expect(onDismiss).toHaveBeenCalled();
     // The header should NOT have been told to hide.
     expect(onActiveChange).not.toHaveBeenCalledWith(true);
+    // Bypass path must not record a show.
+    expect(window.localStorage.getItem(SHOWS_KEY)).toBeNull();
   });
 
-  // 13. Played flag is set when the decode-gate commits -- not before.
-  it('marks played in localStorage once the image is decoded and revealed', async () => {
+  // 13. Per-window cap: at the cap, even a fresh session short-circuits, and
+  // the read-only bypass leaves the seeded list untouched.
+  it('does not render once the per-window cap is reached', () => {
+    seedRecentShows(DEFAULT_MAX_SHOWS_PER_WINDOW);
+    const seeded = window.localStorage.getItem(SHOWS_KEY);
+    const onDismiss = jest.fn();
+    const onActiveChange = jest.fn();
+    const {container} = render(
+      <LogoTransitionOverlay
+        {...DEFAULT_PROPS}
+        onDismiss={onDismiss}
+        onActiveChange={onActiveChange}
+      />,
+    );
+    expect(container).toBeEmptyDOMElement();
+    expect(onDismiss).toHaveBeenCalled();
+    expect(onActiveChange).not.toHaveBeenCalledWith(true);
+    expect(window.localStorage.getItem(SHOWS_KEY)).toBe(seeded);
+  });
+
+  // 14. Under the cap in a new session: the overlay plays and appends a show.
+  it('renders and appends a show when under the cap in a new session', async () => {
+    mountDestination();
+    seedRecentShows(DEFAULT_MAX_SHOWS_PER_WINDOW - 1);
     render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
-    // Before the decode-gate resolves: not yet played.
-    expect(window.localStorage.getItem(PLAYED_STORAGE_KEY)).toBeNull();
     await revealOverlay();
-    // After decode commits: played.
-    expect(window.localStorage.getItem(PLAYED_STORAGE_KEY)).toBe('1');
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    // The committed show is appended to the existing recent ones.
+    const shows = JSON.parse(window.localStorage.getItem(SHOWS_KEY) ?? '[]');
+    expect(shows).toHaveLength(DEFAULT_MAX_SHOWS_PER_WINDOW);
+    expect(window.sessionStorage.getItem(SESSION_KEY)).toBe('1');
   });
 
-  // 14. Decode failure does NOT mark played (user gets a retry next time).
-  it('does NOT mark played in localStorage when the image fails to decode', async () => {
+  // 15. Shows older than the window don't count toward the cap and are pruned
+  // when a new show is recorded.
+  it('ignores and prunes shows older than the rolling window', async () => {
+    mountDestination();
+    const stale = Date.now() - (DEFAULT_SHOW_WINDOW_MS + 1);
+    window.localStorage.setItem(
+      SHOWS_KEY,
+      JSON.stringify([stale, stale, stale]),
+    );
+    render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
+    // All seeded shows are outside the window, so the cap is not reached.
+    await revealOverlay();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    // The new write drops the stale entries and keeps only the fresh show.
+    const shows = JSON.parse(window.localStorage.getItem(SHOWS_KEY) ?? '[]');
+    expect(shows).toHaveLength(1);
+    expect(shows[0]).toBeGreaterThan(stale);
+  });
+
+  // 16. A malformed shows value can't permanently suppress the overlay: it is
+  // treated as "nothing shown recently" and overwritten on the next show.
+  it('recovers from a malformed shows value and overwrites it on commit', async () => {
+    mountDestination();
+    window.localStorage.setItem(SHOWS_KEY, 'not-json');
+    render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
+    await revealOverlay();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    const shows = JSON.parse(window.localStorage.getItem(SHOWS_KEY) ?? '[]');
+    expect(shows).toHaveLength(1);
+  });
+
+  // 17. The shows list is appended (and the session flag set) only when the
+  // decode-gate commits -- not before.
+  it('records a show once the image is decoded and revealed', async () => {
+    render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
+    // Before the decode-gate resolves: nothing recorded.
+    expect(window.localStorage.getItem(SHOWS_KEY)).toBeNull();
+    expect(window.sessionStorage.getItem(SESSION_KEY)).toBeNull();
+    await revealOverlay();
+    // After decode commits: one show + the session flag.
+    const shows = JSON.parse(window.localStorage.getItem(SHOWS_KEY) ?? '[]');
+    expect(shows).toHaveLength(1);
+    expect(window.sessionStorage.getItem(SESSION_KEY)).toBe('1');
+  });
+
+  // 18. Decode failure does NOT record a show (user gets a retry next time).
+  it('does NOT record a show when the image fails to decode', async () => {
     decodeBehavior = 'reject';
     const consoleWarn = jest
       .spyOn(console, 'warn')
       .mockImplementation(() => {});
     render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
     await revealOverlay();
-    expect(window.localStorage.getItem(PLAYED_STORAGE_KEY)).toBeNull();
+    expect(window.localStorage.getItem(SHOWS_KEY)).toBeNull();
+    expect(window.sessionStorage.getItem(SESSION_KEY)).toBeNull();
     consoleWarn.mockRestore();
   });
 
-  // 15. Decode timeout does NOT mark played.
-  it('does NOT mark played in localStorage when decode times out', () => {
+  // 19. Decode timeout does NOT record a show.
+  it('does NOT record a show when decode times out', () => {
     decodeBehavior = 'hang';
     const consoleWarn = jest
       .spyOn(console, 'warn')
@@ -453,7 +549,8 @@ describe('LogoTransitionOverlay', () => {
     act(() => {
       jest.advanceTimersByTime(1500);
     });
-    expect(window.localStorage.getItem(PLAYED_STORAGE_KEY)).toBeNull();
+    expect(window.localStorage.getItem(SHOWS_KEY)).toBeNull();
+    expect(window.sessionStorage.getItem(SESSION_KEY)).toBeNull();
     consoleWarn.mockRestore();
   });
 });

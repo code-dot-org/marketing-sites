@@ -50,11 +50,36 @@ export const DEFAULT_DIALOG_ARIA_LABEL =
   'Code.org logo logo-transition animation';
 export const DEFAULT_CLOSE_ARIA_LABEL = 'Close';
 
-// localStorage key that records "the visitor has seen the logo-transition
-// animation in this browser". Set as soon as the animation successfully loads
-// and starts playing; read at mount to short-circuit the overlay (so later mounts or
-// return visits in this browser do nothing). Persists across tabs and browser
-// restarts, but not across browsers or devices. Functional, non-tracking
-// marker -- no PII.
-export const LOGO_TRANSITION_OVERLAY_PLAYED_STORAGE_KEY =
-  'logo-transition-overlay:played';
+// How the overlay is throttled (see shownThisSession / getRecentShows /
+// recordShow in LogoTransitionOverlay.tsx). Two functional, non-tracking,
+// no-PII markers, both set only once a show actually commits:
+//
+//   - sessionStorage flag: "shown in this tab session already". Cleared
+//     automatically when the tab session ends, so the animation can play again
+//     in a future session (but never twice within one).
+//   - localStorage list: epoch-ms timestamps of recent shows, pruned to the
+//     trailing window. The count of timestamps within the window enforces the
+//     per-window cap below.
+//
+// Neither persists across browsers or devices -- that would need server-side
+// state. Both degrade toward "let it play" if storage is unavailable.
+
+// sessionStorage key: present (== '1') once the overlay has been shown in the
+// current tab session. Read at mount to skip replaying on reloads/navigations.
+export const LOGO_TRANSITION_OVERLAY_SESSION_STORAGE_KEY =
+  'logo-transition-overlay:shown-session';
+
+// localStorage key: a JSON array of epoch-ms timestamps, one per committed
+// show, pruned to DEFAULT_SHOW_WINDOW_MS. Its length is the rolling-window
+// show count used to enforce the cap.
+export const LOGO_TRANSITION_OVERLAY_SHOWS_STORAGE_KEY =
+  'logo-transition-overlay:shows';
+
+// Maximum number of times the overlay may be shown within any trailing
+// SHOW_WINDOW_MS. Consumers override via the `maxShowsPerWindow` prop.
+export const DEFAULT_MAX_SHOWS_PER_WINDOW = 3;
+
+// Length of the rolling window over which shows are counted: 30 days. A show
+// "ages out" exactly SHOW_WINDOW_MS after it occurred (rolling, not a calendar
+// month). Consumers override via the `showWindowMs` prop.
+export const DEFAULT_SHOW_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;

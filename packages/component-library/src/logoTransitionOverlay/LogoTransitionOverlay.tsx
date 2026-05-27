@@ -10,7 +10,8 @@ import useFocusTrap from '@/common/hooks/useFocusTrap';
 
 import {
   LOGO_TRANSITION_MODAL_FEATURE_TAG,
-  LOGO_TRANSITION_OVERLAY_PLAYED_STORAGE_KEY,
+  LOGO_TRANSITION_OVERLAY_SESSION_STORAGE_KEY,
+  LOGO_TRANSITION_OVERLAY_SHOWS_STORAGE_KEY,
   LogoTransitionOverlayFailureReason,
   DEFAULT_ANIMATION_DURATION_MS,
   DEFAULT_CLOSE_ARIA_LABEL,
@@ -20,7 +21,9 @@ import {
   DEFAULT_HANDOFF_MS,
   DEFAULT_HANDOFF_TRIGGER_MS,
   DEFAULT_LOAD_TIMEOUT_MS,
+  DEFAULT_MAX_SHOWS_PER_WINDOW,
   DEFAULT_POST_PLAY_HOLD_MS,
+  DEFAULT_SHOW_WINDOW_MS,
 } from './constants';
 
 import moduleStyles from './logoTransitionOverlay.module.scss';
@@ -73,6 +76,14 @@ export interface LogoTransitionOverlayProps {
    *  finishes, before the fade-out crossfade begins. Lets the visitor
    *  register the destination logo before the modal starts dissolving. */
   postPlayHoldMs?: number;
+  /** Maximum number of times the overlay may be shown within any trailing
+   *  `showWindowMs`. Combined with the once-per-session gate, a returning
+   *  visitor sees the animation at most this many times per rolling window. */
+  maxShowsPerWindow?: number;
+  /** Length of the rolling window (ms) over which shows are counted toward
+   *  `maxShowsPerWindow`. A show ages out exactly this long after it occurred
+   *  (rolling, not a calendar month). */
+  showWindowMs?: number;
   /** Optional callback invoked after the overlay unmounts. */
   onDismiss?: () => void;
   /** Optional callback fired with `true` when the overlay decides to render
@@ -133,18 +144,17 @@ const prefersReducedMotion = (): boolean => {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
-// Has the visitor already seen the logo-transition animation in this browser?
-// Stored in localStorage so the flag persists across tabs and browser
-// restarts (so the animation plays only once per browser). Note this does NOT
-// cross browsers or devices -- that would require server-side state. Returns
-// false (i.e. "let it play") if localStorage is unavailable (some privacy
-// modes) -- acceptable degradation.
-const hasPlayed = (): boolean => {
+// Has the overlay already been shown in this tab session? Stored in
+// sessionStorage so it clears when the session ends, letting the animation play
+// again in a future session but never twice within one. Returns false (i.e.
+// "let it play") if sessionStorage is unavailable (some privacy modes) --
+// acceptable degradation.
+const shownThisSession = (): boolean => {
   if (typeof window === 'undefined') return false;
   try {
     return (
-      window.localStorage.getItem(
-        LOGO_TRANSITION_OVERLAY_PLAYED_STORAGE_KEY,
+      window.sessionStorage.getItem(
+        LOGO_TRANSITION_OVERLAY_SESSION_STORAGE_KEY,
       ) === '1'
     );
   } catch {
@@ -152,16 +162,56 @@ const hasPlayed = (): boolean => {
   }
 };
 
-const markPlayed = (): void => {
+// Timestamps (epoch ms) of recent shows that still fall within the trailing
+// `windowMs`, read from localStorage. Stale, future-dated, and malformed
+// entries are filtered out so a corrupt value can't permanently suppress the
+// overlay. Read-only: callers that don't commit a show leave storage untouched.
+// Returns [] (i.e. "nothing shown recently") if localStorage is unavailable or
+// the value can't be parsed -- acceptable degradation toward showing.
+const getRecentShows = (windowMs: number): number[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem(
+      LOGO_TRANSITION_OVERLAY_SHOWS_STORAGE_KEY,
+    );
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    const now = Date.now();
+    return parsed.filter(
+      (ts): ts is number =>
+        typeof ts === 'number' &&
+        Number.isFinite(ts) &&
+        ts <= now &&
+        now - ts < windowMs,
+    );
+  } catch {
+    return [];
+  }
+};
+
+// Record that a show has just committed: mark the session flag and append now
+// to the rolling list (pruned to `windowMs` on write so it stays tiny). Both
+// writes are best-effort; failures are swallowed so a storage error never
+// breaks the animation -- the next mount simply isn't throttled.
+const recordShow = (windowMs: number): void => {
   if (typeof window === 'undefined') return;
   try {
-    window.localStorage.setItem(
-      LOGO_TRANSITION_OVERLAY_PLAYED_STORAGE_KEY,
+    window.sessionStorage.setItem(
+      LOGO_TRANSITION_OVERLAY_SESSION_STORAGE_KEY,
       '1',
     );
   } catch {
-    // localStorage unavailable; the next mount will play the animation
-    // again. Acceptable.
+    // sessionStorage unavailable; the session gate degrades to off. Acceptable.
+  }
+  try {
+    const shows = [...getRecentShows(windowMs), Date.now()];
+    window.localStorage.setItem(
+      LOGO_TRANSITION_OVERLAY_SHOWS_STORAGE_KEY,
+      JSON.stringify(shows),
+    );
+  } catch {
+    // localStorage unavailable; the per-window cap degrades to off. Acceptable.
   }
 };
 
@@ -179,6 +229,11 @@ const markPlayed = (): void => {
  * `<video>`), playback start is detected via `onLoad` and the end of playback
  * is driven by a timer matched to the asset's known `animationDurationMs`. The
  * AVIF is authored to play once and freeze on its last frame.
+ *
+ * Throttled to at most once per tab session (sessionStorage) and
+ * `maxShowsPerWindow` shows per trailing `showWindowMs` (localStorage list of
+ * timestamps) -- both functional, non-tracking markers that degrade toward
+ * showing when storage is unavailable.
  *
  * Honors `prefers-reduced-motion` (renders null). ESC and the close button
  * dismiss the overlay. The overlay enforces a singleton at the module scope.
@@ -198,6 +253,8 @@ const LogoTransitionOverlay: React.FunctionComponent<
   dialogAriaLabel = DEFAULT_DIALOG_ARIA_LABEL,
   loadTimeoutMs = DEFAULT_LOAD_TIMEOUT_MS,
   postPlayHoldMs = DEFAULT_POST_PLAY_HOLD_MS,
+  maxShowsPerWindow = DEFAULT_MAX_SHOWS_PER_WINDOW,
+  showWindowMs = DEFAULT_SHOW_WINDOW_MS,
   onDismiss,
   onActiveChange,
 }) => {
@@ -212,8 +269,9 @@ const LogoTransitionOverlay: React.FunctionComponent<
   const claimedSingleton = useRef(false);
 
   useEffect(() => {
-    // Post-hydration decision. Reduced motion, a sibling instance, or a
-    // prior playthrough in this browser all bypass the overlay.
+    // Post-hydration decision. Reduced motion, a sibling instance, an earlier
+    // show this session, or the per-window cap being reached all bypass the
+    // overlay.
     if (prefersReducedMotion()) {
       onDismiss?.();
       return;
@@ -223,10 +281,15 @@ const LogoTransitionOverlay: React.FunctionComponent<
       onDismiss?.();
       return;
     }
-    if (hasPlayed()) {
-      // The visitor has already seen the logo-transition animation in this
-      // browser. Show the page normally with the real header logo and skip
-      // the overlay entirely.
+    if (shownThisSession()) {
+      // Already played once in this tab session (e.g. a reload or in-app
+      // navigation). Show the page normally; it can play again next session.
+      onDismiss?.();
+      return;
+    }
+    if (getRecentShows(showWindowMs).length >= maxShowsPerWindow) {
+      // The visitor has already seen the animation the maximum number of times
+      // within the trailing window. Skip until older shows age out of it.
       onDismiss?.();
       return;
     }
@@ -242,7 +305,7 @@ const LogoTransitionOverlay: React.FunctionComponent<
     // connections. Bounded by loadTimeoutMs: if the asset is too slow or cannot
     // be decoded, skip gracefully and let the page render with the normal header
     // logo (the same outcome a load failure/timeout produced before).
-    // markPlayed() fires only once we commit to showing it.
+    // recordShow() fires only once we commit to showing it.
     let settled = false;
     const releaseSingleton = () => {
       if (claimedSingleton.current) {
@@ -272,7 +335,7 @@ const LogoTransitionOverlay: React.FunctionComponent<
         if (settled) return;
         settled = true;
         window.clearTimeout(timeoutId);
-        markPlayed();
+        recordShow(showWindowMs);
         setShouldRender(true);
       })
       .catch(() => {
@@ -379,7 +442,7 @@ const LogoTransitionOverlay: React.FunctionComponent<
   // flips true after the off-screen decode resolves). The rendered <img> is
   // already decoded, so it paints its first frame immediately; arming 'playing'
   // here keeps the animationDurationMs timer in lockstep with that first frame.
-  // (markPlayed() and the load timeout are handled by the decode-gate in the
+  // (recordShow() and the load timeout are handled by the decode-gate in the
   // mount-decision effect above, so there is no separate load-timeout here.)
   useEffect(() => {
     if (shouldRender && phase === 'loading') {

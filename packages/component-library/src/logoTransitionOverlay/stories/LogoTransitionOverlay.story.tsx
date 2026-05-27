@@ -1,9 +1,28 @@
 import {Meta, StoryFn} from '@storybook/react-webpack5';
 import {useEffect, useRef, useState} from 'react';
 
+import {
+  LOGO_TRANSITION_OVERLAY_SESSION_STORAGE_KEY,
+  LOGO_TRANSITION_OVERLAY_SHOWS_STORAGE_KEY,
+} from '../constants';
 import LogoTransitionOverlay, {
   LogoTransitionOverlayProps,
 } from '../LogoTransitionOverlay';
+
+// The overlay throttles itself (once per session + N per rolling window) via
+// web storage. Clear that state before each Replay so a developer who points
+// SAMPLE_MEDIA at real media can re-trigger the happy path instead of being
+// suppressed after the first/Nth play.
+const clearThrottleState = () => {
+  try {
+    window.sessionStorage.removeItem(
+      LOGO_TRANSITION_OVERLAY_SESSION_STORAGE_KEY,
+    );
+    window.localStorage.removeItem(LOGO_TRANSITION_OVERLAY_SHOWS_STORAGE_KEY);
+  } catch {
+    // Storage unavailable; nothing to clear.
+  }
+};
 
 // A sample logo-transition animation. Real consumers (apps/marketing) supply
 // their own animated AVIF with alpha. Point this at a hosted animated AVIF to
@@ -76,7 +95,10 @@ const ReplayWrapper: React.FC<{
     <>
       <MockHeader />
       <button
-        onClick={() => setKey(k => k + 1)}
+        onClick={() => {
+          clearThrottleState();
+          setKey(k => k + 1);
+        }}
         style={{
           position: 'fixed',
           bottom: 16,
@@ -195,7 +217,10 @@ export const HandoffDestination: StoryFn<LogoTransitionOverlayProps> = (
           padding: '8px 16px',
           zIndex: 3000,
         }}
-        onClick={() => location.reload()}
+        onClick={() => {
+          clearThrottleState();
+          location.reload();
+        }}
       >
         Replay
       </button>
