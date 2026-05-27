@@ -1,7 +1,7 @@
 // Logo Transition Overlay: full-viewport one-shot animation (animated AVIF with
 // alpha in an <img>) that fades out and FLIPs to an on-page SVG. Chrome-light:
 // just the animation, the layered SVG, and a close button on a grey wash.
-//
+
 // Post-playback: 'fading' begins at playback end but DEFAULT_HANDOFF_TRIGGER_MS
 // is 0, so 'handoff' starts the same tick (no static pause). During 'handoff'
 // (DEFAULT_HANDOFF_MS) the SVG and .mediaWrapper travel the same path to the
@@ -20,7 +20,7 @@
   justify-content: center;
   // Grey wash + blur. Fade via background-color/backdrop-filter (NOT opacity) so
   // the sibling SVG stays fully visible.
-  background-color: rgba(80, 80, 80, 0.8);
+  background-color: rgb(80 80 80 / 0.8);
   backdrop-filter: blur(24px);
   // Durations come from the --lto-* vars set inline by the component, so CSS and
   // JS timings can't drift.
@@ -28,7 +28,7 @@
     background-color var(--lto-handoff-ms) ease-out,
     backdrop-filter var(--lto-handoff-ms) ease-out;
   // One-shot fade-in on mount.
-  animation: overlayFadeIn 250ms ease-out;
+  animation: overlay-fade-in 250ms ease-out;
   outline: none;
 }
 
@@ -45,7 +45,7 @@
   }
 }
 
-@keyframes overlayFadeIn {
+@keyframes overlay-fade-in {
   from {
     opacity: 0;
   }
@@ -60,7 +60,7 @@
 
 // 'handoff': fade out the grey wash + blur as the SVG flies to the header.
 .overlayRoot--backdropFading {
-  background-color: rgba(80, 80, 80, 0);
+  background-color: rgb(80 80 80 / 0);
   backdrop-filter: blur(0);
   pointer-events: none;
 }
