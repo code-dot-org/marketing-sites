@@ -175,7 +175,7 @@ LoadFailure.parameters = {
   docs: {
     description: {
       story:
-        'When the animation fails to load (or loadTimeoutMs elapses first), the overlay unmounts and the page is shown with the standard header logo. A Sentry warning is captured.',
+        'When the animation fails to load (or loadTimeoutMs elapses first), the overlay unmounts and the page is shown with the standard header logo. A warning is logged to the console.',
     },
   },
 };
@@ -250,7 +250,7 @@ SingleInstanceGuard.parameters = {
   docs: {
     description: {
       story:
-        'Two overlay instances are mounted simultaneously. Only the first renders; the second is a no-op (a Sentry warning is captured).',
+        'Two overlay instances are mounted simultaneously. Only the first renders; the second is a no-op (a warning is logged to the console).',
     },
   },
 };

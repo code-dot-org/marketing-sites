@@ -95,31 +95,10 @@ type Phase =
 const TERMINAL_PHASES: ReadonlySet<Phase> = new Set(['done', 'failed']);
 const isTerminalPhase = (phase: Phase): boolean => TERMINAL_PHASES.has(phase);
 
-type SentryLike = {
-  captureMessage?: (
-    message: string,
-    options?: {level?: string; tags?: Record<string, string>},
-  ) => void;
-};
-
 const reportFailure = (reason: LogoTransitionOverlayFailureReason) => {
-  // Read Sentry off the global so this works outside @sentry/nextjs (Storybook,
-  // tests); fall back to console.warn when it's absent.
-  const sentry: SentryLike | undefined =
-    typeof window !== 'undefined'
-      ? (
-          window as unknown as {
-            Sentry?: SentryLike;
-          }
-        ).Sentry
-      : undefined;
-
-  if (sentry?.captureMessage) {
-    sentry.captureMessage(`LogoTransitionOverlay: ${reason}`, {
-      level: 'warning',
-      tags: {feature: LOGO_TRANSITION_MODAL_FEATURE_TAG, reason},
-    });
-  } else if (typeof console !== 'undefined') {
+  // Non-fatal -- the overlay just skips gracefully. Warn for diagnostics; the
+  // host app's logging can pick it up from the console if it wants.
+  if (typeof console !== 'undefined') {
     console.warn(`[${LOGO_TRANSITION_MODAL_FEATURE_TAG}] ${reason}`);
   }
 };
