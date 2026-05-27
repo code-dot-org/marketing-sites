@@ -1,0 +1,146 @@
+// Logo Transition Overlay: full-viewport one-shot animation (animated AVIF with
+// alpha in an <img>) that fades out and FLIPs to an on-page SVG. Chrome-light:
+// just the animation, the layered SVG, and a close button on a grey wash.
+
+// Post-playback: 'fading' begins at playback end but DEFAULT_HANDOFF_TRIGGER_MS
+// is 0, so 'handoff' starts the same tick (no static pause). During 'handoff'
+// (DEFAULT_HANDOFF_MS) the SVG and .mediaWrapper travel the same path to the
+// header (wrapper via inline transform), reading as one moving logo. They
+// front-load-crossfade over DEFAULT_CROSSFADE_MS (first ~25% of the trip,
+// ease-out both ways) so the animation drops out while still coincident with
+// the SVG -- no trail -- then the SVG flies the rest alone. The grey backdrop +
+// blur fade out over the full travel.
+
+.overlayRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; // Above the standard header.
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Grey wash + blur. Fade via background-color/backdrop-filter (NOT opacity) so
+  // the sibling SVG stays fully visible.
+  background-color: rgb(80 80 80 / 0.8);
+  backdrop-filter: blur(24px);
+  // Durations come from the --lto-* vars set inline by the component, so CSS and
+  // JS timings can't drift.
+  transition:
+    background-color var(--lto-handoff-ms) ease-out,
+    backdrop-filter var(--lto-handoff-ms) ease-out;
+  // One-shot fade-in on mount.
+  animation: overlay-fade-in 250ms ease-out;
+  outline: none;
+}
+
+// Below the animation's 834px width the frame scales to fit. The logo is
+// flush-left (rect.x = 0) with ~3% transparent space on the right, so without a
+// gutter it reads off-center; a left gutter re-centers it on small screens. It
+// must live here, NOT on .mediaWrapper (the FLIP transform target) -- padding
+// there would be scaled during the hand-off and miss the header. Alignment
+// stays pixel-accurate either way, as the SVG start + FLIP derive from the live
+// getBoundingClientRect().
+@media (max-width: 834px) {
+  .overlayRoot {
+    padding-left: 3%;
+  }
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.overlayRoot--fading {
+  pointer-events: none;
+}
+
+// 'handoff': fade out the grey wash + blur as the SVG flies to the header.
+.overlayRoot--backdropFading {
+  background-color: rgb(80 80 80 / 0);
+  backdrop-filter: blur(0);
+  pointer-events: none;
+}
+
+.mediaWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  z-index: 1;
+  // top-left origin so the FLIP scale anchors at the logo's top-left (rect
+  // x=y=0). The wrapper owns the AVIF's opacity fade (the child <img> doesn't
+  // fade). This base transition is only the brief pre-handoff 'fading' tick; the
+  // real fade-out is .mediaWrapper--running below.
+  transform-origin: top left;
+  transition: opacity var(--lto-fade-out-ms) ease-out;
+}
+
+.mediaWrapper--fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+// 'handoff': the inline transform flies the wrapper to the header over
+// --lto-handoff-ms while opacity fades out over the short --lto-crossfade-ms
+// (ease-out) -- gone within the first ~25% of the trip, no trail.
+.mediaWrapper--running {
+  transition:
+    opacity var(--lto-crossfade-ms) ease-out,
+    transform var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mediaElement {
+  display: block;
+  // Intrinsic 834px, scaling down on narrower viewports. Opacity is driven by
+  // the parent .mediaWrapper, so the AVIF fades on a single curve.
+  width: 834px;
+  height: auto;
+  max-width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+// Sibling of .mediaWrapper (not a child) so the wrapper fade doesn't cascade.
+// Starts at opacity 0; crossfades in during the hand-off. Positioned via inline
+// style at the end-frame logo rect, then animated to the header.
+.handoffSvg {
+  position: absolute;
+  transform-origin: top left;
+  opacity: 0;
+  z-index: 10;
+  transition: opacity var(--lto-fade-out-ms) ease-out;
+}
+
+.handoffSvg--visible {
+  opacity: 1;
+}
+
+.handoffSvg--running {
+  // Animate left/top with width/height so the SVG slides smoothly to the header
+  // (over --lto-handoff-ms) instead of snapping. Opacity fades in over the short
+  // --lto-crossfade-ms (ease-out) to cover the animation as it drops out.
+  transition:
+    left var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
+    top var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
+    width var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
+    height var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
+    opacity var(--lto-crossfade-ms) ease-out;
+}
+
+.closeButton {
+  position: absolute;
+  inset-block-start: 16px;
+  inset-inline-end: 16px;
+  z-index: 11; // Above the animation and in-transit SVG.
+  transition: opacity var(--lto-fade-out-ms) ease-out;
+}
+
+.closeButton--fading {
+  opacity: 0;
+  pointer-events: none;
+}

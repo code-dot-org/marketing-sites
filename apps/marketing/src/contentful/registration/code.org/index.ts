@@ -33,6 +33,9 @@ import Button, {
 } from '@/components/contentful/corporateSite/buttonLegacy';
 import {DoubleTheDonationContentfulComponentDefinition} from '@/components/contentful/corporateSite/doubleTheDonation';
 import DoubleTheDonation from '@/components/contentful/corporateSite/doubleTheDonation/DoubleTheDonation';
+import StateGapMap, {
+  StateGapMapContentfulComponentDefinition,
+} from '@/components/contentful/corporateSite/stateGapMap';
 import YourSchool, {
   YourSchoolContentfulComponentDefinition,
 } from '@/components/contentful/corporateSite/yourSchool';
@@ -63,6 +66,9 @@ import Image, {
 import Link, {
   LinkContentfulComponentDefinition,
 } from '@/components/contentful/link';
+import LogoTransitionModal, {
+  LogoTransitionModalContentfulComponentDefinition,
+} from '@/components/contentful/logoTransitionModal';
 import Overline, {
   OverlineContentfulComponentDefinition,
 } from '@/components/contentful/overline';
@@ -151,6 +157,13 @@ const contentfulRegistration = {
       component: DoubleTheDonation,
       definition: DoubleTheDonationContentfulComponentDefinition,
     },
+    {
+      component: StateGapMap,
+      definition: StateGapMapContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+      },
+    },
 
     {
       component: EditorialCard,
@@ -204,6 +217,10 @@ const contentfulRegistration = {
     {
       component: Link,
       definition: LinkContentfulComponentDefinition,
+    },
+    {
+      component: LogoTransitionModal,
+      definition: LogoTransitionModalContentfulComponentDefinition,
     },
     {component: Overline, definition: OverlineContentfulComponentDefinition},
     {

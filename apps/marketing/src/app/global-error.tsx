@@ -1,9 +1,7 @@
 'use client'; // Error boundaries must be Client Components
 
+import * as Sentry from '@sentry/nextjs';
 import {useEffect, useState} from 'react';
-import {v4 as uuid} from 'uuid';
-
-import {handleError} from '@/otel/errorHandler';
 
 /**
  * This error boundary is for cases where the more specific error boundaries have all failed.
@@ -15,13 +13,13 @@ export default function ErrorPage(props: {
   error: Error & {digest?: string};
   reset: () => void;
 }) {
-  const [traceId, setTraceId] = useState<string>();
+  const [eventId, setEventId] = useState<string>();
 
+  // The same error is also captured server-side via `Sentry.captureRequestError` in instrumentation.ts. This
+  // client-side call is additive — it carries the client error-boundary context (user, URL, browser) that the
+  // server event does not, and gives the user a surfaced Event ID. Two events for one crash is intentional.
   useEffect(() => {
-    const currentTraceId = uuid();
-    setTraceId(currentTraceId);
-
-    handleError(props.error, currentTraceId);
+    setEventId(Sentry.captureException(props.error));
   }, [props.error]);
 
   return (
@@ -40,7 +38,7 @@ export default function ErrorPage(props: {
           </a>
         </span>
 
-        <p>Error Trace ID: {traceId}</p>
+        <p>Error ID: {eventId}</p>
 
         <pre>{props.error?.stack}</pre>
       </body>

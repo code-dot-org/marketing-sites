@@ -51,6 +51,12 @@ STAGE=<pr|test|production> yarn test:ui:local
 
 "All The Things" is a special page for the purpose of testing all UI components on a single page complete with an integration with Contentful. A special tool has been created to manage creating and updating "All The Things" tests. This page is normally updated using the source control version of the page via the Contentful management API.
 
+It should be treated as a lightweight smoke test for the integration between
+Contentful Studio Experiences and the marketing app. Its purpose is to confirm
+that component registration, experience rendering, and the end-to-end Contentful
+pipeline still work together. It is not the primary place to verify detailed
+component behavior, accessibility, or all edge cases.
+
 All The Things can be found on all environments with the sub-path `/all-the-things`.
 
 ### Forking

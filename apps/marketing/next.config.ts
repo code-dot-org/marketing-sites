@@ -5,6 +5,7 @@ import {SUPPORTED_LOCALE_CODES} from '@/config/locale';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  productionBrowserSourceMaps: true,
   serverExternalPackages: ['@opentelemetry/auto-instrumentations-node', 'pino'],
   cacheHandler:
     process.env.NODE_ENV === 'production'
@@ -51,4 +52,6 @@ const nextConfig: NextConfig = {
   },
 };
 
+// Sentry debug-ID injection and source-map upload happen in the deploy workflow's S3 upload step, not at
+// build time. See marketing-app-deploy-to-environment.yml.
 export default nextConfig;

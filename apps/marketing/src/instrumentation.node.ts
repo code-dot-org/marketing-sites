@@ -1,20 +1,20 @@
 import {getNodeAutoInstrumentations} from '@opentelemetry/auto-instrumentations-node';
-import {OTLPLogExporter} from '@opentelemetry/exporter-logs-otlp-proto';
-import {OTLPMetricExporter} from '@opentelemetry/exporter-metrics-otlp-proto';
 import {resourceFromAttributes} from '@opentelemetry/resources';
-import {BatchLogRecordProcessor} from '@opentelemetry/sdk-logs';
-import {PeriodicExportingMetricReader} from '@opentelemetry/sdk-metrics';
 import {NodeSDK} from '@opentelemetry/sdk-node';
-import {
-  AlwaysOnSampler,
-  TraceIdRatioBasedSampler,
-} from '@opentelemetry/sdk-trace-node';
 import {ATTR_SERVICE_NAME} from '@opentelemetry/semantic-conventions';
+import {
+  SentryAsyncLocalStorageContextManager,
+  SentryPropagator,
+} from '@sentry/opentelemetry';
 import {FetchInstrumentation} from '@vercel/otel';
 import {ClientRequest} from 'node:http';
 
-import {FilteringTraceSampler} from '@/otel/FilteringTraceSampler';
 import SpanProcessor from '@/otel/SpanProcessor';
+
+// URL-prefix patterns for requests whose spans we don't want to ingest — asset fetches and health checks are pure
+// noise. Applied at the instrumentation layer via ignoreIncomingRequestHook so the span is never created, rather
+// than being created and then dropped by a custom sampler.
+const IGNORED_REQUEST_PREFIXES = ['/_next/', '/images/', '/api/health_check'];
 
 /**
  * If debugging OpenTelemetry, uncomment the following lines to enable console logs
@@ -27,7 +27,7 @@ import SpanProcessor from '@/otel/SpanProcessor';
 // See: https://nextjs.org/docs/app/guides/opentelemetry
 if (process.env.NEXT_PUBLIC_INSTRUMENTATION_ENABLED === 'true') {
   console.debug(
-    `Sending OpenTelemetry traces to ${process.env.OTEL_EXPORTER_OTLP_ENDPOINT}`,
+    `Sending OpenTelemetry traces to ${process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT}`,
   );
 
   const sdk = new NodeSDK({
@@ -35,16 +35,13 @@ if (process.env.NEXT_PUBLIC_INSTRUMENTATION_ENABLED === 'true') {
       [ATTR_SERVICE_NAME]: '@code-dot-org/marketing',
     }),
     spanProcessors: [SpanProcessor.getInstance()],
-    logRecordProcessors: [new BatchLogRecordProcessor(new OTLPLogExporter())],
-    metricReader: new PeriodicExportingMetricReader({
-      exporter: new OTLPMetricExporter(),
-    }),
-    sampler: new FilteringTraceSampler({
-      base:
-        process.env.NODE_ENV === 'production'
-          ? new TraceIdRatioBasedSampler(0.1) // 10% of traces in production mode
-          : new AlwaysOnSampler(),
-    }),
+    contextManager: new SentryAsyncLocalStorageContextManager(),
+    textMapPropagator: new SentryPropagator(),
+    // Sampling is configured via standard OTel env vars: OTEL_TRACES_SAMPLER (default "parentbased_always_on") and
+    // OTEL_TRACES_SAMPLER_ARG. In production we set OTEL_TRACES_SAMPLER=parentbased_traceidratio with
+    // OTEL_TRACES_SAMPLER_ARG=0.01 so browser-initiated traces (with sampled `traceparent`/`sentry-trace`) continue
+    // on the server while trace roots (direct navigations, SSR, background jobs) use the 1% ratio. Unset env vars
+    // leave NodeSDK at its "parentbased_always_on" default, which is the desired behavior for local development.
     instrumentations: [
       getNodeAutoInstrumentations({
         // Disable some noisy auto instrumentations
@@ -59,6 +56,14 @@ if (process.env.NEXT_PUBLIC_INSTRUMENTATION_ENABLED === 'true') {
         },
         '@opentelemetry/instrumentation-http': {
           enabled: true,
+          // Drop spans for asset fetches and health-check probes before they are created — these are pure noise and
+          // would otherwise eat sampling budget and clutter the Sentry Performance view.
+          ignoreIncomingRequestHook: request => {
+            const url = request.url ?? '';
+            return IGNORED_REQUEST_PREFIXES.some(prefix =>
+              url.startsWith(prefix),
+            );
+          },
           // This gives your request spans a more meaningful name than `GET`
           // This sets the name to `GET code.org/xyz/123` instead of just `GET`
           requestHook: (span, request) => {

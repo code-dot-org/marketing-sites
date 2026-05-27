@@ -1,6 +1,6 @@
 'use client';
 
-import {Box, Button, Stack, Typography} from '@mui/material';
+import {Box, Typography} from '@mui/material';
 
 import {ActivityType} from '@/modules/activityCatalog/types/Activity';
 
@@ -39,32 +39,6 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
         Dive into the {activityName} activities below! As you explore, preview
         each activity to find the ones that best match your learners' needs.
       </Typography>
-
-      <Stack
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        spacing={2}
-        sx={{mt: {xs: 3.5, md: 3.5}, flexWrap: 'wrap', rowGap: 3}}
-      >
-        <Button
-          href="/activities/hour-of-ai"
-          variant={activityType === 'hour-of-ai' ? 'contained' : 'outlined'}
-          color="primary"
-          sx={{textDecoration: 'none'}}
-        >
-          Hour of AI Activities
-        </Button>
-
-        <Button
-          href="/activities/hour-of-code"
-          variant={activityType === 'hour-of-code' ? 'contained' : 'outlined'}
-          color="primary"
-          sx={{textDecoration: 'none'}}
-        >
-          Legacy Hour of Code Activities
-        </Button>
-      </Stack>
     </Box>
   );
 }

@@ -3,13 +3,12 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import * as Sentry from '@sentry/nextjs';
 import {useEffect, useState} from 'react';
-import {v4 as uuid} from 'uuid';
 
 import Image from '@code-dot-org/component-library/image';
 
 import Overline from '@/components/contentful/overline';
-import {handleError} from '@/otel/errorHandler';
 import sadBee404 from '@public/images/error/404.webp';
 import sadBee500 from '@public/images/error/500.webp';
 
@@ -57,16 +56,16 @@ const styles = {
 
 export default function Error(props: ErrorProps) {
   const [showError, setShowError] = useState(false);
-  const [traceId, setTraceId] = useState<string>();
+  const [eventId, setEventId] = useState<string>();
 
-  if (props.statusCode === 500) {
-    useEffect(() => {
-      const currentTraceId = uuid();
-      setTraceId(currentTraceId);
-
-      handleError(props.error, currentTraceId);
-    }, [props.error]);
-  }
+  // The same error is also captured server-side via `Sentry.captureRequestError` in instrumentation.ts. This
+  // client-side call is additive — it carries the client error-boundary context (user, URL, browser) that the
+  // server event does not, and gives the user a surfaced Event ID. Two events for one 500 is intentional.
+  const error = props.statusCode === 500 ? props.error : undefined;
+  useEffect(() => {
+    if (!error) return;
+    setEventId(Sentry.captureException(error));
+  }, [error]);
 
   const getSadBeeImage = () => {
     switch (props.statusCode) {
@@ -180,7 +179,7 @@ export default function Error(props: ErrorProps) {
             component="p"
             variant="body2"
             gutterBottom
-          >{`Error Trace ID: ${traceId}`}</Typography>
+          >{`Error ID: ${eventId}`}</Typography>
           <Button
             variant="contained"
             color="error"

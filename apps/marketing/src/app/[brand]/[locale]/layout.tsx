@@ -3,6 +3,7 @@ import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
 import {GoogleAnalytics} from '@next/third-parties/google';
 import {draftMode} from 'next/headers';
 
+import {LogoTransitionProvider} from '@/components/contentful/logoTransitionModal/logoTransitionState';
 import {getFooter} from '@/components/footer/Footer';
 import {getHeader} from '@/components/header/Header';
 import {getBrandFromString} from '@/config/brand';
@@ -12,9 +13,9 @@ import {SUPPORTED_LOCALES_MAP, SupportedLocale} from '@/config/locale';
 import {getStage} from '@/config/stage';
 import EnvironmentLoader from '@/providers/environment';
 import LocalizeLoader from '@/providers/localize/LocalizeLoader';
-import NewRelicLoader from '@/providers/newrelic/NewRelicLoader';
 import OneTrustLoader from '@/providers/onetrust/OneTrustLoader';
 import OneTrustProvider from '@/providers/onetrust/OneTrustProvider';
+import SentryLoader from '@/providers/sentry/SentryLoader';
 import StatsigProvider from '@/providers/statsig/StatsigProvider';
 import {getCriticalFonts, getMuiTheme} from '@/themes';
 
@@ -43,7 +44,7 @@ export default async function Layout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <EnvironmentLoader brand={brand} />
-            <NewRelicLoader />
+            <SentryLoader />
             <OneTrustLoader brand={brand} />
             <LocalizeLoader
               brand={brand}
@@ -60,9 +61,11 @@ export default async function Layout({
                 clientKey={statsigClientKey}
                 brand={brand}
               >
-                {getHeader(brand)}
-                {children}
-                {await getFooter(brand, locale)}
+                <LogoTransitionProvider>
+                  {getHeader(brand)}
+                  {children}
+                  {await getFooter(brand, locale)}
+                </LogoTransitionProvider>
               </StatsigProvider>
             </OneTrustProvider>
 
