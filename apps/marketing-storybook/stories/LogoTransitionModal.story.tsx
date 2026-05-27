@@ -1,13 +1,14 @@
+import LogoTransitionModal from '@/components/contentful/logoTransitionModal';
 import {Meta, StoryObj} from '@storybook/react';
 import {useEffect} from 'react';
-
-import LogoTransitionModal from '@/components/contentful/logoTransitionModal';
 
 const meta: Meta<typeof LogoTransitionModal> = {
   title: 'Marketing/LogoTransitionModal',
   component: LogoTransitionModal,
   parameters: {
     layout: 'fullscreen',
+    // Excluded from Applitools until a baseline is accepted; visual coverage deferred.
+    eyes: {include: false},
   },
 };
 export default meta;

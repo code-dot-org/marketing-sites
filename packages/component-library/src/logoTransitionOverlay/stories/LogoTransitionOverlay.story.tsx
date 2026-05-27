@@ -31,9 +31,9 @@ const SAMPLE_MEDIA =
 // supply cdo-logo-inverse.svg).
 const TINY_SVG =
   'data:image/svg+xml;base64,' +
-  Buffer.from(
+  btoa(
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#1c4be3"/><text x="32" y="42" font-family="Arial" font-size="32" fill="white" text-anchor="middle" font-weight="bold">C</text></svg>`,
-  ).toString('base64');
+  );
 
 const DEFAULT_PROPS: LogoTransitionOverlayProps = {
   mediaSrc: SAMPLE_MEDIA,
