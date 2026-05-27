@@ -37,13 +37,15 @@ export const DEFAULT_HANDOFF_TRIGGER_MS = 0;
 // .handoffSvg--running, .mediaWrapper--running, and .overlayRoot CSS transitions.
 export const DEFAULT_HANDOFF_MS = 1500;
 // Duration of the animation->SVG opacity crossfade that runs *during* the
-// hand-off travel. Set to half the travel so the animation hits 0% opacity at
-// the 50% travel mark -- it carries the motion through the first half, then is
-// gone (no trailing past the midpoint), and the SVG (which fades in over the
-// same window) is fully opaque to finish the trip. Emitted as
+// hand-off travel. Set to a QUARTER of the travel and front-loaded (ease-out on
+// both fades) so the crossfade completes within the first ~25% of the trip --
+// while the AVIF and the SVG are still nearly coincident on the path, before any
+// spatial separation that would read as a double-image "trail". The AVIF fades
+// 1->0 fast and early; the SVG fades 0->1 just as fast to cover it; the
+// remaining ~75% of the travel is the solid SVG flying alone. Emitted as
 // `--lto-crossfade-ms`; consumed by .mediaWrapper--running (animation fade-out,
-// ease-in) and .handoffSvg--running (SVG fade-in, ease-in-out).
-export const DEFAULT_CROSSFADE_MS = DEFAULT_HANDOFF_MS / 2;
+// ease-out) and .handoffSvg--running (SVG fade-in, ease-out).
+export const DEFAULT_CROSSFADE_MS = DEFAULT_HANDOFF_MS / 4;
 export const DEFAULT_DIALOG_ARIA_LABEL =
   'Code.org logo logo-transition animation';
 export const DEFAULT_CLOSE_ARIA_LABEL = 'Close';

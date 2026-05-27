@@ -387,15 +387,15 @@ const LogoTransitionOverlay: React.FunctionComponent<
     }
   }, [shouldRender, phase]);
 
-  // When 'fading' phase is entered, the animation fades out IN PLACE (it does
-  // not travel) while the SVG sitting behind it fades in (both over
-  // DEFAULT_FADE_OUT_MS). Only once the animation has fully faded to transparent
-  // -- i.e. after DEFAULT_HANDOFF_TRIGGER_MS, which equals DEFAULT_FADE_OUT_MS --
-  // do we enter 'handoff', where the now-fully-revealed SVG (and only the SVG)
-  // flies to the header. Revealing the stationary SVG first, then moving just
-  // it, avoids any drift between the animation frame and the SVG during travel.
-  // The grey background stays full through fading so the SVG reads cleanly
-  // against it, then fades to nothing during the handoff travel.
+  // 'fading' is a near-instant hinge into 'handoff': DEFAULT_HANDOFF_TRIGGER_MS
+  // is 0, so both phases fire on effectively the same tick and there is no
+  // static-at-center pause. The animation and the SVG then travel to the header
+  // together (see the 'handoff' effect below) and crossfade as they fly --
+  // front-loaded over DEFAULT_CROSSFADE_MS (a quarter of the travel) so the
+  // animation drops out and the SVG solidifies within the first ~25% of the
+  // trip, while the two are still nearly coincident, leaving no double-image
+  // trail once they separate. The grey background stays full through fading so
+  // the SVG reads cleanly against it, then fades to nothing during the travel.
   useEffect(() => {
     if (phase !== 'fading') return;
     const id = window.setTimeout(
@@ -407,8 +407,9 @@ const LogoTransitionOverlay: React.FunctionComponent<
 
   // When the 'handoff' phase begins, measure the destination element and fly
   // BOTH the SVG and the animation's .mediaWrapper to it, in lockstep, while
-  // they crossfade (the animation fades out by the midpoint, the SVG fades in).
-  // If no destination is found, skip the travel and unmount.
+  // they crossfade (front-loaded: the animation drops out and the SVG fades in
+  // within the first quarter of the travel). If no destination is found, skip
+  // the travel and unmount.
   useEffect(() => {
     if (phase !== 'handoff') return;
     if (typeof document === 'undefined') {
@@ -586,8 +587,8 @@ const LogoTransitionOverlay: React.FunctionComponent<
       <div
         className={classnames(
           moduleStyles.mediaWrapper,
-          // The animation fades out during the hand-off (to 0 by the midpoint
-          // of the travel) and stays gone for the rest of it.
+          // The animation fades out during the hand-off (to 0 within the first
+          // quarter of the travel) and stays gone for the rest of it.
           (phase === 'fading' || phase === 'handoff') &&
             moduleStyles['mediaWrapper--fading'],
           // During 'handoff' the wrapper FLIPs to the header in lockstep with

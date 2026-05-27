@@ -16,11 +16,13 @@
 //        wrapper via an inline transform), so the animation's logo region
 //        tracks the SVG. The AVIF's alpha background hides the rest of the
 //        (now-shrunken) frame, so the two read as one moving logo.
-//        Crossfade over DEFAULT_CROSSFADE_MS (= half the travel): the animation
-//        (opacity 1 -> 0, ease-in) carries the motion through the first half
-//        then hits 0% at the 50% travel mark (no trailing past the midpoint),
-//        while the SVG (opacity 0 -> 1, ease-in-out) reaches full opacity by
-//        that midpoint and finishes the trip on its own.
+//        Front-loaded crossfade over DEFAULT_CROSSFADE_MS (= a quarter of the
+//        travel): the animation (opacity 1 -> 0, ease-out) drops out fast and
+//        early while the SVG (opacity 0 -> 1, ease-out) fades in just as fast to
+//        cover it. Both finish within the first ~25% of the trip -- while the
+//        two logos are still nearly coincident, before any separation that would
+//        read as a double-image trail -- so the rest of the travel is the solid
+//        SVG alone.
 //        background fades from rgba(80,80,80,0.8) -> rgba(80,80,80,0)
 //        backdrop-filter blur fades from 24px -> 0
 //        (these run over the full travel, simultaneously)
@@ -120,14 +122,14 @@
 // Applied during 'handoff'. The inline `transform` (set by JS) flies the
 // wrapper to the header on the same path as the SVG (movement over
 // --lto-handoff-ms), so the animation's logo region tracks the SVG. The
-// opacity fade-out uses the shorter crossfade window (--lto-crossfade-ms = half
-// the travel) with an ease-in curve, so the animation carries the motion
-// through the first half then hits 0% at the 50% travel mark -- no trailing
-// into the second half -- handing off to the SVG (which fades in over the same
-// window).
+// opacity fade-out uses the short crossfade window (--lto-crossfade-ms = a
+// quarter of the travel) with an ease-out curve, so the animation drops to 0%
+// fast and early -- within the first ~25% of the trip, while it's still nearly
+// on top of the SVG -- leaving no double-image trail as the two separate. The
+// SVG fades in over the same window to cover it.
 .mediaWrapper--running {
   transition:
-    opacity var(--lto-crossfade-ms) ease-in,
+    opacity var(--lto-crossfade-ms) ease-out,
     transform var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -165,16 +167,17 @@
   // animate left/top together with width/height so the SVG's position
   // transitions smoothly instead of snapping to the destination corner while
   // only size animates. Movement duration comes from --lto-handoff-ms
-  // (DEFAULT_HANDOFF_MS). The opacity fade-in uses the crossfade window
-  // (--lto-crossfade-ms, half the travel) with an ease-in-out curve so the SVG
-  // reaches full opacity by the midpoint, taking over from the animation as it
-  // dissolves.
+  // (DEFAULT_HANDOFF_MS). The opacity fade-in uses the short crossfade window
+  // (--lto-crossfade-ms, a quarter of the travel) with an ease-out curve so the
+  // SVG solidifies fast and early -- reaching full opacity within the first
+  // ~25% of the trip to cover the animation as it drops out, then flying the
+  // rest of the way alone.
   transition:
     left var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
     top var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
     width var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
     height var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
-    opacity var(--lto-crossfade-ms) ease-in-out;
+    opacity var(--lto-crossfade-ms) ease-out;
 }
 
 .closeButton {
