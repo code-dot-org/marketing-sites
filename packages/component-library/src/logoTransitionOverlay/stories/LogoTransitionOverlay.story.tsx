@@ -9,10 +9,8 @@ import LogoTransitionOverlay, {
   LogoTransitionOverlayProps,
 } from '../LogoTransitionOverlay';
 
-// The overlay throttles itself (once per session + N per rolling window) via
-// web storage. Clear that state before each Replay so a developer who points
-// SAMPLE_MEDIA at real media can re-trigger the happy path instead of being
-// suppressed after the first/Nth play.
+// Clear the overlay's session/rolling-window throttle so Replay re-triggers the
+// happy path (when SAMPLE_MEDIA points at real media).
 const clearThrottleState = () => {
   try {
     window.sessionStorage.removeItem(
@@ -24,15 +22,13 @@ const clearThrottleState = () => {
   }
 };
 
-// A sample logo-transition animation. Real consumers (apps/marketing) supply
-// their own animated AVIF with alpha. Point this at a hosted animated AVIF to
-// see the "Playing" story actually animate; with the placeholder below the
-// <img> 404s and the LoadFailure path is exercised instead.
+// Placeholder media: point at a hosted animated AVIF to see "Playing" animate;
+// as-is the <img> 404s and exercises the LoadFailure path.
 const SAMPLE_MEDIA =
   'https://contentful-images.code.org/90t6bu6vlf76/REPLACE_ME/REPLACE_ME/animated-logo-transition.avif';
 
-// A small inline SVG -- the Code.org "C" mark -- so the hand-off has something
-// visible to render. Real consumers supply cdo-logo-inverse.svg.
+// Inline "C" mark so the hand-off has something to render (real consumers
+// supply cdo-logo-inverse.svg).
 const TINY_SVG =
   'data:image/svg+xml;base64,' +
   Buffer.from(
@@ -57,8 +53,7 @@ export default {
   },
 } as Meta;
 
-// A consistent mock "header" rendered behind every overlay story so the
-// FLIP hand-off has a visible destination element.
+// Mock header behind every story, giving the FLIP hand-off a destination.
 const MockHeader = () => (
   <header
     style={{

@@ -2,9 +2,8 @@ import {render} from '@testing-library/react';
 
 import LogoTransitionModal from '../LogoTransitionModal';
 
-// Mock the LogoTransitionOverlay so we can assert on the props the wrapper
-// passes to it without spinning up the full overlay machinery (matchMedia,
-// timers, singleton state, etc.).
+// Mock the overlay so we can assert on the props the wrapper passes without
+// the full overlay machinery (matchMedia, timers, singleton state).
 const overlayPropsSpy = jest.fn();
 
 jest.mock(
@@ -16,14 +15,12 @@ jest.mock(
       return <div data-testid="mock-overlay" />;
     },
   }),
-  // The new component-library subpath only resolves once the package has been
-  // built; tell Jest not to try resolving it from disk.
+  // Subpath only resolves after the package is built; don't resolve from disk.
   {virtual: true},
 );
 
-// Image imports under @public/images/* are handled by next/jest's built-in
-// image-asset mock. We only need to validate that the wrapper forwards a
-// non-empty src for both the animation and the SVG to the overlay.
+// @public/images/* imports use next/jest's built-in image-asset mock; we just
+// check the wrapper forwards non-empty animation and SVG srcs to the overlay.
 
 describe('LogoTransitionModal', () => {
   beforeEach(() => {

@@ -1,19 +1,10 @@
-// Tiny module-level pubsub for the "logo transition is active" flag.
+// Module-level pubsub for the "logo transition is active" flag. The overlay
+// publishes via onActiveChange; the header subscribes to hide its static logo
+// while the SVG flies in and reveal it once the hand-off completes.
 //
-// The LogoTransitionOverlay fires onActiveChange(true) when it mounts to
-// run the animation, and onActiveChange(false) when the FLIP hand-off
-// completes (or the overlay unmounts for any other reason). The marketing-
-// app header component subscribes to this so it can hide its server-
-// rendered logo while the SVG is flying into the header position, and
-// reveal it once the SVG has arrived.
-//
-// Module-level state is fine here because:
-//   - Both the publisher (LogoTransitionModal wrapper) and the subscribers
-//     (HeaderCorporateSite) run only on the client.
-//   - There is at most one active logo-transition overlay at a time
-//     (singleton guard inside the overlay component).
-//   - We never mutate this from the server, so request-level isolation is
-//     not a concern.
+// Module-level state is safe: publisher and subscribers are client-only, at
+// most one overlay is active at a time (singleton guard in the overlay), and
+// it's never mutated server-side.
 
 type Listener = (active: boolean) => void;
 

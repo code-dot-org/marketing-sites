@@ -14,9 +14,8 @@ export default meta;
 
 type Story = StoryObj<typeof LogoTransitionModal>;
 
-// A mocked corporate-header layout that renders a placeholder logo tagged
-// with `data-logo-transition-target` so the FLIP hand-off has a destination
-// element to land on.
+// Mock header with a placeholder logo tagged `data-logo-transition-target` so
+// the FLIP hand-off has a destination to land on.
 const MockCorporateHeader: React.FC = () => (
   <header
     style={{

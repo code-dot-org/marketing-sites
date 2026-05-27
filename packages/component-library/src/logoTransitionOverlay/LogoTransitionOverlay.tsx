@@ -28,7 +28,7 @@ import {
 
 import moduleStyles from './logoTransitionOverlay.module.scss';
 
-// Module-scoped singleton guard. Only one overlay may be active at a time.
+// Only one overlay may be active at a time.
 let isSingletonMounted = false;
 
 export interface NormalizedRect {
@@ -43,55 +43,42 @@ export interface NormalizedRect {
 }
 
 export interface LogoTransitionOverlayProps {
-  /** Static URL for the logo-transition animation. In the marketing app this
-   *  is an animated AVIF with an alpha channel, rendered in an `<img>` so the
-   *  image decoder handles the transparency natively. Any browser-displayable
-   *  animated image format works; animated images autoplay (no audio/autoplay
-   *  policy to satisfy). */
+  /** Animation URL. In marketing this is an animated AVIF with alpha rendered
+   *  in an `<img>` (the decoder handles transparency); any animated image
+   *  format works. */
   mediaSrc: string;
   /** Static URL for the destination SVG logo. */
   svgSrc: string;
-  /** Media aspect ratio (width / height). The animation is rendered into a
-   *  centered box that preserves this ratio while it loads. */
+  /** Animation aspect ratio (width / height); sizes the centered box while it
+   *  loads. */
   mediaAspectRatio: number;
-  /** CSS selector identifying the on-page element the SVG must animate into
-   *  on hand-off (e.g. `'[data-logo-transition-target]'`). */
+  /** CSS selector for the on-page element the SVG flies into on hand-off. */
   destinationSelector: string;
-  /** The on-screen position+size of the animation's final-frame logo,
-   *  expressed as fractions of the animation's displayed dimensions. */
+  /** On-screen position+size of the animation's final-frame logo, as fractions
+   *  of the animation's displayed dimensions. */
   mediaEndFrameLogoNormalizedRect: NormalizedRect;
-  /** How long the animation plays before holding on its final frame. An
-   *  animated `<img>` exposes no `ended` event, so the overlay arms a timer of
-   *  this length once the image starts playing and treats its expiry as
-   *  "playback finished". MUST match the asset's true playback duration. */
+  /** Playback length. An animated `<img>` has no `ended` event, so a timer of
+   *  this length stands in for it; MUST match the asset's true duration. */
   animationDurationMs?: number;
   /** ARIA label for the close button. */
   closeAriaLabel?: string;
   /** ARIA label for the modal dialog. */
   dialogAriaLabel?: string;
-  /** Bounded wait for the animation to load+start before falling back to "no
-   *  overlay". Covers slow downloads and decode failures. */
+  /** Bounded wait for load+decode before skipping the overlay. */
   loadTimeoutMs?: number;
-  /** Milliseconds to hold on the animation's final frame after playback
-   *  finishes, before the fade-out crossfade begins. Lets the visitor
-   *  register the destination logo before the modal starts dissolving. */
+  /** Hold on the final frame after playback before the fade begins. */
   postPlayHoldMs?: number;
-  /** Maximum number of times the overlay may be shown within any trailing
-   *  `showWindowMs`. Combined with the once-per-session gate, a returning
-   *  visitor sees the animation at most this many times per rolling window. */
+  /** Max shows per trailing `showWindowMs`, on top of the once-per-session
+   *  gate. */
   maxShowsPerWindow?: number;
-  /** Length of the rolling window (ms) over which shows are counted toward
-   *  `maxShowsPerWindow`. A show ages out exactly this long after it occurred
-   *  (rolling, not a calendar month). */
+  /** Rolling window (ms) over which shows are counted; a show ages out this
+   *  long after it occurred. */
   showWindowMs?: number;
-  /** Optional callback invoked after the overlay unmounts. */
+  /** Called after the overlay unmounts. */
   onDismiss?: () => void;
-  /** Optional callback fired with `true` when the overlay decides to render
-   *  (post-hydration, not bypassed by reduced motion / singleton guard), and
-   *  with `false` when the FLIP hand-off completes (phase 'done'/'failed')
-   *  or the component unmounts. Consumers can use this to e.g.
-   *  hide the real header logo while the logo-transition SVG flies into
-   *  its place. */
+  /** Fired `true` when the overlay commits to rendering and `false` when the
+   *  hand-off completes or it unmounts -- e.g. to hide/reveal the real header
+   *  logo as the SVG flies into place. */
   onActiveChange?: (active: boolean) => void;
 }
 
@@ -104,8 +91,7 @@ type Phase =
   | 'done'
   | 'failed';
 
-// Phases after which the overlay renders nothing and is finished. Used both
-// to short-circuit rendering and to fire the final onActiveChange/onDismiss.
+// Phases after which the overlay renders nothing and is finished.
 const TERMINAL_PHASES: ReadonlySet<Phase> = new Set(['done', 'failed']);
 const isTerminalPhase = (phase: Phase): boolean => TERMINAL_PHASES.has(phase);
 
@@ -117,9 +103,8 @@ type SentryLike = {
 };
 
 const reportFailure = (reason: LogoTransitionOverlayFailureReason) => {
-  // Lazy-load Sentry from the global scope so this component can be used
-  // outside of an environment that has @sentry/nextjs configured (e.g. Storybook
-  // and unit tests). When Sentry is unavailable, fall back to console.warn.
+  // Read Sentry off the global so this works outside @sentry/nextjs (Storybook,
+  // tests); fall back to console.warn when it's absent.
   const sentry: SentryLike | undefined =
     typeof window !== 'undefined'
       ? (
@@ -144,11 +129,9 @@ const prefersReducedMotion = (): boolean => {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
-// Has the overlay already been shown in this tab session? Stored in
-// sessionStorage so it clears when the session ends, letting the animation play
-// again in a future session but never twice within one. Returns false (i.e.
-// "let it play") if sessionStorage is unavailable (some privacy modes) --
-// acceptable degradation.
+// Shown already in this tab session? sessionStorage clears at session end, so
+// it can play again next session but not twice within one. False ("play") if
+// storage is unavailable.
 const shownThisSession = (): boolean => {
   if (typeof window === 'undefined') return false;
   try {
@@ -162,12 +145,9 @@ const shownThisSession = (): boolean => {
   }
 };
 
-// Timestamps (epoch ms) of recent shows that still fall within the trailing
-// `windowMs`, read from localStorage. Stale, future-dated, and malformed
-// entries are filtered out so a corrupt value can't permanently suppress the
-// overlay. Read-only: callers that don't commit a show leave storage untouched.
-// Returns [] (i.e. "nothing shown recently") if localStorage is unavailable or
-// the value can't be parsed -- acceptable degradation toward showing.
+// Show timestamps still within the trailing `windowMs`, from localStorage.
+// Drops stale/future/malformed entries so a bad value can't permanently
+// suppress the overlay. Read-only; returns [] ("play") on any error.
 const getRecentShows = (windowMs: number): number[] => {
   if (typeof window === 'undefined') return [];
   try {
@@ -190,10 +170,9 @@ const getRecentShows = (windowMs: number): number[] => {
   }
 };
 
-// Record that a show has just committed: mark the session flag and append now
-// to the rolling list (pruned to `windowMs` on write so it stays tiny). Both
-// writes are best-effort; failures are swallowed so a storage error never
-// breaks the animation -- the next mount simply isn't throttled.
+// Mark the session flag and append now to the rolling list (pruned on write).
+// Best-effort: write failures are swallowed (the next mount just isn't
+// throttled).
 const recordShow = (windowMs: number): void => {
   if (typeof window === 'undefined') return;
   try {
@@ -202,7 +181,7 @@ const recordShow = (windowMs: number): void => {
       '1',
     );
   } catch {
-    // sessionStorage unavailable; the session gate degrades to off. Acceptable.
+    // Session gate degrades to off.
   }
   try {
     const shows = [...getRecentShows(windowMs), Date.now()];
@@ -211,34 +190,22 @@ const recordShow = (windowMs: number): void => {
       JSON.stringify(shows),
     );
   } catch {
-    // localStorage unavailable; the per-window cap degrades to off. Acceptable.
+    // Per-window cap degrades to off.
   }
 };
 
 /**
- * Logo Transition Overlay.
+ * Plays a one-shot logo animation (animated AVIF with alpha, in an `<img>`)
+ * full-viewport, then fades out and FLIPs to an on-page SVG. The SVG is layered
+ * behind the animation from mount, matched to its final frame, so the hand-off
+ * is seamless across viewports.
  *
- * Plays a one-shot logo-transition animation (an animated AVIF with alpha,
- * rendered in an `<img>`) over the full viewport, then fades out and hands off
- * to an existing on-page SVG element via a FLIP-style animation. The SVG is
- * layered behind the animation from the moment of mount, sized and positioned
- * to match the animation's final frame, so the animation->SVG hand-off is
- * pixel-seamless across viewports.
- *
- * Because an animated `<img>` fires no `playing`/`ended` events (unlike
- * `<video>`), playback start is detected via `onLoad` and the end of playback
- * is driven by a timer matched to the asset's known `animationDurationMs`. The
- * AVIF is authored to play once and freeze on its last frame.
- *
- * Throttled to at most once per tab session (sessionStorage) and
- * `maxShowsPerWindow` shows per trailing `showWindowMs` (localStorage list of
- * timestamps) -- both functional, non-tracking markers that degrade toward
- * showing when storage is unavailable.
- *
- * Honors `prefers-reduced-motion` (renders null). ESC and the close button
- * dismiss the overlay. The overlay enforces a singleton at the module scope.
- *
- * Marked `'use client'`: depends on matchMedia, the DOM, and timers.
+ * An animated `<img>` fires no `ended` event, so end-of-playback is a timer of
+ * `animationDurationMs` (the AVIF plays once and freezes on its last frame).
+ * Throttled to once per session + `maxShowsPerWindow` per `showWindowMs`
+ * (functional, non-tracking storage that degrades toward showing). Honors
+ * reduced-motion (renders null); ESC/close dismiss; singleton at module scope.
+ * `'use client'`: needs matchMedia, the DOM, and timers.
  */
 const LogoTransitionOverlay: React.FunctionComponent<
   LogoTransitionOverlayProps
@@ -260,18 +227,15 @@ const LogoTransitionOverlay: React.FunctionComponent<
 }) => {
   const dialogId = useId();
 
-  // shouldRender starts as `false` so the first render produces the same
-  // output on the server (no dialog) and on the first client paint (no
-  // dialog). After hydration completes, the effect below decides whether to
-  // render the dialog -- this avoids a SSR/CSR hydration mismatch that would
-  // otherwise occur because matchMedia/prefersReducedMotion is browser-only.
+  // Starts false so SSR and the first client paint match (no dialog); the
+  // effect below decides post-hydration, avoiding a matchMedia hydration
+  // mismatch.
   const [shouldRender, setShouldRender] = useState(false);
   const claimedSingleton = useRef(false);
 
   useEffect(() => {
-    // Post-hydration decision. Reduced motion, a sibling instance, an earlier
-    // show this session, or the per-window cap being reached all bypass the
-    // overlay.
+    // Reduced motion, a sibling instance, an earlier show this session, or the
+    // per-window cap all bypass the overlay.
     if (prefersReducedMotion()) {
       onDismiss?.();
       return;
@@ -282,30 +246,23 @@ const LogoTransitionOverlay: React.FunctionComponent<
       return;
     }
     if (shownThisSession()) {
-      // Already played once in this tab session (e.g. a reload or in-app
-      // navigation). Show the page normally; it can play again next session.
       onDismiss?.();
       return;
     }
     if (getRecentShows(showWindowMs).length >= maxShowsPerWindow) {
-      // The visitor has already seen the animation the maximum number of times
-      // within the trailing window. Skip until older shows age out of it.
       onDismiss?.();
       return;
     }
 
-    // Claim the singleton up-front so a second instance mounting while we
-    // decode is still rejected.
+    // Claim the singleton up-front so a second instance is rejected while we
+    // decode.
     isSingletonMounted = true;
     claimedSingleton.current = true;
 
-    // Decode-gate: fetch + decode the animation OFF-SCREEN before revealing the
-    // overlay, so the first frame paints the instant the overlay appears -- no
-    // empty-backdrop wait, no mid-load skip, and no timer-vs-paint drift on slow
-    // connections. Bounded by loadTimeoutMs: if the asset is too slow or cannot
-    // be decoded, skip gracefully and let the page render with the normal header
-    // logo (the same outcome a load failure/timeout produced before).
-    // recordShow() fires only once we commit to showing it.
+    // Decode the animation OFF-SCREEN before revealing the overlay, so the first
+    // frame paints immediately (no empty-backdrop wait, no timer-vs-paint
+    // drift). Bounded by loadTimeoutMs: too slow / undecodable skips gracefully
+    // to the normal header. recordShow() fires only once we commit.
     let settled = false;
     const releaseSingleton = () => {
       if (claimedSingleton.current) {
@@ -322,7 +279,6 @@ const LogoTransitionOverlay: React.FunctionComponent<
     const preload = new Image();
     preload.src = mediaSrc;
 
-    // If decode hasn't finished within loadTimeoutMs, skip gracefully.
     const timeoutId = window.setTimeout(() => {
       if (settled) return;
       settled = true;
@@ -346,19 +302,16 @@ const LogoTransitionOverlay: React.FunctionComponent<
       });
 
     return () => {
-      // Unmounted (or re-run): cancel the timeout, ignore any late decode
-      // callback, and release the singleton if we still hold it.
+      // Cancel the timeout, ignore any late decode, release the singleton.
       settled = true;
       window.clearTimeout(timeoutId);
       releaseSingleton();
     };
-    // Effect deliberately runs once on mount; props are captured at that point.
+    // Runs once on mount; props captured at that point.
   }, []);
 
-  // Notify consumers when the logo-transition animation starts/stops, so
-  // they can e.g. hide the real header logo while the SVG is flying into
-  // its place. Active becomes true once we've committed to render (i.e.
-  // shouldRender flipped to true); becomes false on unmount.
+  // Tell consumers when the overlay is active (true on commit, false on
+  // unmount) so they can hide/reveal the real header logo.
   useEffect(() => {
     if (!shouldRender) return;
     onActiveChange?.(true);
@@ -372,9 +325,8 @@ const LogoTransitionOverlay: React.FunctionComponent<
     null,
   );
   const [handoffRunning, setHandoffRunning] = useState(false);
-  // Transform applied to .mediaWrapper during 'handoff' so the animation's
-  // logo region flies to the header alongside the SVG. Computed once at handoff
-  // start; null otherwise.
+  // Transform that flies .mediaWrapper to the header during 'handoff'; computed
+  // once at handoff start, null otherwise.
   const [mediaHandoffTransform, setMediaHandoffTransform] = useState<
     string | null
   >(null);
@@ -382,15 +334,12 @@ const LogoTransitionOverlay: React.FunctionComponent<
   const dialogRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLImageElement>(null);
 
-  // Body scroll lock is active until we begin the hand-off (so the page
-  // doesn't scroll while the modal is the focus of attention).
+  // Lock body scroll until the hand-off begins.
   useBodyScrollLock(shouldRender && phase !== 'handoff' && phase !== 'done');
 
   useFocusTrap(dialogRef as React.RefObject<HTMLElement>);
 
-  // Auto-fade trigger: kicks off the modal/animation fade and the eventual
-  // FLIP to the header. Used only by the post-play hold timeout below -- user-
-  // initiated dismissals skip straight to 'done' (see dismissImmediately).
+  // Auto-fade trigger (post-play hold only; user dismissals jump to 'done').
   const beginFadeOut = useCallback(() => {
     setPhase(currentPhase => {
       if (
@@ -404,22 +353,18 @@ const LogoTransitionOverlay: React.FunctionComponent<
     });
   }, []);
 
-  // User-initiated dismissal: jump straight to 'done', which unmounts the
-  // dialog and the in-transit SVG in the same render pass and fires
-  // onActiveChange(false) so the real header logo reveals immediately.
-  // No fade-out animations are played.
+  // User dismissal: jump straight to 'done' (unmounts dialog + in-transit SVG
+  // and fires onActiveChange(false) so the header logo reveals at once). No
+  // fade.
   const dismissImmediately = useCallback(() => {
     setPhase('done');
   }, []);
 
   useEscapeKeyHandler(shouldRender ? dismissImmediately : undefined);
 
-  // End-of-playback timer. An animated <img> fires no `ended` event, so we
-  // drive the transition off the asset's known animation duration: once the
-  // image has begun playing ('playing'), wait animationDurationMs and then
-  // move to 'holding' (the brief final-frame dwell) just as <video>'s onEnded
-  // used to. The AVIF is authored to play once and freeze on its last frame,
-  // so the frame on screen when this fires is the final logo.
+  // No `ended` event on an animated <img>, so move to 'holding' a fixed
+  // animationDurationMs after playback starts; the frame on screen is the final
+  // logo.
   useEffect(() => {
     if (phase !== 'playing') return;
     const id = window.setTimeout(() => {
@@ -430,35 +375,28 @@ const LogoTransitionOverlay: React.FunctionComponent<
     return () => window.clearTimeout(id);
   }, [phase, animationDurationMs]);
 
-  // Schedule the fade-out after postPlayHoldMs once the animation has finished
-  // playing and we're holding on its final frame.
+  // After the final-frame hold, begin the fade.
   useEffect(() => {
     if (phase !== 'holding') return;
     const id = window.setTimeout(beginFadeOut, postPlayHoldMs);
     return () => window.clearTimeout(id);
   }, [phase, postPlayHoldMs, beginFadeOut]);
 
-  // Begin playback once the decode-gate commits to rendering (shouldRender
-  // flips true after the off-screen decode resolves). The rendered <img> is
-  // already decoded, so it paints its first frame immediately; arming 'playing'
-  // here keeps the animationDurationMs timer in lockstep with that first frame.
-  // (recordShow() and the load timeout are handled by the decode-gate in the
-  // mount-decision effect above, so there is no separate load-timeout here.)
+  // Start playback once the decode-gate commits. The <img> is already decoded,
+  // so it paints at once; arming 'playing' here keeps the duration timer in
+  // lockstep with the first frame.
   useEffect(() => {
     if (shouldRender && phase === 'loading') {
       setPhase('playing');
     }
   }, [shouldRender, phase]);
 
-  // 'fading' is a near-instant hinge into 'handoff': DEFAULT_HANDOFF_TRIGGER_MS
-  // is 0, so both phases fire on effectively the same tick and there is no
-  // static-at-center pause. The animation and the SVG then travel to the header
-  // together (see the 'handoff' effect below) and crossfade as they fly --
-  // front-loaded over DEFAULT_CROSSFADE_MS (a quarter of the travel) so the
-  // animation drops out and the SVG solidifies within the first ~25% of the
-  // trip, while the two are still nearly coincident, leaving no double-image
-  // trail once they separate. The grey background stays full through fading so
-  // the SVG reads cleanly against it, then fades to nothing during the travel.
+  // 'fading' is a near-instant hinge into 'handoff' (DEFAULT_HANDOFF_TRIGGER_MS
+  // is 0): no static-at-center pause. Animation and SVG then travel together
+  // and crossfade, front-loaded over DEFAULT_CROSSFADE_MS (first ~25% of the
+  // trip) so the animation drops out while still nearly coincident with the
+  // SVG -- no double-image trail. The grey backdrop stays full through fading,
+  // then fades during the travel.
   useEffect(() => {
     if (phase !== 'fading') return;
     const id = window.setTimeout(
@@ -468,11 +406,9 @@ const LogoTransitionOverlay: React.FunctionComponent<
     return () => window.clearTimeout(id);
   }, [phase]);
 
-  // When the 'handoff' phase begins, measure the destination element and fly
-  // BOTH the SVG and the animation's .mediaWrapper to it, in lockstep, while
-  // they crossfade (front-loaded: the animation drops out and the SVG fades in
-  // within the first quarter of the travel). If no destination is found, skip
-  // the travel and unmount.
+  // On 'handoff', measure the destination and fly BOTH the SVG and
+  // .mediaWrapper to it in lockstep (crossfading as above). No destination ->
+  // skip the travel and unmount.
   useEffect(() => {
     if (phase !== 'handoff') return;
     if (typeof document === 'undefined') {
@@ -488,10 +424,8 @@ const LogoTransitionOverlay: React.FunctionComponent<
       return;
     }
     const destinationRect = destination.getBoundingClientRect();
-    // Move the SVG from its current absolute position (the animation's
-    // final-frame logo rect) to the destination's rect. CSS uses
-    // left/top/width/height rather than transform to keep the math simple and
-    // the result pixel-accurate.
+    // Move the SVG from its current rect to the destination via
+    // left/top/width/height (simple, pixel-accurate).
     setHandoffStyle(prev => {
       return {
         ...prev,
@@ -501,10 +435,9 @@ const LogoTransitionOverlay: React.FunctionComponent<
         height: destinationRect.height,
       };
     });
-    // Compute the matching FLIP for the media wrapper so the animation's logo
-    // region tracks the SVG. Maps the wrapper's logo sub-rect (per
-    // mediaEndFrameLogoNormalizedRect) onto destinationRect; the AVIF's alpha
-    // background hides the rest of the (now-shrunken) frame.
+    // Matching FLIP for the wrapper: map its logo sub-rect (per
+    // mediaEndFrameLogoNormalizedRect) onto destinationRect so the animation's
+    // logo tracks the SVG; the AVIF's alpha hides the rest.
     const mediaRect = mediaRef.current?.getBoundingClientRect();
     if (mediaRect && mediaRect.width > 0) {
       const logoLeft =
@@ -522,9 +455,8 @@ const LogoTransitionOverlay: React.FunctionComponent<
     return () => window.clearTimeout(id);
   }, [phase, destinationSelector, mediaEndFrameLogoNormalizedRect]);
 
-  // Unmount on terminal phases. Also notify onActiveChange immediately so
-  // the header logo can reveal at the moment the FLIP completes (rather
-  // than waiting for the parent to actually unmount this component).
+  // Unmount on terminal phases; fire onActiveChange(false) now so the header
+  // logo reveals the moment the FLIP completes.
   useEffect(() => {
     if (isTerminalPhase(phase)) {
       onActiveChange?.(false);
@@ -532,32 +464,20 @@ const LogoTransitionOverlay: React.FunctionComponent<
     }
   }, [phase, onActiveChange, onDismiss]);
 
-  // Singleton flag is released in the cleanup of the mount-decision effect
-  // above; no extra cleanup needed here.
+  // (Singleton released in the mount effect's cleanup.)
 
-  // The wrapper is intrinsic-sized to (animation + padding). The image itself
-  // has an explicit width baked into the SCSS, so no inline sizing is
-  // needed here. We keep aspect-ratio + min-width as defensive defaults so
-  // the wrapper doesn't collapse before the image loads.
+  // The <img> has an explicit width in SCSS; aspect-ratio is a defensive
+  // pre-load placeholder so the wrapper doesn't collapse before it loads.
   const mediaWrapperStyle = useMemo<React.CSSProperties>(() => {
     return {
-      // Pre-load placeholder. After the image loads, its intrinsic
-      // dimensions drive the wrapper's content size.
       aspectRatio: `${mediaAspectRatio}`,
     };
   }, [mediaAspectRatio]);
 
-  // Compute the SVG's initial absolute position.
-  //   left:   aligned to the animation's logo content area (rect.left +
-  //           normalizedRect.x * rect.width). This preserves the
-  //           seamless visual match between the animation's final-frame logo
-  //           and the SVG.
-  //   top:    centered in the viewport. The animation's logo is not
-  //           necessarily vertically centered within its frame, so deriving y
-  //           from the normalized rect produces a misalignment; viewport
-  //           center matches the user's stated intent.
-  //   width / height: from the normalized rect's width/height fractions
-  //                   of the animation's measured dimensions.
+  // SVG's initial absolute position: left aligned to the animation's logo area
+  // (so the hand-off start matches the final frame); top centered in the
+  // viewport (the logo isn't vertically centered within its frame);
+  // width/height from the normalized rect.
   const computeSvgInitialStyle = useCallback((): React.CSSProperties | null => {
     const media = mediaRef.current;
     if (!media) return null;
@@ -573,18 +493,15 @@ const LogoTransitionOverlay: React.FunctionComponent<
     };
   }, [mediaEndFrameLogoNormalizedRect]);
 
-  // On entering 'playing' phase, set the SVG's initial style. The SVG remains
-  // at this position through the fade-out; the handoff effect above mutates
-  // it to the destination's rect.
+  // Position the SVG while it sits at center; the handoff effect later moves it
+  // to the destination.
   useEffect(() => {
     if (phase !== 'playing' && phase !== 'holding') return;
     const initialStyle = computeSvgInitialStyle();
     if (initialStyle) setHandoffStyle(initialStyle);
   }, [phase, computeSvgInitialStyle]);
 
-  // Re-measure on viewport resize while the SVG is sitting at the modal-
-  // center position so it stays aligned to the animation if the viewport
-  // changes.
+  // Keep the centered SVG aligned to the animation across viewport resizes.
   useEffect(() => {
     if (phase !== 'playing' && phase !== 'holding' && phase !== 'fading') {
       return;
@@ -598,8 +515,6 @@ const LogoTransitionOverlay: React.FunctionComponent<
   }, [phase, computeSvgInitialStyle, handoffRunning]);
 
   if (!shouldRender) {
-    // Reduced motion or singleton conflict: render nothing. Fire onDismiss
-    // synchronously so callers that wait on it can unmount cleanly.
     return null;
   }
 
@@ -614,10 +529,8 @@ const LogoTransitionOverlay: React.FunctionComponent<
       aria-modal="true"
       aria-label={dialogAriaLabel}
       id={dialogId}
-      // Emit the TS timing constants as CSS custom properties so the SCSS
-      // transition durations stay in lockstep with the JS timers without
-      // duplicating the magic numbers. These cascade to every descendant
-      // (media wrapper, image, close button, hand-off SVG).
+      // Emit the JS timing constants as CSS vars so SCSS durations can't drift
+      // from the JS timers. Cascade to all descendants.
       style={
         {
           '--lto-handoff-ms': `${DEFAULT_HANDOFF_MS}ms`,
@@ -628,10 +541,8 @@ const LogoTransitionOverlay: React.FunctionComponent<
       className={classnames(
         moduleStyles.overlayRoot,
         phase === 'fading' && moduleStyles['overlayRoot--fading'],
-        // The backdrop fades during 'handoff' (in parallel with the SVG
-        // moving to the header), so the transparent SVG is always over
-        // a backdrop (full during fading, fading-to-zero during handoff)
-        // and never over fully-revealed page content.
+        // Backdrop fades during 'handoff' so the SVG is never over fully-
+        // revealed page content (it's a sibling, not faded by opacity).
         phase === 'handoff' && moduleStyles['overlayRoot--backdropFading'],
       )}
     >
@@ -640,7 +551,6 @@ const LogoTransitionOverlay: React.FunctionComponent<
         onClick={dismissImmediately}
         className={classnames(
           moduleStyles.closeButton,
-          // The close button fades together with the modal box.
           (phase === 'fading' || phase === 'handoff') &&
             moduleStyles['closeButton--fading'],
         )}
@@ -650,13 +560,11 @@ const LogoTransitionOverlay: React.FunctionComponent<
       <div
         className={classnames(
           moduleStyles.mediaWrapper,
-          // The animation fades out during the hand-off (to 0 within the first
-          // quarter of the travel) and stays gone for the rest of it.
+          // Animation fades out within the first quarter of the travel.
           (phase === 'fading' || phase === 'handoff') &&
             moduleStyles['mediaWrapper--fading'],
-          // During 'handoff' the wrapper FLIPs to the header in lockstep with
-          // the SVG (inline transform below), so the animation's logo region
-          // tracks the SVG as both shrink toward the destination.
+          // FLIPs to the header (inline transform below) in lockstep with the
+          // SVG.
           phase === 'handoff' && moduleStyles['mediaWrapper--running'],
         )}
         style={{
@@ -667,18 +575,13 @@ const LogoTransitionOverlay: React.FunctionComponent<
         <img
           ref={mediaRef}
           src={mediaSrc}
-          // Decorative: the dialog's aria-label conveys the purpose; the
-          // animation itself carries no additional meaning for AT.
+          // Decorative; the dialog's aria-label conveys the purpose.
           alt=""
           aria-hidden="true"
           decoding="async"
           draggable={false}
-          // Opacity fade is owned by the parent .mediaWrapper (single curve);
-          // the <img> itself does not fade. The src is already decoded (the
-          // decode-gate in the mount effect ran before we rendered), so it
-          // paints from cache immediately -- no load event is needed to drive
-          // playback. onError is a defensive net only: if the cached frame
-          // somehow fails to render, skip to the header.
+          // Opacity fade is owned by .mediaWrapper. Already decoded by the mount
+          // effect, so it paints from cache; onError is a defensive net.
           className={moduleStyles.mediaElement}
           onError={() => {
             reportFailure('media-load-failed');
@@ -687,18 +590,15 @@ const LogoTransitionOverlay: React.FunctionComponent<
         />
       </div>
       {handoffStyle && (
-        // SVG is a sibling of mediaWrapper (not a child) so the modal
-        // box's opacity fade during 'fading' does NOT cascade to the SVG
-        // via CSS opacity inheritance. The SVG fades in (revealed behind the
-        // animation) while the animation fades out, then stays put against the
-        // dark backdrop until the travel-to-header begins.
+        // Sibling of mediaWrapper (not a child) so the box's opacity fade
+        // doesn't cascade to it; the SVG crossfades in as the animation fades
+        // out.
         <img
           src={svgSrc}
           alt=""
           aria-hidden="true"
           className={classnames(
             moduleStyles.handoffSvg,
-            // Visible from 'fading' onward: opacity 1.
             (phase === 'fading' || phase === 'handoff') &&
               moduleStyles['handoffSvg--visible'],
             handoffRunning && moduleStyles['handoffSvg--running'],
@@ -715,8 +615,8 @@ const LogoTransitionOverlay: React.FunctionComponent<
 
 export default LogoTransitionOverlay;
 
-// Test-only helper to reset the module-scoped singleton flag between tests.
-// Not exported from the public index; tests import directly from this file.
+// Test-only: reset the module-scoped singleton between tests (not publicly
+// exported).
 export const __resetSingletonForTests = () => {
   isSingletonMounted = false;
 };

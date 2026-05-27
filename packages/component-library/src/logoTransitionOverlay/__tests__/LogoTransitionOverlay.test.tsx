@@ -71,20 +71,14 @@ const mountDestination = () => {
   return destination;
 };
 
-// The AVIF's opacity fade is owned by the wrapper; the 'fading' phase adds
-// .mediaWrapper--fading. Tests assert on this to detect whether a fade started.
+// The 'fading' phase adds .mediaWrapper--fading; tests check it to detect a fade.
 const getMediaWrapper = () => document.querySelector('.mediaWrapper');
 
-// The overlay decode-gates: on mount it decodes the image OFF-SCREEN via
-// `new Image().decode()` and only renders once that resolves (so the first
-// frame paints the instant the overlay appears). jsdom doesn't implement
-// decode(), so we stub it; `decodeBehavior` lets each test choose how it
-// settles. 'hang' models a slow/never-finishing decode so the loadTimeoutMs
-// path can fire.
+// jsdom has no Image.decode(), so stub it; `decodeBehavior` picks how it settles
+// per test ('hang' never resolves, to exercise loadTimeoutMs).
 let decodeBehavior: 'resolve' | 'reject' | 'hang';
 
-// Flush the decode-gate: run the decode() microtask + the resulting state
-// updates/effects so the overlay commits and enters 'playing'.
+// Flush the decode-gate microtask so the overlay commits and enters 'playing'.
 const revealOverlay = async () => {
   await act(async () => {
     await Promise.resolve();
@@ -101,8 +95,7 @@ let storageSnapshot: {
 const SESSION_KEY = LOGO_TRANSITION_OVERLAY_SESSION_STORAGE_KEY;
 const SHOWS_KEY = LOGO_TRANSITION_OVERLAY_SHOWS_STORAGE_KEY;
 
-// Seed `count` show timestamps that all fall within the rolling window, as the
-// component would have written them on prior shows.
+// Seed `count` in-window show timestamps, as prior shows would have.
 const seedRecentShows = (count: number) => {
   const now = Date.now();
   const shows = Array.from({length: count}, (_, i) => now - i * 1000);
@@ -147,8 +140,7 @@ afterEach(() => {
   window.sessionStorage.clear();
 });
 
-// Strict assertion: no storage of any kind changed. Use for tests that
-// short-circuit before the animation commits to playing.
+// No storage of any kind changed; for tests that short-circuit before playing.
 const expectNoStorageWritten = () => {
   expect(document.cookie).toBe(storageSnapshot.cookies);
   expect(Object.keys(window.localStorage)).toEqual(storageSnapshot.localKeys);
@@ -157,10 +149,8 @@ const expectNoStorageWritten = () => {
   );
 };
 
-// Permissive assertion: no cookies written; the only new sessionStorage key is
-// the session flag and the only new localStorage key is the shows list (with at
-// least one recent timestamp). Use for tests that commit to playing (where
-// recordShow fires) starting from cleared storage.
+// On commit (from cleared storage): no cookies, one new sessionStorage key (the
+// session flag) and one new localStorage key (the shows list, >=1 timestamp).
 const expectThrottleStateRecorded = () => {
   expect(document.cookie).toBe(storageSnapshot.cookies);
 

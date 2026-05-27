@@ -42,13 +42,9 @@ const Header: React.FC = () => {
     return !!getCookie(getCookieNameByStage('_shortName', getStage()));
   };
 
-  // Tag the rendered header-logo image with a stable data-attribute so the
-  // logo-transition overlay can locate it as the FLIP hand-off destination,
-  // and subscribe to the logo-transition-active flag so the static header
-  // logo stays hidden while the logo-transition overlay is running. The
-  // header logo is revealed at the moment the FLIP-to-header animation
-  // completes (overlay phase becomes 'done'), seamlessly taking over from
-  // the in-transit SVG as it lands.
+  // Tag the header logo so the overlay can find it as the FLIP destination, and
+  // hide it while the transition runs. It's revealed when the overlay completes,
+  // taking over from the SVG as it lands.
   useEffect(() => {
     const headerLogo = document.querySelector(
       'header img',
@@ -64,8 +60,7 @@ const Header: React.FC = () => {
     const unsubscribe = subscribeToLogoTransitionActive(applyVisibility);
     return () => {
       unsubscribe();
-      // Restore default visibility on unmount so a future re-render doesn't
-      // inherit a stale opacity.
+      // Restore default opacity so a re-render doesn't inherit a stale value.
       headerLogo.style.opacity = '';
     };
   }, []);
