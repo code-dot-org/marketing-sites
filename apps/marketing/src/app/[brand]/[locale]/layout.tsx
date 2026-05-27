@@ -3,6 +3,7 @@ import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
 import {GoogleAnalytics} from '@next/third-parties/google';
 import {draftMode} from 'next/headers';
 
+import {LogoTransitionProvider} from '@/components/contentful/logoTransitionModal/logoTransitionState';
 import {getFooter} from '@/components/footer/Footer';
 import {getHeader} from '@/components/header/Header';
 import {getBrandFromString} from '@/config/brand';
@@ -60,9 +61,11 @@ export default async function Layout({
                 clientKey={statsigClientKey}
                 brand={brand}
               >
-                {getHeader(brand)}
-                {children}
-                {await getFooter(brand, locale)}
+                <LogoTransitionProvider>
+                  {getHeader(brand)}
+                  {children}
+                  {await getFooter(brand, locale)}
+                </LogoTransitionProvider>
               </StatsigProvider>
             </OneTrustProvider>
 

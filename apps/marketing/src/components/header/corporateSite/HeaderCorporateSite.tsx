@@ -1,11 +1,13 @@
 'use client';
 
 import {getCookie} from 'cookies-next/client';
+import {useEffect} from 'react';
 
 import DSCOHeader, {
   getDefaultHeaderProps,
 } from '@code-dot-org/component-library/cms/header';
 
+import {useLogoTransition} from '@/components/contentful/logoTransitionModal/logoTransitionState';
 import {getStage} from '@/config/stage';
 import {getStudioBaseUrl} from '@/config/studio';
 import {getCookieNameByStage} from '@/cookies/getCookie';
@@ -33,9 +35,27 @@ const defaultProps = getDefaultHeaderProps({
 });
 
 const Header: React.FC = () => {
+  const {active} = useLogoTransition();
+
   const isSignedIn = async (): Promise<boolean> => {
     return !!getCookie(getCookieNameByStage('_shortName', getStage()));
   };
+
+  // Tag the header logo as the overlay's FLIP destination and hide it while the
+  // transition runs (driven by `active` from context). The opacity write stays
+  // imperative because the logo lives inside DSCOHeader.
+  useEffect(() => {
+    const headerLogo = document.querySelector(
+      'header img',
+    ) as HTMLElement | null;
+    if (!headerLogo) return;
+    headerLogo.setAttribute('data-logo-transition-target', '');
+    headerLogo.style.opacity = active ? '0' : '';
+    return () => {
+      // Restore default opacity so a re-render doesn't inherit a stale value.
+      headerLogo.style.opacity = '';
+    };
+  }, [active]);
 
   return <DSCOHeader {...defaultProps} isSignedIn={isSignedIn} />;
 };

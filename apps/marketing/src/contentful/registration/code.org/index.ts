@@ -66,6 +66,9 @@ import Image, {
 import Link, {
   LinkContentfulComponentDefinition,
 } from '@/components/contentful/link';
+import LogoTransitionModal, {
+  LogoTransitionModalContentfulComponentDefinition,
+} from '@/components/contentful/logoTransitionModal';
 import Overline, {
   OverlineContentfulComponentDefinition,
 } from '@/components/contentful/overline';
@@ -214,6 +217,10 @@ const contentfulRegistration = {
     {
       component: Link,
       definition: LinkContentfulComponentDefinition,
+    },
+    {
+      component: LogoTransitionModal,
+      definition: LogoTransitionModalContentfulComponentDefinition,
     },
     {component: Overline, definition: OverlineContentfulComponentDefinition},
     {

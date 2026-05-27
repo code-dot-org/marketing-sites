@@ -58,6 +58,14 @@
       "import": "./dist/esm/alert/index.mjs",
       "require": "./dist/cjs/alert/index.js"
     },
+    "./logoTransitionOverlay": {
+      "types": {
+        "import": "./dist/esm/logoTransitionOverlay/index.d.ts",
+        "require": "./dist/cjs/logoTransitionOverlay/index.d.ts"
+      },
+      "import": "./dist/esm/logoTransitionOverlay/index.mjs",
+      "require": "./dist/cjs/logoTransitionOverlay/index.js"
+    },
     "./breadcrumbs": {
       "types": {
         "import": "./dist/esm/breadcrumbs/index.d.ts",
