@@ -8,6 +8,8 @@ const meta: Meta<typeof LogoTransitionModal> = {
   component: LogoTransitionModal,
   parameters: {
     layout: 'fullscreen',
+    // Animated transition — exclude from Applitools visual regression.
+    eyes: {include: false},
   },
 };
 export default meta;

@@ -50,6 +50,8 @@ export default {
   component: LogoTransitionOverlay,
   parameters: {
     layout: 'fullscreen',
+    // Animated transition — exclude from Applitools visual regression.
+    eyes: {include: false},
   },
 } as Meta;
 
