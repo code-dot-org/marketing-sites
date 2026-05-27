@@ -3,18 +3,17 @@
 import LogoTransitionOverlay from '@code-dot-org/component-library/logoTransitionOverlay';
 
 import {getAssetPublicPath} from '@/config/assets';
-
 // Must match the logo HeaderCorporateSite.tsx renders, so the animation -> SVG
 // hand-off lands on that asset.
 import headerLogo from '@public/images/codeai-logo-inverse.svg';
+
+import {useLogoTransition} from './logoTransitionState';
 
 // Animated AVIF (alpha) bundled in the app and served as a raw static asset
 // from public/assets via getAssetPublicPath() (public/ -> /_next/static/public
 // in prod; /assets is exempt from the dev locale rewrite). NOT a @public import
 // like the logo: Next's build-time image-size can't read AVIF image sequences.
 const LOGO_TRANSITION_ANIMATION_SRC = `${getAssetPublicPath()}/assets/animated-logo-transition.avif`;
-
-import {setLogoTransitionActive} from './logoTransitionState';
 
 // Logo bounds within the 834x313 animation frame. The SVG renders
 // viewport-centered (see computeSvgInitialStyle in LogoTransitionOverlay.tsx),
@@ -39,17 +38,20 @@ const ANIMATION_DURATION_MS = 8000;
 // to mask the animation's abrupt tail.
 const POST_PLAY_HOLD_MS = 200;
 
-const LogoTransitionModal: React.FC = () => (
-  <LogoTransitionOverlay
-    mediaSrc={LOGO_TRANSITION_ANIMATION_SRC}
-    svgSrc={headerLogo.src}
-    mediaAspectRatio={MEDIA_ASPECT_RATIO}
-    mediaEndFrameLogoNormalizedRect={MEDIA_END_FRAME_LOGO_NORMALIZED_RECT}
-    animationDurationMs={ANIMATION_DURATION_MS}
-    destinationSelector="[data-logo-transition-target]"
-    postPlayHoldMs={POST_PLAY_HOLD_MS}
-    onActiveChange={setLogoTransitionActive}
-  />
-);
+const LogoTransitionModal: React.FC = () => {
+  const {setActive} = useLogoTransition();
+  return (
+    <LogoTransitionOverlay
+      mediaSrc={LOGO_TRANSITION_ANIMATION_SRC}
+      svgSrc={headerLogo.src}
+      mediaAspectRatio={MEDIA_ASPECT_RATIO}
+      mediaEndFrameLogoNormalizedRect={MEDIA_END_FRAME_LOGO_NORMALIZED_RECT}
+      animationDurationMs={ANIMATION_DURATION_MS}
+      destinationSelector="[data-logo-transition-target]"
+      postPlayHoldMs={POST_PLAY_HOLD_MS}
+      onActiveChange={setActive}
+    />
+  );
+};
 
 export default LogoTransitionModal;

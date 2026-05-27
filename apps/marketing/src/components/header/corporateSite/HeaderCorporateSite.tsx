@@ -7,10 +7,7 @@ import DSCOHeader, {
   getDefaultHeaderProps,
 } from '@code-dot-org/component-library/cms/header';
 
-import {
-  getLogoTransitionActive,
-  subscribeToLogoTransitionActive,
-} from '@/components/contentful/logoTransitionModal/logoTransitionState';
+import {useLogoTransition} from '@/components/contentful/logoTransitionModal/logoTransitionState';
 import {getStage} from '@/config/stage';
 import {getStudioBaseUrl} from '@/config/studio';
 import {getCookieNameByStage} from '@/cookies/getCookie';
@@ -38,32 +35,27 @@ const defaultProps = getDefaultHeaderProps({
 });
 
 const Header: React.FC = () => {
+  const {active} = useLogoTransition();
+
   const isSignedIn = async (): Promise<boolean> => {
     return !!getCookie(getCookieNameByStage('_shortName', getStage()));
   };
 
-  // Tag the header logo so the overlay can find it as the FLIP destination, and
-  // hide it while the transition runs. It's revealed when the overlay completes,
-  // taking over from the SVG as it lands.
+  // Tag the header logo as the overlay's FLIP destination and hide it while the
+  // transition runs (driven by `active` from context). The opacity write stays
+  // imperative because the logo lives inside DSCOHeader.
   useEffect(() => {
     const headerLogo = document.querySelector(
       'header img',
     ) as HTMLElement | null;
     if (!headerLogo) return;
     headerLogo.setAttribute('data-logo-transition-target', '');
-
-    const applyVisibility = (active: boolean) => {
-      headerLogo.style.opacity = active ? '0' : '';
-    };
-
-    applyVisibility(getLogoTransitionActive());
-    const unsubscribe = subscribeToLogoTransitionActive(applyVisibility);
+    headerLogo.style.opacity = active ? '0' : '';
     return () => {
-      unsubscribe();
       // Restore default opacity so a re-render doesn't inherit a stale value.
       headerLogo.style.opacity = '';
     };
-  }, []);
+  }, [active]);
 
   return <DSCOHeader {...defaultProps} isSignedIn={isSignedIn} />;
 };
