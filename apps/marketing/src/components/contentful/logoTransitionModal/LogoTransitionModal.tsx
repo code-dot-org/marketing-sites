@@ -2,16 +2,17 @@
 
 import LogoTransitionOverlay from '@code-dot-org/component-library/logoTransitionOverlay';
 
+import {getAssetPublicPath} from '@/config/assets';
+
 // Must match the logo HeaderCorporateSite.tsx renders, so the animation -> SVG
 // hand-off lands on that asset.
 import headerLogo from '@public/images/codeai-logo-inverse.svg';
 
-// Animated AVIF with alpha, served as a Contentful image asset via <img> (the
-// image decoder handles transparency; not the AV1-in-<video> alpha path). Use
-// the bare delivery URL: Images API transform params (?fm=/?w=) re-encode and
-// can break the animation/alpha. Plays once, freezes on the final Code AI logo.
-const LOGO_TRANSITION_ANIMATION_SRC =
-  'https://contentful-images.code.org/90t6bu6vlf76/640TmEw2Qdh6XFdjWJsQOc/607785e2e101d759c585b75b0614b20a/animated-logo-transition.avif';
+// Animated AVIF (alpha) bundled in the app and served as a raw static asset
+// from public/assets via getAssetPublicPath() (public/ -> /_next/static/public
+// in prod; /assets is exempt from the dev locale rewrite). NOT a @public import
+// like the logo: Next's build-time image-size can't read AVIF image sequences.
+const LOGO_TRANSITION_ANIMATION_SRC = `${getAssetPublicPath()}/assets/animated-logo-transition.avif`;
 
 import {setLogoTransitionActive} from './logoTransitionState';
 
