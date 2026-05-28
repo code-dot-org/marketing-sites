@@ -304,14 +304,21 @@ const LogoTransitionOverlay: React.FunctionComponent<
     null,
   );
   const [handoffRunning, setHandoffRunning] = useState(false);
-  // Transform that flies .mediaWrapper to the header during 'handoff'; computed
-  // once at handoff start, null otherwise.
+  // Transforms that fly each layer to the header during 'handoff'; computed
+  // once at handoff start, null otherwise. Both layers FLIP via transform so
+  // they ride the GPU compositor in lockstep (Chrome trails the SVG when its
+  // FLIP is geometric -- left/top/width/height -- because that runs on the
+  // main thread and drifts from the wrapper's composited transform).
   const [mediaHandoffTransform, setMediaHandoffTransform] = useState<
     string | null
   >(null);
+  const [svgHandoffTransform, setSvgHandoffTransform] = useState<string | null>(
+    null,
+  );
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLImageElement>(null);
+  const svgRef = useRef<HTMLImageElement>(null);
 
   // Lock body scroll until the hand-off begins.
   useBodyScrollLock(shouldRender && phase !== 'handoff' && phase !== 'done');
@@ -403,17 +410,15 @@ const LogoTransitionOverlay: React.FunctionComponent<
       return;
     }
     const destinationRect = destination.getBoundingClientRect();
-    // Move the SVG from its current rect to the destination via
-    // left/top/width/height (simple, pixel-accurate).
-    setHandoffStyle(prev => {
-      return {
-        ...prev,
-        left: destinationRect.left,
-        top: destinationRect.top,
-        width: destinationRect.width,
-        height: destinationRect.height,
-      };
-    });
+    // FLIP the SVG from its starting rect to the destination via transform
+    // (composited; pairs with the wrapper transform below).
+    const svgRect = svgRef.current?.getBoundingClientRect();
+    if (svgRect && svgRect.width > 0) {
+      const scale = destinationRect.width / svgRect.width;
+      const dx = destinationRect.left - svgRect.left;
+      const dy = destinationRect.top - svgRect.top;
+      setSvgHandoffTransform(`translate(${dx}px, ${dy}px) scale(${scale})`);
+    }
     // Matching FLIP for the wrapper: map its logo sub-rect (per
     // mediaEndFrameLogoNormalizedRect) onto destinationRect so the animation's
     // logo tracks the SVG; the AVIF's alpha hides the rest.
@@ -573,6 +578,7 @@ const LogoTransitionOverlay: React.FunctionComponent<
         // doesn't cascade to it; the SVG crossfades in as the animation fades
         // out.
         <img
+          ref={svgRef}
           src={svgSrc}
           alt=""
           aria-hidden="true"
@@ -585,6 +591,7 @@ const LogoTransitionOverlay: React.FunctionComponent<
           style={{
             position: 'fixed',
             ...handoffStyle,
+            transform: svgHandoffTransform ?? undefined,
           }}
         />
       )}

@@ -121,14 +121,12 @@
 }
 
 .handoffSvg--running {
-  // Animate left/top with width/height so the SVG slides smoothly to the header
-  // (over --lto-handoff-ms) instead of snapping. Opacity fades in over the short
-  // --lto-crossfade-ms (ease-out) to cover the animation as it drops out.
+  // Composited FLIP: animate transform (translate+scale) instead of left/top/
+  // width/height so the SVG rides the GPU compositor in lockstep with the
+  // wrapper's transform -- otherwise Chrome trails the geometric animation
+  // behind the composited one. Opacity fades in over --lto-crossfade-ms.
   transition:
-    left var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
-    top var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
-    width var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
-    height var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
+    transform var(--lto-handoff-ms) cubic-bezier(0.4, 0, 0.2, 1),
     opacity var(--lto-crossfade-ms) ease-out;
 }
 
