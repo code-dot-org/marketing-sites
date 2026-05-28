@@ -5,7 +5,7 @@ import {NOTO_FONT} from '@/themes/constants/fonts';
 
 import {createFontStack} from '../common/constants';
 
-import {BARLOW_FONT, FIGTREE_FONT} from './constants/fonts';
+import {SPACE_GROTESK_FONT, FIGTREE_FONT} from './constants/fonts';
 import {STYLE_OVERRIDES} from './styleOverrides';
 
 const theme = createTheme({
@@ -17,27 +17,27 @@ const theme = createTheme({
   typography: {
     fontFamily: createFontStack(FIGTREE_FONT, NOTO_FONT),
     h1: {
-      fontFamily: createFontStack(BARLOW_FONT, NOTO_FONT),
-      fontSize: '3rem', // 48px
-      fontWeight: 500,
-      lineHeight: 1.16,
+      fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
+      fontSize: '5rem', // 80px
+      fontWeight: 700,
+      lineHeight: 0.95,
     },
     h2: {
-      fontFamily: createFontStack(BARLOW_FONT, NOTO_FONT),
-      fontSize: '2.125rem', // 34px
-      fontWeight: 500,
-      lineHeight: 1.24,
+      fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
+      fontSize: '4rem', // 64px
+      fontWeight: 700,
+      lineHeight: 0.95,
     },
     h3: {
-      fontFamily: createFontStack(BARLOW_FONT, NOTO_FONT),
+      fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
       fontSize: '1.75rem', // 28px
-      fontWeight: 500,
+      fontWeight: 700,
       lineHeight: 1.28,
     },
     h4: {
-      fontFamily: createFontStack(BARLOW_FONT, NOTO_FONT),
+      fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
       fontSize: '1.5rem', // 24px
-      fontWeight: 500,
+      fontWeight: 700,
       lineHeight: 1.32,
     },
     h5: {
