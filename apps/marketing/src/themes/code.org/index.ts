@@ -18,13 +18,13 @@ const theme = createTheme({
     fontFamily: createFontStack(FIGTREE_FONT, NOTO_FONT),
     h1: {
       fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
-      fontSize: '5rem', // 80px
+      fontSize: '4rem', // 64px
       fontWeight: 700,
       lineHeight: 0.95,
     },
     h2: {
       fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
-      fontSize: '4rem', // 64px
+      fontSize: '3rem', // 48px
       fontWeight: 700,
       lineHeight: 0.95,
     },
@@ -32,7 +32,7 @@ const theme = createTheme({
       fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
       fontSize: '1.75rem', // 28px
       fontWeight: 700,
-      lineHeight: 1.28,
+      lineHeight: 1.0,
     },
     h4: {
       fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
