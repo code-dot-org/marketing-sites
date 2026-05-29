@@ -1717,6 +1717,7 @@ __metadata:
     "@fontsource-variable/noto-sans-telugu": "npm:^5.1.1"
     "@fontsource-variable/noto-sans-thaana": "npm:^5.1.1"
     "@fontsource-variable/noto-sans-thai": "npm:^5.1.1"
+    "@fontsource/barlow-semi-condensed": "npm:^5.1.1"
     "@fontsource/noto-sans-jp": "npm:^5.1.1"
     "@fontsource/noto-sans-kr": "npm:^5.1.1"
     "@fontsource/noto-sans-math": "npm:^5.1.1"
@@ -1724,7 +1725,6 @@ __metadata:
     "@fontsource/noto-sans-sc": "npm:^5.1.1"
     "@fontsource/noto-sans-tc": "npm:^5.1.1"
     "@fontsource/roboto-mono": "npm:^5.2.6"
-    "@fontsource/space-grotesk": "npm:^5.1.1"
     eslint: "npm:^9.16.0"
     prettier: "npm:3.4.2"
     react: "npm:^18.3.1"
@@ -3548,6 +3548,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/barlow-semi-condensed@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "@fontsource/barlow-semi-condensed@npm:5.1.1"
+  checksum: 10c0/2f3eacbb1b220f65d35387136f90c7848f355695a240307bf6d07634de4128ad76d4d05a230a647640141ce16f6fd9ab6292fc27f2d6220b7a1b2bd79a555b4e
+  languageName: node
+  linkType: hard
+
 "@fontsource/noto-sans-jp@npm:^5.1.1":
   version: 5.1.1
   resolution: "@fontsource/noto-sans-jp@npm:5.1.1"
@@ -3594,13 +3601,6 @@ __metadata:
   version: 5.2.6
   resolution: "@fontsource/roboto-mono@npm:5.2.6"
   checksum: 10c0/a0ac77aacdce5b5fa4a1a4cdb364615e52a208040d5cfdf0537fcf9d84fd3130b7321e627969948430cc557599f4bdd89e38cd7ceaf13cf429b108f697c6a72e
-  languageName: node
-  linkType: hard
-
-"@fontsource/space-grotesk@npm:^5.1.1":
-  version: 5.2.10
-  resolution: "@fontsource/space-grotesk@npm:5.2.10"
-  checksum: 10c0/dabe027e9ef8e4dc5d6982e3ff5a73a311a151c06f2dc0b881468c9bab4f0b39106f182aa29be8e1a4ea10ce435dea807bdcb982176ee5e81083fd3814f5a5bd
   languageName: node
   linkType: hard
 

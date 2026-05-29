@@ -1,8 +1,8 @@
 export const FONT_FAMILY_NAMES = [
   'Figtree', // Primary Font
   'Noto Sans', // Fallback
-  'Space Grotesk Bold', // For headings, low priority
-  'Space Grotesk Medium', // For headings, low priority
+  'Barlow Semi Condensed Semibold', // For headings, low priority
+  'Barlow Semi Condensed Medium', // For headings, low priority
   '"FontAwesome"', // Icons, low priority
   '"Font Awesome 7 Brands"', // Icons, low priority
   '"Font Awesome 7 Duotone"', // Icons, low priority

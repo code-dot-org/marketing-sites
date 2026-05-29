@@ -1,7 +1,0 @@
-@use '@fontsource/space-grotesk/scss/mixins' as SpaceGrotesk;
-
-/**
- * Typically only used in headings
- */
-@include SpaceGrotesk.faces($family: 'Space Grotesk Medium', $weights: 500);
-@include SpaceGrotesk.faces($family: 'Space Grotesk Bold', $weights: 700);
