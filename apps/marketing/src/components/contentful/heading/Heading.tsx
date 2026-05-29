@@ -36,6 +36,8 @@ export type HeadingProps = RemoveMarginBottomProps & {
   fontWeight?: '500' | '700';
   /** Hex color override; only used when useAltFont is true. */
   colorOverride?: string;
+  /** Font kerning override; only used when useAltFont is true. */
+  fontKerning?: 'auto' | 'normal' | 'none';
 };
 
 // Maps Contentful Heading visualAppearance values with
@@ -76,6 +78,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
   lineHeight,
   fontWeight,
   colorOverride,
+  fontKerning,
 }) => {
   const tag = visualAppearanceToSemanticTagMap[visualAppearance];
 
@@ -89,6 +92,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
       lineHeight: lineHeight ?? 1,
       fontWeight: fontWeight ? Number(fontWeight) : 700,
       color: colorOverride || ALT_FONT_DEFAULT_COLOR,
+      fontKerning: fontKerning ?? 'auto',
     };
 
     return (
