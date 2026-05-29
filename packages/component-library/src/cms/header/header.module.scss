@@ -30,6 +30,7 @@ $box-shadow:
   .homeLink {
     color: transparent;
     text-decoration: none;
+    padding-block: 0.5rem;
 
     @include mixins.transition-all;
 
@@ -45,7 +46,7 @@ $box-shadow:
 
     & > figure {
       height: 1.375rem;
-      width: auto;
+      aspect-ratio: 591.15 / 100; // matches codeai-logo SVG viewBox; Safari needs an explicit width
       border-radius: unset;
     }
   }
