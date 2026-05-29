@@ -45,6 +45,62 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
+    useAltFont: {
+      displayName: 'Use alternate font (Space Grotesk)',
+      type: 'Boolean',
+      defaultValue: false,
+      group: 'style',
+      description:
+        'Switch this heading to the Space Grotesk style. Leaves other headings unchanged.',
+    },
+    fontSize: {
+      displayName: 'Font size (rem)',
+      type: 'Number',
+      group: 'style',
+      description:
+        'Override the font size in rem. Only applies when the alternate font is on. Leave blank for the responsive default.',
+    },
+    lineHeight: {
+      displayName: 'Line height',
+      type: 'Number',
+      group: 'style',
+      description:
+        'Unitless line-height override. Only applies when the alternate font is on. Default is 1.0.',
+    },
+    fontWeight: {
+      displayName: 'Font weight',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Only applies when the alternate font is on. Default is Bold.',
+      validations: {
+        in: [
+          {value: '500', displayName: 'Medium'},
+          {value: '700', displayName: 'Bold'},
+        ],
+      },
+    },
+    colorOverride: {
+      displayName: 'Color override (hex)',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Hex color (e.g. #1F1976). Only applies when the alternate font is on. Default is #1F1976.',
+    },
+    fontKerning: {
+      displayName: 'Font kerning',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Only applies when the alternate font is on. Default is Auto.',
+      validations: {
+        in: [
+          {value: 'auto', displayName: 'Auto'},
+          {value: 'normal', displayName: 'Normal (always on)'},
+          {value: 'none', displayName: 'None (off)'},
+        ],
+      },
+    },
     removeMarginBottom: {...removeMarginBottomDefinition},
     children: {
       displayName: 'Content',

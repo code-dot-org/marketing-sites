@@ -3,6 +3,8 @@ export const FONT_FAMILY_NAMES = [
   'Noto Sans', // Fallback
   'Barlow Semi Condensed Semibold', // For headings, low priority
   'Barlow Semi Condensed Medium', // For headings, low priority
+  'Space Grotesk Bold', // Alt heading font, opt-in per heading
+  'Space Grotesk Medium', // Alt heading font, opt-in per heading
   '"FontAwesome"', // Icons, low priority
   '"Font Awesome 7 Brands"', // Icons, low priority
   '"Font Awesome 7 Duotone"', // Icons, low priority
