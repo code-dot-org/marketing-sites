@@ -20,19 +20,20 @@ jest.mock(
 );
 
 // @public/images/* imports use next/jest's built-in image-asset mock; we just
-// check the wrapper forwards non-empty animation and SVG srcs to the overlay.
+// check the wrapper forwards the animation (children) and a non-empty SVG src
+// to the overlay.
 
 describe('LogoTransitionModal', () => {
   beforeEach(() => {
     overlayPropsSpy.mockClear();
   });
 
-  it('renders the LogoTransitionOverlay with bundled asset sources', () => {
+  it('renders the LogoTransitionOverlay with the animation and SVG source', () => {
     render(<LogoTransitionModal />);
     expect(overlayPropsSpy).toHaveBeenCalledTimes(1);
     const props = overlayPropsSpy.mock.calls[0][0];
-    expect(typeof props.mediaSrc).toBe('string');
-    expect(props.mediaSrc.length).toBeGreaterThan(0);
+    // The animation is passed as children (the CSS-animated SVG stage).
+    expect(props.children).toBeDefined();
     expect(typeof props.svgSrc).toBe('string');
     expect(props.svgSrc.length).toBeGreaterThan(0);
   });
@@ -46,7 +47,7 @@ describe('LogoTransitionModal', () => {
   it('passes a normalized end-frame rect with values in [0,1]', () => {
     render(<LogoTransitionModal />);
     const props = overlayPropsSpy.mock.calls[0][0];
-    const rect = props.mediaEndFrameLogoNormalizedRect;
+    const rect = props.endFrameLogoNormalizedRect;
     expect(rect).toBeDefined();
     for (const key of ['x', 'y', 'width', 'height'] as const) {
       expect(rect[key]).toBeGreaterThanOrEqual(0);
@@ -55,13 +56,6 @@ describe('LogoTransitionModal', () => {
     // Logo must fit inside the animation bounds.
     expect(rect.x + rect.width).toBeLessThanOrEqual(1);
     expect(rect.y + rect.height).toBeLessThanOrEqual(1);
-  });
-
-  it('passes a positive mediaAspectRatio', () => {
-    render(<LogoTransitionModal />);
-    const props = overlayPropsSpy.mock.calls[0][0];
-    expect(typeof props.mediaAspectRatio).toBe('number');
-    expect(props.mediaAspectRatio).toBeGreaterThan(0);
   });
 
   it('passes a positive animationDurationMs', () => {

@@ -1,8 +1,8 @@
 // Contentful Studio definition for the Logo Transition Modal. No
 // editor-configurable variables -- placement on an Experience is the only
-// configuration. Assets (SVG + animated AVIF) are bundled in the component, so
-// editorial changes can't break the hand-off. No picker thumbnail/tooltip image
-// (matching the State Gap Map component).
+// configuration. The animation (CSS-animated SVG) and header SVG are bundled in
+// the component, so editorial changes can't break the hand-off. No picker
+// thumbnail/tooltip image (matching the State Gap Map component).
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 export const LogoTransitionModalContentfulComponentDefinition: ComponentDefinition =

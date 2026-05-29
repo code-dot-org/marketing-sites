@@ -13,16 +13,17 @@ import LogoTransitionOverlay, {
   __resetSingletonForTests,
 } from '../LogoTransitionOverlay';
 
-const SAMPLE_MEDIA = '/test-fixtures/logo-transition.avif';
+// The animation is passed as children; a plain div stands in for the real
+// CSS-animated SVG stage.
+const SAMPLE_CHILDREN = <div data-testid="animation-stage" />;
 const SAMPLE_SVG = '/test-fixtures/cdo-logo-inverse.svg';
 const TEST_ANIMATION_DURATION_MS = 2000;
 const TEST_POST_PLAY_HOLD_MS = 1000;
 const DEFAULT_PROPS: LogoTransitionOverlayProps = {
-  mediaSrc: SAMPLE_MEDIA,
+  children: SAMPLE_CHILDREN,
   svgSrc: SAMPLE_SVG,
-  mediaAspectRatio: 1,
   destinationSelector: '[data-test-destination]',
-  mediaEndFrameLogoNormalizedRect: {x: 0.25, y: 0.25, width: 0.5, height: 0.5},
+  endFrameLogoNormalizedRect: {x: 0.25, y: 0.25, width: 0.5, height: 0.5},
   animationDurationMs: TEST_ANIMATION_DURATION_MS,
   postPlayHoldMs: TEST_POST_PLAY_HOLD_MS,
 };
@@ -74,11 +75,8 @@ const mountDestination = () => {
 // The 'fading' phase adds .mediaWrapper--fading; tests check it to detect a fade.
 const getMediaWrapper = () => document.querySelector('.mediaWrapper');
 
-// jsdom has no Image.decode(), so stub it; `decodeBehavior` picks how it settles
-// per test ('hang' never resolves, to exercise loadTimeoutMs).
-let decodeBehavior: 'resolve' | 'reject' | 'hang';
-
-// Flush the decode-gate microtask so the overlay commits and enters 'playing'.
+// The overlay commits synchronously on mount (no decode gate). This just flushes
+// any pending effect-driven re-renders (commit -> 'playing').
 const revealOverlay = async () => {
   await act(async () => {
     await Promise.resolve();
@@ -105,20 +103,6 @@ const seedRecentShows = (count: number) => {
 beforeEach(() => {
   jest.useFakeTimers();
   __resetSingletonForTests();
-  decodeBehavior = 'resolve';
-  Object.defineProperty(HTMLImageElement.prototype, 'decode', {
-    configurable: true,
-    writable: true,
-    value: jest.fn(() => {
-      if (decodeBehavior === 'reject') {
-        return Promise.reject(new Error('decode failed'));
-      }
-      if (decodeBehavior === 'hang') {
-        return new Promise<void>(() => {});
-      }
-      return Promise.resolve();
-    }),
-  });
   mockMatchMedia(false);
   // Start every test with empty local/session storage so throttle state
   // doesn't bleed across tests.
@@ -298,7 +282,7 @@ describe('LogoTransitionOverlay', () => {
     act(() => {
       jest.advanceTimersByTime(100);
     });
-    // The AVIF must not have begun fading (phase stayed 'playing').
+    // The animation must not have begun fading (phase stayed 'playing').
     expect(getMediaWrapper()?.className).not.toContain('mediaWrapper--fading');
     // Committing to play records the throttle state (session flag + shows
     // list); nothing in cookies.
@@ -318,59 +302,12 @@ describe('LogoTransitionOverlay', () => {
     act(() => {
       jest.advanceTimersByTime(100);
     });
-    // The AVIF must not have begun fading (phase stayed 'playing').
+    // The animation must not have begun fading (phase stayed 'playing').
     expect(getMediaWrapper()?.className).not.toContain('mediaWrapper--fading');
     expectThrottleStateRecorded();
   });
 
-  // 8. Decode failure -> skip the overlay + warning
-  it('skips the overlay (and warns) when the image fails to decode', async () => {
-    decodeBehavior = 'reject';
-    const consoleWarn = jest
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const onDismiss = jest.fn();
-    render(<LogoTransitionOverlay {...DEFAULT_PROPS} onDismiss={onDismiss} />);
-    // Flush the rejected decode -> skip path.
-    await revealOverlay();
-    expect(screen.queryByRole('dialog')).toBeNull();
-    expect(onDismiss).toHaveBeenCalled();
-    expect(consoleWarn).toHaveBeenCalledWith(
-      expect.stringContaining('media-load-failed'),
-    );
-    consoleWarn.mockRestore();
-    // Nothing committed -> no storage written.
-    expectNoStorageWritten();
-  });
-
-  // 9. Decode/load timeout -> skip the overlay + warning
-  it('skips the overlay (and warns) when decode does not finish within loadTimeoutMs', () => {
-    decodeBehavior = 'hang';
-    const consoleWarn = jest
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const onDismiss = jest.fn();
-    render(
-      <LogoTransitionOverlay
-        {...DEFAULT_PROPS}
-        onDismiss={onDismiss}
-        loadTimeoutMs={1000}
-      />,
-    );
-    // decode() never resolves; advance past the timeout.
-    act(() => {
-      jest.advanceTimersByTime(1500);
-    });
-    expect(screen.queryByRole('dialog')).toBeNull();
-    expect(onDismiss).toHaveBeenCalled();
-    expect(consoleWarn).toHaveBeenCalledWith(
-      expect.stringContaining('media-load-timeout'),
-    );
-    consoleWarn.mockRestore();
-    expectNoStorageWritten();
-  });
-
-  // 10. Missing destination element -> unmount after fade + warning
+  // 8. Missing destination element -> unmount after fade + warning
   it('logs warning and unmounts when destination selector finds no element', async () => {
     const consoleWarn = jest
       .spyOn(console, 'warn')
@@ -400,7 +337,7 @@ describe('LogoTransitionOverlay', () => {
     expectThrottleStateRecorded();
   });
 
-  // 11. Storage discipline: no cookies written; sessionStorage gains only the
+  // 9. Storage discipline: no cookies written; sessionStorage gains only the
   // session flag and localStorage only the shows-timestamp list.
   it('writes no cookies; records only the session flag and shows list on commit', async () => {
     mountDestination();
@@ -417,7 +354,7 @@ describe('LogoTransitionOverlay', () => {
     expectThrottleStateRecorded();
   });
 
-  // 12. Once-per-session: when the session flag is already set, the overlay
+  // 10. Once-per-session: when the session flag is already set, the overlay
   // short-circuits, never becomes active, and writes nothing.
   it('does not render if already shown this session', () => {
     window.sessionStorage.setItem(SESSION_KEY, '1');
@@ -438,7 +375,7 @@ describe('LogoTransitionOverlay', () => {
     expect(window.localStorage.getItem(SHOWS_KEY)).toBeNull();
   });
 
-  // 13. Per-window cap: at the cap, even a fresh session short-circuits, and
+  // 11. Per-window cap: at the cap, even a fresh session short-circuits, and
   // the read-only bypass leaves the seeded list untouched.
   it('does not render once the per-window cap is reached', () => {
     seedRecentShows(DEFAULT_MAX_SHOWS_PER_WINDOW);
@@ -458,7 +395,7 @@ describe('LogoTransitionOverlay', () => {
     expect(window.localStorage.getItem(SHOWS_KEY)).toBe(seeded);
   });
 
-  // 14. Under the cap in a new session: the overlay plays and appends a show.
+  // 12. Under the cap in a new session: the overlay plays and appends a show.
   it('renders and appends a show when under the cap in a new session', async () => {
     mountDestination();
     seedRecentShows(DEFAULT_MAX_SHOWS_PER_WINDOW - 1);
@@ -471,7 +408,7 @@ describe('LogoTransitionOverlay', () => {
     expect(window.sessionStorage.getItem(SESSION_KEY)).toBe('1');
   });
 
-  // 15. Shows older than the window don't count toward the cap and are pruned
+  // 13. Shows older than the window don't count toward the cap and are pruned
   // when a new show is recorded.
   it('ignores and prunes shows older than the rolling window', async () => {
     mountDestination();
@@ -490,7 +427,7 @@ describe('LogoTransitionOverlay', () => {
     expect(shows[0]).toBeGreaterThan(stale);
   });
 
-  // 16. A malformed shows value can't permanently suppress the overlay: it is
+  // 14. A malformed shows value can't permanently suppress the overlay: it is
   // treated as "nothing shown recently" and overwritten on the next show.
   it('recovers from a malformed shows value and overwrites it on commit', async () => {
     mountDestination();
@@ -502,45 +439,56 @@ describe('LogoTransitionOverlay', () => {
     expect(shows).toHaveLength(1);
   });
 
-  // 17. The shows list is appended (and the session flag set) only when the
-  // decode-gate commits -- not before.
-  it('records a show once the image is decoded and revealed', async () => {
+  // 15. The shows list is appended and the session flag set when the overlay
+  // commits to rendering.
+  it('records a show on commit', async () => {
     render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
-    // Before the decode-gate resolves: nothing recorded.
-    expect(window.localStorage.getItem(SHOWS_KEY)).toBeNull();
-    expect(window.sessionStorage.getItem(SESSION_KEY)).toBeNull();
     await revealOverlay();
-    // After decode commits: one show + the session flag.
     const shows = JSON.parse(window.localStorage.getItem(SHOWS_KEY) ?? '[]');
     expect(shows).toHaveLength(1);
     expect(window.sessionStorage.getItem(SESSION_KEY)).toBe('1');
   });
 
-  // 18. Decode failure does NOT record a show (user gets a retry next time).
-  it('does NOT record a show when the image fails to decode', async () => {
-    decodeBehavior = 'reject';
-    const consoleWarn = jest
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+  // 16. The bypass paths (reduced motion, already-shown, capped) record no show;
+  // only a committed render does.
+  it('does NOT record a show when reduced motion bypasses the overlay', () => {
+    mockMatchMedia(true);
     render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
-    await revealOverlay();
-    expect(window.localStorage.getItem(SHOWS_KEY)).toBeNull();
-    expect(window.sessionStorage.getItem(SESSION_KEY)).toBeNull();
-    consoleWarn.mockRestore();
-  });
-
-  // 19. Decode timeout does NOT record a show.
-  it('does NOT record a show when decode times out', () => {
-    decodeBehavior = 'hang';
-    const consoleWarn = jest
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    render(<LogoTransitionOverlay {...DEFAULT_PROPS} loadTimeoutMs={1000} />);
     act(() => {
-      jest.advanceTimersByTime(1500);
+      jest.runOnlyPendingTimers();
     });
     expect(window.localStorage.getItem(SHOWS_KEY)).toBeNull();
     expect(window.sessionStorage.getItem(SESSION_KEY)).toBeNull();
-    consoleWarn.mockRestore();
+  });
+
+  // 17. Web Animations API: the overlay ends playback when the children's
+  // animations finish, ahead of the animationDurationMs fallback.
+  it('hands off when the children animations finish (Web Animations API)', async () => {
+    mountDestination();
+    // jsdom has no getAnimations; stub it with one controllable animation.
+    let resolveFinished: () => void = () => {};
+    const finished = new Promise<void>(resolve => {
+      resolveFinished = resolve;
+    });
+    const proto = HTMLElement.prototype as unknown as {
+      getAnimations?: () => Array<{finished: Promise<unknown>}>;
+    };
+    proto.getAnimations = () => [{finished}];
+    try {
+      render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
+      await revealOverlay();
+      // The animation finishes well before the 2000ms fallback -> 'holding'.
+      await act(async () => {
+        resolveFinished();
+        await Promise.resolve();
+      });
+      // The post-play hold then elapses -> 'fading'.
+      act(() => {
+        jest.advanceTimersByTime(TEST_POST_PLAY_HOLD_MS);
+      });
+      expect(getMediaWrapper()?.className).toContain('mediaWrapper--fading');
+    } finally {
+      delete proto.getAnimations;
+    }
   });
 });
