@@ -17,6 +17,7 @@ export const Playground: Story = {
     color: 'primary',
     className: '',
     removeMarginBottom: false,
+    useAltFont: false,
   },
   argTypes: {
     children: {control: 'text'},
@@ -37,6 +38,14 @@ export const Playground: Story = {
     },
     className: {control: 'text'},
     removeMarginBottom: {control: 'boolean'},
+    useAltFont: {control: 'boolean'},
+    fontSize: {control: {type: 'number', min: 0.5, max: 12, step: 0.125}},
+    lineHeight: {control: {type: 'number', min: 0.5, max: 3, step: 0.05}},
+    fontWeight: {
+      control: {type: 'select'},
+      options: [undefined, '500', '700'],
+    },
+    colorOverride: {control: 'color'},
   },
 };
 
@@ -242,4 +251,80 @@ export const HeadingXS: Story = {
       }
     }
   },
+};
+
+const ALT_LEVELS = [
+  'heading-xxl',
+  'heading-xl',
+  'heading-lg',
+  'heading-md',
+  'heading-sm',
+  'heading-xs',
+] as const;
+
+export const AltFontDefaults: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      {ALT_LEVELS.map(level => (
+        <Heading
+          key={`alt-default-${level}`}
+          visualAppearance={level}
+          removeMarginBottom={false}
+          useAltFont
+        >
+          {`${level} | alt font default`}
+        </Heading>
+      ))}
+    </div>
+  ),
+};
+
+export const AltFontOverrides: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      <Heading
+        visualAppearance="heading-xl"
+        removeMarginBottom={false}
+        useAltFont
+        fontSize={5}
+      >
+        heading-xl | fontSize 5rem
+      </Heading>
+      <Heading
+        visualAppearance="heading-xl"
+        removeMarginBottom={false}
+        useAltFont
+        lineHeight={1.4}
+      >
+        heading-xl | lineHeight 1.4
+      </Heading>
+      <Heading
+        visualAppearance="heading-xl"
+        removeMarginBottom={false}
+        useAltFont
+        fontWeight="500"
+      >
+        heading-xl | fontWeight 500 (Medium)
+      </Heading>
+      <Heading
+        visualAppearance="heading-xl"
+        removeMarginBottom={false}
+        useAltFont
+        colorOverride="#C03A2B"
+      >
+        heading-xl | colorOverride #C03A2B
+      </Heading>
+      <Heading
+        visualAppearance="heading-xl"
+        removeMarginBottom={false}
+        useAltFont
+        fontSize={3.5}
+        lineHeight={1.1}
+        fontWeight="500"
+        colorOverride="#0B6E4F"
+      >
+        heading-xl | all four overrides
+      </Heading>
+    </div>
+  ),
 };
