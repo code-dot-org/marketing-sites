@@ -1,15 +1,13 @@
 export const LOGO_TRANSITION_MODAL_FEATURE_TAG = 'logo-transition-modal';
 
 export type LogoTransitionOverlayFailureReason =
-  | 'media-load-failed'
-  | 'media-load-timeout'
   | 'multiple-instances'
   | 'destination-not-found';
 
-export const DEFAULT_LOAD_TIMEOUT_MS = 2000;
-// Playback length before the final-frame hold. An animated <img> has no `ended`
-// event, so a timer of this length stands in for it; MUST match the asset (the
-// marketing AVIF is 8s, plays once, freezes on its last frame).
+// Playback length before the final-frame hold. The animation content is a
+// one-shot that freezes on its last frame (a CSS-animated SVG has no JS-visible
+// "ended" event), so a timer of this length stands in for it; MUST match the
+// content's true duration.
 export const DEFAULT_ANIMATION_DURATION_MS = 8000;
 // Hold on the final frame after playback before the crossfade begins.
 export const DEFAULT_POST_PLAY_HOLD_MS = 3000;
