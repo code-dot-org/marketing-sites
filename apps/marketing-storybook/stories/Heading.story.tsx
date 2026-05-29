@@ -46,6 +46,10 @@ export const Playground: Story = {
       options: [undefined, '500', '700'],
     },
     colorOverride: {control: 'color'},
+    fontKerning: {
+      control: {type: 'select'},
+      options: [undefined, 'auto', 'normal', 'none'],
+    },
   },
 };
 
@@ -318,12 +322,21 @@ export const AltFontOverrides: Story = {
         visualAppearance="heading-xl"
         removeMarginBottom={false}
         useAltFont
+        fontKerning="none"
+      >
+        heading-xl | fontKerning none (AVA WAVE WeKa)
+      </Heading>
+      <Heading
+        visualAppearance="heading-xl"
+        removeMarginBottom={false}
+        useAltFont
         fontSize={3.5}
         lineHeight={1.1}
         fontWeight="500"
         colorOverride="#0B6E4F"
+        fontKerning="normal"
       >
-        heading-xl | all four overrides
+        heading-xl | all five overrides
       </Heading>
     </div>
   ),

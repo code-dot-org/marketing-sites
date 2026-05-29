@@ -87,6 +87,20 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
       description:
         'Hex color (e.g. #1F1976). Only applies when the alternate font is on. Default is #1F1976.',
     },
+    fontKerning: {
+      displayName: 'Font kerning',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Only applies when the alternate font is on. Default is Auto.',
+      validations: {
+        in: [
+          {value: 'auto', displayName: 'Auto'},
+          {value: 'normal', displayName: 'Normal (always on)'},
+          {value: 'none', displayName: 'None (off)'},
+        ],
+      },
+    },
     removeMarginBottom: {...removeMarginBottomDefinition},
     children: {
       displayName: 'Content',
