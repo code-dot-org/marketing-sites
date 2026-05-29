@@ -9,30 +9,36 @@ import headerLogo from '@public/images/codeai-logo-inverse.svg';
 
 import {useLogoTransition} from './logoTransitionState';
 
-// Animated AVIF (alpha) bundled in the app and served as a raw static asset
+// Animated WebP (alpha) bundled in the app and served as a raw static asset
 // from public/assets via getAssetPublicPath() (public/ -> /_next/static/public
 // in prod; /assets is exempt from the dev locale rewrite). NOT a @public import
-// like the logo: Next's build-time image-size can't read AVIF image sequences.
-const LOGO_TRANSITION_ANIMATION_SRC = `${getAssetPublicPath()}/assets/animated-logo-transition.avif`;
+// like the logo: Next's build-time image-size can't read animated image
+// sequences.
+const LOGO_TRANSITION_ANIMATION_SRC = `${getAssetPublicPath()}/assets/animated-logo-transition.webp`;
 
-// Logo bounds within the 834x313 animation frame. The SVG renders
-// viewport-centered (see computeSvgInitialStyle in LogoTransitionOverlay.tsx),
-// so only width/height matter; x/y are unused.
-//   width: 809/834 ~0.970, height: 137/313 ~0.438
+// Logo bounds within the animation frame, as fractions of displayed
+// dimensions. Measured from the composited final frame: the 811x141 logo
+// sits centered at offset (135, 86) within the 1080x313 canvas. x is the
+// logo's left edge fraction (used for the SVG's horizontal placement and
+// the FLIP handoff); y is the top edge (handoff only — the SVG renders
+// viewport-centered vertically during play).
+//   x: 135/1080 ~0.125, y: 86/313 ~0.275
+//   width: 811/1080 ~0.751, height: 141/313 ~0.451
 const MEDIA_END_FRAME_LOGO_NORMALIZED_RECT = {
-  x: 0,
-  y: 0,
-  width: 0.97,
-  height: 0.438,
+  x: 0.125,
+  y: 0.275,
+  width: 0.751,
+  height: 0.451,
 };
 
-// The logo-transition animation is 834x313 (~2.6645:1).
-const MEDIA_ASPECT_RATIO = 834 / 313;
+// The logo-transition WebP is 1080x313 (~3.45:1). Different from the AVIF's
+// 834x313 (~2.66:1) -- adjust if the asset is replaced.
+const MEDIA_ASPECT_RATIO = 1080 / 313;
 
 // Playback duration. An animated <img> fires no `ended` event, so the overlay
 // holds on the final frame once this elapses. MUST match the encoded asset
-// (currently 8.0s). Verify via `ffprobe -show_entries format=duration <file>`.
-const ANIMATION_DURATION_MS = 8000;
+// (currently 8.83s, from sum of per-frame WebP delays).
+const ANIMATION_DURATION_MS = 8830;
 
 // Brief hold on the final frame before the crossfade + FLIP fire, just enough
 // to mask the animation's abrupt tail.
