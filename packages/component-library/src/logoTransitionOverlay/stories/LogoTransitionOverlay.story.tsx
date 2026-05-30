@@ -10,7 +10,7 @@ import LogoTransitionOverlay, {
 } from '../LogoTransitionOverlay';
 
 // Clear the overlay's session/rolling-window throttle so Replay re-triggers the
-// happy path.
+// happy path (when SAMPLE_MEDIA points at real media).
 const clearThrottleState = () => {
   try {
     window.sessionStorage.removeItem(
@@ -22,42 +22,25 @@ const clearThrottleState = () => {
   }
 };
 
+// Placeholder media: point at a hosted animated AVIF to see "Playing" animate;
+// as-is the <img> 404s and exercises the LoadFailure path.
+const SAMPLE_MEDIA =
+  'https://contentful-images.code.org/90t6bu6vlf76/REPLACE_ME/REPLACE_ME/animated-logo-transition.avif';
+
 // Inline "C" mark so the hand-off has something to render (real consumers
-// supply their own header SVG).
+// supply cdo-logo-inverse.svg).
 const TINY_SVG =
   'data:image/svg+xml;base64,' +
   btoa(
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#1c4be3"/><text x="32" y="42" font-family="Arial" font-size="32" fill="white" text-anchor="middle" font-weight="bold">C</text></svg>`,
   );
 
-// Stand-in for the consumer-supplied animation (real consumers pass a
-// CSS-animated SVG). A self-sizing box whose whole footprint is the "logo", so
-// endFrameLogoNormalizedRect covers it fully.
-const SampleAnimation: React.FC = () => (
-  <div
-    style={{
-      width: 'min(834px, 90vw)',
-      aspectRatio: '834 / 313',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: '#1c4be3',
-      color: 'white',
-      fontFamily: 'sans-serif',
-      fontSize: 'clamp(24px, 6vw, 56px)',
-      fontWeight: 700,
-      borderRadius: 12,
-    }}
-  >
-    Code.org
-  </div>
-);
-
 const DEFAULT_PROPS: LogoTransitionOverlayProps = {
-  children: <SampleAnimation />,
+  mediaSrc: SAMPLE_MEDIA,
   svgSrc: TINY_SVG,
+  mediaAspectRatio: 834 / 313,
   destinationSelector: '[data-story-destination]',
-  endFrameLogoNormalizedRect: {x: 0, y: 0, width: 1, height: 1},
+  mediaEndFrameLogoNormalizedRect: {x: 0, y: 0, width: 0.97, height: 0.438},
   animationDurationMs: 5000,
   postPlayHoldMs: 1500,
 };
@@ -171,6 +154,30 @@ ReducedMotion.parameters = {
     description: {
       story:
         'When the visitor prefers reduced motion the overlay renders nothing and the underlying page (with its header) is shown directly. No modal is displayed.',
+    },
+  },
+};
+
+export const LoadFailure: StoryFn<LogoTransitionOverlayProps> = (
+  args: LogoTransitionOverlayProps,
+) => (
+  <ReplayWrapper>
+    {key => (
+      <LogoTransitionOverlay
+        key={key}
+        {...args}
+        mediaSrc="/this/path/intentionally/does-not-exist.avif"
+        loadTimeoutMs={1500}
+      />
+    )}
+  </ReplayWrapper>
+);
+LoadFailure.args = DEFAULT_PROPS;
+LoadFailure.parameters = {
+  docs: {
+    description: {
+      story:
+        'When the animation fails to load (or loadTimeoutMs elapses first), the overlay unmounts and the page is shown with the standard header logo. A warning is logged to the console.',
     },
   },
 };
