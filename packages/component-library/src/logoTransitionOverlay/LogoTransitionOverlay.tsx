@@ -391,17 +391,20 @@ const LogoTransitionOverlay: React.FunctionComponent<
     }
     // Matching FLIP for the wrapper: map its logo sub-rect (per
     // endFrameLogoNormalizedRect) onto destinationRect so the animation's logo
-    // tracks the SVG; the animation's alpha hides the rest.
+    // tracks the SVG; the animation's alpha hides the rest. The wrapper's
+    // transform-origin is its top-left, but the logo sub-rect sits offset
+    // inside it, and `scale` shrinks that offset about the origin -- so the
+    // offset must be pre-scaled here (unlike the SVG, whose origin IS its rect).
+    // Without this the logo lands off by (scale - 1) x offset and drifts away
+    // from the SVG during the slide.
     const mediaRect = mediaWrapperRef.current?.getBoundingClientRect();
     if (mediaRect && mediaRect.width > 0) {
-      const logoLeft =
-        mediaRect.left + endFrameLogoNormalizedRect.x * mediaRect.width;
-      const logoTop =
-        mediaRect.top + endFrameLogoNormalizedRect.y * mediaRect.height;
       const logoWidth = endFrameLogoNormalizedRect.width * mediaRect.width;
       const scale = destinationRect.width / logoWidth;
-      const dx = destinationRect.left - logoLeft;
-      const dy = destinationRect.top - logoTop;
+      const offsetX = endFrameLogoNormalizedRect.x * mediaRect.width;
+      const offsetY = endFrameLogoNormalizedRect.y * mediaRect.height;
+      const dx = destinationRect.left - mediaRect.left - scale * offsetX;
+      const dy = destinationRect.top - mediaRect.top - scale * offsetY;
       setMediaHandoffTransform(`translate(${dx}px, ${dy}px) scale(${scale})`);
     }
     setHandoffRunning(true);

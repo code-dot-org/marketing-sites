@@ -219,8 +219,40 @@ describe('LogoTransitionOverlay', () => {
     });
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(onDismiss).toHaveBeenCalled();
-    // Played flag set when the decode-gate committed; nothing else written.
+    // Played flag set on commit; nothing else written.
     expectThrottleStateRecorded();
+  });
+
+  // 3b. Hand-off FLIP maps the logo sub-rect (not the wrapper corner) onto the
+  // destination. The wrapper's transform-origin is its top-left, so the logo's
+  // offset must be scaled -- otherwise the animation drifts away from the SVG
+  // mid-slide (the "out of sync" bug).
+  it('FLIPs the animation logo onto the destination with a scaled offset', async () => {
+    mountDestination(); // destination rect: left/top 10, 40x40
+    render(<LogoTransitionOverlay {...DEFAULT_PROPS} />);
+    await revealOverlay();
+    // jsdom has no layout; stub the wrapper's on-screen rect.
+    const wrapper = getMediaWrapper() as HTMLElement;
+    wrapper.getBoundingClientRect = () =>
+      ({
+        left: 0,
+        top: 0,
+        right: 1000,
+        bottom: 400,
+        width: 1000,
+        height: 400,
+        x: 0,
+        y: 0,
+        toJSON: () => ({}),
+      }) as DOMRect;
+    // playing -> holding -> fading -> handoff.
+    act(() => jest.advanceTimersByTime(TEST_ANIMATION_DURATION_MS));
+    act(() => jest.advanceTimersByTime(TEST_POST_PLAY_HOLD_MS));
+    act(() => jest.advanceTimersByTime(DEFAULT_HANDOFF_TRIGGER_MS));
+    // endFrameLogoNormalizedRect {x:.25, y:.25, w:.5, h:.5} -> logoWidth 500,
+    // scale 40/500 = 0.08, offset (250, 100). dx = 10 - 0.08*250 = -10;
+    // dy = 10 - 0.08*100 = 2. (An unscaled offset would give dy = 10 - 100 = -90.)
+    expect(wrapper.style.transform).toBe('translate(-10px, 2px) scale(0.08)');
   });
 
   // 4. Close-button dismissal: overlay disappears immediately, no fade.
