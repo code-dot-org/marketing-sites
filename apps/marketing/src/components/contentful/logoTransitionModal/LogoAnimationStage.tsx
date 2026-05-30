@@ -63,36 +63,12 @@ const LogoAnimationStage: React.FC = () => {
         </div>
         <div className={`${styles.elem} ${styles.triangle}`}>
           <svg viewBox="438 0 108.22 100">
-            <path
-              className={styles.triOuter}
-              d="M487.36,2.92l-49.15,88.66c-2.1,3.78,0.64,8.42,4.96,8.42h98.3c4.32,0,7.06-4.64,4.96-8.42L497.29,2.92c-2.16-3.9-7.76-3.9-9.92,0Z"
-            />
-            <path
-              className={styles.triInner}
-              d="M487.36,2.92l-49.15,88.66c-2.1,3.78,0.64,8.42,4.96,8.42h98.3c4.32,0,7.06-4.64,4.96-8.42L497.29,2.92c-2.16-3.9-7.76-3.9-9.92,0Z"
-              transform="translate(490.67 67.64) scale(0.55) translate(-490.67 -67.64)"
-            />
+            <path d="M487.36,2.92l-49.15,88.66c-2.1,3.78,0.64,8.42,4.96,8.42h98.3c4.32,0,7.06-4.64,4.96-8.42L497.29,2.92c-2.16-3.9-7.76-3.9-9.92,0Z" />
           </svg>
         </div>
         <div className={`${styles.elem} ${styles.ibar}`}>
           <svg viewBox="557.65 0 33.5 100">
-            <rect
-              className={styles.barOuter}
-              x="557.65"
-              width="33.5"
-              height="100"
-              rx="5.5"
-              ry="5.5"
-            />
-            <rect
-              className={styles.barInner}
-              x="566.025"
-              y="25.0"
-              width="16.75"
-              height="50.0"
-              rx="3"
-              ry="3"
-            />
+            <rect x="557.65" width="33.5" height="100" rx="5.5" ry="5.5" />
           </svg>
         </div>
       </div>

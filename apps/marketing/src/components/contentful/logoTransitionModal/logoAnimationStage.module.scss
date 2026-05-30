@@ -4,9 +4,7 @@
 // (not inlined per request) -- the keyframes are large but immutable, so they
 // cache once and are shared across every page that mounts the overlay. The six
 // element motions run once and freeze on the final solid-black logo, which the
-// overlay then FLIPs into the header. (The `ai-radiate` colour sweep + --ai-*
-// custom properties are defined below but intentionally left unwired -- the
-// mark renders solid black.)
+// overlay then FLIPs into the header.
 
 // The motions all complete by ~39.5% of the authored timeline; the rest is a
 // static tail. A fractional iteration-count plays just this leading slice (at
@@ -24,7 +22,11 @@ $visible-fraction: 0.4;
 // scaler so the overlay's FLIP math (which reads the live rect) stays exact.
 .scaler {
   position: relative;
-  width: min(1053px, 100vw);
+  // Footprint scales with the viewport, capped at the animation's native width.
+  // 70vw (was 100vw, which ran full-bleed and oversized on laptops/tablets, and
+  // overflowed when the overlay added its centring gutter). LogoTransitionOverlay
+  // offsets this flush-left logo by 3% of THIS width, so the two must stay in sync.
+  width: min(1053px, 70vw);
   aspect-ratio: 1053 / 396;
 }
 
@@ -60,7 +62,9 @@ $visible-fraction: 0.4;
   height: 100px;
 }
 .square path,
-.square ellipse {
+.square ellipse,
+.triangle path,
+.ibar rect {
   fill: #000;
 }
 
@@ -82,33 +86,6 @@ $visible-fraction: 0.4;
 .ibar svg {
   width: 33.5px;
   height: 100px;
-}
-
-.triOuter {
-  fill: var(--ai-outer);
-}
-.triInner {
-  fill: var(--ai-inner);
-  filter: blur(5px);
-}
-.barOuter {
-  fill: var(--ai-outer);
-}
-.barInner {
-  fill: var(--ai-inner);
-  filter: blur(2px);
-}
-
-@property --ai-inner {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #000;
-}
-
-@property --ai-outer {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #000;
 }
 
 @keyframes c-motion {
@@ -1143,297 +1120,6 @@ $visible-fraction: 0.4;
   99.668% {
     transform: translate(963px, 111px) scale(1.731);
     opacity: 1;
-  }
-}
-
-@keyframes ai-radiate {
-  0% {
-    --ai-inner: #000;
-    --ai-outer: #000;
-  }
-  45.404% {
-    --ai-inner: #000;
-    --ai-outer: #000;
-  }
-  45.736% {
-    --ai-inner: #4e4c6a;
-    --ai-outer: #000;
-  }
-  46.179% {
-    --ai-inner: #7974c5;
-    --ai-outer: #000;
-  }
-  46.512% {
-    --ai-inner: #5c579b;
-    --ai-outer: #000;
-  }
-  46.844% {
-    --ai-inner: #544bcf;
-    --ai-outer: #202020;
-  }
-  47.287% {
-    --ai-inner: #5149ba;
-    --ai-outer: #000;
-  }
-  47.619% {
-    --ai-inner: #5e55d4;
-    --ai-outer: #000;
-  }
-  47.951% {
-    --ai-inner: #857fdf;
-    --ai-outer: #000;
-  }
-  48.394% {
-    --ai-inner: #9690e3;
-    --ai-outer: #010001;
-  }
-  48.726% {
-    --ai-inner: #a39fe7;
-    --ai-outer: #2b285b;
-  }
-  49.059% {
-    --ai-inner: #9a94e4;
-    --ai-outer: #5852ab;
-  }
-  49.502% {
-    --ai-inner: #a6a1e8;
-    --ai-outer: #7068d9;
-  }
-  49.834% {
-    --ai-inner: #aca7ea;
-    --ai-outer: #8d88e2;
-  }
-  50.166% {
-    --ai-inner: #827bde;
-    --ai-outer: #a39fe7;
-  }
-  50.609% {
-    --ai-inner: #6a62d7;
-    --ai-outer: #a9a4e9;
-  }
-  50.941% {
-    --ai-inner: #5e55d4;
-    --ai-outer: #8a84e0;
-  }
-  51.274% {
-    --ai-inner: #4d45b4;
-    --ai-outer: #a9a4e9;
-  }
-  51.717% {
-    --ai-inner: #564cd4;
-    --ai-outer: #9690e3;
-  }
-  52.049% {
-    --ai-inner: #6a62d7;
-    --ai-outer: #9690e3;
-  }
-  52.381% {
-    --ai-inner: #5b52d3;
-    --ai-outer: #8d88e2;
-  }
-  52.824% {
-    --ai-inner: #7068d9;
-    --ai-outer: #675fd6;
-  }
-  53.156% {
-    --ai-inner: #b0adeb;
-    --ai-outer: #554cd1;
-  }
-  53.488% {
-    --ai-inner: #9a94e4;
-    --ai-outer: #5e55d4;
-  }
-  53.931% {
-    --ai-inner: #9d99e5;
-    --ai-outer: #544bcf;
-  }
-  54.264% {
-    --ai-inner: #afabeb;
-    --ai-outer: #675fd6;
-  }
-  54.596% {
-    --ai-inner: #b0adeb;
-    --ai-outer: #7068d9;
-  }
-  55.039% {
-    --ai-inner: #a6a1e8;
-    --ai-outer: #655dd6;
-  }
-  55.371% {
-    --ai-inner: #b0adeb;
-    --ai-outer: #574ed2;
-  }
-  55.703% {
-    --ai-inner: #928ce2;
-    --ai-outer: #7b74dc;
-  }
-  56.146% {
-    --ai-inner: #a6a1e8;
-    --ai-outer: #8a84e0;
-  }
-  56.478% {
-    --ai-inner: #9d99e5;
-    --ai-outer: #847ddf;
-  }
-  56.811% {
-    --ai-inner: #8781e0;
-    --ai-outer: #b0adeb;
-  }
-  57.254% {
-    --ai-inner: #716ad9;
-    --ai-outer: #a19ce7;
-  }
-  57.586% {
-    --ai-inner: #5c53d3;
-    --ai-outer: #9d99e5;
-  }
-  57.918% {
-    --ai-inner: #5d54d3;
-    --ai-outer: #b0adeb;
-  }
-  58.361% {
-    --ai-inner: #544cd2;
-    --ai-outer: #a39fe7;
-  }
-  58.693% {
-    --ai-inner: #4d45b4;
-    --ai-outer: #928ce2;
-  }
-  59.025% {
-    --ai-inner: #564cd4;
-    --ai-outer: #807ade;
-  }
-  59.468% {
-    --ai-inner: #554cd2;
-    --ai-outer: #928ce2;
-  }
-  59.801% {
-    --ai-inner: #544bcf;
-    --ai-outer: #928ce2;
-  }
-  60.133% {
-    --ai-inner: #716ad9;
-    --ai-outer: #8a84e0;
-  }
-  60.576% {
-    --ai-inner: #7068d9;
-    --ai-outer: #8a84e0;
-  }
-  60.908% {
-    --ai-inner: #8a84e0;
-    --ai-outer: #807ade;
-  }
-  61.24% {
-    --ai-inner: #7c75db;
-    --ai-outer: #6259d5;
-  }
-  61.683% {
-    --ai-inner: #9690e3;
-    --ai-outer: #716ad9;
-  }
-  62.016% {
-    --ai-inner: #7f78dd;
-    --ai-outer: #655dd6;
-  }
-  62.348% {
-    --ai-inner: #928ce2;
-    --ai-outer: #544bcf;
-  }
-  62.791% {
-    --ai-inner: #9a94e4;
-    --ai-outer: #5a51d2;
-  }
-  63.123% {
-    --ai-inner: #9a94e4;
-    --ai-outer: #655dd6;
-  }
-  63.455% {
-    --ai-inner: #928ce2;
-    --ai-outer: #7068d9;
-  }
-  63.898% {
-    --ai-inner: #a19ce7;
-    --ai-outer: #7068d9;
-  }
-  64.23% {
-    --ai-inner: #9b98d3;
-    --ai-outer: #5d54d3;
-  }
-  64.563% {
-    --ai-inner: #373648;
-    --ai-outer: #716ad9;
-  }
-  65.006% {
-    --ai-inner: #000;
-    --ai-outer: #655dd6;
-  }
-  65.338% {
-    --ai-inner: #131314;
-    --ai-outer: #6a62d7;
-  }
-  65.67% {
-    --ai-inner: #000;
-    --ai-outer: #827bde;
-  }
-  66.113% {
-    --ai-inner: #000;
-    --ai-outer: #6a62d7;
-  }
-  66.445% {
-    --ai-inner: #000;
-    --ai-outer: #736cda;
-  }
-  66.777% {
-    --ai-inner: #000;
-    --ai-outer: #7f79d0;
-  }
-  67.22% {
-    --ai-inner: #000;
-    --ai-outer: #7d77d9;
-  }
-  67.553% {
-    --ai-inner: #000;
-    --ai-outer: #7d76dd;
-  }
-  67.885% {
-    --ai-inner: #000;
-    --ai-outer: #7c76d0;
-  }
-  68.328% {
-    --ai-inner: #000;
-    --ai-outer: #7f79d0;
-  }
-  68.66% {
-    --ai-inner: #000;
-    --ai-outer: #6965a1;
-  }
-  68.992% {
-    --ai-inner: #000;
-    --ai-outer: #2e2e2e;
-  }
-  69.435% {
-    --ai-inner: #000;
-    --ai-outer: #373648;
-  }
-  69.767% {
-    --ai-inner: #000;
-    --ai-outer: #000;
-  }
-  72.757% {
-    --ai-inner: #000;
-    --ai-outer: #000;
-  }
-  73.09% {
-    --ai-inner: #100f17;
-    --ai-outer: #000;
-  }
-  73.422% {
-    --ai-inner: #000;
-    --ai-outer: #000;
-  }
-  99.668% {
-    --ai-inner: #000;
-    --ai-outer: #000;
   }
 }
 
