@@ -429,8 +429,7 @@ const LogoTransitionOverlay: React.FunctionComponent<
     // from the SVG during the slide.
     const mediaRect = mediaRef.current?.getBoundingClientRect();
     if (mediaRect && mediaRect.width > 0) {
-      const logoWidth =
-        mediaEndFrameLogoNormalizedRect.width * mediaRect.width;
+      const logoWidth = mediaEndFrameLogoNormalizedRect.width * mediaRect.width;
       const scale = destinationRect.width / logoWidth;
       const offsetX = mediaEndFrameLogoNormalizedRect.x * mediaRect.width;
       const offsetY = mediaEndFrameLogoNormalizedRect.y * mediaRect.height;
