@@ -1,7 +1,6 @@
+import LogoTransitionModal from '@/components/contentful/logoTransitionModal';
 import {Meta, StoryObj} from '@storybook/react';
 import {useEffect} from 'react';
-
-import LogoTransitionModal from '@/components/contentful/logoTransitionModal';
 
 const meta: Meta<typeof LogoTransitionModal> = {
   title: 'Marketing/LogoTransitionModal',
@@ -55,9 +54,9 @@ const MockBody: React.FC = () => (
   <main style={{paddingBlockStart: 96, paddingInline: 24}}>
     <h1 style={{fontFamily: 'sans-serif'}}>Mock page content</h1>
     <p style={{fontFamily: 'sans-serif', maxWidth: 640}}>
-      This text represents the underlying page that the visitor sees come
-      "into focus" after the logo-transition modal fades out and the SVG
-      logo animates into the header.
+      This text represents the underlying page that the visitor sees come "into
+      focus" after the logo-transition modal fades out and the SVG logo animates
+      into the header.
     </p>
   </main>
 );
@@ -87,7 +86,7 @@ export const ReducedMotion: Story = {
           addEventListener: () => {},
           removeEventListener: () => {},
           dispatchEvent: () => false,
-        } as unknown as MediaQueryList);
+        }) as unknown as MediaQueryList;
       return () => {
         window.matchMedia = original;
       };

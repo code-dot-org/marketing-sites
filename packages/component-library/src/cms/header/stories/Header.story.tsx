@@ -1,4 +1,4 @@
-import logoImage from '@public/images/cdo-logo-inverse.svg';
+import logoImage from '@public/images/codeai-logo-inverse.svg';
 import allProjectsImage from '@public/images/header-all-projects-icon.png';
 import appLabImage from '@public/images/header-app-lab-icon.png';
 import artistImage from '@public/images/header-artist-icon.png';
