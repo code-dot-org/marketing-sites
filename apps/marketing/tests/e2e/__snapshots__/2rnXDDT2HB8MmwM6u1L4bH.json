@@ -7,8 +7,23 @@
       "slug": {
         "en-US": "/engineering/all-the-things"
       },
-      "pageHeading": {
-        "en-US": "[Engineering] UI Integration Test"
+      "metaTitle": {
+        "en-US": "❌ [ENGINEERING ONLY] UI Integration Testing - SEO"
+      },
+      "metaDesc": {
+        "en-US": "SEO Description"
+      },
+      "opengraphImage": {
+        "en-US": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "4hXiOPiRlCXpmtypRNOZqc"
+          }
+        }
+      },
+      "noIndex": {
+        "en-US": true
       },
       "componentTree": {
         "en-US": {
@@ -3224,15 +3239,6 @@
             "value": false
           },
           "zkx5V9ed": {}
-        }
-      },
-      "seoMetadata": {
-        "en-US": {
-          "sys": {
-            "type": "Link",
-            "linkType": "Entry",
-            "id": "1hQeP2bdFuIFm5kuYeefew"
-          }
         }
       }
     }
