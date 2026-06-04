@@ -49,7 +49,6 @@ describe('GET /sitemap.xml', () => {
       {
         fields: {
           slug: '/test',
-          seoMetadata: {fields: {}},
         },
         sys: {updatedAt: '2024-01-01T00:00:00Z'},
       },
@@ -71,7 +70,6 @@ describe('GET /sitemap.xml', () => {
       {
         fields: {
           slug: '/test',
-          seoMetadata: {fields: {}},
         },
         sys: {updatedAt: '2024-01-01T00:00:00Z'},
       },
@@ -89,13 +87,13 @@ describe('GET /sitemap.xml', () => {
     expect(body).toContain('code.org');
   });
 
-  it('skips entries with hidePageFromSearchEnginesNoindex', async () => {
+  it('skips entries with noIndex set', async () => {
     (getContentfulClient as jest.Mock).mockReturnValue({});
     (getAllEntriesForContentType as jest.Mock).mockResolvedValue([
       {
         fields: {
           slug: '/hidden',
-          seoMetadata: {fields: {hidePageFromSearchEnginesNoindex: true}},
+          noIndex: true,
         },
         sys: {updatedAt: '2024-01-01T00:00:00Z'},
       },
@@ -112,7 +110,6 @@ describe('GET /sitemap.xml', () => {
       {
         fields: {
           slug: '',
-          seoMetadata: {fields: {}},
         },
         sys: {updatedAt: '2024-01-01T00:00:00Z'},
       },
@@ -130,7 +127,6 @@ describe('GET /sitemap.xml', () => {
       {
         fields: {
           slug: '/',
-          seoMetadata: {fields: {}},
         },
         sys: {updatedAt: '2024-01-01T00:00:00Z'},
       },
@@ -156,7 +152,6 @@ describe('GET /sitemap.xml', () => {
       {
         fields: {
           slug: '/hreftest',
-          seoMetadata: {fields: {}},
         },
         sys: {updatedAt: '2024-01-01T00:00:00Z'},
       },
@@ -184,7 +179,6 @@ describe('GET /sitemap.xml', () => {
       {
         fields: {
           slug: '/',
-          seoMetadata: {fields: {}},
         },
         sys: {updatedAt: '2024-01-01T00:00:00Z'},
       },

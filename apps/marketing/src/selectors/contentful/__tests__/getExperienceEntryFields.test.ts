@@ -2,9 +2,10 @@ import {Experience} from '@contentful/experiences-sdk-react';
 
 import {
   getExperienceEntryFieldsFromExperience,
-  getSeoMetadataEntryFromExperience,
-  getSeoMetadataFromExperience,
-  getPageHeading,
+  getMetaTitleFromExperience,
+  getMetaDescFromExperience,
+  getOpengraphImageFromExperience,
+  getNoIndexFromExperience,
 } from '../getExperienceEntryFields';
 
 const mockExperience: Experience = {
@@ -13,18 +14,21 @@ const mockExperience: Experience = {
   },
 } as Experience;
 
+function buildExperience(fields: Record<string, unknown>): Experience {
+  return {
+    ...mockExperience,
+    entityStore: {
+      ...mockExperience.entityStore,
+      experienceEntryFields: fields,
+    },
+  } as unknown as Experience;
+}
+
 describe('getExperienceEntryFieldsFromExperience', () => {
   it('should return experienceEntryFields when experience is defined', () => {
-    const experience = {
-      ...mockExperience,
-      entityStore: {
-        ...mockExperience.entityStore,
-        experienceEntryFields: {pageHeading: 'Test Heading'},
-      },
-    } as Experience;
-
+    const experience = buildExperience({metaTitle: 'Test Title'});
     const result = getExperienceEntryFieldsFromExperience(experience);
-    expect(result).toEqual({pageHeading: 'Test Heading'});
+    expect(result).toEqual({metaTitle: 'Test Title'});
   });
 
   it('should return undefined when experience is undefined', () => {
@@ -33,88 +37,56 @@ describe('getExperienceEntryFieldsFromExperience', () => {
   });
 });
 
-describe('getSeoMetadataEntryFromExperience', () => {
-  it('should return seoMetadata when experienceEntryFields contains it', () => {
-    const experience = {
-      ...mockExperience,
-      entityStore: {
-        ...mockExperience.entityStore,
-        experienceEntryFields: {seoMetadata: {title: 'Test Title'}},
-      },
-    } as unknown as Experience;
-
-    const result = getSeoMetadataEntryFromExperience(experience);
-    expect(result).toEqual({title: 'Test Title'});
+describe('getMetaTitleFromExperience', () => {
+  it('returns metaTitle when set', () => {
+    const experience = buildExperience({metaTitle: 'Test Title'});
+    expect(getMetaTitleFromExperience(experience)).toBe('Test Title');
   });
 
-  it('should return undefined when experienceEntryFields is undefined', () => {
-    const experience = {
-      ...mockExperience,
-      entityStore: {
-        ...mockExperience.entityStore,
-        experienceEntryFields: {},
-      },
-    } as Experience;
-
-    const result = getSeoMetadataEntryFromExperience(experience);
-    expect(result).toBeUndefined();
+  it('returns undefined when missing', () => {
+    expect(getMetaTitleFromExperience(buildExperience({}))).toBeUndefined();
   });
 });
 
-describe('getSeoMetadataFromExperience', () => {
-  it('should return fields when seoMetadata contains fields', () => {
-    const experience = {
-      ...mockExperience,
-      entityStore: {
-        ...mockExperience.entityStore,
-        experienceEntryFields: {
-          seoMetadata: {fields: {description: 'Test Description'}},
-        },
-      },
-    } as unknown as Experience;
-
-    const result = getSeoMetadataFromExperience(experience);
-    expect(result).toEqual({description: 'Test Description'});
+describe('getMetaDescFromExperience', () => {
+  it('returns metaDesc when set', () => {
+    const experience = buildExperience({metaDesc: 'Test Description'});
+    expect(getMetaDescFromExperience(experience)).toBe('Test Description');
   });
 
-  it('should return undefined when seoMetadata is undefined', () => {
-    const experience = {
-      ...mockExperience,
-      entityStore: {
-        ...mockExperience.entityStore,
-        experienceEntryFields: {},
-      },
-    } as Experience;
-
-    const result = getSeoMetadataFromExperience(experience);
-    expect(result).toBeUndefined();
+  it('returns undefined when missing', () => {
+    expect(getMetaDescFromExperience(buildExperience({}))).toBeUndefined();
   });
 });
 
-describe('getPageHeading', () => {
-  it('should return pageHeading when experienceEntryFields contains it', () => {
-    const experience = {
-      ...mockExperience,
-      entityStore: {
-        ...mockExperience.entityStore,
-        experienceEntryFields: {pageHeading: 'Test Heading'},
-      },
-    } as Experience;
-
-    const result = getPageHeading(experience);
-    expect(result).toBe('Test Heading');
+describe('getOpengraphImageFromExperience', () => {
+  it('returns opengraphImage when set', () => {
+    const image = {fields: {file: {url: '/img.jpg'}}};
+    const experience = buildExperience({opengraphImage: image});
+    expect(getOpengraphImageFromExperience(experience)).toEqual(image);
   });
 
-  it('should return undefined when experienceEntryFields is undefined', () => {
-    const experience = {
-      ...mockExperience,
-      entityStore: {
-        ...mockExperience.entityStore,
-        experienceEntryFields: {},
-      },
-    } as Experience;
+  it('returns undefined when missing', () => {
+    expect(
+      getOpengraphImageFromExperience(buildExperience({})),
+    ).toBeUndefined();
+  });
+});
 
-    const result = getPageHeading(experience);
-    expect(result).toBeUndefined();
+describe('getNoIndexFromExperience', () => {
+  it('returns true when set true', () => {
+    expect(getNoIndexFromExperience(buildExperience({noIndex: true}))).toBe(
+      true,
+    );
+  });
+
+  it('returns false when set false', () => {
+    expect(getNoIndexFromExperience(buildExperience({noIndex: false}))).toBe(
+      false,
+    );
+  });
+
+  it('returns undefined when missing (callers should treat as indexable)', () => {
+    expect(getNoIndexFromExperience(buildExperience({}))).toBeUndefined();
   });
 });

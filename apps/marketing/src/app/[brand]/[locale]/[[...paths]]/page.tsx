@@ -13,7 +13,6 @@ import {getExperience} from '@/contentful/get-experience';
 import {registerContentfulComponents} from '@/contentful/registration';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
 import {getSeoMetadata} from '@/metadata/seo';
-import {getPageHeading} from '@/selectors/contentful/getExperienceEntryFields';
 
 /**
  * This sets the time for which a page is considered "fresh" to the upstream requester.
@@ -79,7 +78,6 @@ export async function generateMetadata({
   const experience = pageProps.experienceResult.experience;
 
   return {
-    title: getPageHeading(experience),
     icons: getIcons(pageProps.brand),
     ...getSeoMetadata(
       experience,

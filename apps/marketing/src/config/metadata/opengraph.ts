@@ -4,7 +4,7 @@ export const BRAND_OPENGRAPH_DEFAULT_IMAGE_URL: {
   [brand in Brand]: string | undefined;
 } = {
   [Brand.CODE_DOT_ORG]:
-    'https://contentful-images.code.org/90t6bu6vlf76/6QAykNTAjFdgHya4lBchyF/539e119f045b74395ec9aca97bacf6ed/opengraph-default.png',
+    'https://contentful-images.code.org/90t6bu6vlf76/6QAykNTAjFdgHya4lBchyF/f2afa0254f89188206e45c223910b412/codeai_default_opengraph.png',
   [Brand.HOUR_OF_CODE]: undefined,
   [Brand.CS_FOR_ALL]:
     'https://contentful-images.code.org/27jkibac934d/7q8KX08NZDetFqLFrvlA46/e79393e0815aee7be0ac056b21c6a197/CSForAll_logo_opengraph.jpg?fm=webp',

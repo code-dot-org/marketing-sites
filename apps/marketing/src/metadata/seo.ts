@@ -4,67 +4,62 @@ import {Metadata} from 'next';
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
 import {BRAND_OPENGRAPH_DEFAULT_IMAGE_URL} from '@/config/metadata/opengraph';
-import {getSeoMetadataFromExperience} from '@/selectors/contentful/getExperienceEntryFields';
+import {
+  getMetaDescFromExperience,
+  getMetaTitleFromExperience,
+  getNoIndexFromExperience,
+  getOpengraphImageFromExperience,
+} from '@/selectors/contentful/getExperienceEntryFields';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
-import {SeoMetadata} from '@/types/contentful/entries/SeoMetadata';
+import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 export function getSeoMetadata(
   experience: Experience | undefined,
   brand: Brand | undefined,
   locale: string,
   slug: string,
-): Metadata | undefined {
-  const seoMetadata = getSeoMetadataFromExperience(experience);
-
-  if (seoMetadata === undefined) {
-    return undefined;
-  }
+): Metadata {
+  const metaTitle = getMetaTitleFromExperience(experience);
+  const metaDesc = getMetaDescFromExperience(experience);
+  const opengraphImage = getOpengraphImageFromExperience(experience);
+  const noIndex = getNoIndexFromExperience(experience) ?? false;
 
   return {
-    ...(seoMetadata.seoTitle ? {title: seoMetadata.seoTitle} : undefined),
-    description: seoMetadata.seoDescription,
-    keywords: seoMetadata.keywords,
+    ...(metaTitle ? {title: metaTitle} : undefined),
+    description: metaDesc,
     alternates: {
       canonical: `https://${getProductionCanonicalRootDomain(brand)}/${locale}/${slug}`,
     },
-    openGraph: getOpenGraph(seoMetadata, brand, locale),
-    robots: getRobots(seoMetadata),
+    openGraph: getOpenGraph(metaTitle, metaDesc, opengraphImage, brand, locale),
+    robots: {
+      index: !noIndex,
+      follow: !noIndex,
+    },
   };
 }
 
 function getOpenGraph(
-  seoMetadata: SeoMetadata,
+  metaTitle: string | undefined,
+  metaDesc: string | undefined,
+  opengraphImage: ExperienceAsset | undefined,
   brand: Brand | undefined,
   locale: string,
 ) {
-  const openGraphImage = seoMetadata.openGraphImage;
-  // As of July 2025, all open graph providers support JPEG & PNG but there is only partial support for AVIF.
-  // Use webp for compatibility.
-  const openGraphImageUrl = getAbsoluteImageUrl(openGraphImage, {fm: 'webp'});
+  // As of July 2025, all open graph providers support JPEG & PNG but there is
+  // only partial support for AVIF. Use webp for compatibility.
+  const opengraphImageUrl = getAbsoluteImageUrl(opengraphImage, {fm: 'webp'});
 
   return {
     type: 'website',
-    locale: locale,
-    title: seoMetadata.openGraphTitle,
-    description: seoMetadata.openGraphDescription,
+    locale,
+    title: metaTitle,
+    description: metaDesc,
     url: './',
     images:
-      openGraphImage && openGraphImageUrl
-        ? openGraphImageUrl
+      opengraphImage && opengraphImageUrl
+        ? opengraphImageUrl
         : brand
           ? BRAND_OPENGRAPH_DEFAULT_IMAGE_URL[brand]
           : undefined,
-  };
-}
-
-function getRobots(seoMetadata: SeoMetadata) {
-  const hideFromSearchEngines =
-    seoMetadata.hidePageFromSearchEnginesNoindex ?? false;
-  const hideLinksFromSearchEngines =
-    seoMetadata.hideLinksFromSearchEnginesNofollow ?? false;
-
-  return {
-    index: !hideFromSearchEngines,
-    follow: !hideLinksFromSearchEngines,
   };
 }
