@@ -46,7 +46,7 @@ $box-shadow:
 
     & > figure {
       height: 1.375rem;
-      aspect-ratio: 591.15 / 100; // matches codeai-logo SVG viewBox; Safari needs an explicit width
+      width: calc(1.375rem * 591.15 / 100); // matches codeai-logo viewBox
       border-radius: unset;
     }
   }
