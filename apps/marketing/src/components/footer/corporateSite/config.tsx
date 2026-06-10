@@ -55,11 +55,6 @@ export const SITE_LINKS_CORPORATE_SITE = [
     href: '/donate',
   },
   {
-    key: 'store',
-    label: 'Store',
-    href: 'https://store.code.org/',
-  },
-  {
     key: 'support',
     label: 'Support',
     href: 'https://support.code.org/',
