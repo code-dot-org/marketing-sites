@@ -26,6 +26,24 @@ export const Basic: StoryObj<SimpleListContentfulProps> = {
   },
 };
 
+export const Manual: StoryObj<SimpleListContentfulProps> = {
+  args: {
+    manualList: 'First manual item\nSecond manual item\nThird manual item',
+    size: 'm',
+    weight: 'normal',
+    iconName: 'circle-small',
+    type: 'primary',
+  },
+  play: async ({canvas}) => {
+    await expect(
+      await canvas.findByText('First manual item'),
+    ).toBeInTheDocument();
+    await expect(
+      await canvas.findByText('Third manual item'),
+    ).toBeInTheDocument();
+  },
+};
+
 export const Smile: StoryObj<SimpleListContentfulProps> = {
   args: {
     ...SimpleListMock,

@@ -44,4 +44,25 @@ describe('Design System - SimpleList', () => {
 
     expect(list).toHaveStyle(classStyle);
   });
+
+  it.each(['black', 'white', 'brand1', 'brand2', 'brand3'] as const)(
+    'applies the icon color class for %s',
+    color => {
+      renderListContainer({type: color});
+      expect(getList().className).toContain(`simpleList-type-${color}`);
+    },
+  );
+
+  it('omits a text color class when textColor is unset', () => {
+    renderListContainer({});
+    expect(getList().className).not.toContain('simpleList-text-color-');
+  });
+
+  it.each(['primary', 'black', 'white', 'brand1', 'brand2', 'brand3'] as const)(
+    'applies the text color class when textColor=%s',
+    color => {
+      renderListContainer({textColor: color});
+      expect(getList().className).toContain(`simpleList-text-color-${color}`);
+    },
+  );
 });
