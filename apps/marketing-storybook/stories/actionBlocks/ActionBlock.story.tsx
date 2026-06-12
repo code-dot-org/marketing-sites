@@ -67,7 +67,7 @@ export const ThreeAcross: Story = {
       style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px'}}
     >
       {Array.from({length: 3}).map((_, idx) => (
-        <div key={idx}>Hi! {mockActionBlock()}</div>
+        <div key={idx}>{mockActionBlock()}</div>
       ))}
     </div>
   ),
