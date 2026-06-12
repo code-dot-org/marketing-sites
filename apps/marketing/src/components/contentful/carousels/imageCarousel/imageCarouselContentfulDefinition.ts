@@ -4,7 +4,7 @@ import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 export const ImageCarouselContentfulComponentDefinition: ComponentDefinition = {
   id: 'carousel-image',
   name: 'Image Carousel',
-  category: '05: Carousels',
+  category: '10: Deprecated',
   thumbnailUrl:
     'https://contentful-images.code.org/90t6bu6vlf76/18ndVxW5lB6s1OLO8AFhc9/ee51190ff569dace1eb3af5c29e306d0/component_carousel_image_thumbnail.png',
   tooltip: {

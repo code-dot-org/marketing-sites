@@ -7,7 +7,7 @@ export const LogoCollectionContentfulComponentDefinition: ComponentDefinition =
   {
     id: 'collection-logo',
     name: 'Logo Collection',
-    category: '06: Dynamic Displays',
+    category: '10: Deprecated',
     thumbnailUrl:
       'https://contentful-images.code.org/90t6bu6vlf76/X57vBxMESGE78cq07DYOq/b61a9f38ade871c8ada6716286e7da92/component_logocollection_icon.png',
     tooltip: {

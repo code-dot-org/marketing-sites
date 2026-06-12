@@ -6,7 +6,7 @@ import {EDITORIAL_CARD_CONTENTFUL_LAYOUTS} from './EditorialCard';
 export const EditorialCardContentfulComponentDefinition: ComponentDefinition = {
   id: 'editorialCard',
   name: 'Editorial Card',
-  category: '04: Layout Building Blocks',
+  category: '10: Deprecated',
   thumbnailUrl:
     'https://contentful-images.code.org/90t6bu6vlf76/1SptVYIyW5meSA34NcP99o/499a67854db82f98ee7717dbc9b95c6e/component_editorial_card_thumbnail.png',
   tooltip: {
