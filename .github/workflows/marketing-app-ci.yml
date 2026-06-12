@@ -126,7 +126,7 @@ jobs:
         shell: bash
         run: |
           echo "CONTENTFUL_SPACE_ID=${{ vars.CONTENTFUL_SPACE_ID }}
-          CONTENTFUL_ENV_ID=development
+          CONTENTFUL_ENV_ID=sandbox
           CONTENTFUL_API_HOST=cdn.contentful.com
           CONTENTFUL_DELIVERY_TOKEN=${{ secrets.CONTENTFUL_DELIVERY_TOKEN }}
           CONTENTFUL_EXPERIENCE_CONTENT_TYPE_ID=experience
