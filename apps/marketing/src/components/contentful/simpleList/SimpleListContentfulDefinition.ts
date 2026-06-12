@@ -21,14 +21,22 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
   builtInStyles: [],
   children: false,
   variables: {
+    manualList: {
+      displayName: 'Manual List',
+      type: 'Text',
+      group: 'content',
+      description: 'Separate list items with a line break.',
+      validations: {
+        bindingSourceType: ['manual'],
+      },
+    },
     items: {
       displayName: 'List Items',
       type: 'Array',
       group: 'content',
       description:
-        'Accepts only the "List" content type entry that contain "List Item" entries',
+        'Bind a "List" content type entry that contains "List Item" entries. Ignored when Manual List has content.',
       validations: {
-        required: true,
         bindingSourceType: ['entry'],
       },
     },
@@ -54,15 +62,37 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: SIMPLE_LIST_DEFAULT_ICON,
     },
     type: {
-      displayName: 'Icon type',
+      displayName: 'Icon color',
       type: 'Text',
       group: 'style',
       defaultValue: 'primary',
       validations: {
         in: [
           {value: 'primary', displayName: 'Primary'},
-          {value: 'secondary', displayName: 'Secondary'},
-          {value: 'brand', displayName: 'Brand'},
+          {value: 'black', displayName: 'Black'},
+          {value: 'white', displayName: 'White'},
+          {value: 'brand1', displayName: 'Brand 1'},
+          {value: 'brand2', displayName: 'Brand 2'},
+          {value: 'brand3', displayName: 'Brand 3'},
+          {value: 'secondary', displayName: 'Secondary (legacy)'},
+          {value: 'brand', displayName: 'Brand (legacy)'},
+        ],
+      },
+    },
+    textColor: {
+      displayName: 'Text color',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Override the default text color for the list item labels.',
+      validations: {
+        in: [
+          {value: 'primary', displayName: 'Primary'},
+          {value: 'black', displayName: 'Black'},
+          {value: 'white', displayName: 'White'},
+          {value: 'brand1', displayName: 'Brand 1'},
+          {value: 'brand2', displayName: 'Brand 2'},
+          {value: 'brand3', displayName: 'Brand 3'},
         ],
       },
     },

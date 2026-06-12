@@ -15,6 +15,17 @@ export type SimpleListItem = {
   label: string | ReactNode;
 };
 
+export type SimpleListColor =
+  | 'primary'
+  | 'black'
+  | 'white'
+  | 'brand1'
+  | 'brand2'
+  | 'brand3';
+
+// Legacy values stay accepted so older content keeps rendering unchanged.
+export type SimpleListIconColor = SimpleListColor | 'secondary' | 'brand';
+
 export interface SimpleListProps extends HTMLAttributes<HTMLUListElement> {
   /** SimpleList items */
   items: SimpleListItem[];
@@ -22,8 +33,10 @@ export interface SimpleListProps extends HTMLAttributes<HTMLUListElement> {
   icon?: FontAwesomeV6IconProps;
   /** SimpleList size */
   size?: ComponentSizeXSToL;
-  /** SimpleList type */
-  type?: 'primary' | 'secondary' | 'brand';
+  /** Icon color */
+  type?: SimpleListIconColor;
+  /** Text color (label). Unset preserves the existing default. */
+  textColor?: SimpleListColor;
   /** SimpleList text weight */
   weight?: 'normal' | 'bold';
   /** Class of the list */
@@ -48,6 +61,7 @@ const SimpleList: React.FC<SimpleListProps> = ({
   className,
   size = 'm',
   type = 'primary',
+  textColor,
   weight = 'normal',
   icon = {
     iconName: SIMPLE_LIST_DEFAULT_ICON,
@@ -59,6 +73,7 @@ const SimpleList: React.FC<SimpleListProps> = ({
     className={classNames(
       moduleStyles.simpleList,
       moduleStyles[`simpleList-type-${type}`],
+      textColor && moduleStyles[`simpleList-text-color-${textColor}`],
       moduleStyles[`simpleList-size-${size}`],
       moduleStyles[`simpleList-weight-${weight}`],
       className,

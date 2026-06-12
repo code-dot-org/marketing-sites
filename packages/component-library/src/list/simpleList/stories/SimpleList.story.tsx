@@ -365,6 +365,25 @@ export const Weight: Story = {
   },
 };
 
+export const NewColors: Story = {
+  args: [
+    {...defaultArgs, type: 'black'},
+    {...defaultArgs, type: 'white'},
+    {...defaultArgs, type: 'brand1'},
+    {...defaultArgs, type: 'brand2'},
+    {...defaultArgs, type: 'brand3'},
+  ],
+};
+
+export const TextColor: Story = {
+  args: [
+    {...defaultArgs, textColor: 'primary'},
+    {...defaultArgs, textColor: 'brand1'},
+    {...defaultArgs, textColor: 'brand2'},
+    {...defaultArgs, textColor: 'brand3'},
+  ],
+};
+
 export const WithMultilineItem: Story = {
   args: {
     style: {maxWidth: '20em'},

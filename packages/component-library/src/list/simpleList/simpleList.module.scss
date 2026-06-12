@@ -28,7 +28,7 @@
   }
 }
 
-// List types
+// Icon color
 .simpleList.simpleList-type {
   &-primary {
     .simpleListItemIcon {
@@ -36,6 +36,37 @@
     }
   }
 
+  &-black {
+    .simpleListItemIcon {
+      color: black;
+    }
+  }
+
+  &-white {
+    .simpleListItemIcon {
+      color: white;
+    }
+  }
+
+  &-brand1 {
+    .simpleListItemIcon {
+      color: var(--text-brand-purple-primary);
+    }
+  }
+
+  &-brand2 {
+    .simpleListItemIcon {
+      color: var(--text-brand-aqua-primary);
+    }
+  }
+
+  &-brand3 {
+    .simpleListItemIcon {
+      color: var(--text-brand-teal-primary);
+    }
+  }
+
+  // Legacy values — kept for backward compatibility with existing entries.
   &-secondary {
     .simpleListItemIcon {
       color: var(--text-neutral-placeholder);
@@ -44,6 +75,45 @@
 
   &-brand {
     .simpleListItemIcon {
+      color: var(--text-brand-teal-primary);
+    }
+  }
+}
+
+// Text color (label) — unset leaves the existing default untouched.
+.simpleList.simpleList-text-color {
+  &-primary {
+    .simpleListItemLabel {
+      color: var(--text-neutral-primary);
+    }
+  }
+
+  &-black {
+    .simpleListItemLabel {
+      color: black;
+    }
+  }
+
+  &-white {
+    .simpleListItemLabel {
+      color: white;
+    }
+  }
+
+  &-brand1 {
+    .simpleListItemLabel {
+      color: var(--text-brand-purple-primary);
+    }
+  }
+
+  &-brand2 {
+    .simpleListItemLabel {
+      color: var(--text-brand-aqua-primary);
+    }
+  }
+
+  &-brand3 {
+    .simpleListItemLabel {
       color: var(--text-brand-teal-primary);
     }
   }
