@@ -4,6 +4,8 @@ This directory contains packages and applications that power Code.org marketing 
 
 **Note**: Code.org's learn platform (student experience, curriculum, teacher tools, etc.) is built on the [Code.org Main Repository](https://github.com/code-dot-org/code-dot-org).
 
+test
+
 ## What's inside?
 
 This directory uses [Turborepo](https://turbo.build/) to manage the monorepo and uses the following package structure:
