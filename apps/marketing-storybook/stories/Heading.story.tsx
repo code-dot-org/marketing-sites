@@ -1,3 +1,4 @@
+import {UNIVERSAL_COLORS} from '@/components/common/colors';
 import Heading from '@/components/contentful/heading';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import {expect} from 'storybook/test';
@@ -10,6 +11,15 @@ const meta: Meta<typeof Heading> = {
 export default meta;
 type Story = StoryObj<typeof Heading>;
 
+const LEVELS = [
+  'heading-xxl',
+  'heading-xl',
+  'heading-lg',
+  'heading-md',
+  'heading-sm',
+  'heading-xs',
+] as const;
+
 export const Playground: Story = {
   args: {
     children: 'Playground Heading',
@@ -17,28 +27,19 @@ export const Playground: Story = {
     color: 'primary',
     className: '',
     removeMarginBottom: false,
-    useAltFont: false,
   },
   argTypes: {
     children: {control: 'text'},
     visualAppearance: {
       control: {type: 'select'},
-      options: [
-        'heading-xxl',
-        'heading-xl',
-        'heading-lg',
-        'heading-md',
-        'heading-sm',
-        'heading-xs',
-      ],
+      options: LEVELS,
     },
     color: {
       control: {type: 'select'},
-      options: ['primary', 'white'],
+      options: UNIVERSAL_COLORS,
     },
     className: {control: 'text'},
     removeMarginBottom: {control: 'boolean'},
-    useAltFont: {control: 'boolean'},
     fontSize: {control: {type: 'number', min: 0.5, max: 12, step: 0.125}},
     lineHeight: {control: {type: 'number', min: 0.5, max: 3, step: 0.05}},
     fontWeight: {
@@ -48,248 +49,81 @@ export const Playground: Story = {
     colorOverride: {control: 'color'},
     fontKerning: {
       control: {type: 'select'},
-      options: [undefined, 'auto', 'normal', 'none'],
+      options: [undefined, 'normal', 'auto', 'none'],
     },
   },
 };
 
-export const HeadingXXL: Story = {
+const PRIMARY_AND_WHITE = ['primary', 'white'] as const;
+
+const levelStory = (
+  level: (typeof LEVELS)[number],
+): Story => ({
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-      {(['primary', 'white'] as const)
-        .map(color =>
-          ([false, true] as const).map(removeMarginBottom => (
-            <div
-              key={`heading-xxl-${color}-${removeMarginBottom}`}
-              style={color === 'white' ? {background: '#333', padding: 8} : {}}
+      {PRIMARY_AND_WHITE.map(color =>
+        ([false, true] as const).map(removeMarginBottom => (
+          <div
+            key={`${level}-${color}-${removeMarginBottom}`}
+            style={color === 'white' ? {background: '#333', padding: 8} : {}}
+          >
+            <Heading
+              visualAppearance={level}
+              color={color}
+              removeMarginBottom={removeMarginBottom}
             >
-              <Heading
-                visualAppearance="heading-xxl"
-                color={color as 'primary' | 'white'}
-                removeMarginBottom={removeMarginBottom}
-              >
-                {`heading-xxl | ${color} | removeMarginBottom: ${removeMarginBottom}`}
-              </Heading>
-            </div>
-          )),
-        )
-        .flat()}
+              {`${level} | ${color} | removeMarginBottom: ${removeMarginBottom}`}
+            </Heading>
+          </div>
+        )),
+      ).flat()}
     </div>
   ),
   play: async ({canvas}) => {
-    for (const color of ['primary', 'white'] as const) {
+    for (const color of PRIMARY_AND_WHITE) {
       for (const removeMarginBottom of [false, true] as const) {
-        const headingText = `heading-xxl | ${color} | removeMarginBottom: ${removeMarginBottom}`;
+        const headingText = `${level} | ${color} | removeMarginBottom: ${removeMarginBottom}`;
         const heading = canvas.getByRole('heading', {name: headingText});
         expect(heading).toBeInTheDocument();
       }
     }
   },
-};
+});
 
-export const HeadingXL: Story = {
+export const HeadingXXL = levelStory('heading-xxl');
+export const HeadingXL = levelStory('heading-xl');
+export const HeadingLG = levelStory('heading-lg');
+export const HeadingMD = levelStory('heading-md');
+export const HeadingSM = levelStory('heading-sm');
+export const HeadingXS = levelStory('heading-xs');
+
+export const Colors: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-      {(['primary', 'white'] as const)
-        .map(color =>
-          ([false, true] as const).map(removeMarginBottom => (
-            <div
-              key={`heading-xl-${color}-${removeMarginBottom}`}
-              style={color === 'white' ? {background: '#333', padding: 8} : {}}
-            >
-              <Heading
-                visualAppearance="heading-xl"
-                color={color as 'primary' | 'white'}
-                removeMarginBottom={removeMarginBottom}
-              >
-                {`heading-xl | ${color} | removeMarginBottom: ${removeMarginBottom}`}
-              </Heading>
-            </div>
-          )),
-        )
-        .flat()}
-    </div>
-  ),
-  play: async ({canvas}) => {
-    for (const color of ['primary', 'white'] as const) {
-      for (const removeMarginBottom of [false, true] as const) {
-        const headingText = `heading-xl | ${color} | removeMarginBottom: ${removeMarginBottom}`;
-        const heading = canvas.getByRole('heading', {name: headingText});
-        expect(heading).toBeInTheDocument();
-      }
-    }
-  },
-};
-
-export const HeadingLG: Story = {
-  render: () => (
-    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-      {(['primary', 'white'] as const)
-        .map(color =>
-          ([false, true] as const).map(removeMarginBottom => (
-            <div
-              key={`heading-lg-${color}-${removeMarginBottom}`}
-              style={color === 'white' ? {background: '#333', padding: 8} : {}}
-            >
-              <Heading
-                visualAppearance="heading-lg"
-                color={color as 'primary' | 'white'}
-                removeMarginBottom={removeMarginBottom}
-              >
-                {`heading-lg | ${color} | removeMarginBottom: ${removeMarginBottom}`}
-              </Heading>
-            </div>
-          )),
-        )
-        .flat()}
-    </div>
-  ),
-  play: async ({canvas}) => {
-    for (const color of ['primary', 'white'] as const) {
-      for (const removeMarginBottom of [false, true] as const) {
-        const headingText = `heading-lg | ${color} | removeMarginBottom: ${removeMarginBottom}`;
-        const heading = canvas.getByRole('heading', {name: headingText});
-        expect(heading).toBeInTheDocument();
-      }
-    }
-  },
-};
-
-export const HeadingMD: Story = {
-  render: () => (
-    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-      {(['primary', 'white'] as const)
-        .map(color =>
-          ([false, true] as const).map(removeMarginBottom => (
-            <div
-              key={`heading-md-${color}-${removeMarginBottom}`}
-              style={color === 'white' ? {background: '#333', padding: 8} : {}}
-            >
-              <Heading
-                visualAppearance="heading-md"
-                color={color as 'primary' | 'white'}
-                removeMarginBottom={removeMarginBottom}
-              >
-                {`heading-md | ${color} | removeMarginBottom: ${removeMarginBottom}`}
-              </Heading>
-            </div>
-          )),
-        )
-        .flat()}
-    </div>
-  ),
-  play: async ({canvas}) => {
-    for (const color of ['primary', 'white'] as const) {
-      for (const removeMarginBottom of [false, true] as const) {
-        const headingText = `heading-md | ${color} | removeMarginBottom: ${removeMarginBottom}`;
-        const heading = canvas.getByRole('heading', {name: headingText});
-        expect(heading).toBeInTheDocument();
-      }
-    }
-  },
-};
-
-export const HeadingSM: Story = {
-  render: () => (
-    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-      {(['primary', 'white'] as const)
-        .map(color =>
-          ([false, true] as const).map(removeMarginBottom => (
-            <div
-              key={`heading-sm-${color}-${removeMarginBottom}`}
-              style={color === 'white' ? {background: '#333', padding: 8} : {}}
-            >
-              <Heading
-                visualAppearance="heading-sm"
-                color={color as 'primary' | 'white'}
-                removeMarginBottom={removeMarginBottom}
-              >
-                {`heading-sm | ${color} | removeMarginBottom: ${removeMarginBottom}`}
-              </Heading>
-            </div>
-          )),
-        )
-        .flat()}
-    </div>
-  ),
-  play: async ({canvas}) => {
-    for (const color of ['primary', 'white'] as const) {
-      for (const removeMarginBottom of [false, true] as const) {
-        const headingText = `heading-sm | ${color} | removeMarginBottom: ${removeMarginBottom}`;
-        const heading = canvas.getByRole('heading', {name: headingText});
-        expect(heading).toBeInTheDocument();
-      }
-    }
-  },
-};
-
-export const HeadingXS: Story = {
-  render: () => (
-    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-      {(['primary', 'white'] as const)
-        .map(color =>
-          ([false, true] as const).map(removeMarginBottom => (
-            <div
-              key={`heading-xs-${color}-${removeMarginBottom}`}
-              style={color === 'white' ? {background: '#333', padding: 8} : {}}
-            >
-              <Heading
-                visualAppearance="heading-xs"
-                color={color as 'primary' | 'white'}
-                removeMarginBottom={removeMarginBottom}
-              >
-                {`heading-xs | ${color} | removeMarginBottom: ${removeMarginBottom}`}
-              </Heading>
-            </div>
-          )),
-        )
-        .flat()}
-    </div>
-  ),
-  play: async ({canvas}) => {
-    for (const color of ['primary', 'white'] as const) {
-      for (const removeMarginBottom of [false, true] as const) {
-        const headingText = `heading-xs | ${color} | removeMarginBottom: ${removeMarginBottom}`;
-        const heading = canvas.getByRole('heading', {name: headingText});
-        expect(heading).toBeInTheDocument();
-      }
-    }
-  },
-};
-
-const ALT_LEVELS = [
-  'heading-xxl',
-  'heading-xl',
-  'heading-lg',
-  'heading-md',
-  'heading-sm',
-  'heading-xs',
-] as const;
-
-export const AltFontDefaults: Story = {
-  render: () => (
-    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-      {ALT_LEVELS.map(level => (
-        <Heading
-          key={`alt-default-${level}`}
-          visualAppearance={level}
-          removeMarginBottom={false}
-          useAltFont
+      {UNIVERSAL_COLORS.map(color => (
+        <div
+          key={`color-${color}`}
+          style={color === 'white' ? {background: '#333', padding: 8} : {}}
         >
-          {`${level} | alt font default`}
-        </Heading>
+          <Heading
+            visualAppearance="heading-xl"
+            color={color}
+            removeMarginBottom={false}
+          >
+            {`heading-xl | ${color}`}
+          </Heading>
+        </div>
       ))}
     </div>
   ),
 };
 
-export const AltFontOverrides: Story = {
+export const Overrides: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
       <Heading
         visualAppearance="heading-xl"
         removeMarginBottom={false}
-        useAltFont
         fontSize={5}
       >
         heading-xl | fontSize 5rem
@@ -297,7 +131,6 @@ export const AltFontOverrides: Story = {
       <Heading
         visualAppearance="heading-xl"
         removeMarginBottom={false}
-        useAltFont
         lineHeight={1.4}
       >
         heading-xl | lineHeight 1.4
@@ -305,15 +138,13 @@ export const AltFontOverrides: Story = {
       <Heading
         visualAppearance="heading-xl"
         removeMarginBottom={false}
-        useAltFont
-        fontWeight="500"
+        fontWeight="700"
       >
-        heading-xl | fontWeight 500 (Medium)
+        heading-xl | fontWeight 700 (Bold)
       </Heading>
       <Heading
         visualAppearance="heading-xl"
         removeMarginBottom={false}
-        useAltFont
         colorOverride="#C03A2B"
       >
         heading-xl | colorOverride #C03A2B
@@ -321,7 +152,6 @@ export const AltFontOverrides: Story = {
       <Heading
         visualAppearance="heading-xl"
         removeMarginBottom={false}
-        useAltFont
         fontKerning="none"
       >
         heading-xl | fontKerning none (AVA WAVE WeKa)
@@ -329,12 +159,11 @@ export const AltFontOverrides: Story = {
       <Heading
         visualAppearance="heading-xl"
         removeMarginBottom={false}
-        useAltFont
         fontSize={3.5}
         lineHeight={1.1}
-        fontWeight="500"
+        fontWeight="700"
         colorOverride="#0B6E4F"
-        fontKerning="normal"
+        fontKerning="auto"
       >
         heading-xl | all five overrides
       </Heading>

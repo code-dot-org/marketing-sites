@@ -1,7 +1,8 @@
 @use '@fontsource/space-grotesk/scss/mixins' as SpaceGrotesk;
 
 /**
- * Typically only used in headings
+ * Heading font. Both weights live under a single family so consumers can
+ * pick weight via `font-weight: 500 | 700` without changing `font-family`.
  */
-@include SpaceGrotesk.faces($family: 'Space Grotesk Medium', $weights: 500);
-@include SpaceGrotesk.faces($family: 'Space Grotesk Bold', $weights: 700);
+@include SpaceGrotesk.faces($family: 'Space Grotesk', $weights: 500);
+@include SpaceGrotesk.faces($family: 'Space Grotesk', $weights: 700);

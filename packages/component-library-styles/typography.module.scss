@@ -85,46 +85,43 @@ html {
 
 @mixin heading-xxl {
   @include heading-common;
-  font-family: font.$barlowSemiCondensed-semibold;
-  font-weight: font.$semi-bold-font-weight;
-  font-size: 3rem;
-  line-height: 1.16;
+  @include font.space-grotesk-medium;
+  font-size: clamp(2.5rem, 5vw + 1rem, 4rem);
+  line-height: 1;
+  font-kerning: normal;
 }
 
 @mixin heading-xl {
   @include heading-common;
-  font-family: font.$barlowSemiCondensed-semibold;
-  font-weight: font.$semi-bold-font-weight;
+  @include font.space-grotesk-medium;
   font-size: 2.125rem;
   line-height: 1.24;
 }
 
 @mixin heading-lg {
   @include heading-common;
-  font-family: font.$barlowSemiCondensed-semibold;
-  font-weight: font.$semi-bold-font-weight;
+  @include font.space-grotesk-medium;
   font-size: 1.75rem;
   line-height: 1.28;
 }
 
 @mixin heading-md {
   @include heading-common;
-  font-family: font.$barlowSemiCondensed-semibold;
-  font-weight: font.$semi-bold-font-weight;
+  @include font.space-grotesk-medium;
   font-size: 1.5rem;
   line-height: 1.32;
 }
 
 @mixin heading-sm {
   @include heading-common;
-  @include font.main-font-semi-bold;
+  @include font.space-grotesk-medium;
   font-size: 1.25rem;
   line-height: 1.4;
 }
 
 @mixin heading-xs {
   @include heading-common;
-  @include font.main-font-semi-bold;
+  @include font.space-grotesk-medium;
   font-size: 1rem;
   line-height: 1.48;
 }

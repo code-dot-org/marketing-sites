@@ -130,6 +130,22 @@ $barlowSemiCondensed-semibold: 'Barlow Semi Condensed Semibold',
 $barlowSemiCondensed-medium: 'Barlow Semi Condensed Medium', $noto-sans-fonts,
   sans-serif;
 
+// Heading font. Use $space-grotesk and set font-weight to 500 (medium) or
+// 700 (bold) — both faces live under the same family.
+$space-grotesk: 'Space Grotesk', sans-serif;
+
+@mixin space-grotesk-medium {
+  font-family: $space-grotesk;
+  font-weight: $medium-font-weight;
+  font-style: normal;
+}
+
+@mixin space-grotesk-bold {
+  font-family: $space-grotesk;
+  font-weight: $bold-font-weight;
+  font-style: normal;
+}
+
 /*
    Font Awesome S3 Bucket URLs
    Current version: 7.1.0

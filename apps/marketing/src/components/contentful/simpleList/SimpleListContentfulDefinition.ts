@@ -3,6 +3,10 @@ import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {SIMPLE_LIST_DEFAULT_ICON} from '@code-dot-org/component-library/list';
 
+import {
+  LEGACY_ICON_COLOR_OPTIONS,
+  UNIVERSAL_COLOR_OPTIONS,
+} from '@/components/common/colors';
 import {componentSizeXSToLDefinition} from '@/components/common/definitions';
 
 export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
@@ -67,16 +71,7 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
       group: 'style',
       defaultValue: 'primary',
       validations: {
-        in: [
-          {value: 'primary', displayName: 'Primary'},
-          {value: 'black', displayName: 'Black'},
-          {value: 'white', displayName: 'White'},
-          {value: 'brand1', displayName: 'Brand 1'},
-          {value: 'brand2', displayName: 'Brand 2'},
-          {value: 'brand3', displayName: 'Brand 3'},
-          {value: 'secondary', displayName: 'Secondary (legacy)'},
-          {value: 'brand', displayName: 'Brand (legacy)'},
-        ],
+        in: [...UNIVERSAL_COLOR_OPTIONS, ...LEGACY_ICON_COLOR_OPTIONS],
       },
     },
     textColor: {
@@ -85,14 +80,7 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
       group: 'style',
       description: 'Override the default text color for the list item labels.',
       validations: {
-        in: [
-          {value: 'primary', displayName: 'Primary'},
-          {value: 'black', displayName: 'Black'},
-          {value: 'white', displayName: 'White'},
-          {value: 'brand1', displayName: 'Brand 1'},
-          {value: 'brand2', displayName: 'Brand 2'},
-          {value: 'brand3', displayName: 'Brand 3'},
-        ],
+        in: UNIVERSAL_COLOR_OPTIONS,
       },
     },
   },
