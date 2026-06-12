@@ -376,6 +376,16 @@ export const NewColors: Story = {
 };
 
 export const TextColor: Story = {
+  parameters: {
+    a11y: {
+      config: {
+        // Showcase every text color token, including brand colors that don't
+        // meet contrast against the default white Storybook background. Real
+        // usage pairs them with an appropriate background.
+        rules: [{id: 'color-contrast', enabled: false}],
+      },
+    },
+  },
   args: [
     {...defaultArgs, textColor: 'primary'},
     {...defaultArgs, textColor: 'brand1'},
