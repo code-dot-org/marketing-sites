@@ -83,8 +83,7 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
       displayName: 'Text color',
       type: 'Text',
       group: 'style',
-      description:
-        'Override the default text color for the list item labels.',
+      description: 'Override the default text color for the list item labels.',
       validations: {
         in: [
           {value: 'primary', displayName: 'Primary'},
