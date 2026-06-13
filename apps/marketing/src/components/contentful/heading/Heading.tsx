@@ -1,6 +1,7 @@
 import Typography from '@mui/material/Typography';
 import {ReactNode} from 'react';
 
+import {TEXT_COLOR_TOKENS, UniversalColor} from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {SPACE_GROTESK_FONT} from '@/themes/code.org/constants/fonts';
 
@@ -22,21 +23,19 @@ export type HeadingProps = RemoveMarginBottomProps & {
   /** Heading visual appearance */
   visualAppearance: HeadingVisualAppearance;
   /** Heading color */
-  color?: 'primary' | 'white';
+  color?: UniversalColor;
   /** ClassName passed by Contentful to apply styles
    * that are set through Contentful native editor */
   className?: string;
-  /** Opt this heading into the Space Grotesk alt style. */
-  useAltFont?: boolean;
-  /** rem override; only used when useAltFont is true. */
+  /** rem override */
   fontSize?: number;
-  /** Unitless line-height override; only used when useAltFont is true. */
+  /** Unitless line-height override */
   lineHeight?: number;
-  /** Weight override; only used when useAltFont is true. */
+  /** Weight override */
   fontWeight?: '500' | '700';
-  /** Hex color override; only used when useAltFont is true. */
+  /** Hex color override */
   colorOverride?: string;
-  /** Font kerning override; only used when useAltFont is true. */
+  /** Font kerning override */
   fontKerning?: 'auto' | 'normal' | 'none';
 };
 
@@ -54,9 +53,8 @@ const visualAppearanceToSemanticTagMap: Record<
   'heading-xs': 'h6',
 };
 
-// Per-level fluid default applied only when the alt font is on and
-// no explicit fontSize is given. Scales from mobile min to desktop max.
-const ALT_FONT_RESPONSIVE_SIZE: Record<HeadingVisualAppearance, string> = {
+// Fluid per-level default size: scales from mobile min to desktop max.
+const HEADING_RESPONSIVE_SIZE: Record<HeadingVisualAppearance, string> = {
   'heading-xxl': 'clamp(2.5rem, 5vw + 1rem, 4rem)',
   'heading-xl': 'clamp(2rem, 4vw + 0.5rem, 3rem)',
   'heading-lg': 'clamp(1.5rem, 3vw + 0.25rem, 2rem)',
@@ -65,15 +63,12 @@ const ALT_FONT_RESPONSIVE_SIZE: Record<HeadingVisualAppearance, string> = {
   'heading-xs': 'clamp(1rem, 1vw + 0.5rem, 1.25rem)',
 };
 
-const ALT_FONT_DEFAULT_COLOR = '#1F1976';
-
 const Heading: React.FunctionComponent<HeadingProps> = ({
   children,
   visualAppearance,
-  color,
+  color = 'primary',
   removeMarginBottom,
   className,
-  useAltFont,
   fontSize,
   lineHeight,
   fontWeight,
@@ -82,39 +77,25 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
 }) => {
   const tag = visualAppearanceToSemanticTagMap[visualAppearance];
 
-  if (useAltFont) {
-    const altSx = {
-      fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
-      fontSize:
-        fontSize !== undefined
-          ? `${fontSize}rem`
-          : ALT_FONT_RESPONSIVE_SIZE[visualAppearance],
-      lineHeight: lineHeight ?? 1,
-      fontWeight: fontWeight ? Number(fontWeight) : 700,
-      color: colorOverride || ALT_FONT_DEFAULT_COLOR,
-      fontKerning: fontKerning ?? 'auto',
-    };
-
-    return (
-      <Typography
-        className={className}
-        component={tag}
-        variant={tag}
-        gutterBottom={!removeMarginBottom}
-        sx={altSx}
-      >
-        {children}
-      </Typography>
-    );
-  }
+  const sx = {
+    fontFamily: `"${SPACE_GROTESK_FONT}", sans-serif`,
+    fontSize:
+      fontSize !== undefined
+        ? `${fontSize}rem`
+        : HEADING_RESPONSIVE_SIZE[visualAppearance],
+    lineHeight: lineHeight ?? 1,
+    fontWeight: fontWeight ? Number(fontWeight) : 500,
+    color: colorOverride || TEXT_COLOR_TOKENS[color],
+    fontKerning: fontKerning ?? 'normal',
+  };
 
   return (
     <Typography
       className={className}
-      color={color}
       component={tag}
       variant={tag}
       gutterBottom={!removeMarginBottom}
+      sx={sx}
     >
       {children}
     </Typography>
