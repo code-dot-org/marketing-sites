@@ -1,10 +1,7 @@
 import Typography from '@mui/material/Typography';
 import {ReactNode} from 'react';
 
-import {
-  TEXT_COLOR_TOKENS,
-  UniversalColor,
-} from '@/components/common/colors';
+import {TEXT_COLOR_TOKENS, UniversalColor} from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {SPACE_GROTESK_FONT} from '@/themes/code.org/constants/fonts';
 

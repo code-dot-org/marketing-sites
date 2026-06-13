@@ -57,7 +57,8 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
       displayName: 'Override · Font size (rem)',
       type: 'Number',
       group: 'style',
-      description: 'Override the font size in rem. Leave blank for the responsive default.',
+      description:
+        'Override the font size in rem. Leave blank for the responsive default.',
     },
     lineHeight: {
       displayName: 'Override · Line height',
@@ -82,7 +83,8 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
       displayName: 'Override · Color (hex)',
       type: 'Text',
       group: 'style',
-      description: 'Hex color (e.g. #1F1976). Overrides the Color selection above.',
+      description:
+        'Hex color (e.g. #1F1976). Overrides the Color selection above.',
     },
     fontKerning: {
       displayName: 'Override · Font kerning',
