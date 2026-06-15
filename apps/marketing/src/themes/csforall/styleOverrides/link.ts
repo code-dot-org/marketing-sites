@@ -1,14 +1,13 @@
 import {alpha, Components, Theme} from '@mui/material/styles';
 
 import {createFontStack} from '@/themes/common/constants';
-import {NOTO_FONT} from '@/themes/constants/fonts';
 
 import {ROBOTO_MONO_FONT} from '../constants/fonts';
 
 export const LINK_OVERRIDES: Components<Theme>['MuiLink'] = {
   styleOverrides: {
     root: ({theme}) => ({
-      fontFamily: createFontStack(ROBOTO_MONO_FONT, NOTO_FONT),
+      fontFamily: createFontStack(ROBOTO_MONO_FONT),
       color: theme.palette.text.primary,
       fontWeight: 500,
       lineHeight: 1.45,

@@ -1,11 +1,9 @@
 'use client';
 import {createTheme} from '@mui/material';
 
-import {NOTO_FONT} from '@/themes/constants/fonts';
-
 import {createFontStack} from '../common/constants';
 
-import {FIGTREE_FONT} from './constants/fonts';
+import {GEIST_FONT} from './constants/fonts';
 import {STYLE_OVERRIDES} from './styleOverrides';
 
 const theme = createTheme({
@@ -15,7 +13,7 @@ const theme = createTheme({
     borderRadius: 4,
   },
   typography: {
-    fontFamily: createFontStack(FIGTREE_FONT, NOTO_FONT),
+    fontFamily: createFontStack(GEIST_FONT),
     h1: {
       fontSize: '3rem', // 48px
       fontWeight: 500,
@@ -57,13 +55,13 @@ const theme = createTheme({
       lineHeight: 1.48,
     },
     body3: {
-      fontFamily: createFontStack(FIGTREE_FONT, NOTO_FONT),
+      fontFamily: createFontStack(GEIST_FONT),
       fontSize: '1rem', // 16px
       fontWeight: 400,
       lineHeight: 1.54,
     },
     body4: {
-      fontFamily: createFontStack(FIGTREE_FONT, NOTO_FONT),
+      fontFamily: createFontStack(GEIST_FONT),
       fontSize: '0.875rem', // 14px
       fontWeight: 400,
       lineHeight: 1.43,

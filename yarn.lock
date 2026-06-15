@@ -1698,7 +1698,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@code-dot-org/fonts@workspace:packages/fonts"
   dependencies:
-    "@fontsource-variable/figtree": "npm:^5.1.2"
+    "@fontsource-variable/geist": "npm:^5.2.9"
     "@fontsource-variable/noto-sans": "npm:^5.1.1"
     "@fontsource-variable/noto-sans-arabic": "npm:^5.1.1"
     "@fontsource-variable/noto-sans-armenian": "npm:^5.1.1"
@@ -3401,10 +3401,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource-variable/figtree@npm:^5.1.2":
-  version: 5.1.2
-  resolution: "@fontsource-variable/figtree@npm:5.1.2"
-  checksum: 10c0/c0a4d0d0e9a46ad0ff3b48ec63804ffe712383d384e422e35de6ab9bb213b490e2772d04cca652413336d438a17a30f310e11a962302b5b075019599653e3687
+"@fontsource-variable/geist@npm:^5.2.9":
+  version: 5.2.9
+  resolution: "@fontsource-variable/geist@npm:5.2.9"
+  checksum: 10c0/2f9b070bece1ab4cca0c3e434fb13a670eeae30481db17884a37ced494b7177ca81e9a384d30fc8c47fe05e4a55d861f854e377395c88d900a03ae3a8fe85e88
   languageName: node
   linkType: hard
 
