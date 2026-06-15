@@ -10,18 +10,10 @@ export const TYPOGRAPHY_OVERRIDES: Components<Theme>['MuiTypography'] = {
   styleOverrides: {
     root: ({theme}) => ({
       color: 'var(--text-neutral-primary)',
-      // Paragraph styles
-      '&.MuiTypography-body1.paragraph--color-primary, &.MuiTypography-body2.paragraph--color-primary, &.MuiTypography-body3.paragraph--color-primary, &.MuiTypography-body4.paragraph--color-primary':
-        {
-          color: 'var(--text-neutral-primary)',
-        },
+      // Paragraph legacy color (non-legacy values render inline via brand color manifest)
       '&.MuiTypography-body1.paragraph--color-secondary, &.MuiTypography-body2.paragraph--color-secondary, &.MuiTypography-body3.paragraph--color-secondary, &.MuiTypography-body4.paragraph--color-secondary':
         {
           color: 'var(--text-neutral-secondary)',
-        },
-      '&.MuiTypography-body1.paragraph--color-white, &.MuiTypography-body2.paragraph--color-white, &.MuiTypography-body3.paragraph--color-white, &.MuiTypography-body4.paragraph--color-white':
-        {
-          color: 'var(--neutral-base-white)',
         },
       // Overline styles
       '&.MuiTypography-overline.overline--color-primary': {

@@ -1,6 +1,10 @@
-// Creates a definition for the Paragraph component to be used in Contentful Studio
+// Creates a definition for the Typography component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {
+  BRAND_COLOR_OPTIONS,
+  LEGACY_PARAGRAPH_COLOR_OPTIONS,
+} from '@/components/common/colors';
 import {removeMarginBottomDefinition} from '@/components/common/definitions';
 
 export const ParagraphContentfulComponentDefinition: ComponentDefinition = {
@@ -15,7 +19,7 @@ export const ParagraphContentfulComponentDefinition: ComponentDefinition = {
     imageUrl:
       'https://contentful-images.code.org/90t6bu6vlf76/5qoQl0G7ZKxKCI8VYBaCzl/19a21cd2fbb6b037c397fcbc417f70b1/component_paragraph_tooltip.png',
   },
-  builtInStyles: ['cfTextAlign'],
+  builtInStyles: ['cfTextAlign', 'cfMaxWidth'],
   variables: {
     visualAppearance: {
       displayName: 'Visual Appearance',
@@ -37,14 +41,43 @@ export const ParagraphContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'primary',
       group: 'style',
       validations: {
+        in: [...BRAND_COLOR_OPTIONS, ...LEGACY_PARAGRAPH_COLOR_OPTIONS],
+      },
+    },
+    textTransform: {
+      displayName: 'Transform Case',
+      type: 'Text',
+      defaultValue: 'none',
+      group: 'style',
+      validations: {
         in: [
-          {value: 'primary', displayName: 'Primary'},
-          {value: 'secondary', displayName: 'Secondary'},
-          {value: 'white', displayName: 'White'},
+          {value: 'none', displayName: 'None'},
+          {value: 'uppercase', displayName: 'Uppercase'},
+          {value: 'lowercase', displayName: 'Lowercase'},
+          {value: 'capitalize', displayName: 'Capitalize'},
         ],
       },
     },
+    colorOverride: {
+      displayName: 'Override · Color (hex)',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Hex color (e.g. #1F1976). Overrides the Color selection above.',
+    },
     removeMarginBottom: {...removeMarginBottomDefinition},
+    isStrong: {
+      displayName: 'Make this paragraph bold',
+      type: 'Boolean',
+      defaultValue: false,
+      group: 'style',
+    },
+    isItalic: {
+      displayName: 'Make this paragraph italic',
+      type: 'Boolean',
+      defaultValue: false,
+      group: 'style',
+    },
     children: {
       displayName: 'Content',
       type: 'Text',
@@ -54,12 +87,6 @@ export const ParagraphContentfulComponentDefinition: ComponentDefinition = {
       validations: {
         bindingSourceType: ['entry', 'manual'],
       },
-    },
-    isStrong: {
-      displayName: 'Make this paragraph bold',
-      type: 'Boolean',
-      defaultValue: false,
-      group: 'style',
     },
   },
 };

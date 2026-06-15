@@ -16,7 +16,10 @@ export const Playground: Story = {
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, urna eu tincidunt consectetur, nisi nisl aliquam enim, vitae facilisis sapien enim nec urna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer ac sem nec urna cursus dictum. Etiam euismod, velit eu facilisis cursus, enim erat dictum urna, nec dictum massa erat nec enim. Mauris ac sapien vitae erat cursus dictum.',
     visualAppearance: 'body-one',
     isStrong: false,
+    isItalic: false,
     color: 'primary',
+    colorOverride: '',
+    textTransform: 'none',
     removeMarginBottom: false,
     className: '',
   },
@@ -27,9 +30,23 @@ export const Playground: Story = {
       options: ['body-one', 'body-two', 'body-three', 'body-four'],
     },
     isStrong: {control: 'boolean'},
+    isItalic: {control: 'boolean'},
     color: {
       control: {type: 'select'},
-      options: ['primary', 'secondary'],
+      options: [
+        'primary',
+        'white',
+        'purple',
+        'darkPurple1',
+        'darkPurple2',
+        'lightGreen3',
+        'secondary',
+      ],
+    },
+    colorOverride: {control: 'text'},
+    textTransform: {
+      control: {type: 'select'},
+      options: ['none', 'uppercase', 'lowercase', 'capitalize'],
     },
     removeMarginBottom: {control: 'boolean'},
     className: {control: 'text'},
@@ -118,5 +135,38 @@ export const StrongBodyOne: Story = {
   play: async ({canvas}) => {
     const strongBodyOne = canvas.getByText('Strong Body One Paragraph');
     expect(strongBodyOne).toBeInTheDocument();
+  },
+};
+
+export const ItalicBodyOne: Story = {
+  render: () => (
+    <Paragraph
+      visualAppearance="body-one"
+      isItalic={true}
+      color="primary"
+      removeMarginBottom={false}
+    >
+      Italic Body One Paragraph
+    </Paragraph>
+  ),
+  play: async ({canvas}) => {
+    const italicBodyOne = canvas.getByText('Italic Body One Paragraph');
+    expect(italicBodyOne).toBeInTheDocument();
+  },
+};
+
+export const PurpleBodyTwo: Story = {
+  render: () => (
+    <Paragraph
+      visualAppearance="body-two"
+      color="purple"
+      removeMarginBottom={false}
+    >
+      Purple Body Two Paragraph
+    </Paragraph>
+  ),
+  play: async ({canvas}) => {
+    const purpleBodyTwo = canvas.getByText('Purple Body Two Paragraph');
+    expect(purpleBodyTwo).toBeInTheDocument();
   },
 };
