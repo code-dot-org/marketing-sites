@@ -1,8 +1,7 @@
 import {Components, Theme} from '@mui/material/styles';
 
-import {FIGTREE_FONT} from '@/themes/code.org/constants/fonts';
+import {GEIST_FONT} from '@/themes/code.org/constants/fonts';
 import {createFontStack} from '@/themes/common/constants';
-import {NOTO_FONT} from '@/themes/constants/fonts';
 
 export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
   styleOverrides: {
@@ -51,7 +50,7 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
           backgroundColor: 'var(--background-neutral-primary)',
         },
         '.MuiAccordionSummary-content': {
-          fontFamily: createFontStack(FIGTREE_FONT, NOTO_FONT),
+          fontFamily: createFontStack(GEIST_FONT),
           fontStyle: 'normal',
           fontWeight: 600,
           fontSize: '1rem', // 16px

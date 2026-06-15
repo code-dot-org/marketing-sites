@@ -48,3 +48,12 @@ export const LEGACY_ICON_COLOR_OPTIONS = [
   {value: 'secondary', displayName: 'Secondary (legacy)'},
   {value: 'brand', displayName: 'Brand (legacy)'},
 ];
+
+// Legacy Paragraph colors. Renders via the theme's `paragraph--color-*`
+// className rules so older Contentful entries stay visually identical.
+export const LEGACY_PARAGRAPH_COLORS = ['secondary'] as const;
+export type LegacyParagraphColor = (typeof LEGACY_PARAGRAPH_COLORS)[number];
+
+export const LEGACY_PARAGRAPH_COLOR_OPTIONS = [
+  {value: 'secondary', displayName: 'Secondary (legacy)'},
+];

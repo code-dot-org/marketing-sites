@@ -1,14 +1,13 @@
 import {alpha, Components, Theme} from '@mui/material/styles';
 
 import {createFontStack} from '@/themes/common/constants';
-import {NOTO_FONT} from '@/themes/constants/fonts';
 
-import {FIGTREE_FONT} from '../constants/fonts';
+import {GEIST_FONT} from '../constants/fonts';
 
 export const LINK_OVERRIDES: Components<Theme>['MuiLink'] = {
   styleOverrides: {
     root: ({theme}) => ({
-      fontFamily: createFontStack(FIGTREE_FONT, NOTO_FONT),
+      fontFamily: createFontStack(GEIST_FONT),
       fontWeight: 500,
       lineHeight: 1.4,
       marginBottom: theme.spacing(2),

@@ -257,9 +257,9 @@ All fonts are available globally through CSS variables and SCSS mixins.
 
 | Variable           | Description                               | Value                                                    |
 | ------------------ | ----------------------------------------- | -------------------------------------------------------- |
-| `$figtree-font`    | Primary font for headings and body text   | `'Figtree'`                                              |
+| `$geist-font`      | Primary body font                         | `'Geist'`                                                |
 | `$noto-sans-fonts` | Fallback fonts for multi-language support | `'Noto Sans', 'Noto Sans Math', 'Noto Sans Arabic', ...` |
-| `$main-font`       | Combined main font (Figtree + Noto Sans)  | `$figtree-font, $noto-sans-fonts, sans-serif`            |
+| `$main-font`       | Main body font stack                      | `$geist-font, sans-serif`                                |
 
 ---
 

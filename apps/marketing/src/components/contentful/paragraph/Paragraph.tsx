@@ -3,9 +3,12 @@ import classNames from 'classnames';
 import {ReactNode} from 'react';
 
 import {
-  RemoveMarginBottomProps,
-  TypographyColor,
-} from '@/components/common/types';
+  BrandColor,
+  cssVarForBrandColor,
+  LEGACY_PARAGRAPH_COLORS,
+  LegacyParagraphColor,
+} from '@/components/common/colors';
+import {RemoveMarginBottomProps} from '@/components/common/types';
 
 type ParagraphSemanticTag = 'body1' | 'body2' | 'body3' | 'body4';
 
@@ -17,15 +20,25 @@ type ParagraphVisualAppearance =
   | 'body-three'
   | 'body-four';
 
+type ParagraphColor = BrandColor | LegacyParagraphColor;
+
+type ParagraphTextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+
 type ParagraphProps = RemoveMarginBottomProps & {
   /** Paragraph content */
   children: ReactNode;
   /** Paragraph visual appearance */
   visualAppearance?: ParagraphVisualAppearance;
-  /** Whether the paragraph text is strong */
+  /** Whether the paragraph text is bold */
   isStrong?: boolean;
+  /** Whether the paragraph text is italic */
+  isItalic?: boolean;
   /** Paragraph color */
-  color?: TypographyColor;
+  color?: ParagraphColor;
+  /** Hex color override; takes precedence over `color` */
+  colorOverride?: string;
+  /** Text-case transform; 'none' is treated as unset */
+  textTransform?: ParagraphTextTransform;
   /** ClassName passed by contentful to apply styles that are set through contentful native editor*/
   className?: string;
   /** Custom styles */
@@ -44,23 +57,45 @@ const visualAppearanceToMuiTagMap: Record<
   'body-four': 'body4',
 };
 
+const isLegacyParagraphColor = (
+  value: ParagraphColor,
+): value is LegacyParagraphColor =>
+  (LEGACY_PARAGRAPH_COLORS as readonly string[]).includes(value);
+
 const Paragraph: React.FunctionComponent<ParagraphProps> = ({
   visualAppearance = 'body-two',
   isStrong = false,
+  isItalic = false,
   color = 'primary',
+  colorOverride,
+  textTransform = 'none',
   children,
   removeMarginBottom = false,
   className,
   sx,
-}) => (
-  <Typography
-    className={classNames(`paragraph--color-${color}`, className)}
-    variant={visualAppearanceToMuiTagMap[visualAppearance]}
-    gutterBottom={!removeMarginBottom}
-    sx={{...{fontWeight: isStrong ? 600 : 400}, ...sx}}
-  >
-    {children}
-  </Typography>
-);
+}) => {
+  const legacy = isLegacyParagraphColor(color);
+  const inlineColor =
+    colorOverride || (legacy ? undefined : cssVarForBrandColor(color));
+  const legacyClassName =
+    legacy && !colorOverride ? `paragraph--color-${color}` : undefined;
+
+  return (
+    <Typography
+      className={classNames(legacyClassName, className)}
+      variant={visualAppearanceToMuiTagMap[visualAppearance]}
+      gutterBottom={!removeMarginBottom}
+      sx={{
+        fontWeight: isStrong ? 600 : 400,
+        fontStyle: isItalic ? 'italic' : 'normal',
+        ...(inlineColor && {color: inlineColor}),
+        ...(textTransform !== 'none' && {textTransform}),
+        ...sx,
+      }}
+    >
+      {children}
+    </Typography>
+  );
+};
 
 export default Paragraph;
