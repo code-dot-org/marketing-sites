@@ -1,53 +1,46 @@
-// Universal color palette shared across Contentful component definitions.
-// Adding a color: append to UNIVERSAL_COLORS, then add a row to each token
-// map + COLOR_DISPLAY_NAMES. Components consuming UNIVERSAL_COLOR_OPTIONS
-// and the token maps pick up the new value with no per-component changes.
+// Brand color manifest used by Contentful definitions and components that
+// expose a color selector. Adding a color: append a row here, and add the
+// matching CSS variable to
+// packages/component-library-styles/primitiveColors.scss.
 
-export const UNIVERSAL_COLORS = [
-  'primary',
-  'black',
-  'white',
-  'brand1',
-  'brand2',
-  'brand3',
+export const BRAND_COLORS = [
+  {
+    value: 'primary',
+    displayName: 'Primary',
+    cssVar: 'var(--text-neutral-primary)',
+  },
+  {value: 'white', displayName: 'White', cssVar: 'white'},
+  {value: 'purple', displayName: 'Purple', cssVar: 'var(--codeai-purple)'},
+  {
+    value: 'darkPurple1',
+    displayName: 'Dark Purple 1',
+    cssVar: 'var(--codeai-purple-dark-1)',
+  },
+  {
+    value: 'darkPurple2',
+    displayName: 'Dark Purple 2',
+    cssVar: 'var(--codeai-purple-dark-2)',
+  },
+  {
+    value: 'lightGreen3',
+    displayName: 'Light Green 3',
+    cssVar: 'var(--codeai-green-light-3)',
+  },
 ] as const;
-export type UniversalColor = (typeof UNIVERSAL_COLORS)[number];
 
-export const COLOR_DISPLAY_NAMES: Record<UniversalColor, string> = {
-  primary: 'Primary',
-  black: 'Black',
-  white: 'White',
-  brand1: 'Brand 1',
-  brand2: 'Brand 2',
-  brand3: 'Brand 3',
-};
+export type BrandColor = (typeof BRAND_COLORS)[number]['value'];
 
-export const TEXT_COLOR_TOKENS: Record<UniversalColor, string> = {
-  primary: 'var(--text-neutral-primary)',
-  black: 'black',
-  white: 'white',
-  brand1: 'var(--text-brand-purple-primary)',
-  brand2: 'var(--text-brand-aqua-primary)',
-  brand3: 'var(--text-brand-teal-primary)',
-};
-
-export const BACKGROUND_COLOR_TOKENS: Record<UniversalColor, string> = {
-  primary: 'var(--background-neutral-primary)',
-  black: 'black',
-  white: 'white',
-  brand1: 'var(--background-brand-purple-primary)',
-  brand2: 'var(--background-brand-aqua-primary)',
-  brand3: 'var(--background-brand-teal-primary)',
-};
-
-// Contentful validation list — drop straight into `validations.in`.
-export const UNIVERSAL_COLOR_OPTIONS = UNIVERSAL_COLORS.map(value => ({
+// Drop-in for Contentful `validations.in`.
+export const BRAND_COLOR_OPTIONS = BRAND_COLORS.map(({value, displayName}) => ({
   value,
-  displayName: COLOR_DISPLAY_NAMES[value],
+  displayName,
 }));
 
-// Legacy color values retained for backward compat with existing Contentful
-// entries (e.g. SimpleList's icon color). New components should not adopt these.
+export const cssVarForBrandColor = (value: BrandColor): string =>
+  BRAND_COLORS.find(c => c.value === value)?.cssVar ?? 'inherit';
+
+// Legacy SimpleList icon colors. Kept so older Contentful entries keep
+// validating; renders via the component library's legacy `type` SCSS classes.
 export const LEGACY_ICON_COLORS = ['secondary', 'brand'] as const;
 export type LegacyIconColor = (typeof LEGACY_ICON_COLORS)[number];
 

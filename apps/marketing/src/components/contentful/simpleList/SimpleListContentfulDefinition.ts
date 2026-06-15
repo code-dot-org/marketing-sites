@@ -4,8 +4,8 @@ import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 import {SIMPLE_LIST_DEFAULT_ICON} from '@code-dot-org/component-library/list';
 
 import {
+  BRAND_COLOR_OPTIONS,
   LEGACY_ICON_COLOR_OPTIONS,
-  UNIVERSAL_COLOR_OPTIONS,
 } from '@/components/common/colors';
 import {componentSizeXSToLDefinition} from '@/components/common/definitions';
 
@@ -71,7 +71,7 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
       group: 'style',
       defaultValue: 'primary',
       validations: {
-        in: [...UNIVERSAL_COLOR_OPTIONS, ...LEGACY_ICON_COLOR_OPTIONS],
+        in: [...BRAND_COLOR_OPTIONS, ...LEGACY_ICON_COLOR_OPTIONS],
       },
     },
     textColor: {
@@ -80,7 +80,7 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
       group: 'style',
       description: 'Override the default text color for the list item labels.',
       validations: {
-        in: UNIVERSAL_COLOR_OPTIONS,
+        in: BRAND_COLOR_OPTIONS,
       },
     },
   },

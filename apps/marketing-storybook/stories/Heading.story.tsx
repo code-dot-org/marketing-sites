@@ -1,4 +1,4 @@
-import {UNIVERSAL_COLORS} from '@/components/common/colors';
+import {BRAND_COLORS} from '@/components/common/colors';
 import Heading from '@/components/contentful/heading';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import {expect} from 'storybook/test';
@@ -36,7 +36,7 @@ export const Playground: Story = {
     },
     color: {
       control: {type: 'select'},
-      options: UNIVERSAL_COLORS,
+      options: BRAND_COLORS.map(c => c.value),
     },
     className: {control: 'text'},
     removeMarginBottom: {control: 'boolean'},
@@ -100,17 +100,17 @@ export const HeadingXS = levelStory('heading-xs');
 export const Colors: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-      {UNIVERSAL_COLORS.map(color => (
+      {BRAND_COLORS.map(({value}) => (
         <div
-          key={`color-${color}`}
-          style={color === 'white' ? {background: '#333', padding: 8} : {}}
+          key={`color-${value}`}
+          style={value === 'white' ? {background: '#333', padding: 8} : {}}
         >
           <Heading
             visualAppearance="heading-xl"
-            color={color}
+            color={value}
             removeMarginBottom={false}
           >
-            {`heading-xl | ${color}`}
+            {`heading-xl | ${value}`}
           </Heading>
         </div>
       ))}

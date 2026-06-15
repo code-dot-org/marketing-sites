@@ -15,16 +15,7 @@ export type SimpleListItem = {
   label: string | ReactNode;
 };
 
-export type SimpleListColor =
-  | 'primary'
-  | 'black'
-  | 'white'
-  | 'brand1'
-  | 'brand2'
-  | 'brand3';
-
-// Legacy values stay accepted so older content keeps rendering unchanged.
-export type SimpleListIconColor = SimpleListColor | 'secondary' | 'brand';
+export type SimpleListType = 'primary' | 'secondary' | 'brand';
 
 export interface SimpleListProps extends HTMLAttributes<HTMLUListElement> {
   /** SimpleList items */
@@ -33,10 +24,12 @@ export interface SimpleListProps extends HTMLAttributes<HTMLUListElement> {
   icon?: FontAwesomeV6IconProps;
   /** SimpleList size */
   size?: ComponentSizeXSToL;
-  /** Icon color */
-  type?: SimpleListIconColor;
-  /** Text color (label). Unset preserves the existing default. */
-  textColor?: SimpleListColor;
+  /** Icon style preset. Overridden when `iconColor` is set. */
+  type?: SimpleListType;
+  /** Icon color — any CSS color value (e.g. `var(--codeai-purple)` or `#fff`). Overrides `type`. */
+  iconColor?: string;
+  /** Label color — any CSS color value. Unset leaves the inherited default. */
+  textColor?: string;
   /** SimpleList text weight */
   weight?: 'normal' | 'bold';
   /** Class of the list */
@@ -61,6 +54,7 @@ const SimpleList: React.FC<SimpleListProps> = ({
   className,
   size = 'm',
   type = 'primary',
+  iconColor,
   textColor,
   weight = 'normal',
   icon = {
@@ -73,7 +67,6 @@ const SimpleList: React.FC<SimpleListProps> = ({
     className={classNames(
       moduleStyles.simpleList,
       moduleStyles[`simpleList-type-${type}`],
-      textColor && moduleStyles[`simpleList-text-color-${textColor}`],
       moduleStyles[`simpleList-size-${size}`],
       moduleStyles[`simpleList-weight-${weight}`],
       className,
@@ -91,12 +84,14 @@ const SimpleList: React.FC<SimpleListProps> = ({
               moduleStyles.simpleListItemBullet,
             icon.className,
           )}
+          style={iconColor ? {color: iconColor, ...icon.style} : icon.style}
         />
 
         <Typography
           semanticTag="span"
           className={moduleStyles.simpleListItemLabel}
           visualAppearance={componentSizeToBodyTextSizeMap[size]}
+          style={textColor ? {color: textColor} : undefined}
         >
           {label}
         </Typography>
