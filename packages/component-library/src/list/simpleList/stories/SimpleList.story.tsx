@@ -365,13 +365,22 @@ export const Weight: Story = {
   },
 };
 
-export const NewColors: Story = {
+export const IconColor: Story = {
+  parameters: {
+    a11y: {
+      config: {
+        // Showcase brand colors that don't necessarily meet contrast against
+        // the default white Storybook background. Real usage pairs them with
+        // an appropriate background.
+        rules: [{id: 'color-contrast', enabled: false}],
+      },
+    },
+  },
   args: [
-    {...defaultArgs, type: 'black'},
-    {...defaultArgs, type: 'white'},
-    {...defaultArgs, type: 'brand1'},
-    {...defaultArgs, type: 'brand2'},
-    {...defaultArgs, type: 'brand3'},
+    {...defaultArgs, iconColor: 'var(--codeai-purple)'},
+    {...defaultArgs, iconColor: 'var(--codeai-purple-dark-1)'},
+    {...defaultArgs, iconColor: 'var(--codeai-purple-dark-2)'},
+    {...defaultArgs, iconColor: 'var(--codeai-green-light-3)'},
   ],
 };
 
@@ -379,18 +388,15 @@ export const TextColor: Story = {
   parameters: {
     a11y: {
       config: {
-        // Showcase every text color token, including brand colors that don't
-        // meet contrast against the default white Storybook background. Real
-        // usage pairs them with an appropriate background.
         rules: [{id: 'color-contrast', enabled: false}],
       },
     },
   },
   args: [
-    {...defaultArgs, textColor: 'primary'},
-    {...defaultArgs, textColor: 'brand1'},
-    {...defaultArgs, textColor: 'brand2'},
-    {...defaultArgs, textColor: 'brand3'},
+    {...defaultArgs, textColor: 'var(--codeai-purple)'},
+    {...defaultArgs, textColor: 'var(--codeai-purple-dark-1)'},
+    {...defaultArgs, textColor: 'var(--codeai-purple-dark-2)'},
+    {...defaultArgs, textColor: 'var(--codeai-green-light-3)'},
   ],
 };
 

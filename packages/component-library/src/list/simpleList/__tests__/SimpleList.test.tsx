@@ -45,24 +45,34 @@ describe('Design System - SimpleList', () => {
     expect(list).toHaveStyle(classStyle);
   });
 
-  it.each(['black', 'white', 'brand1', 'brand2', 'brand3'] as const)(
-    'applies the icon color class for %s',
-    color => {
-      renderListContainer({type: color});
-      expect(getList().className).toContain(`simpleList-type-${color}`);
+  it.each(['primary', 'secondary', 'brand'] as const)(
+    'applies the icon type class for %s',
+    type => {
+      renderListContainer({type});
+      expect(getList().className).toContain(`simpleList-type-${type}`);
     },
   );
 
-  it('omits a text color class when textColor is unset', () => {
-    renderListContainer({});
-    expect(getList().className).not.toContain('simpleList-text-color-');
+  it('applies iconColor inline style to each icon', () => {
+    renderListContainer({iconColor: 'var(--codeai-purple)'});
+    screen.getAllByTestId('font-awesome-v6-icon').forEach(icon => {
+      expect(icon).toHaveStyle('color: var(--codeai-purple)');
+    });
   });
 
-  it.each(['primary', 'black', 'white', 'brand1', 'brand2', 'brand3'] as const)(
-    'applies the text color class when textColor=%s',
-    color => {
-      renderListContainer({textColor: color});
-      expect(getList().className).toContain(`simpleList-text-color-${color}`);
-    },
-  );
+  it('leaves the label inline style untouched when textColor is unset', () => {
+    renderListContainer({});
+    items.forEach(({label}) => {
+      expect(screen.getByText(label)).not.toHaveAttribute('style');
+    });
+  });
+
+  it('applies textColor inline style to each label', () => {
+    renderListContainer({textColor: 'var(--codeai-purple)'});
+    items.forEach(({label}) => {
+      expect(screen.getByText(label)).toHaveStyle(
+        'color: var(--codeai-purple)',
+      );
+    });
+  });
 });

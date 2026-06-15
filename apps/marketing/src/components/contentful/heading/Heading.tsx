@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography';
 import {ReactNode} from 'react';
 
-import {TEXT_COLOR_TOKENS, UniversalColor} from '@/components/common/colors';
+import {BrandColor, cssVarForBrandColor} from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {SPACE_GROTESK_FONT} from '@/themes/code.org/constants/fonts';
 
@@ -23,7 +23,7 @@ export type HeadingProps = RemoveMarginBottomProps & {
   /** Heading visual appearance */
   visualAppearance: HeadingVisualAppearance;
   /** Heading color */
-  color?: UniversalColor;
+  color?: BrandColor;
   /** ClassName passed by Contentful to apply styles
    * that are set through Contentful native editor */
   className?: string;
@@ -85,7 +85,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
         : HEADING_RESPONSIVE_SIZE[visualAppearance],
     lineHeight: lineHeight ?? 1,
     fontWeight: fontWeight ? Number(fontWeight) : 500,
-    color: colorOverride || TEXT_COLOR_TOKENS[color],
+    color: colorOverride || cssVarForBrandColor(color),
     fontKerning: fontKerning ?? 'normal',
   };
 

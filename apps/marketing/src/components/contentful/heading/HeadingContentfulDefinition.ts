@@ -1,7 +1,7 @@
 // Creates a definition for the Typography component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
-import {UNIVERSAL_COLOR_OPTIONS} from '@/components/common/colors';
+import {BRAND_COLOR_OPTIONS} from '@/components/common/colors';
 import {removeMarginBottomDefinition} from '@/components/common/definitions';
 
 export const HeadingContentfulComponentDefinition: ComponentDefinition = {
@@ -40,7 +40,7 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'primary',
       group: 'style',
       validations: {
-        in: UNIVERSAL_COLOR_OPTIONS,
+        in: BRAND_COLOR_OPTIONS,
       },
     },
     removeMarginBottom: {...removeMarginBottomDefinition},
