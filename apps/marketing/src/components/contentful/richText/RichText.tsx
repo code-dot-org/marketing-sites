@@ -36,6 +36,8 @@ import {
 
 export interface RichTextProps {
   content?: EntryFields.RichText | Document;
+  /** ClassName passed by Contentful to apply styles that are set through Contentful native editor */
+  className?: string;
 }
 
 export type RichTextNode =
@@ -228,9 +230,9 @@ const richTextRenderOptions: Options = {
   },
 };
 
-const RichText: React.FC<RichTextProps> = ({content}) =>
+const RichText: React.FC<RichTextProps> = ({content, className}) =>
   content ? (
-    <MuiBox sx={richTextContainerStyles}>
+    <MuiBox className={className} sx={richTextContainerStyles}>
       {documentToReactComponents(content, richTextRenderOptions)}
     </MuiBox>
   ) : (

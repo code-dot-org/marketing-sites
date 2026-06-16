@@ -13,7 +13,7 @@ export const RichTextContentfulComponentDefinition: ComponentDefinition = {
     imageUrl:
       'https://contentful-images.code.org/90t6bu6vlf76/2nDq9QyBr8reF6G31qpfS3/73a5fdd1d402ff31c9f31e17c09685db/component_rich_text_tooltip.png',
   },
-  builtInStyles: ['cfTextAlign'],
+  builtInStyles: ['cfTextAlign', 'cfMaxWidth'],
   children: false,
   variables: {
     content: {
@@ -22,7 +22,7 @@ export const RichTextContentfulComponentDefinition: ComponentDefinition = {
       group: 'content',
       validations: {
         required: true,
-        bindingSourceType: ['entry'],
+        bindingSourceType: ['entry', 'manual'],
       },
     },
   },
