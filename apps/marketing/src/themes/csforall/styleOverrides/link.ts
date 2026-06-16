@@ -1,4 +1,4 @@
-import {alpha, Components, Theme} from '@mui/material/styles';
+import {Components, Theme} from '@mui/material/styles';
 
 import {createFontStack} from '@/themes/common/constants';
 
@@ -8,47 +8,24 @@ export const LINK_OVERRIDES: Components<Theme>['MuiLink'] = {
   styleOverrides: {
     root: ({theme}) => ({
       fontFamily: createFontStack(ROBOTO_MONO_FONT),
-      color: theme.palette.text.primary,
-      fontWeight: 500,
       lineHeight: 1.45,
       marginBottom: theme.spacing(2),
       textDecoration: 'underline',
-      transition: 'color 0.2s ease-in-out',
-      '& svg': {
+      transition: 'color 0.2s ease-in-out, opacity 0.2s ease-in-out',
+      '& > i, & > svg': {
+        color: 'inherit',
         transition: 'color 0.2s ease-in-out',
+      },
+      '& > svg': {
         marginTop: theme.spacing(0.4),
+      },
+      '&:hover': {
+        opacity: 0.8,
       },
       '&:focus-visible': {
         outline: `2px solid ${theme.palette.primary.main}`,
         outlineOffset: '2px',
         borderRadius: theme.spacing(0.5),
-      },
-      '&.MuiLink-root.link--color-primary': {
-        color: theme.palette.text.primary,
-        '&:hover': {
-          color: theme.palette.secondary.main,
-          '& svg': {
-            color: theme.palette.secondary.main,
-          },
-        },
-        '& svg': {
-          color: theme.palette.text.primary,
-        },
-      },
-      '&.MuiLink-root.link--color-white': {
-        color: theme.palette.common.white,
-        '&:hover': {
-          color: alpha(theme.palette.common.white, 0.8),
-          '& svg': {
-            color: alpha(theme.palette.common.white, 0.8),
-          },
-        },
-        '&:focus-visible': {
-          outlineColor: alpha(theme.palette.common.white, 0.8),
-        },
-        '& svg': {
-          color: theme.palette.common.white,
-        },
       },
       '&.MuiLink-root.link--size-l': {
         fontSize: '1.375rem', // 22px
