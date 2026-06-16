@@ -1,3 +1,9 @@
+import {
+  ContentfulContainer,
+  containerDefinition,
+} from '@contentful/experiences-components-react';
+import {ComponentDefinition} from '@contentful/experiences-sdk-react';
+
 import ActionBlock, {
   ActionBlockContentfulComponentDefinition,
 } from '@/components/contentful/actionBlocks/defaultActionBlock';
@@ -105,6 +111,30 @@ import Testimonial, {
 import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
+
+import {codeOrgDesignTokens} from './designTokens';
+
+// Override only the defaults on the native Container — keeps the SDK's
+// React component and full variable schema intact. Existing pages keep
+// working; new containers pick up these defaults. Requires
+// __unsafe__enableBuiltInStructureOverwrites on the registration options
+// (set below).
+const containerDefinitionWithOverrides: ComponentDefinition = {
+  ...containerDefinition,
+  variables: {
+    ...containerDefinition.variables,
+    cfMaxWidth: {
+      ...containerDefinition.variables.cfMaxWidth,
+      type: 'Text',
+      defaultValue: '960px',
+    },
+    cfGap: {
+      ...containerDefinition.variables.cfGap,
+      type: 'Text',
+      defaultValue: '0rem 0rem',
+    },
+  },
+};
 
 const contentfulRegistration = {
   componentRegistrations: [
@@ -286,10 +316,29 @@ const contentfulRegistration = {
         wrapContainerWidth: '100%',
       },
     },
+    // Native Container with patched defaults (cfMaxWidth, cfGap). Component
+    // and full variable schema are untouched; only defaults change. Existing
+    // pages keep working because they have stored values for these vars.
+    {
+      component: ContentfulContainer,
+      definition: containerDefinitionWithOverrides,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+          isEmpty: true,
+          nodeBlockId: true,
+        },
+      },
+    },
   ],
   options: {
     enabledBuiltInComponents: [],
+    // Required to re-register the reserved `contentful-container` id. We only
+    // patch defaults — the native React component is reused. Safe on
+    // @contentful/experiences-sdk-react@^3.8.8.
+    __unsafe__enableBuiltInStructureOverwrites: true,
   },
+  designTokens: codeOrgDesignTokens,
 };
 
 export default contentfulRegistration;

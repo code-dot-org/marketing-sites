@@ -3,7 +3,10 @@
  *
  * Note: This file must be imported both server-side and client-side to ensure Contentful is able to map on both rendering modes.
  */
-import {defineComponents} from '@contentful/experiences-sdk-react';
+import {
+  defineComponents,
+  defineDesignTokens,
+} from '@contentful/experiences-sdk-react';
 
 import {Brand} from '@/config/brand';
 
@@ -23,6 +26,9 @@ export function registerContentfulComponents(brand: Brand) {
   const registration = getContentfulRegistration(brand);
 
   if (registration) {
+    if ('designTokens' in registration && registration.designTokens) {
+      defineDesignTokens(registration.designTokens);
+    }
     defineComponents(registration.componentRegistrations, registration.options);
   }
 }
