@@ -17,7 +17,7 @@ export const TYPOGRAPHY_OVERRIDES: Components<Theme>['MuiTypography'] = {
         },
       // Overline styles
       '&.MuiTypography-overline.overline--color-primary': {
-        color: 'var(--text-brand-teal-primary)',
+        color: 'var(--text-neutral-primary)',
       },
       '&.MuiTypography-overline.overline--color-secondary': {
         color: 'var(--text-neutral-quaternary)',

@@ -51,6 +51,10 @@ export const Playground: Story = {
       control: {type: 'select'},
       options: [undefined, 'normal', 'auto', 'none'],
     },
+    textTransform: {
+      control: {type: 'select'},
+      options: ['none', 'uppercase', 'lowercase', 'capitalize'],
+    },
   },
 };
 

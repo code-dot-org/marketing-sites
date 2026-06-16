@@ -43,6 +43,20 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
         in: BRAND_COLOR_OPTIONS,
       },
     },
+    textTransform: {
+      displayName: 'Transform Case',
+      type: 'Text',
+      defaultValue: 'none',
+      group: 'style',
+      validations: {
+        in: [
+          {value: 'none', displayName: 'None'},
+          {value: 'uppercase', displayName: 'Uppercase'},
+          {value: 'lowercase', displayName: 'Lowercase'},
+          {value: 'capitalize', displayName: 'Capitalize'},
+        ],
+      },
+    },
     removeMarginBottom: {...removeMarginBottomDefinition},
     children: {
       displayName: 'Content',

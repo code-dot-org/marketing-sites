@@ -17,6 +17,8 @@ type HeadingVisualAppearance =
   | 'heading-sm'
   | 'heading-xs';
 
+type HeadingTextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+
 export type HeadingProps = RemoveMarginBottomProps & {
   /** Heading content */
   children: ReactNode;
@@ -37,6 +39,8 @@ export type HeadingProps = RemoveMarginBottomProps & {
   colorOverride?: string;
   /** Font kerning override */
   fontKerning?: 'auto' | 'normal' | 'none';
+  /** Text-case transform; 'none' is treated as unset */
+  textTransform?: HeadingTextTransform;
 };
 
 // Maps Contentful Heading visualAppearance values with
@@ -74,6 +78,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
   fontWeight,
   colorOverride,
   fontKerning,
+  textTransform = 'none',
 }) => {
   const tag = visualAppearanceToSemanticTagMap[visualAppearance];
 
@@ -87,6 +92,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
     fontWeight: fontWeight ? Number(fontWeight) : 500,
     color: colorOverride || cssVarForBrandColor(color),
     fontKerning: fontKerning ?? 'normal',
+    ...(textTransform !== 'none' && {textTransform}),
   };
 
   return (
