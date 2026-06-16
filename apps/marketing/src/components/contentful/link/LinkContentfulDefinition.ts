@@ -1,6 +1,7 @@
 // Creates a definition for the Link component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {BRAND_COLOR_OPTIONS} from '@/components/common/colors';
 import {removeMarginBottomDefinition} from '@/components/common/definitions';
 
 export const LinkContentfulComponentDefinition: ComponentDefinition = {
@@ -23,10 +24,7 @@ export const LinkContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'primary',
       group: 'style',
       validations: {
-        in: [
-          {value: 'primary', displayName: 'Primary'},
-          {value: 'white', displayName: 'White'},
-        ],
+        in: [...BRAND_COLOR_OPTIONS],
       },
     },
     size: {
@@ -40,6 +38,34 @@ export const LinkContentfulComponentDefinition: ComponentDefinition = {
           {value: 'm', displayName: 'Medium'},
           {value: 's', displayName: 'Small'},
           {value: 'xs', displayName: 'Extra Small'},
+        ],
+      },
+    },
+    isStrong: {
+      displayName: 'Make this link bold',
+      type: 'Boolean',
+      defaultValue: false,
+      group: 'style',
+    },
+    icon: {
+      displayName: 'Icon',
+      description:
+        'FontAwesome icon name (e.g. "arrow-right"). Ignored when "Is this link external?" is on.',
+      type: 'Text',
+      group: 'style',
+      validations: {
+        bindingSourceType: ['entry', 'manual'],
+      },
+    },
+    iconPosition: {
+      displayName: 'Icon Position',
+      type: 'Text',
+      defaultValue: 'right',
+      group: 'style',
+      validations: {
+        in: [
+          {value: 'left', displayName: 'Left'},
+          {value: 'right', displayName: 'Right'},
         ],
       },
     },

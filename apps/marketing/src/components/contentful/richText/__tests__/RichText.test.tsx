@@ -137,9 +137,8 @@ describe('RichText component', () => {
       ]),
     });
 
-    const link = screen.getByText(linkText);
+    const link = screen.getByRole('link', {name: linkText});
     expect(link).toBeVisible();
-    expect(link).toHaveRole('link');
     expect(link).toHaveAttribute('href', linkHref);
     expect(link.parentElement).toHaveRole('paragraph');
   });

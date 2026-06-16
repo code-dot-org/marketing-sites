@@ -4,11 +4,15 @@ import classNames from 'classnames';
 import {EntryFields} from 'contentful';
 import React, {ReactNode} from 'react';
 
+import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
+
+import {BrandColor, cssVarForBrandColor} from '@/components/common/colors';
 import {
   ComponentSize,
   RemoveMarginBottomProps,
-  TypographyColor,
 } from '@/components/common/types';
+
+type IconPosition = 'left' | 'right';
 
 export type LinkProps = RemoveMarginBottomProps & {
   /** Link Label */
@@ -16,16 +20,29 @@ export type LinkProps = RemoveMarginBottomProps & {
   /** Link URL */
   href: string;
   /** Link color */
-  color?: Exclude<TypographyColor, 'secondary'>;
+  color?: BrandColor;
   /** Link size */
   size?: ComponentSize;
   /** Whether Link is for internal code.org pages, or external web page. (external links are opened in new tab) */
   isLinkExternal: boolean;
+  /** Whether to render the link text in bold */
+  isStrong?: boolean;
+  /** FontAwesome icon name (e.g. "arrow-right"). Suppressed when isLinkExternal is true. */
+  icon?: string;
+  /** Side to render the icon on. Defaults to right. */
+  iconPosition?: IconPosition;
   /** Aria label for the link */
   ariaLabel?: EntryFields.Text;
   /** Custom classname */
   className?: string | object;
 };
+
+// Text Link's "Primary" intentionally diverges from Paragraph/Heading so links
+// stay visually distinct from body copy.
+const resolveLinkColor = (color: BrandColor): string =>
+  color === 'primary'
+    ? 'var(--codeai-purple-dark-1)'
+    : cssVarForBrandColor(color);
 
 const styles = {
   container: {
@@ -44,28 +61,39 @@ const Link: React.FunctionComponent<LinkProps> = ({
   color = 'primary',
   size = 'm',
   isLinkExternal,
+  isStrong = false,
+  icon,
+  iconPosition = 'right',
   removeMarginBottom,
   ariaLabel,
   className,
-}) => (
-  <MuiLink
-    className={classNames(
-      `link--size-${size}`,
-      `link--color-${color}`,
-      className,
-    )}
-    href={href}
-    aria-label={ariaLabel}
-    target={isLinkExternal ? '_blank' : undefined}
-    rel={isLinkExternal ? 'noopener noreferrer' : undefined}
-    sx={{
-      marginBottom: removeMarginBottom ? 0 : undefined,
-      ...styles.container,
-    }}
-  >
-    {children}
-    {isLinkExternal && <OpenInNew fontSize="inherit" />}
-  </MuiLink>
-);
+}) => {
+  const userIcon =
+    !isLinkExternal && icon ? (
+      <FontAwesomeV6Icon iconName={icon} iconStyle="solid" />
+    ) : null;
+
+  return (
+    <MuiLink
+      className={classNames(`link--size-${size}`, className)}
+      href={href}
+      aria-label={ariaLabel}
+      target={isLinkExternal ? '_blank' : undefined}
+      rel={isLinkExternal ? 'noopener noreferrer' : undefined}
+      sx={{
+        color: resolveLinkColor(color),
+        fontWeight: isStrong ? 600 : 500,
+        marginBottom: removeMarginBottom ? 0 : undefined,
+        textDecoration: 'none',
+        ...styles.container,
+      }}
+    >
+      {userIcon && iconPosition === 'left' && userIcon}
+      <span style={{textDecoration: 'underline'}}>{children}</span>
+      {userIcon && iconPosition === 'right' && userIcon}
+      {isLinkExternal && <OpenInNew fontSize="inherit" />}
+    </MuiLink>
+  );
+};
 
 export default Link;
