@@ -54,9 +54,9 @@ describe('Design System - SimpleList', () => {
   );
 
   it('applies iconColor inline style to each icon', () => {
-    renderListContainer({iconColor: 'var(--codeai-purple)'});
+    renderListContainer({iconColor: 'var(--codeai-purple-primary)'});
     screen.getAllByTestId('font-awesome-v6-icon').forEach(icon => {
-      expect(icon).toHaveStyle('color: var(--codeai-purple)');
+      expect(icon).toHaveStyle('color: var(--codeai-purple-primary)');
     });
   });
 
@@ -68,10 +68,10 @@ describe('Design System - SimpleList', () => {
   });
 
   it('applies textColor inline style to each label', () => {
-    renderListContainer({textColor: 'var(--codeai-purple)'});
+    renderListContainer({textColor: 'var(--codeai-purple-primary)'});
     items.forEach(({label}) => {
       expect(screen.getByText(label)).toHaveStyle(
-        'color: var(--codeai-purple)',
+        'color: var(--codeai-purple-primary)',
       );
     });
   });

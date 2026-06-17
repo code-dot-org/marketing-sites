@@ -377,10 +377,9 @@ export const IconColor: Story = {
     },
   },
   args: [
-    {...defaultArgs, iconColor: 'var(--codeai-purple)'},
-    {...defaultArgs, iconColor: 'var(--codeai-purple-dark-1)'},
-    {...defaultArgs, iconColor: 'var(--codeai-purple-dark-2)'},
-    {...defaultArgs, iconColor: 'var(--codeai-green-light-3)'},
+    {...defaultArgs, iconColor: 'var(--codeai-purple-primary)'},
+    {...defaultArgs, iconColor: 'var(--codeai-purple-dark)'},
+    {...defaultArgs, iconColor: 'var(--codeai-green-light)'},
   ],
 };
 
@@ -393,10 +392,9 @@ export const TextColor: Story = {
     },
   },
   args: [
-    {...defaultArgs, textColor: 'var(--codeai-purple)'},
-    {...defaultArgs, textColor: 'var(--codeai-purple-dark-1)'},
-    {...defaultArgs, textColor: 'var(--codeai-purple-dark-2)'},
-    {...defaultArgs, textColor: 'var(--codeai-green-light-3)'},
+    {...defaultArgs, textColor: 'var(--codeai-purple-primary)'},
+    {...defaultArgs, textColor: 'var(--codeai-purple-dark)'},
+    {...defaultArgs, textColor: 'var(--codeai-green-light)'},
   ],
 };
 

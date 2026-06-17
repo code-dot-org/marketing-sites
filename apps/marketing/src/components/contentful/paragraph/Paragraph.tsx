@@ -4,11 +4,12 @@ import {ReactNode} from 'react';
 
 import {
   BrandColor,
-  cssVarForBrandColor,
   LEGACY_PARAGRAPH_COLORS,
   LegacyParagraphColor,
+  resolvedCssVarForBrandColor,
 } from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
+import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 
 type ParagraphSemanticTag = 'body1' | 'body2' | 'body3' | 'body4';
 
@@ -66,7 +67,7 @@ const Paragraph: React.FunctionComponent<ParagraphProps> = ({
   visualAppearance = 'body-two',
   isStrong = false,
   isItalic = false,
-  color = 'primary',
+  color = 'black',
   colorOverride,
   textTransform = 'none',
   children,
@@ -75,8 +76,13 @@ const Paragraph: React.FunctionComponent<ParagraphProps> = ({
   sx,
 }) => {
   const legacy = isLegacyParagraphColor(color);
+  const enclosingBackground = useSectionBackground();
+  // colorOverride wins over the contrast switch (FR-014).
   const inlineColor =
-    colorOverride || (legacy ? undefined : cssVarForBrandColor(color));
+    colorOverride ||
+    (legacy
+      ? undefined
+      : resolvedCssVarForBrandColor(color, enclosingBackground));
   const legacyClassName =
     legacy && !colorOverride ? `paragraph--color-${color}` : undefined;
 

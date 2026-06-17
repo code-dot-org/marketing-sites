@@ -30,17 +30,17 @@ describe('Link Component', () => {
     expect(screen.getByRole('link')).toHaveAttribute('target', '_blank');
   });
 
-  it('applies the dark-purple-1 CSS var when color is primary', () => {
+  it('applies the purple-primary CSS var when color is primary', () => {
     render(<Link {...defaultProps} color="primary" />);
     expect(screen.getByRole('link')).toHaveStyle({
-      color: 'var(--codeai-purple-dark-1)',
+      color: 'var(--codeai-purple-primary)',
     });
   });
 
   it('applies the shared brand CSS var for non-primary colors', () => {
-    render(<Link {...defaultProps} color="darkPurple2" />);
+    render(<Link {...defaultProps} color="purpleDark" />);
     expect(screen.getByRole('link')).toHaveStyle({
-      color: 'var(--codeai-purple-dark-2)',
+      color: 'var(--codeai-purple-dark)',
     });
   });
 

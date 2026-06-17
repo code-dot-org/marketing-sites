@@ -3,11 +3,18 @@ import Container from '@mui/material/Container';
 import classNames from 'classnames';
 import {ReactNode} from 'react';
 
+import {
+  BRAND_COLORS,
+  BrandColor,
+  backgroundToneFor,
+} from '@/components/common/colors';
 import type {SpacingProps} from '@/components/common/types';
-import {DividerProps} from '@/components/contentful/divider';
+import {SectionBackgroundProvider} from '@/components/contentful/section/SectionBackgroundContext';
 import bgPatternImage from '@public/images/bg-pattern-lines.webp';
 
-export type SectionBackground =
+// Legacy backgrounds — Corporate Site theme primitives + CS for All brand
+// backgrounds + pattern/transparent. Kept exactly as before.
+type LegacySectionBackground =
   | 'primary'
   | 'secondary'
   | 'dark'
@@ -21,27 +28,45 @@ export type SectionBackground =
   | 'patternPrimary'
   | 'transparent';
 
+// CodeAI brand-palette section backgrounds: every entry in BRAND_COLORS is a
+// valid background value. Adding a color to BRAND_COLORS automatically widens
+// this type.
+type BrandColorSectionBackground = (typeof BRAND_COLORS)[number]['value'];
+
+export type SectionBackground =
+  | LegacySectionBackground
+  | BrandColorSectionBackground;
+
+const LEGACY_SECTION_BACKGROUNDS = [
+  'primary',
+  'secondary',
+  'dark',
+  'brandPrimary',
+  'brandLightPrimary',
+  'brandSecondary',
+  'brandLightSecondary',
+  'brandTertiary',
+  'brandLightTertiary',
+  'patternDark',
+  'patternPrimary',
+  'transparent',
+] as const satisfies readonly LegacySectionBackground[];
+
 export const sectionBackground: {
   [key in SectionBackground]: SectionBackground;
-} = {
-  primary: 'primary',
-  secondary: 'secondary',
-  dark: 'dark',
-  brandPrimary: 'brandPrimary',
-  brandLightPrimary: 'brandLightPrimary',
-  brandSecondary: 'brandSecondary',
-  brandLightSecondary: 'brandLightSecondary',
-  brandTertiary: 'brandTertiary',
-  brandLightTertiary: 'brandLightTertiary',
-  patternDark: 'patternDark',
-  patternPrimary: 'patternPrimary',
-  transparent: 'transparent',
-};
+} = Object.fromEntries([
+  ...LEGACY_SECTION_BACKGROUNDS.map(v => [v, v] as const),
+  ...BRAND_COLORS.map(({value}) => [value, value] as const),
+]) as {[key in SectionBackground]: SectionBackground};
 
-export type SectionDivider = Exclude<'none' | DividerProps['color'], 'white'>;
+// Section's bottom-divider field is a separate concept from the Divider
+// component's `color` prop. It supports a fixed three-value set rendered via
+// `.container--divider-{value}` classes; the Divider component's color
+// palette (which now includes the full CodeAI brand set) is irrelevant here.
+export type SectionDivider = 'none' | 'primary' | 'strong';
 
 export const sectionDivider: {
-  [key in Exclude<SectionDivider, undefined>]: SectionDivider;
+  [key in SectionDivider]: SectionDivider;
 } = {
   none: 'none',
   primary: 'primary',
@@ -74,6 +99,20 @@ const styles = {
   },
 };
 
+// Value-space guard for the new CodeAI brand palette. Only set when the
+// background prop is one of the 22 new brand tokens — csforall and Corporate
+// Site legacy values fall through and produce no data-bg-tone attribute on
+// the rendered Section (research.md §10, FR-013 / FR-018).
+//
+// `primary` is excluded because it's a text-color manifest entry (theme-aware
+// neutral text) that collides by name with the legacy SectionBackground value
+// `primary` (which means the white Section background). Without this filter,
+// `background="primary"` (legacy white) would be misread as a brand background
+// → dark tone → flip descendant primary text to white.
+const BRAND_BACKGROUND_VALUES = new Set<string>(
+  BRAND_COLORS.filter(c => c.value !== 'primary').map(c => c.value),
+);
+
 const Section: React.FC<SectionProps> = ({
   background = 'primary',
   padding = 'l',
@@ -95,12 +134,23 @@ const Section: React.FC<SectionProps> = ({
   const useDarkTheme =
     hasPatternBackground || background === sectionBackground.dark;
 
+  // CodeAI brand-palette guards. Both undefined for non-brand backgrounds so
+  // React renders no extra attribute / no provider change.
+  const isBrandBackground = BRAND_BACKGROUND_VALUES.has(background);
+  const brandBackgroundValue = isBrandBackground
+    ? (background as BrandColor)
+    : undefined;
+  const dataBgTone = isBrandBackground
+    ? backgroundToneFor(brandBackgroundValue)
+    : undefined;
+
   return (
     <Box
       id={id}
       component="section"
       // Dark theme is used on the Corporate Site only
       data-theme={hasPatternBackground || useDarkTheme ? 'Dark' : theme}
+      data-bg-tone={dataBgTone}
       className={classNames(`section-background-${background}`, className)}
       sx={{
         ...styles.section,
@@ -126,7 +176,9 @@ const Section: React.FC<SectionProps> = ({
           divider !== 'none' && `container--divider-${divider}`,
         )}
       >
-        {children}
+        <SectionBackgroundProvider value={brandBackgroundValue}>
+          {children}
+        </SectionBackgroundProvider>
       </Container>
     </Box>
   );

@@ -1,3 +1,4 @@
+import {BRAND_COLORS} from '@/components/common/colors';
 import SimpleListContentful, {
   SimpleListContentfulProps,
 } from '@/components/contentful/simpleList';
@@ -42,6 +43,27 @@ export const Manual: StoryObj<SimpleListContentfulProps> = {
       await canvas.findByText('Third manual item'),
     ).toBeInTheDocument();
   },
+};
+
+// CodeAI brand palette — one SimpleList per brand color, exercising both the
+// icon `type` and `textColor` controls so storybook-eyes establishes a baseline
+// for the new palette options.
+export const BrandPalette: StoryObj<SimpleListContentfulProps> = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      {BRAND_COLORS.map(({value, displayName}) => (
+        <SimpleListContentful
+          key={`brand-${value}`}
+          manualList={`${displayName} item one\n${displayName} item two`}
+          size="m"
+          weight="normal"
+          iconName="circle-small"
+          type={value}
+          textColor={value}
+        />
+      ))}
+    </div>
+  ),
 };
 
 export const Smile: StoryObj<SimpleListContentfulProps> = {

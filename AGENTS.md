@@ -181,6 +181,9 @@ See [docs/ui-convention.md](docs/ui-convention.md).
 
 ## Active Technologies
 
+- TypeScript with React 18 on Next.js 15 + MUI (existing theme stack), `@code-dot-org/marketing-component-library-styles` (SCSS primitives), Contentful field validation via existing registration layer, existing marketing testing stack (006-brand-color-system-init)
+- N/A (no runtime persistence; manifest is a static module + CSS variables) (006-brand-color-system-init)
+
 - TypeScript with React 18 on Next.js 15 + Next.js App Router, MUI, existing marketing app testing stack, vetted npm React US map package, and repo-managed structured data file (003-gap-analysis-map)
 - Repo-managed structured data file; no runtime persistence (003-gap-analysis-map)
 

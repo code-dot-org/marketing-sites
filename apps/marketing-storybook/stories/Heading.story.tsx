@@ -1,5 +1,6 @@
 import {BRAND_COLORS} from '@/components/common/colors';
 import Heading from '@/components/contentful/heading';
+import Section from '@/components/contentful/section';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import {expect} from 'storybook/test';
 
@@ -60,9 +61,7 @@ export const Playground: Story = {
 
 const PRIMARY_AND_WHITE = ['primary', 'white'] as const;
 
-const levelStory = (
-  level: (typeof LEVELS)[number],
-): Story => ({
+const levelStory = (level: (typeof LEVELS)[number]): Story => ({
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
       {PRIMARY_AND_WHITE.map(color =>
@@ -118,6 +117,115 @@ export const Colors: Story = {
           </Heading>
         </div>
       ))}
+    </div>
+  ),
+};
+
+// US2 contrast-switch matrix. Each row places the same Heading inside a
+// different brand-background Section so storybook-eyes records the resolved
+// rendered color.
+const CONTRAST_MATRIX: ReadonlyArray<{
+  label: string;
+  bg: 'purpleDark' | 'purpleLight' | 'purpleMid' | 'white';
+  color: 'black' | 'white' | 'purpleMid' | 'greenLight' | 'purpleDark';
+  expected: string;
+}> = [
+  {
+    label: 'dark-text-on-dark-bg-becomes-white',
+    bg: 'purpleDark',
+    color: 'black',
+    expected: 'white',
+  },
+  {
+    label: 'passthrough (white on dark)',
+    bg: 'purpleDark',
+    color: 'white',
+    expected: 'white',
+  },
+  {
+    label: 'low-contrast-on-light-bg-shifts-to-family-dark (same family)',
+    bg: 'purpleLight',
+    color: 'purpleMid',
+    expected: 'purpleDark',
+  },
+  {
+    label: 'low-contrast-on-light-bg-shifts-to-family-dark (cross family)',
+    bg: 'purpleLight',
+    color: 'greenLight',
+    expected: 'greenDark',
+  },
+  {
+    label: 'low-contrast-on-mid-shifts-to-family-primary',
+    bg: 'purpleMid',
+    color: 'purpleMid',
+    expected: 'purplePrimary',
+  },
+  {
+    label: 'low-contrast-on-white-shifts-to-family-primary',
+    bg: 'white',
+    color: 'purpleMid',
+    expected: 'purplePrimary',
+  },
+  {
+    label: 'white-on-light-becomes-black',
+    bg: 'purpleLight',
+    color: 'white',
+    expected: 'black',
+  },
+  {
+    label: 'passthrough (dark text on light bg)',
+    bg: 'purpleLight',
+    color: 'purpleDark',
+    expected: 'purpleDark',
+  },
+];
+
+export const ContrastSwitch: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      {CONTRAST_MATRIX.map(({label, bg, color, expected}) => (
+        <Section key={`${bg}-${color}`} background={bg} padding="m">
+          <Heading
+            visualAppearance="heading-md"
+            color={color}
+            removeMarginBottom={true}
+          >
+            {`bg=${bg} | color=${color} → expected=${expected}  (${label})`}
+          </Heading>
+        </Section>
+      ))}
+    </div>
+  ),
+};
+
+// US3 — colorOverride wins over the contrast switch (FR-014). Both rows
+// would normally switch (white→black on light, black→white on dark) but the
+// hex override pins the rendered color.
+export const ColorOverrideBypassesContrastSwitch: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      <Section background="purpleLight" padding="m">
+        <Heading
+          visualAppearance="heading-md"
+          color="white"
+          colorOverride="#FFFFFF"
+          removeMarginBottom={true}
+        >
+          color=white + override #FFFFFF on purpleLight → renders white (would
+          be black without override)
+        </Heading>
+      </Section>
+      <Section background="purpleDark" padding="m">
+        <Heading
+          visualAppearance="heading-md"
+          color="black"
+          colorOverride="#000000"
+          removeMarginBottom={true}
+        >
+          color=black + override #000000 on purpleDark → renders black (would be
+          white without override)
+        </Heading>
+      </Section>
     </div>
   ),
 };

@@ -1,6 +1,17 @@
 // Creates a definition for the Divider component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {brandColorOptionsWithDefault} from '@/components/common/colors';
+
+// Brand options for the Divider dropdown. `primary` and `white` are filtered
+// out because their value strings collide with the legacy Divider color
+// values (also `primary` and `white`), which render via the existing
+// class-based theme overrides. Authors who want a white divider should pick
+// the "White (legacy)" option at the bottom of the list.
+const DIVIDER_BRAND_OPTIONS = brandColorOptionsWithDefault(
+  'purplePrimary',
+).filter(opt => opt.value !== 'primary' && opt.value !== 'white');
+
 export const DividerContentfulComponentDefinition: ComponentDefinition = {
   id: 'divider',
   name: 'Divider',
@@ -19,17 +30,19 @@ export const DividerContentfulComponentDefinition: ComponentDefinition = {
     color: {
       displayName: 'Color',
       type: 'Text',
-      defaultValue: 'primary',
+      defaultValue: 'purplePrimary',
       group: 'style',
       validations: {
         in: [
-          {value: 'primary', displayName: 'Primary'},
-          // This value is `strong` in existing usage of this component on Code.org,
-          // but a Secondary displayName label is more generic for different themes.
-          // Keeping the value as `strong` so it can be used in existing components
-          // without breaking, but the dropdown will say "Secondary" on all sites.
-          {value: 'strong', displayName: 'Secondary'},
-          {value: 'white', displayName: 'White'},
+          ...DIVIDER_BRAND_OPTIONS,
+          // Legacy Divider colors — render via the existing
+          // `.divider--color-{value}` CSS classes. Kept at the bottom of the
+          // list so existing Contentful entries continue to validate.
+          // `strong` displays as "Secondary (legacy)" — the stored value
+          // remains `strong` so existing usage on Code.org keeps working.
+          {value: 'primary', displayName: 'Primary (legacy)'},
+          {value: 'strong', displayName: 'Secondary (legacy)'},
+          {value: 'white', displayName: 'White (legacy)'},
         ],
       },
     },

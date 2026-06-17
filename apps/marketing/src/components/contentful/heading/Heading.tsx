@@ -1,8 +1,12 @@
 import Typography from '@mui/material/Typography';
 import {ReactNode} from 'react';
 
-import {BrandColor, cssVarForBrandColor} from '@/components/common/colors';
+import {
+  BrandColor,
+  resolvedCssVarForBrandColor,
+} from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
+import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 import {SPACE_GROTESK_FONT} from '@/themes/code.org/constants/fonts';
 
 type HeadingSemanticTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
@@ -70,7 +74,7 @@ const HEADING_RESPONSIVE_SIZE: Record<HeadingVisualAppearance, string> = {
 const Heading: React.FunctionComponent<HeadingProps> = ({
   children,
   visualAppearance,
-  color = 'primary',
+  color = 'black',
   removeMarginBottom,
   className,
   fontSize,
@@ -81,6 +85,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
   textTransform = 'none',
 }) => {
   const tag = visualAppearanceToSemanticTagMap[visualAppearance];
+  const enclosingBackground = useSectionBackground();
 
   const sx = {
     fontFamily: `"${SPACE_GROTESK_FONT}", sans-serif`,
@@ -90,7 +95,9 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
         : HEADING_RESPONSIVE_SIZE[visualAppearance],
     lineHeight: lineHeight ?? 1,
     fontWeight: fontWeight ? Number(fontWeight) : 500,
-    color: colorOverride || cssVarForBrandColor(color),
+    // colorOverride wins over the contrast switch (FR-014).
+    color:
+      colorOverride || resolvedCssVarForBrandColor(color, enclosingBackground),
     fontKerning: fontKerning ?? 'normal',
     ...(textTransform !== 'none' && {textTransform}),
   };

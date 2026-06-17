@@ -31,14 +31,14 @@ describe('Paragraph Component', () => {
 
   it('applies inline color for new brand colors', () => {
     render(
-      <Paragraph color="purple" removeMarginBottom={false}>
+      <Paragraph color="purplePrimary" removeMarginBottom={false}>
         Purple text
       </Paragraph>,
     );
 
     const el = screen.getByText('Purple text');
-    expect(el).toHaveStyle({color: 'var(--codeai-purple)'});
-    expect(el).not.toHaveClass('paragraph--color-purple');
+    expect(el).toHaveStyle({color: 'var(--codeai-purple-primary)'});
+    expect(el).not.toHaveClass('paragraph--color-purplePrimary');
   });
 
   it('applies textTransform when set to a non-none value', () => {
@@ -79,7 +79,7 @@ describe('Paragraph Component', () => {
   it('colorOverride wins over a brand color', () => {
     render(
       <Paragraph
-        color="purple"
+        color="purplePrimary"
         colorOverride="#1F1976"
         removeMarginBottom={false}
       >
