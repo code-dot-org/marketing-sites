@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import RichText from '@/components/contentful/richText';
+import Section from '@/components/contentful/section';
 import {BLOCKS} from '@contentful/rich-text-types';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import {expect} from 'storybook/test';
@@ -80,4 +81,45 @@ export const FilledOut: Story = {
     expect(headers.length).toBeGreaterThan(0);
     headers.forEach(header => expect(header).toBeVisible());
   },
+};
+
+// US2 / FR-016 — body text inherits the contrast-switch result via the CSS
+// cascade on Section's data-bg-tone. Confirms Rich Text resolves to readable
+// black/white on light/dark CodeAI brand backgrounds without exposing a
+// color picker.
+const richTextDoc = (text: string) => ({
+  nodeType: BLOCKS.DOCUMENT,
+  data: {},
+  content: [
+    {
+      nodeType: BLOCKS.PARAGRAPH,
+      data: {},
+      content: [{nodeType: 'text', value: text, marks: [], data: {}}],
+    },
+  ],
+});
+
+export const ContrastSwitchInherit: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      <Section background="purpleDark" padding="m">
+        <RichText
+          content={
+            richTextDoc(
+              'Rich Text on a Purple Dark Section — body text should render white via inheritance.',
+            ) as any
+          }
+        />
+      </Section>
+      <Section background="purpleLight" padding="m">
+        <RichText
+          content={
+            richTextDoc(
+              'Rich Text on a Purple Light Section — body text should render black via inheritance.',
+            ) as any
+          }
+        />
+      </Section>
+    </div>
+  ),
 };

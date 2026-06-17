@@ -117,7 +117,7 @@
   --text-neutral-disabled-inverse: var(--neutral-base-white);
   --text-neutral-inverse: var(--neutral-base-white);
   --text-neutral-placeholder: var(--neutral-gray-40);
-  --text-neutral-primary: var(--neutral-base-black);
+  --text-neutral-primary: var(--neutral-base-true-black);
   --text-neutral-quaternary: var(--neutral-gray-80);
   --text-neutral-secondary: var(--neutral-gray-95);
   --text-neutral-tertiary: var(--neutral-gray-90);
@@ -239,4 +239,29 @@
   --text-warning-primary: var(--text-neutral-primary);
   --text-warning-primary-fixed: var(--sentiment-warning-40);
   --text-warning-secondary: var(--text-neutral-tertiary);
+}
+
+/* CodeAI brand-color contrast switch.
+ *
+ * Drives the default `color` for descendants of a Section whose `background`
+ * is one of the 22 new CodeAI brand tokens. Heading and Paragraph resolve
+ * their authored color through the TypeScript resolver in
+ * apps/marketing/src/components/common/colors.ts (covered by Jest), so these
+ * rules are responsible only for elements that inherit `color` — most
+ * importantly the Rich Text component, whose body text has no color prop.
+ *
+ * Inline links, table cells, and any other descendant that sets its own
+ * color continues to win via normal CSS inheritance rules.
+ *
+ * The data-bg-tone attribute is set on <Section> only when the background is
+ * a new CodeAI brand token (see Section.tsx value-space guard). csforall and
+ * Corporate Site legacy values never emit the attribute, so these rules
+ * never apply there.
+ */
+[data-bg-tone='dark'] {
+  color: var(--neutral-base-white);
+}
+[data-bg-tone='light'],
+[data-bg-tone='mid'] {
+  color: var(--neutral-base-true-black);
 }

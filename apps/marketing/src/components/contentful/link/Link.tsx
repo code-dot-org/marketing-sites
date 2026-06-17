@@ -6,11 +6,16 @@ import React, {ReactNode} from 'react';
 
 import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
 
-import {BrandColor, cssVarForBrandColor} from '@/components/common/colors';
+import {
+  BrandColor,
+  cssVarForBrandColor,
+  resolveTextColorForBackground,
+} from '@/components/common/colors';
 import {
   ComponentSize,
   RemoveMarginBottomProps,
 } from '@/components/common/types';
+import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 
 type IconPosition = 'left' | 'right';
 
@@ -39,10 +44,26 @@ export type LinkProps = RemoveMarginBottomProps & {
 
 // Text Link's "Primary" intentionally diverges from Paragraph/Heading so links
 // stay visually distinct from body copy.
-const resolveLinkColor = (color: BrandColor): string =>
-  color === 'primary'
-    ? 'var(--codeai-purple-dark-1)'
-    : cssVarForBrandColor(color);
+const resolveLinkColor = (
+  color: BrandColor,
+  enclosingBackground: BrandColor | null,
+): string => {
+  if (color === 'primary') {
+    // Primary stays the brand purple on light/mid backgrounds for visual
+    // distinctness, but routes through the contrast switch on dark CodeAI
+    // backgrounds so links remain readable.
+    const resolved = resolveTextColorForBackground(
+      'primary',
+      enclosingBackground,
+    );
+    return resolved.value === 'primary'
+      ? 'var(--codeai-purple-primary)'
+      : cssVarForBrandColor(resolved.value);
+  }
+  return cssVarForBrandColor(
+    resolveTextColorForBackground(color, enclosingBackground).value,
+  );
+};
 
 const styles = {
   container: {
@@ -72,6 +93,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
     !isLinkExternal && icon ? (
       <FontAwesomeV6Icon iconName={icon} iconStyle="solid" />
     ) : null;
+  const enclosingBackground = useSectionBackground();
 
   return (
     <MuiLink
@@ -81,7 +103,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
       target={isLinkExternal ? '_blank' : undefined}
       rel={isLinkExternal ? 'noopener noreferrer' : undefined}
       sx={{
-        color: resolveLinkColor(color),
+        color: resolveLinkColor(color, enclosingBackground),
         fontWeight: isStrong ? 600 : 500,
         marginBottom: removeMarginBottom ? 0 : undefined,
         textDecoration: 'none',

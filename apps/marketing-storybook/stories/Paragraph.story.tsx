@@ -1,4 +1,6 @@
+import {BRAND_COLORS} from '@/components/common/colors';
 import Paragraph from '@/components/contentful/paragraph';
+import Section from '@/components/contentful/section';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import {expect} from 'storybook/test';
 
@@ -33,15 +35,7 @@ export const Playground: Story = {
     isItalic: {control: 'boolean'},
     color: {
       control: {type: 'select'},
-      options: [
-        'primary',
-        'white',
-        'purple',
-        'darkPurple1',
-        'darkPurple2',
-        'lightGreen3',
-        'secondary',
-      ],
+      options: [...BRAND_COLORS.map(c => c.value), 'secondary'],
     },
     colorOverride: {control: 'text'},
     textTransform: {
@@ -51,6 +45,60 @@ export const Playground: Story = {
     removeMarginBottom: {control: 'boolean'},
     className: {control: 'text'},
   },
+};
+
+// US2 contrast-switch coverage. Same pattern as Heading.ContrastSwitch.
+const PARAGRAPH_CONTRAST_MATRIX = [
+  {bg: 'purpleDark' as const, color: 'black' as const, expected: 'white'},
+  {
+    bg: 'purpleDark' as const,
+    color: 'white' as const,
+    expected: 'white (passthrough)',
+  },
+  {
+    bg: 'purpleLight' as const,
+    color: 'purpleMid' as const,
+    expected: 'purpleDark',
+  },
+  {
+    bg: 'purpleLight' as const,
+    color: 'greenLight' as const,
+    expected: 'greenDark (cross-family)',
+  },
+  {
+    bg: 'purpleMid' as const,
+    color: 'purpleMid' as const,
+    expected: 'purplePrimary',
+  },
+  {
+    bg: 'white' as const,
+    color: 'purpleMid' as const,
+    expected: 'purplePrimary',
+  },
+  {bg: 'purpleLight' as const, color: 'white' as const, expected: 'black'},
+  {
+    bg: 'purpleLight' as const,
+    color: 'purpleDark' as const,
+    expected: 'purpleDark (passthrough)',
+  },
+];
+
+export const ContrastSwitch: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
+      {PARAGRAPH_CONTRAST_MATRIX.map(({bg, color, expected}) => (
+        <Section key={`${bg}-${color}`} background={bg} padding="m">
+          <Paragraph
+            visualAppearance="body-two"
+            color={color}
+            removeMarginBottom={true}
+          >
+            {`bg=${bg} | color=${color} → expected=${expected}`}
+          </Paragraph>
+        </Section>
+      ))}
+    </div>
+  ),
 };
 
 export const BodyOne: Story = {
@@ -155,18 +203,18 @@ export const ItalicBodyOne: Story = {
   },
 };
 
-export const PurpleBodyTwo: Story = {
+export const PurplePrimaryBodyTwo: Story = {
   render: () => (
     <Paragraph
       visualAppearance="body-two"
-      color="purple"
+      color="purplePrimary"
       removeMarginBottom={false}
     >
-      Purple Body Two Paragraph
+      Purple Primary Body Two Paragraph
     </Paragraph>
   ),
   play: async ({canvas}) => {
-    const purpleBodyTwo = canvas.getByText('Purple Body Two Paragraph');
+    const purpleBodyTwo = canvas.getByText('Purple Primary Body Two Paragraph');
     expect(purpleBodyTwo).toBeInTheDocument();
   },
 };

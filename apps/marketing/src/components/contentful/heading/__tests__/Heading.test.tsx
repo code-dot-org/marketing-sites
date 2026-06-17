@@ -1,5 +1,7 @@
 import {render, screen} from '@testing-library/react';
 
+import Section from '@/components/contentful/section';
+
 import Heading from '../Heading';
 
 describe('Heading Component', () => {
@@ -48,14 +50,21 @@ describe('Heading Component', () => {
   });
 
   it('applies the color prop correctly', () => {
+    // With the brand-color contrast switch (US2), `color="white"` outside a
+    // dark Section resolves to black via the page-root-default mid tone.
+    // Wrapping in a dark CodeAI Section keeps the test's original intent —
+    // verify the color prop reaches the rendered element — without losing
+    // coverage of that path.
     render(
-      <Heading
-        visualAppearance="heading-lg"
-        color="white"
-        removeMarginBottom={false}
-      >
-        White Heading
-      </Heading>,
+      <Section background="purpleDark">
+        <Heading
+          visualAppearance="heading-lg"
+          color="white"
+          removeMarginBottom={false}
+        >
+          White Heading
+        </Heading>
+      </Section>,
     );
     const heading = screen.getByText('White Heading');
     expect(heading).toHaveStyle('color: white');

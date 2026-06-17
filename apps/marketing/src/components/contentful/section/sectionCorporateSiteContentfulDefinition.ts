@@ -1,6 +1,7 @@
 // Creates a definition for the Section component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {BRAND_COLOR_OPTIONS} from '@/components/common/colors';
 import {
   sectionIdDefinition,
   sectionPaddingDefinition,
@@ -54,6 +55,7 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
               value: 'transparent',
               displayName: 'Transparent',
             },
+            ...BRAND_COLOR_OPTIONS,
           ],
         },
       },

@@ -1,7 +1,7 @@
 // Creates a definition for the Link component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
-import {BRAND_COLOR_OPTIONS} from '@/components/common/colors';
+import {brandColorOptionsWithDefault} from '@/components/common/colors';
 import {removeMarginBottomDefinition} from '@/components/common/definitions';
 
 export const LinkContentfulComponentDefinition: ComponentDefinition = {
@@ -21,10 +21,10 @@ export const LinkContentfulComponentDefinition: ComponentDefinition = {
     color: {
       displayName: 'Color',
       type: 'Text',
-      defaultValue: 'primary',
+      defaultValue: 'purplePrimary',
       group: 'style',
       validations: {
-        in: [...BRAND_COLOR_OPTIONS],
+        in: brandColorOptionsWithDefault('purplePrimary'),
       },
     },
     size: {

@@ -26,7 +26,7 @@ export interface SimpleListProps extends HTMLAttributes<HTMLUListElement> {
   size?: ComponentSizeXSToL;
   /** Icon style preset. Overridden when `iconColor` is set. */
   type?: SimpleListType;
-  /** Icon color — any CSS color value (e.g. `var(--codeai-purple)` or `#fff`). Overrides `type`. */
+  /** Icon color — any CSS color value (e.g. `var(--codeai-purple-primary)` or `#fff`). Overrides `type`. */
   iconColor?: string;
   /** Label color — any CSS color value. Unset leaves the inherited default. */
   textColor?: string;
