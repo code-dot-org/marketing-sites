@@ -10,6 +10,7 @@ import {
 } from '@/components/common/colors';
 import type {SpacingProps} from '@/components/common/types';
 import {SectionBackgroundProvider} from '@/components/contentful/section/SectionBackgroundContext';
+import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import bgPatternImage from '@public/images/bg-pattern-lines.webp';
 
 // Legacy backgrounds — Corporate Site theme primitives + CS for All brand
@@ -73,11 +74,39 @@ export const sectionDivider: {
   strong: 'strong',
 };
 
+export type SectionBackgroundImageScaling =
+  | 'cover'
+  | 'contain'
+  | 'auto'
+  | 'manual';
+
+export type SectionBackgroundImageRepeat =
+  | 'no-repeat'
+  | 'repeat'
+  | 'repeat-x'
+  | 'repeat-y';
+
 export interface SectionProps {
   /** Background color */
   background?: SectionBackground;
   /** Vertical padding */
   padding?: keyof Exclude<SpacingProps, 'xs' | 's'>;
+  /** Vertical gap (rem) between direct children. Undefined → no gap. */
+  gap?: number;
+  /** Background image URL or Contentful asset reference, layered over color */
+  backgroundImage?: string;
+  /** background-size: cover | contain | auto | manual (uses height %) */
+  backgroundImageScaling?: SectionBackgroundImageScaling;
+  /** Image height as % of section height when scaling === 'manual' */
+  backgroundImageHeight?: number;
+  /** background-position X in % (can exceed 0–100 to push past edge) */
+  backgroundImagePositionX?: number;
+  /** background-position Y in % */
+  backgroundImagePositionY?: number;
+  /** background-repeat */
+  backgroundImageRepeat?: SectionBackgroundImageRepeat;
+  /** Hide the bg image. Authored per-viewport in Contentful Studio. */
+  backgroundImageUnset?: boolean;
   /** Section theme */
   theme?: 'Light' | 'Dark';
   /** Has bottom divider */
@@ -116,6 +145,14 @@ const BRAND_BACKGROUND_VALUES = new Set<string>(
 const Section: React.FC<SectionProps> = ({
   background = 'primary',
   padding = 'l',
+  gap,
+  backgroundImage,
+  backgroundImageScaling,
+  backgroundImageHeight,
+  backgroundImagePositionX,
+  backgroundImagePositionY,
+  backgroundImageRepeat,
+  backgroundImageUnset,
   theme = 'Light',
   divider = sectionDivider.none,
   id,
@@ -144,6 +181,30 @@ const Section: React.FC<SectionProps> = ({
     ? backgroundToneFor(brandBackgroundValue)
     : undefined;
 
+  const resolvedBackgroundSize =
+    backgroundImageScaling === 'manual'
+      ? `auto ${backgroundImageHeight ?? 100}%`
+      : (backgroundImageScaling ?? 'cover');
+
+  const backgroundImageUrl =
+    backgroundImage && !backgroundImageUnset
+      ? `url(${getAbsoluteImageUrl(backgroundImage)})`
+      : undefined;
+
+  const backgroundImageSx = backgroundImageUrl
+    ? {
+        backgroundImage: backgroundImageUrl,
+        backgroundSize: resolvedBackgroundSize,
+        backgroundPosition: `${backgroundImagePositionX ?? 50}% ${backgroundImagePositionY ?? 50}%`,
+        backgroundRepeat: backgroundImageRepeat ?? 'no-repeat',
+      }
+    : undefined;
+
+  const gapStyle =
+    gap !== undefined
+      ? {display: 'flex', flexDirection: 'column' as const, gap: `${gap}rem`}
+      : undefined;
+
   return (
     <Box
       id={id}
@@ -166,6 +227,9 @@ const Section: React.FC<SectionProps> = ({
               backgroundSize: '18rem',
             }
           : {}),
+        // User-supplied background image overrides the legacy pattern above
+        // when both happen to be present.
+        ...backgroundImageSx,
       }}
       {...experienceProps}
     >
@@ -177,7 +241,7 @@ const Section: React.FC<SectionProps> = ({
         )}
       >
         <SectionBackgroundProvider value={brandBackgroundValue}>
-          {children}
+          {gapStyle ? <div style={gapStyle}>{children}</div> : children}
         </SectionBackgroundProvider>
       </Container>
     </Box>

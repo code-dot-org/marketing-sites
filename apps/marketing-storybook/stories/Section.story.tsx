@@ -1,5 +1,6 @@
 import {BRAND_COLORS} from '@/components/common/colors';
 import Section, {SectionBackground} from '@/components/contentful/section';
+import bgPatternImage from '@public/images/bg-pattern-lines.webp';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import {expect} from 'storybook/test';
 
@@ -74,9 +75,12 @@ const createStory = (background: SectionBackground): Story => ({
   },
 });
 
+const scalings = ['cover', 'contain', 'auto', 'manual'] as const;
+const repeats = ['no-repeat', 'repeat', 'repeat-x', 'repeat-y'] as const;
+
 export const Playground: Story = {
   args: {
-    background: 'primary',
+    background: 'white',
     padding: 'l',
     theme: 'Light',
     divider: 'none',
@@ -87,6 +91,14 @@ export const Playground: Story = {
   argTypes: {
     background: {control: 'select', options: backgrounds},
     padding: {control: 'select', options: paddings},
+    gap: {control: 'number'},
+    backgroundImage: {control: 'text'},
+    backgroundImageScaling: {control: 'select', options: scalings},
+    backgroundImageHeight: {control: 'number'},
+    backgroundImagePositionX: {control: 'number'},
+    backgroundImagePositionY: {control: 'number'},
+    backgroundImageRepeat: {control: 'select', options: repeats},
+    backgroundImageUnset: {control: 'boolean'},
     theme: {control: 'select', options: themes},
     divider: {control: 'select', options: dividers},
     id: {control: 'text'},
@@ -153,3 +165,26 @@ export const BrandPalette: Story = {
   ),
 };
 export const Transparent = createStory('transparent');
+
+// Gap + background image: visual baseline for the new props. Renders one
+// Section with three children stacked at gap=3rem on top of a tiled pattern
+// image positioned at top-right, offset slightly past the right edge.
+export const GapAndBackgroundImage: Story = {
+  render: () => (
+    <Section
+      background="white"
+      padding="l"
+      gap={3}
+      backgroundImage={bgPatternImage.src}
+      backgroundImageScaling="auto"
+      backgroundImagePositionX={105}
+      backgroundImagePositionY={0}
+      backgroundImageRepeat="no-repeat"
+      id="gap-and-bg-image"
+    >
+      <div>First child</div>
+      <div>Second child — 3rem above me, 3rem below me.</div>
+      <div>Third child</div>
+    </Section>
+  ),
+};
