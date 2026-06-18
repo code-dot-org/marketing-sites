@@ -1,11 +1,25 @@
 // Creates a definition for the Section component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
-import {BRAND_COLOR_OPTIONS} from '@/components/common/colors';
+import {brandColorOptionsWithDefault} from '@/components/common/colors';
 import {
   sectionIdDefinition,
   sectionPaddingDefinition,
 } from '@/components/common/definitions';
+
+// Legacy backgrounds predate the CodeAI palette. Kept (with " (legacy)"
+// suffix) so existing Contentful entries keep validating; they fall to the
+// bottom of the dropdown.
+const LEGACY_SECTION_BACKGROUND_OPTIONS = [
+  {value: 'primary', displayName: 'Primary white (legacy)'},
+  {value: 'secondary', displayName: 'Secondary light gray (legacy)'},
+  {value: 'dark', displayName: 'Dark gray (legacy)'},
+  {value: 'brandLightPrimary', displayName: 'Light teal (legacy)'},
+  {value: 'brandLightSecondary', displayName: 'Light purple (legacy)'},
+  {value: 'patternDark', displayName: 'Pattern dark (legacy)'},
+  {value: 'patternPrimary', displayName: 'Pattern teal (legacy)'},
+  {value: 'transparent', displayName: 'Transparent (legacy)'},
+];
 
 export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinition =
   {
@@ -29,33 +43,11 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
         type: 'Text',
         group: 'style',
         description: 'The background color of the section.',
-        defaultValue: 'primary',
+        defaultValue: 'white',
         validations: {
           in: [
-            {value: 'primary', displayName: 'Primary (white)'},
-            {value: 'secondary', displayName: 'Secondary (light gray)'},
-            {value: 'dark', displayName: 'Dark gray'},
-            {
-              value: 'brandLightPrimary',
-              displayName: 'Light teal',
-            },
-            {
-              value: 'brandLightSecondary',
-              displayName: 'Light purple',
-            },
-            {
-              value: 'patternDark',
-              displayName: 'Pattern dark',
-            },
-            {
-              value: 'patternPrimary',
-              displayName: 'Pattern teal',
-            },
-            {
-              value: 'transparent',
-              displayName: 'Transparent',
-            },
-            ...BRAND_COLOR_OPTIONS,
+            ...brandColorOptionsWithDefault('white'),
+            ...LEGACY_SECTION_BACKGROUND_OPTIONS,
           ],
         },
       },
@@ -72,6 +64,82 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
             {value: 'primary', displayName: 'Primary'},
             {value: 'strong', displayName: 'Strong'},
           ],
+        },
+      },
+      gap: {
+        displayName: 'Vertical gap (rem)',
+        type: 'Number',
+        group: 'style',
+        description:
+          'Vertical gap (in rem) between direct children. Leave blank for no gap; 3 is a good starting value when stacking multiple containers.',
+      },
+      // Background-image auxiliary settings live in the Design tab; the Media
+      // asset selector itself lives in the Content tab below (Studio only
+      // renders Media inputs under `group: 'content'`).
+      backgroundImageScaling: {
+        displayName: 'BG img scaling',
+        type: 'Text',
+        group: 'style',
+        defaultValue: 'cover',
+        validations: {
+          in: [
+            {value: 'cover', displayName: 'Cover'},
+            {value: 'contain', displayName: 'Contain'},
+            {value: 'auto', displayName: 'Auto (original size)'},
+            {value: 'manual', displayName: 'Manual (use Height %)'},
+          ],
+        },
+      },
+      backgroundImageHeight: {
+        displayName: 'BG img height (%)',
+        type: 'Number',
+        group: 'style',
+        description:
+          'Used only when Scaling = Manual. 100 = full section height; width scales proportionally.',
+        defaultValue: 100,
+      },
+      backgroundImagePositionX: {
+        displayName: 'BG img horizontal align (%)',
+        type: 'Number',
+        group: 'style',
+        description:
+          '0 = left, 50 = center, 100 = right. Values outside 0–100 push the image past the edge.',
+        defaultValue: 50,
+      },
+      backgroundImagePositionY: {
+        displayName: 'BG img vertical align (%)',
+        type: 'Number',
+        group: 'style',
+        description: '0 = top, 50 = middle, 100 = bottom.',
+        defaultValue: 50,
+      },
+      backgroundImageRepeat: {
+        displayName: 'BG img repeat',
+        type: 'Text',
+        group: 'style',
+        defaultValue: 'no-repeat',
+        validations: {
+          in: [
+            {value: 'no-repeat', displayName: 'No repeat'},
+            {value: 'repeat', displayName: 'Tile'},
+            {value: 'repeat-x', displayName: 'Tile horizontally'},
+            {value: 'repeat-y', displayName: 'Tile vertically'},
+          ],
+        },
+      },
+      backgroundImageUnset: {
+        displayName: 'BG image unset',
+        type: 'Boolean',
+        group: 'style',
+        description: 'Check to hide the background image at this viewport.',
+      },
+      backgroundImage: {
+        displayName: 'Background image',
+        type: 'Media',
+        group: 'content',
+        description: 'Optional image rendered on top of the background color.',
+        validations: {
+          bindingSourceType: ['asset'],
         },
       },
       ...sectionIdDefinition,
