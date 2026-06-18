@@ -60,6 +60,9 @@ import Heading, {
 import HeroBanner, {
   HeroBannerContentfulComponentDefinition,
 } from '@/components/contentful/heroBanner';
+import Icon, {
+  IconContentfulComponentDefinition,
+} from '@/components/contentful/icon';
 import IconHighlight, {
   IconHighlightContentfulComponentDefinition,
 } from '@/components/contentful/iconHighlight';
@@ -220,6 +223,10 @@ const contentfulRegistration = {
       options: {
         wrapContainerWidth: '100%',
       },
+    },
+    {
+      component: Icon,
+      definition: IconContentfulComponentDefinition,
     },
     {
       component: IconHighlight,
