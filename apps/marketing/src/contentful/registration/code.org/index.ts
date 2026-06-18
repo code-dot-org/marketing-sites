@@ -1,6 +1,11 @@
 import {
+  Columns,
   ContentfulContainer,
+  SingleColumn,
+  columnsDefinition,
   containerDefinition,
+  sectionDefinition,
+  singleColumnDefinition,
 } from '@contentful/experiences-components-react';
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
@@ -117,13 +122,17 @@ import Video, {
 
 import {codeOrgDesignTokens} from './designTokens';
 
-// Override only the defaults on the native Container — keeps the SDK's
-// React component and full variable schema intact. Existing pages keep
-// working; new containers pick up these defaults. Requires
+// Re-categorize the three native structure components into our numbered
+// sidebar groups, and patch Container's defaults (cfMaxWidth, cfGap). The
+// SDK React components and full variable schemas are untouched — existing
+// pages keep rendering and new instances pick up the new defaults. Requires
 // __unsafe__enableBuiltInStructureOverwrites on the registration options
 // (set below).
 const containerDefinitionWithOverrides: ComponentDefinition = {
   ...containerDefinition,
+  category: '02: Page Structure',
+  thumbnailUrl:
+    'https://contentful-images.code.org/90t6bu6vlf76/6WfOhpSXpSnPCTIGOrqXjz/2a5470ea723c740420ff75c00542f775/component_container_thumbnail.png',
   variables: {
     ...containerDefinition.variables,
     cfMaxWidth: {
@@ -137,6 +146,21 @@ const containerDefinitionWithOverrides: ComponentDefinition = {
       defaultValue: '0rem 0rem',
     },
   },
+};
+
+const sectionDefinitionWithOverrides: ComponentDefinition = {
+  ...sectionDefinition,
+  category: '08: Advanced',
+};
+
+const columnsDefinitionWithOverrides: ComponentDefinition = {
+  ...columnsDefinition,
+  category: '08: Advanced',
+};
+
+const singleColumnDefinitionWithOverrides: ComponentDefinition = {
+  ...singleColumnDefinition,
+  category: '08: Advanced',
 };
 
 const contentfulRegistration = {
@@ -323,9 +347,9 @@ const contentfulRegistration = {
         wrapContainerWidth: '100%',
       },
     },
-    // Native Container with patched defaults (cfMaxWidth, cfGap). Component
-    // and full variable schema are untouched; only defaults change. Existing
-    // pages keep working because they have stored values for these vars.
+    // Native Container re-categorized into '02: Page Structure' and given
+    // patched cfMaxWidth/cfGap defaults. The component and full variable
+    // schema are untouched.
     {
       component: ContentfulContainer,
       definition: containerDefinitionWithOverrides,
@@ -334,6 +358,38 @@ const contentfulRegistration = {
           isEditorMode: true,
           isEmpty: true,
           nodeBlockId: true,
+        },
+      },
+    },
+    // Native Section and Columns surfaced under '08: Advanced' so power users
+    // can reach them without crowding the main palette. The SDK reuses
+    // ContentfulContainer for sections, branching internally on nodeBlockId.
+    {
+      component: ContentfulContainer,
+      definition: sectionDefinitionWithOverrides,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+          isEmpty: true,
+          nodeBlockId: true,
+        },
+      },
+    },
+    {
+      component: Columns,
+      definition: columnsDefinitionWithOverrides,
+    },
+    // SingleColumn is the child cell rendered inside Columns. Registered so
+    // the editor can render column children; re-categorized off the native
+    // 'contentful-component' bucket so the "Structure" sidebar group can
+    // potentially collapse to empty.
+    {
+      component: SingleColumn,
+      definition: singleColumnDefinitionWithOverrides,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+          isEmpty: true,
         },
       },
     },
