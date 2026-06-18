@@ -128,6 +128,12 @@ import {codeOrgDesignTokens} from './designTokens';
 // pages keep rendering and new instances pick up the new defaults. Requires
 // __unsafe__enableBuiltInStructureOverwrites on the registration options
 // (set below).
+//
+// Note: arbitrary CSS variables (e.g. zIndex) added to these overrides are
+// NOT honored — the SDK's buildCfStyles() only maps a fixed allowlist of
+// cf* props to CSS, and ContentfulContainer's extractRenderProps() filters
+// out anything else before render. To add new CSS-tied controls to a
+// native, you'd have to wrap or replace the SDK component.
 const containerDefinitionWithOverrides: ComponentDefinition = {
   ...containerDefinition,
   category: '02: Page Structure',
