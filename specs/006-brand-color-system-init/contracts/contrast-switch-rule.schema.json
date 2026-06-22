@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://code.org/marketing-sites/specs/006-brand-color-system-init/contracts/contrast-switch-rule.schema.json",
+  "title": "ContrastSwitchRule",
+  "description": "Contract for the pure-function resolver that maps (text token, background context) to a rendered token. This is the canonical rule table; the TypeScript resolver (resolveTextColorForBackground) and the SCSS cascade rules MUST stay in sync with this contract.",
+  "type": "object",
+  "required": ["input", "output"],
+  "additionalProperties": false,
+  "properties": {
+    "input": {
+      "type": "object",
+      "required": ["textToken", "background"],
+      "additionalProperties": false,
+      "properties": {
+        "textToken": {
+          "type": "object",
+          "description": "A BrandColorToken (see brand-color-token.schema.json) representing the text element's authored color.",
+          "required": ["value", "family", "shade"],
+          "properties": {
+            "value": { "type": "string" },
+            "family": { "type": "string", "enum": ["purple", "blue", "green", "orange", "pink", "black", "white"] },
+            "shade": { "type": "string", "enum": ["dark", "primary", "mid", "light", "n-a"] }
+          }
+        },
+        "background": {
+          "type": "object",
+          "description": "The resolved enclosing BackgroundContext.",
+          "required": ["tone"],
+          "additionalProperties": false,
+          "properties": {
+            "tone": {
+              "type": "string",
+              "description": "Derived from the background token's shade. dark = {*-dark, *-primary, black}; light = *-light; mid = {*-mid, white}.",
+              "enum": ["dark", "light", "mid"]
+            },
+            "family": {
+              "type": "string",
+              "description": "Background token's family. Diagnostic only; the rule table does not key on this value.",
+              "enum": ["purple", "blue", "green", "orange", "pink", "black", "white"]
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["renderedTokenValue", "behavior"],
+      "additionalProperties": false,
+      "properties": {
+        "renderedTokenValue": {
+          "type": "string",
+          "description": "The BrandColorToken.value the consumer renders. When behavior=passthrough, this equals the input textToken.value."
+        },
+        "behavior": {
+          "type": "string",
+          "description": "Which row of the rule table fired. Used for diagnostics and for Storybook story labeling.",
+          "enum": [
+            "passthrough",
+            "dark-text-on-dark-bg-becomes-white",
+            "white-text-on-light-bg-becomes-black",
+            "low-contrast-text-on-light-bg-shifts-to-family-dark",
+            "low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary"
+          ]
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "input": {
+        "textToken": { "value": "black", "family": "black", "shade": "n-a" },
+        "background": { "tone": "dark", "family": "purple" }
+      },
+      "output": { "renderedTokenValue": "white", "behavior": "dark-text-on-dark-bg-becomes-white" }
+    },
+    {
+      "input": {
+        "textToken": { "value": "purpleMid", "family": "purple", "shade": "mid" },
+        "background": { "tone": "light", "family": "purple" }
+      },
+      "output": { "renderedTokenValue": "purpleDark", "behavior": "low-contrast-text-on-light-bg-shifts-to-family-dark" }
+    },
+    {
+      "input": {
+        "textToken": { "value": "purpleMid", "family": "purple", "shade": "mid" },
+        "background": { "tone": "mid", "family": "purple" }
+      },
+      "output": { "renderedTokenValue": "purplePrimary", "behavior": "low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary" }
+    },
+    {
+      "input": {
+        "textToken": { "value": "pinkLight", "family": "pink", "shade": "light" },
+        "background": { "tone": "mid", "family": "white" }
+      },
+      "output": { "renderedTokenValue": "pinkPrimary", "behavior": "low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary" }
+    },
+    {
+      "input": {
+        "textToken": { "value": "white", "family": "white", "shade": "n-a" },
+        "background": { "tone": "light", "family": "purple" }
+      },
+      "output": { "renderedTokenValue": "black", "behavior": "white-text-on-light-bg-becomes-black" }
+    },
+    {
+      "input": {
+        "textToken": { "value": "purpleDark", "family": "purple", "shade": "dark" },
+        "background": { "tone": "light", "family": "purple" }
+      },
+      "output": { "renderedTokenValue": "purpleDark", "behavior": "passthrough" }
+    },
+    {
+      "input": {
+        "textToken": { "value": "blueMid", "family": "blue", "shade": "mid" },
+        "background": { "tone": "dark", "family": "purple" }
+      },
+      "output": { "renderedTokenValue": "blueMid", "behavior": "passthrough" }
+    }
+  ]
+}
