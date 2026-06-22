@@ -5,6 +5,7 @@ import {SIMPLE_LIST_DEFAULT_ICON} from '@code-dot-org/component-library/list';
 
 import {
   brandColorOptionsWithDefault,
+  brandTextColorOptions,
   LEGACY_ICON_COLOR_OPTIONS,
 } from '@/components/common/colors';
 import {componentSizeXSToLDefinition} from '@/components/common/definitions';
@@ -84,7 +85,7 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'black',
       description: 'Override the default text color for the list item labels.',
       validations: {
-        in: brandColorOptionsWithDefault('black'),
+        in: brandTextColorOptions('black'),
       },
     },
   },

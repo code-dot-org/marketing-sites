@@ -106,7 +106,12 @@ describe('resolveTextColorForBackground', () => {
     });
   });
 
-  describe('FR-010 — white text on any light background becomes black', () => {
+  describe('white text always passes through (literal #FFFFFF)', () => {
+    // Pre-CodeAI behavior: "White" means literal #FFFFFF on every background.
+    // Existing content that picked White on a now-light/mid section must keep
+    // rendering white; authors who want adaptive text default to "Default"
+    // (Black). The previous FR-010 (white-on-light → black) is intentionally
+    // retired.
     it.each<[BrandColor]>([
       ['purpleLight'],
       ['blueLight'],
@@ -116,10 +121,12 @@ describe('resolveTextColorForBackground', () => {
       ['purpleMid'],
       ['blueMid'],
       ['white'],
-    ])('white text on %s bg → black', bg => {
+      ['purpleDark'],
+      ['black'],
+    ])('white text on %s bg passes through', bg => {
       const result = resolveTextColorForBackground('white', bg);
-      expect(result.value).toBe('black');
-      expect(result.behavior).toBe('white-text-on-light-bg-becomes-black');
+      expect(result.value).toBe('white');
+      expect(result.behavior).toBe('passthrough');
     });
   });
 
@@ -138,10 +145,10 @@ describe('resolveTextColorForBackground', () => {
   });
 
   describe('FR-013 — no enclosing background is treated as white (mid tone)', () => {
-    it('white text → black', () => {
+    it('white text passes through (literal white)', () => {
       const result = resolveTextColorForBackground('white', null);
-      expect(result.value).toBe('black');
-      expect(result.behavior).toBe('white-text-on-light-bg-becomes-black');
+      expect(result.value).toBe('white');
+      expect(result.behavior).toBe('passthrough');
     });
 
     it('purpleMid text → purplePrimary', () => {
@@ -155,6 +162,23 @@ describe('resolveTextColorForBackground', () => {
     it('black text → passthrough', () => {
       const result = resolveTextColorForBackground('black', null);
       expect(result.value).toBe('black');
+      expect(result.behavior).toBe('passthrough');
+    });
+  });
+
+  describe('transparent enclosing background bypasses the contrast switch', () => {
+    // Section background='transparent' means the visible bg lives on an
+    // ancestor — the author owns the color and renders verbatim.
+    it.each<[BrandColor]>([
+      ['white'],
+      ['black'],
+      ['purpleDark'],
+      ['purpleLight'],
+      ['pinkMid'],
+      ['greenLight'],
+    ])('%s text on transparent bg passes through', text => {
+      const result = resolveTextColorForBackground(text, 'transparent');
+      expect(result.value).toBe(text);
       expect(result.behavior).toBe('passthrough');
     });
   });

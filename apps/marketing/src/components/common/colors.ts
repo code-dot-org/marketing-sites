@@ -222,6 +222,38 @@ export const brandColorOptionsWithDefault = (defaultValue: BrandColor) =>
       value === defaultValue ? `${displayName} (default)` : displayName,
   }));
 
+// Text-color picker variant. Same set as `brandColorOptionsWithDefault` but:
+//   - `black` is relabeled "Default" so editors gravitate to it (it carries
+//     the contrast switch, flipping to white on dark sections automatically).
+//   - `white` moves to the bottom of the brand block (above legacy entries),
+//     since it's now a deliberate "always #FFFFFF" choice rather than the
+//     pre-populated default.
+//   - Ordering: Default (Black), brand families, White, then `primary` legacy.
+export const brandTextColorOptions = (defaultValue: BrandColor) => {
+  const blackEntry = BRAND_COLORS.find(c => c.value === 'black');
+  const whiteEntry = BRAND_COLORS.find(c => c.value === 'white');
+  const primaryEntry = BRAND_COLORS.find(c => c.value === 'primary');
+  const familyEntries = BRAND_COLORS.filter(
+    c => c.value !== 'black' && c.value !== 'white' && c.value !== 'primary',
+  );
+  const ordered = [
+    ...(blackEntry ? [blackEntry] : []),
+    ...familyEntries,
+    ...(whiteEntry ? [whiteEntry] : []),
+    ...(primaryEntry ? [primaryEntry] : []),
+  ];
+  return ordered.map(({value, displayName}) => {
+    const label = value === 'black' ? 'Default' : displayName;
+    return {
+      value,
+      displayName:
+        value === defaultValue && label !== 'Default'
+          ? `${label} (default)`
+          : label,
+    };
+  });
+};
+
 export const cssVarForBrandColor = (value: BrandColor): string =>
   BRAND_COLORS.find(c => c.value === value)?.cssVar ?? 'inherit';
 
@@ -232,7 +264,6 @@ export type BackgroundTone = 'dark' | 'light' | 'mid';
 export type ContrastSwitchBehavior =
   | 'passthrough'
   | 'dark-text-on-dark-bg-becomes-white'
-  | 'white-text-on-light-bg-becomes-black'
   | 'low-contrast-text-on-light-bg-shifts-to-family-dark'
   | 'low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary';
 
@@ -243,6 +274,13 @@ export interface ResolvedTextColor {
 
 const findToken = (value: BrandColor | null | undefined) =>
   value ? BRAND_COLORS.find(c => c.value === value) : undefined;
+
+// Sentinel passed by Sections with `background='transparent'` to signal that
+// descendants must not auto-contrast-switch. The author owns text color in a
+// transparent section because the visible background lives on an ancestor
+// (Contentful native parent, background image, etc.) and its luminance can't
+// be inferred from this Section's props.
+export type EnclosingBackground = BrandColor | 'transparent' | null;
 
 // Derived from the background token. Black → dark, White → mid (FR-009),
 // {*-dark, *-primary} → dark, *-light → light, *-mid → mid.
@@ -278,13 +316,27 @@ const isLowContrastText = (token: (typeof BRAND_COLORS)[number]) => {
 //
 // Pass `null` or `undefined` for backgroundValue to model "no enclosing
 // background" (page root) — treated as `mid` tone, equivalent to a white
-// background.
+// background. Pass `'transparent'` to bypass the switch entirely; the author's
+// chosen color renders verbatim (used by Sections with background='transparent'
+// where the visible background lives on an ancestor).
 export const resolveTextColorForBackground = (
   textValue: BrandColor,
-  backgroundValue?: BrandColor | null,
+  backgroundValue?: EnclosingBackground,
 ): ResolvedTextColor => {
+  // Transparent sections opt out of contrast switching — author owns the color.
+  if (backgroundValue === 'transparent') {
+    return {value: textValue, behavior: 'passthrough'};
+  }
+
   const textToken = findToken(textValue);
   if (!textToken) return {value: textValue, behavior: 'passthrough'};
+
+  // White is always literal #FFFFFF — matches the pre-CodeAI behavior so
+  // pre-existing content that picked "White" keeps rendering white on every
+  // background. Authors who want adaptive text default to "Default" (Black).
+  if (textToken.family === 'white') {
+    return {value: textValue, behavior: 'passthrough'};
+  }
 
   const tone = backgroundToneFor(backgroundValue);
 
@@ -298,9 +350,6 @@ export const resolveTextColorForBackground = (
   // tone is 'light' or 'mid' below.
   if (isDarkText(textToken)) {
     return {value: textValue, behavior: 'passthrough'};
-  }
-  if (textToken.family === 'white') {
-    return {value: 'black', behavior: 'white-text-on-light-bg-becomes-black'};
   }
   if (isLowContrastText(textToken)) {
     if (tone === 'light') {
@@ -326,7 +375,7 @@ export const resolveTextColorForBackground = (
 // `resolvedCssVarForBrandColor(color, enclosingBg)` to opt into the switch.
 export const resolvedCssVarForBrandColor = (
   textValue: BrandColor,
-  backgroundValue?: BrandColor | null,
+  backgroundValue?: EnclosingBackground,
 ): string =>
   cssVarForBrandColor(
     resolveTextColorForBackground(textValue, backgroundValue).value,

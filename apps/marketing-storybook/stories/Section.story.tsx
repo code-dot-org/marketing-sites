@@ -1,4 +1,6 @@
 import {BRAND_COLORS} from '@/components/common/colors';
+import Heading from '@/components/contentful/heading';
+import Paragraph from '@/components/contentful/paragraph';
 import Section, {SectionBackground} from '@/components/contentful/section';
 import bgPatternImage from '@public/images/bg-pattern-lines.webp';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
@@ -186,5 +188,107 @@ export const GapAndBackgroundImage: Story = {
       <div>Second child — 3rem above me, 3rem below me.</div>
       <div>Third child</div>
     </Section>
+  ),
+};
+
+// Transparent section wrapped in a dark ancestor — descendants see the
+// 'transparent' sentinel and skip contrast switching, so the author's
+// chosen color renders verbatim. White text reads against the ancestor's
+// dark color (the regression PR #136 introduced); Black stays black.
+export const TransparentOnDarkAncestor: Story = {
+  render: () => (
+    <div
+      style={{
+        backgroundColor: '#1f1976',
+      }}
+    >
+      <Section
+        background="transparent"
+        padding="l"
+        id="transparent-on-dark-ancestor"
+      >
+        <Heading
+          color="white"
+          visualAppearance="heading-md"
+          removeMarginBottom={false}
+        >
+          White heading — literal #FFFFFF
+        </Heading>
+        <Paragraph color="white" removeMarginBottom={false}>
+          White paragraph — also literal #FFFFFF; no auto-flip to black under
+          a Transparent section.
+        </Paragraph>
+        <Paragraph color="black" removeMarginBottom={false}>
+          Black paragraph — renders black verbatim (author opted in).
+        </Paragraph>
+      </Section>
+    </div>
+  ),
+};
+
+// Transparent section with a dark background image — same suppression rule.
+// The Section emits no data-bg-tone and the context delivers 'transparent',
+// so descendants render the author-chosen color.
+export const TransparentWithBackgroundImage: Story = {
+  render: () => (
+    <Section
+      background="transparent"
+      padding="l"
+      backgroundImage={bgPatternImage.src}
+      backgroundImageScaling="cover"
+      id="transparent-with-bg-image"
+    >
+      <Heading
+        color="white"
+        visualAppearance="heading-md"
+        removeMarginBottom={false}
+      >
+        White heading — verbatim against the image
+      </Heading>
+      <Paragraph color="black" removeMarginBottom={false}>
+        Black paragraph — verbatim.
+      </Paragraph>
+    </Section>
+  ),
+};
+
+// White text vs. Default (Black) text on brand backgrounds:
+//   - White is literal #FFFFFF on every background (passthrough).
+//   - Black flips to white on dark backgrounds via the contrast switch.
+//   - Black stays black on light/mid backgrounds.
+export const WhiteAndDefaultAcrossBrandBackgrounds: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 0}}>
+      {(
+        [
+          'purpleDark',
+          'pinkLight',
+          'white',
+          'black',
+        ] as const satisfies readonly SectionBackground[]
+      ).map(bg => (
+        <Section
+          key={`white-vs-default-${bg}`}
+          background={bg}
+          padding="m"
+          id={`white-vs-default-${bg}`}
+        >
+          <Heading
+            color="white"
+            visualAppearance="heading-md"
+            removeMarginBottom={false}
+          >
+            background={bg} — White heading (always #FFFFFF)
+          </Heading>
+          <Heading
+            color="black"
+            visualAppearance="heading-md"
+            removeMarginBottom={false}
+          >
+            background={bg} — Default/Black heading (flips on dark)
+          </Heading>
+        </Section>
+      ))}
+    </div>
   ),
 };

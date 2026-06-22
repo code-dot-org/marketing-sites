@@ -7,6 +7,15 @@ import {
   sectionPaddingDefinition,
 } from '@/components/common/definitions';
 
+// Transparent is a first-class section background: the Section renders with
+// no background color so authors can wrap it in a Contentful-native parent or
+// supply a background image. Descendants opt out of contrast switching (see
+// Section.tsx + SectionBackgroundContext.tsx).
+const TRANSPARENT_BACKGROUND_OPTION = {
+  value: 'transparent',
+  displayName: 'Transparent',
+};
+
 // Legacy backgrounds predate the CodeAI palette. Kept (with " (legacy)"
 // suffix) so existing Contentful entries keep validating; they fall to the
 // bottom of the dropdown.
@@ -18,7 +27,6 @@ const LEGACY_SECTION_BACKGROUND_OPTIONS = [
   {value: 'brandLightSecondary', displayName: 'Light purple (legacy)'},
   {value: 'patternDark', displayName: 'Pattern dark (legacy)'},
   {value: 'patternPrimary', displayName: 'Pattern teal (legacy)'},
-  {value: 'transparent', displayName: 'Transparent (legacy)'},
 ];
 
 export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinition =
@@ -45,10 +53,20 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
         description: 'The background color of the section.',
         defaultValue: 'white',
         validations: {
-          in: [
-            ...brandColorOptionsWithDefault('white'),
-            ...LEGACY_SECTION_BACKGROUND_OPTIONS,
-          ],
+          // Transparent sits directly below "White (default)" so authors who
+          // want to wrap the Section in a custom parent (Contentful native
+          // section, background image, etc.) find it among the foundational
+          // options rather than buried with legacy values.
+          in: ((): {value: string; displayName: string}[] => {
+            const brandOptions = brandColorOptionsWithDefault('white');
+            const whiteIndex = brandOptions.findIndex(o => o.value === 'white');
+            return [
+              ...brandOptions.slice(0, whiteIndex + 1),
+              TRANSPARENT_BACKGROUND_OPTION,
+              ...brandOptions.slice(whiteIndex + 1),
+              ...LEGACY_SECTION_BACKGROUND_OPTIONS,
+            ];
+          })(),
         },
       },
       ...sectionPaddingDefinition,
