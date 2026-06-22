@@ -17,9 +17,23 @@
           "description": "A BrandColorToken (see brand-color-token.schema.json) representing the text element's authored color.",
           "required": ["value", "family", "shade"],
           "properties": {
-            "value": { "type": "string" },
-            "family": { "type": "string", "enum": ["purple", "blue", "green", "orange", "pink", "black", "white"] },
-            "shade": { "type": "string", "enum": ["dark", "primary", "mid", "light", "n-a"] }
+            "value": {"type": "string"},
+            "family": {
+              "type": "string",
+              "enum": [
+                "purple",
+                "blue",
+                "green",
+                "orange",
+                "pink",
+                "black",
+                "white"
+              ]
+            },
+            "shade": {
+              "type": "string",
+              "enum": ["dark", "primary", "mid", "light", "n-a"]
+            }
           }
         },
         "background": {
@@ -36,7 +50,15 @@
             "family": {
               "type": "string",
               "description": "Background token's family. Diagnostic only; the rule table does not key on this value.",
-              "enum": ["purple", "blue", "green", "orange", "pink", "black", "white"]
+              "enum": [
+                "purple",
+                "blue",
+                "green",
+                "orange",
+                "pink",
+                "black",
+                "white"
+              ]
             }
           }
         }
@@ -68,52 +90,71 @@
   "examples": [
     {
       "input": {
-        "textToken": { "value": "black", "family": "black", "shade": "n-a" },
-        "background": { "tone": "dark", "family": "purple" }
+        "textToken": {"value": "black", "family": "black", "shade": "n-a"},
+        "background": {"tone": "dark", "family": "purple"}
       },
-      "output": { "renderedTokenValue": "white", "behavior": "dark-text-on-dark-bg-becomes-white" }
+      "output": {
+        "renderedTokenValue": "white",
+        "behavior": "dark-text-on-dark-bg-becomes-white"
+      }
     },
     {
       "input": {
-        "textToken": { "value": "purpleMid", "family": "purple", "shade": "mid" },
-        "background": { "tone": "light", "family": "purple" }
+        "textToken": {"value": "purpleMid", "family": "purple", "shade": "mid"},
+        "background": {"tone": "light", "family": "purple"}
       },
-      "output": { "renderedTokenValue": "purpleDark", "behavior": "low-contrast-text-on-light-bg-shifts-to-family-dark" }
+      "output": {
+        "renderedTokenValue": "purpleDark",
+        "behavior": "low-contrast-text-on-light-bg-shifts-to-family-dark"
+      }
     },
     {
       "input": {
-        "textToken": { "value": "purpleMid", "family": "purple", "shade": "mid" },
-        "background": { "tone": "mid", "family": "purple" }
+        "textToken": {"value": "purpleMid", "family": "purple", "shade": "mid"},
+        "background": {"tone": "mid", "family": "purple"}
       },
-      "output": { "renderedTokenValue": "purplePrimary", "behavior": "low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary" }
+      "output": {
+        "renderedTokenValue": "purplePrimary",
+        "behavior": "low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary"
+      }
     },
     {
       "input": {
-        "textToken": { "value": "pinkLight", "family": "pink", "shade": "light" },
-        "background": { "tone": "mid", "family": "white" }
+        "textToken": {"value": "pinkLight", "family": "pink", "shade": "light"},
+        "background": {"tone": "mid", "family": "white"}
       },
-      "output": { "renderedTokenValue": "pinkPrimary", "behavior": "low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary" }
+      "output": {
+        "renderedTokenValue": "pinkPrimary",
+        "behavior": "low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary"
+      }
     },
     {
       "input": {
-        "textToken": { "value": "white", "family": "white", "shade": "n-a" },
-        "background": { "tone": "light", "family": "purple" }
+        "textToken": {"value": "white", "family": "white", "shade": "n-a"},
+        "background": {"tone": "light", "family": "purple"}
       },
-      "output": { "renderedTokenValue": "black", "behavior": "white-text-on-light-bg-becomes-black" }
+      "output": {
+        "renderedTokenValue": "black",
+        "behavior": "white-text-on-light-bg-becomes-black"
+      }
     },
     {
       "input": {
-        "textToken": { "value": "purpleDark", "family": "purple", "shade": "dark" },
-        "background": { "tone": "light", "family": "purple" }
+        "textToken": {
+          "value": "purpleDark",
+          "family": "purple",
+          "shade": "dark"
+        },
+        "background": {"tone": "light", "family": "purple"}
       },
-      "output": { "renderedTokenValue": "purpleDark", "behavior": "passthrough" }
+      "output": {"renderedTokenValue": "purpleDark", "behavior": "passthrough"}
     },
     {
       "input": {
-        "textToken": { "value": "blueMid", "family": "blue", "shade": "mid" },
-        "background": { "tone": "dark", "family": "purple" }
+        "textToken": {"value": "blueMid", "family": "blue", "shade": "mid"},
+        "background": {"tone": "dark", "family": "purple"}
       },
-      "output": { "renderedTokenValue": "blueMid", "behavior": "passthrough" }
+      "output": {"renderedTokenValue": "blueMid", "behavior": "passthrough"}
     }
   ]
 }
