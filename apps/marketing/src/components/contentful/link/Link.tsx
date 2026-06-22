@@ -9,6 +9,7 @@ import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon
 import {
   BrandColor,
   cssVarForBrandColor,
+  EnclosingBackground,
   resolveTextColorForBackground,
 } from '@/components/common/colors';
 import {
@@ -46,7 +47,7 @@ export type LinkProps = RemoveMarginBottomProps & {
 // stay visually distinct from body copy.
 const resolveLinkColor = (
   color: BrandColor,
-  enclosingBackground: BrandColor | null,
+  enclosingBackground: EnclosingBackground,
 ): string => {
   if (color === 'primary') {
     // Primary stays the brand purple on light/mid backgrounds for visual

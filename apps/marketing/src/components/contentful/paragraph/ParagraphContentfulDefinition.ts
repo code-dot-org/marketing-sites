@@ -2,7 +2,7 @@
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {
-  brandColorOptionsWithDefault,
+  brandTextColorOptions,
   LEGACY_PARAGRAPH_COLOR_OPTIONS,
 } from '@/components/common/colors';
 import {removeMarginBottomDefinition} from '@/components/common/definitions';
@@ -42,7 +42,7 @@ export const ParagraphContentfulComponentDefinition: ComponentDefinition = {
       group: 'style',
       validations: {
         in: [
-          ...brandColorOptionsWithDefault('black'),
+          ...brandTextColorOptions('black'),
           ...LEGACY_PARAGRAPH_COLOR_OPTIONS,
         ],
       },

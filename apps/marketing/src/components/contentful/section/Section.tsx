@@ -181,6 +181,14 @@ const Section: React.FC<SectionProps> = ({
     ? backgroundToneFor(brandBackgroundValue)
     : undefined;
 
+  // Transparent sections opt their descendants out of contrast switching —
+  // the visible background lives on an ancestor (Contentful native parent,
+  // background image, custom layout), so the Section can't infer luminance.
+  // Authors pick "Default" (which still inherits from data-theme cascades on
+  // legacy parents) or an explicit color, and we render it verbatim.
+  const providerValue =
+    background === 'transparent' ? 'transparent' : brandBackgroundValue;
+
   const resolvedBackgroundSize =
     backgroundImageScaling === 'manual'
       ? `auto ${backgroundImageHeight ?? 100}%`
@@ -240,7 +248,7 @@ const Section: React.FC<SectionProps> = ({
           divider !== 'none' && `container--divider-${divider}`,
         )}
       >
-        <SectionBackgroundProvider value={brandBackgroundValue}>
+        <SectionBackgroundProvider value={providerValue}>
           {gapStyle ? <div style={gapStyle}>{children}</div> : children}
         </SectionBackgroundProvider>
       </Container>
