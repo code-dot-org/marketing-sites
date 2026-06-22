@@ -1,5 +1,16 @@
 import {Components, Theme} from '@mui/material/styles';
 
+import {BRAND_GRADIENTS} from '@/components/common/gradients';
+
+// Brand-gradient background rules, mirroring the brand-color `:has()` pattern
+// above but using `background` (shorthand) so the linear-gradient applies.
+const sectionGradientBackgroundRules = Object.fromEntries(
+  BRAND_GRADIENTS.map(g => [
+    `.section-background-${g.value}:has(&.MuiContainer-root)`,
+    {background: g.css},
+  ]),
+);
+
 export const CONTAINER_OVERRIDES: Components<Theme>['MuiContainer'] = {
   styleOverrides: {
     root: ({theme}) => ({
@@ -123,6 +134,7 @@ export const CONTAINER_OVERRIDES: Components<Theme>['MuiContainer'] = {
       '.section-background-pinkLight:has(&.MuiContainer-root)': {
         backgroundColor: 'var(--codeai-pink-light)',
       },
+      ...sectionGradientBackgroundRules,
     }),
   },
 };

@@ -8,6 +8,11 @@ import {
   BrandColor,
   backgroundToneFor,
 } from '@/components/common/colors';
+import {
+  BrandGradient,
+  gradientFamilyFor,
+  isGradientBackground,
+} from '@/components/common/gradients';
 import type {SpacingProps} from '@/components/common/types';
 import {SectionBackgroundProvider} from '@/components/contentful/section/SectionBackgroundContext';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
@@ -36,7 +41,8 @@ type BrandColorSectionBackground = (typeof BRAND_COLORS)[number]['value'];
 
 export type SectionBackground =
   | LegacySectionBackground
-  | BrandColorSectionBackground;
+  | BrandColorSectionBackground
+  | BrandGradient;
 
 const LEGACY_SECTION_BACKGROUNDS = [
   'primary',
@@ -177,9 +183,23 @@ const Section: React.FC<SectionProps> = ({
   const brandBackgroundValue = isBrandBackground
     ? (background as BrandColor)
     : undefined;
+
+  // Gradient backgrounds are treated as primary-tone for the contrast switch:
+  // the top of the gradient is family-primary, so default text needs to flip
+  // to white. We normalize the gradient to its family's primary token before
+  // it reaches the SectionBackgroundProvider — descendants stay gradient-naive.
+  const gradientBackgroundValue = isGradientBackground(background)
+    ? background
+    : undefined;
+  const normalizedBrandBgFromGradient = gradientBackgroundValue
+    ? (`${gradientFamilyFor(gradientBackgroundValue)}Primary` as BrandColor)
+    : undefined;
+
   const dataBgTone = isBrandBackground
     ? backgroundToneFor(brandBackgroundValue)
-    : undefined;
+    : gradientBackgroundValue
+      ? 'dark'
+      : undefined;
 
   // Transparent sections opt their descendants out of contrast switching —
   // the visible background lives on an ancestor (Contentful native parent,
@@ -187,7 +207,9 @@ const Section: React.FC<SectionProps> = ({
   // Authors pick "Default" (which still inherits from data-theme cascades on
   // legacy parents) or an explicit color, and we render it verbatim.
   const providerValue =
-    background === 'transparent' ? 'transparent' : brandBackgroundValue;
+    background === 'transparent'
+      ? 'transparent'
+      : (normalizedBrandBgFromGradient ?? brandBackgroundValue);
 
   const resolvedBackgroundSize =
     backgroundImageScaling === 'manual'

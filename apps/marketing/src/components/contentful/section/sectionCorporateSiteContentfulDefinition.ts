@@ -6,6 +6,7 @@ import {
   sectionIdDefinition,
   sectionPaddingDefinition,
 } from '@/components/common/definitions';
+import {SECTION_GRADIENT_OPTIONS} from '@/components/common/gradients';
 
 // Transparent is a first-class section background: the Section renders with
 // no background color so authors can wrap it in a Contentful-native parent or
@@ -56,7 +57,9 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
           // Transparent sits directly below "White (default)" so authors who
           // want to wrap the Section in a custom parent (Contentful native
           // section, background image, etc.) find it among the foundational
-          // options rather than buried with legacy values.
+          // options rather than buried with legacy values. Brand gradients
+          // sit between the brand-color block and the legacy block so they're
+          // grouped with the modern palette.
           in: ((): {value: string; displayName: string}[] => {
             const brandOptions = brandColorOptionsWithDefault('white');
             const whiteIndex = brandOptions.findIndex(o => o.value === 'white');
@@ -64,6 +67,7 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
               ...brandOptions.slice(0, whiteIndex + 1),
               TRANSPARENT_BACKGROUND_OPTION,
               ...brandOptions.slice(whiteIndex + 1),
+              ...SECTION_GRADIENT_OPTIONS,
               ...LEGACY_SECTION_BACKGROUND_OPTIONS,
             ];
           })(),
