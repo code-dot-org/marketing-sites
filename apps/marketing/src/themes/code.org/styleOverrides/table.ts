@@ -1,5 +1,7 @@
 import {Components, Theme} from '@mui/material/styles';
 
+import {SPACE_GROTESK_FONT} from '@/themes/code.org/constants/fonts';
+
 // Empty template for table component overrides in MUI theme.
 export const TABLE_OVERRIDES: Components<Theme>['MuiTable'] = {
   styleOverrides: {
@@ -18,8 +20,8 @@ export const TABLE_CELL_OVERRIDES: Components<Theme>['MuiTableCell'] = {
       verticalAlign: 'top',
     }),
     head: () => ({
-      backgroundColor: 'var(--background-brand-teal-primary)',
-      borderColor: 'var(--borders-brand-teal-strong)',
+      backgroundColor: 'var(--codeai-purple-primary)',
+      borderColor: 'var(--codeai-purple-dark)',
       textTransform: 'uppercase',
 
       '.MuiTypography-root.MuiTypography-body2.paragraph--color-primary': {
@@ -28,6 +30,13 @@ export const TABLE_CELL_OVERRIDES: Components<Theme>['MuiTableCell'] = {
         color: 'var(--text-neutral-white-fixed);',
         margin: 0,
         lineHeight: '1.23rem',
+      },
+      // !important: Paragraph sets fontWeight via MUI sx (emotion-generated
+      // high-specificity class) which otherwise beats this theme override.
+      '& > p': {
+        fontFamily: `"${SPACE_GROTESK_FONT}", sans-serif !important`,
+        fontWeight: '700 !important',
+        color: 'var(--text-neutral-white-fixed)',
       },
     }),
     body: () => ({

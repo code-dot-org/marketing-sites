@@ -28,6 +28,8 @@ export const IconContentfulComponentDefinition: ComponentDefinition = {
   id: 'icon',
   name: 'Icon',
   category: '03: Content Building Blocks',
+  thumbnailUrl:
+    'https://contentful-images.code.org/90t6bu6vlf76/7DncC3ARfnKQmQWytayrZA/dd718f899ba91bc3fd86dd8b930d8855/component_icon_thumbnail.png',
   // Adding an empty array here so no default style options show in the Design tab.
   builtInStyles: [],
   children: false,

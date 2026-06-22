@@ -45,6 +45,8 @@ export type HeadingProps = RemoveMarginBottomProps & {
   fontKerning?: 'auto' | 'normal' | 'none';
   /** Text-case transform; 'none' is treated as unset */
   textTransform?: HeadingTextTransform;
+  /** Stacking order. Applies with position: relative so the value is honored. */
+  zIndex?: string;
 };
 
 // Maps Contentful Heading visualAppearance values with
@@ -83,6 +85,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
   colorOverride,
   fontKerning,
   textTransform = 'none',
+  zIndex,
 }) => {
   const tag = visualAppearanceToSemanticTagMap[visualAppearance];
   const enclosingBackground = useSectionBackground();
@@ -100,6 +103,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
       colorOverride || resolvedCssVarForBrandColor(color, enclosingBackground),
     fontKerning: fontKerning ?? 'normal',
     ...(textTransform !== 'none' && {textTransform}),
+    ...(zIndex && {position: 'relative', zIndex}),
   };
 
   return (

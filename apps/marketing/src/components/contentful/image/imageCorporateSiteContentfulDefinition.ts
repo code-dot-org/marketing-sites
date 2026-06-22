@@ -38,5 +38,12 @@ export const ImageCorporateSiteContentfulComponentDefinition: ComponentDefinitio
         },
       },
       ...imageHasRoundedCornersDefinition,
+      zIndex: {
+        displayName: 'Z-index',
+        type: 'Text',
+        group: 'style',
+        description:
+          'Stacking order. Leave blank for default. Set an integer (e.g. 10 or -1) to layer above or below sibling elements.',
+      },
     },
   };

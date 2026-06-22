@@ -26,6 +26,7 @@ import {ReactNode} from 'react';
 
 import Link from '@/components/contentful/link';
 import Paragraph from '@/components/contentful/paragraph';
+import {SectionBackgroundProvider} from '@/components/contentful/section/SectionBackgroundContext';
 
 import {
   richTextContainerStyles,
@@ -195,36 +196,42 @@ const richTextRenderOptions: Options = {
       const bodyRows = rows.slice(headerRow ? 1 : 0);
 
       return (
-        <MuiTableContainer sx={richTextTableStyles}>
-          <MuiTable>
-            {headerRow && (
-              <MuiTableHead>
-                <MuiTableRow>
-                  {(('content' in headerRow && headerRow.content) || []).map(
-                    (cell: RichTextNode, i: number) => (
-                      <MuiTableCell key={`header-cell-${i}`}>
-                        {renderTableCellContent(cell)}
-                      </MuiTableCell>
-                    ),
-                  )}
-                </MuiTableRow>
-              </MuiTableHead>
-            )}
-            <MuiTableBody>
-              {bodyRows.map((row, rowIndex) => (
-                <MuiTableRow key={`row-${rowIndex}`}>
-                  {(('content' in row && row.content) || []).map(
-                    (cell: RichTextNode, cellIndex: number) => (
-                      <MuiTableCell key={`cell-${cellIndex}`}>
-                        {renderTableCellContent(cell)}
-                      </MuiTableCell>
-                    ),
-                  )}
-                </MuiTableRow>
-              ))}
-            </MuiTableBody>
-          </MuiTable>
-        </MuiTableContainer>
+        // Reset the section-background context so Paragraphs in cells stop
+        // contrast-switching to white on dark sections. Row backgrounds stay
+        // light, so cell text needs to stay dark. The header row's white text
+        // is forced by the theme override (see table.ts > MuiTableCell.head).
+        <SectionBackgroundProvider value={undefined}>
+          <MuiTableContainer sx={richTextTableStyles}>
+            <MuiTable>
+              {headerRow && (
+                <MuiTableHead>
+                  <MuiTableRow>
+                    {(('content' in headerRow && headerRow.content) || []).map(
+                      (cell: RichTextNode, i: number) => (
+                        <MuiTableCell key={`header-cell-${i}`}>
+                          {renderTableCellContent(cell)}
+                        </MuiTableCell>
+                      ),
+                    )}
+                  </MuiTableRow>
+                </MuiTableHead>
+              )}
+              <MuiTableBody>
+                {bodyRows.map((row, rowIndex) => (
+                  <MuiTableRow key={`row-${rowIndex}`}>
+                    {(('content' in row && row.content) || []).map(
+                      (cell: RichTextNode, cellIndex: number) => (
+                        <MuiTableCell key={`cell-${cellIndex}`}>
+                          {renderTableCellContent(cell)}
+                        </MuiTableCell>
+                      ),
+                    )}
+                  </MuiTableRow>
+                ))}
+              </MuiTableBody>
+            </MuiTable>
+          </MuiTableContainer>
+        </SectionBackgroundProvider>
       );
     },
   },
