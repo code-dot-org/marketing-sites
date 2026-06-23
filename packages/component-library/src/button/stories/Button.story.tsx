@@ -1,3 +1,4 @@
+// Test: verify double /complete behavior for Applitools GitHub integration
 import {Meta, StoryFn} from '@storybook/react-webpack5';
 
 import Button, {ButtonProps, buttonColors} from '../Button';

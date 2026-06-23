@@ -59,4 +59,10 @@ jobs:
       - name: Update Applitools batch status
         shell: bash
         run: |
-          curl -X POST "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ env.APPLITOOLS_BATCH_ID }}/${{ github.run_id }}/complete?apiKey=${{secrets.APPLITOOLS_API_KEY}}"
+          echo "=== First /complete call (real run_id) ==="
+          curl -s -o /dev/null -w "HTTP %{http_code}" -X POST "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ env.APPLITOOLS_BATCH_ID }}/${{ github.run_id }}/complete?apiKey=${{secrets.APPLITOOLS_API_KEY}}"
+          echo ""
+          sleep 5
+          echo "=== Second /complete call (simulated Drone run_id) ==="
+          curl -s -o /dev/null -w "HTTP %{http_code}" -X POST "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ env.APPLITOOLS_BATCH_ID }}/drone-test-99999/complete?apiKey=${{secrets.APPLITOOLS_API_KEY}}"
+          echo ""
