@@ -1,8 +1,14 @@
 @use '@fontsource/space-grotesk/scss/mixins' as SpaceGrotesk;
 
 /**
- * Heading font. Both weights live under a single family so consumers can
- * pick weight via `font-weight: 500 | 700` without changing `font-family`.
+ * Heading font. All four weights live under a single family so consumers
+ * can pick weight via `font-weight: 400 | 500 | 600 | 700` without changing
+ * `font-family`. Weights 400 (Regular) and 600 (Semibold) were added per
+ * spec 009 amendment-4; before that, requesting weight 400 or 600 caused
+ * the browser to synthesize the face from 500 or 700 (visually thinned),
+ * producing inconsistent rendering across platforms.
  */
+@include SpaceGrotesk.faces($family: 'Space Grotesk', $weights: 400);
 @include SpaceGrotesk.faces($family: 'Space Grotesk', $weights: 500);
+@include SpaceGrotesk.faces($family: 'Space Grotesk', $weights: 600);
 @include SpaceGrotesk.faces($family: 'Space Grotesk', $weights: 700);

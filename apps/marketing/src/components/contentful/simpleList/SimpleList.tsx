@@ -6,6 +6,7 @@ import {
   SIMPLE_LIST_DEFAULT_ICON,
   SimpleListProps,
   SimpleListItem,
+  SimpleListSize,
 } from '@code-dot-org/component-library/list';
 
 import {
@@ -27,15 +28,42 @@ export type SimpleListItemEntry = Entry & {
 };
 
 export interface SimpleListContentfulProps
-  extends Omit<SimpleListProps, 'items' | 'type' | 'iconColor' | 'textColor'> {
+  extends Omit<
+    SimpleListProps,
+    'items' | 'type' | 'iconColor' | 'textColor' | 'size'
+  > {
   manualList?: string;
   items?: SimpleListItemEntry[];
   iconName?: string;
+  /**
+   * Contentful size selection. New entries use the spec 009 amendment-5
+   * Text scale (`text-md` default, `text-xs` through `text-4xl`); legacy
+   * stored values (`xs`/`s`/`m`/`l`) auto-map at render time.
+   */
+  size?: SimpleListSize;
   /** Contentful icon-color selection: brand-manifest values or legacy options. */
   type?: BrandColor | LegacyIconColor;
   /** Contentful text-color selection: brand-manifest values. */
   textColor?: BrandColor;
 }
+
+// Legacy stored values from before spec 009 amendment-5 map to Text-scale
+// equivalents so existing Contentful entries continue rendering without
+// any author re-publish.
+const LEGACY_SIZE_AUTO_MAP: Record<'xs' | 's' | 'm' | 'l', SimpleListSize> = {
+  xs: 'text-xs',
+  s: 'text-sm',
+  m: 'text-md',
+  l: 'text-lg',
+};
+
+const resolveSize = (size: SimpleListSize | undefined): SimpleListSize => {
+  if (!size) return 'text-md';
+  if (size in LEGACY_SIZE_AUTO_MAP) {
+    return LEGACY_SIZE_AUTO_MAP[size as keyof typeof LEGACY_SIZE_AUTO_MAP];
+  }
+  return size;
+};
 
 const parseManualList = (raw: string): SimpleListItem[] =>
   raw
@@ -57,6 +85,7 @@ const SimpleListContentful: React.FunctionComponent<
   iconName = SIMPLE_LIST_DEFAULT_ICON,
   type,
   textColor,
+  size,
   ...props
 }) => {
   const listItems: SimpleListItem[] = useMemo(() => {
@@ -95,6 +124,7 @@ const SimpleListContentful: React.FunctionComponent<
     <SimpleList
       {...props}
       items={listItems}
+      size={resolveSize(size)}
       type={legacyType}
       iconColor={iconColor}
       textColor={resolvedTextColor}

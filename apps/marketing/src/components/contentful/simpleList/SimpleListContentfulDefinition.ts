@@ -8,7 +8,6 @@ import {
   brandTextColorOptions,
   LEGACY_ICON_COLOR_OPTIONS,
 } from '@/components/common/colors';
-import {componentSizeXSToLDefinition} from '@/components/common/definitions';
 
 export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
   id: 'simpleList',
@@ -45,7 +44,27 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
         bindingSourceType: ['entry'],
       },
     },
-    size: componentSizeXSToLDefinition,
+    // Spec 009 amendment-5 — Text scale alignment with Paragraph.
+    // Legacy stored values (`xs`/`s`/`m`/`l`) continue to render via the
+    // wrapper's auto-map; they're not exposed in Studio.
+    size: {
+      displayName: 'Size',
+      type: 'Text',
+      defaultValue: 'text-md',
+      group: 'style',
+      validations: {
+        in: [
+          {value: 'text-md', displayName: 'Text md (default)'},
+          {value: 'text-4xl', displayName: 'Text 4xl'},
+          {value: 'text-3xl', displayName: 'Text 3xl'},
+          {value: 'text-2xl', displayName: 'Text 2xl'},
+          {value: 'text-xl', displayName: 'Text xl'},
+          {value: 'text-lg', displayName: 'Text lg'},
+          {value: 'text-sm', displayName: 'Text sm'},
+          {value: 'text-xs', displayName: 'Text xs'},
+        ],
+      },
+    },
     weight: {
       displayName: 'Text weight',
       type: 'Text',

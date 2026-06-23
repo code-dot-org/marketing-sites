@@ -28,7 +28,7 @@
 
       &,
       :first-child {
-        font-size: 0.75rem;
+        font-size: var(--font-size-text-xs); // spec 009 — was 0.75rem literal
         line-height: 1.64;
       }
 

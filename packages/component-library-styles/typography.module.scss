@@ -72,10 +72,39 @@ html {
 */
 
 :root {
-  --font-size-body-xs: 0.813rem;
-  --font-size-body-sm: 0.875rem;
-  --font-size-body-md: 1rem;
-  --font-size-body-lg: 1.25rem;
+  // Text track (Geist) — full 8-cell scale.
+  // Values locked from Figma file Aw6YXqpx6QFlNMXqCKk60e node 36:975
+  // (visible sample labels, not the mislabeled variable names).
+  // See specs/009-typography-system/contracts/scale-tokens.md.
+  --font-size-text-xs: 0.75rem; // 12px
+  --font-size-text-sm: 0.875rem; // 14px
+  --font-size-text-md: 1rem; // 16px — body default
+  --font-size-text-lg: 1.125rem; // 18px
+  --font-size-text-xl: 1.25rem; // 20px
+  --font-size-text-2xl: 1.5rem; // 24px
+  --font-size-text-3xl: 1.875rem; // 30px
+  --font-size-text-4xl: 2.25rem; // 36px
+
+  // Display track (Space Grotesk) — full 8-cell scale.
+  // Same Figma source, node 36:874.
+  --font-size-display-xs: 1.5rem; // 24px
+  --font-size-display-sm: 1.875rem; // 30px
+  --font-size-display-md: 2.25rem; // 36px
+  --font-size-display-lg: 3rem; // 48px
+  --font-size-display-xl: 3.75rem; // 60px — H1 default (amendment-4)
+  --font-size-display-2xl: 4.5rem; // 72px
+  --font-size-display-3xl: 5.625rem; // 90px
+  --font-size-display-4xl: 7.5rem; // 120px
+
+  // Legacy variables — aliased to the new Text scale per spec 009
+  // amendment-4. body-xs intentionally shifts from 0.813rem → 0.75rem
+  // (13px → 12px). The one shared consumer (SimpleList xs-size at line
+  // 114 of simpleList.module.scss) shrinks 1px on both tenants; this is
+  // accepted as an intentional Applitools baseline change.
+  --font-size-body-xs: var(--font-size-text-xs);
+  --font-size-body-sm: var(--font-size-text-sm);
+  --font-size-body-md: var(--font-size-text-md);
+  --font-size-body-lg: var(--font-size-text-xl);
 }
 
 @mixin heading-common {

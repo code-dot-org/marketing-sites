@@ -152,7 +152,9 @@ const Card: React.FC<CardProps> = ({
             variant="subtitle1"
             component="h4"
             gutterBottom
-            fontWeight="bolder"
+            // Spec 009 — "bolder" is browser-relative and inconsistent;
+            // pinned to numeric 600 (Semibold) on the canonical weight ladder.
+            fontWeight={600}
           >
             {subtitle}
           </Typography>

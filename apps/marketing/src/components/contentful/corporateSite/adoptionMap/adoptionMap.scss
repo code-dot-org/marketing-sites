@@ -15,7 +15,9 @@
 
       .mapboxgl-popup-close-button {
         color: var(--text-neutral-placeholder);
-        font-size: 1.5rem;
+        font-size: var(--font-size-text-2xl); // spec 009 — was 1.5rem literal
+        // 0.55 unitless × 1.5rem ≈ 13.2px — intentionally tight to vertically
+        // center the × glyph in a small close button. Leave as-is.
         line-height: 0.55;
         padding: 0.25rem;
         top: 0.2rem;
