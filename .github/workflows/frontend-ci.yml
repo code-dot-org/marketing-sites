@@ -32,15 +32,6 @@ jobs:
               - 'packages/fonts/**'
               - '*'
 
-  # Start the marketing app CI workflow
-  marketing:
-    needs: setup
-    uses: ./.github/workflows/marketing-app-ci.yml
-    with:
-      BRANCHED_TESTING_ENABLED: ${{ contains( github.event.pull_request.labels.*.name, 'All The Things') }}
-      PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
-    secrets: inherit
-
   # Start the component library CI workflow
   component-library:
     if: ${{ needs.setup.outputs.component-library-changed == 'true' }}
@@ -48,15 +39,40 @@ jobs:
     uses: ./.github/workflows/component-library-ci.yml
     secrets: inherit
 
-  # Common teardown actions that must occur after _all_ workflows have completed.
-  # For example, closing the Applitools batch after its completion.
-  teardown:
+  # EXPERIMENT: Call /complete after component-library finishes but BEFORE
+  # marketing storybook Eyes finish. This simulates "GHA finishes first."
+  teardown-early:
+    needs: [setup, component-library]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Early /complete (component-library results only)
+        shell: bash
+        run: |
+          echo "=== Early /complete — only component-library Eyes results should be in the batch ==="
+          RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ env.APPLITOOLS_BATCH_ID }}/${{ github.run_id }}-early/complete?apiKey=${{secrets.APPLITOOLS_API_KEY}}")
+          echo "$RESP"
+
+  # Start the marketing app CI workflow — delayed by 3 minutes to ensure
+  # teardown-early fires before marketing Eyes finish.
+  marketing:
+    needs: [setup, teardown-early]
+    uses: ./.github/workflows/marketing-app-ci.yml
+    with:
+      BRANCHED_TESTING_ENABLED: ${{ contains( github.event.pull_request.labels.*.name, 'All The Things') }}
+      PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+    secrets: inherit
+
+  # EXPERIMENT: Call /complete AFTER marketing finishes too.
+  # If re-evaluation works, the status should now reflect MORE tests.
+  teardown-final:
     needs: [setup, marketing, component-library]
     if: always()
     runs-on: ubuntu-24.04
     steps:
-      # Close the eyes batch after all distributed eyes tests have completed
-      - name: Update Applitools batch status
+      - name: Final /complete (all Eyes results should be in the batch)
         shell: bash
         run: |
-          curl -X POST "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ env.APPLITOOLS_BATCH_ID }}/${{ github.run_id }}/complete?apiKey=${{secrets.APPLITOOLS_API_KEY}}"
+          echo "=== Final /complete — both component-library AND marketing Eyes results should be in the batch ==="
+          RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ env.APPLITOOLS_BATCH_ID }}/${{ github.run_id }}-final/complete?apiKey=${{secrets.APPLITOOLS_API_KEY}}")
+          echo "$RESP"
