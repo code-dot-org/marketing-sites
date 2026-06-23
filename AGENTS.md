@@ -181,6 +181,10 @@ See [docs/ui-convention.md](docs/ui-convention.md).
 
 ## Active Technologies
 
+- TypeScript ~5.x, React 18, Next.js (existing marketing app), SCSS modules for component styling. + `@mui/material`, `@contentful/experiences-sdk-react`, `@code-dot-org/component-library` (this feature updates the `button` export and its dependencies), `@code-dot-org/component-library-styles` (this feature adds `$button-border-radius` to `variables.scss`). No new third-party dependency. (008-brand-buttons)
+- N/A — read-only Contentful entries. (008-brand-buttons)
+- TypeScript ~5.x, React 18, Next.js (existing marketing app), SCSS modules + MUI theme overrides for component styling. + `@mui/material`, `@contentful/experiences-sdk-react`, `@code-dot-org/component-library` (this feature updates `button` exports and their dependencies), `@code-dot-org/component-library-styles` (adds `$button-border-radius` SCSS var + new `buttonColors.scss` CSS-vars file). No new third-party dependency. (008-brand-buttons)
+
 - TypeScript with React 18 on Next.js 15 + MUI (existing theme stack), `@code-dot-org/marketing-component-library-styles` (SCSS primitives), Contentful field validation via existing registration layer, existing marketing testing stack (006-brand-color-system-init)
 - N/A (no runtime persistence; manifest is a static module + CSS variables) (006-brand-color-system-init)
 

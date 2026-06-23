@@ -113,7 +113,7 @@ GroupOfColorsOfButtons.args = {
     },
     {
       text: 'Button Secondary Gray',
-      color: buttonColors.gray,
+      color: buttonColors.black,
       type: 'secondary',
       size: 'm',
       onClick: () => null,
@@ -208,7 +208,7 @@ GroupOfColorsOfButtons.args = {
     {
       icon: {iconName: 'smile', iconStyle: 'solid'},
       ariaLabel: 'gray secondary icon only button',
-      color: buttonColors.gray,
+      color: buttonColors.black,
       type: 'secondary',
       isIconOnly: true,
       size: 'm',
@@ -262,7 +262,7 @@ GroupOfColorsOfButtons.args = {
     {
       icon: {iconName: 'smile', iconStyle: 'solid'},
       ariaLabel: 'gray tertiary icon only button',
-      color: buttonColors.gray,
+      color: buttonColors.black,
       type: 'tertiary',
       isIconOnly: true,
       size: 'm',
@@ -285,7 +285,7 @@ GroupOfSizesOfButtons.args = {
   components: [
     {
       text: 'Button xs',
-      size: 'xs',
+      size: 's',
       onClick: () => null,
     },
     {
@@ -305,7 +305,7 @@ GroupOfSizesOfButtons.args = {
     },
     {
       isIconOnly: true,
-      size: 'xs',
+      size: 's',
       icon: {iconName: 'smile', iconStyle: 'solid'},
       onClick: () => null,
       'aria-label': 'Icon only xs',

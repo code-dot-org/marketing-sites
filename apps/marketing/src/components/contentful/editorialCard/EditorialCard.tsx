@@ -7,6 +7,7 @@ import EditorialCard, {
 } from '@code-dot-org/component-library/cms/editorialCard';
 
 import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
+import {BrandLinkAdapter} from '@/components/contentful/link';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
@@ -91,6 +92,7 @@ const EditorialCardContentful: React.FC<EditorialCardContentfulProps> = ({
       heading={heading}
       text={text}
       link={link}
+      LinkComponent={BrandLinkAdapter}
     />
   );
 };

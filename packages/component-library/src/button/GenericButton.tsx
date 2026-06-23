@@ -1,10 +1,9 @@
 import classNames from 'classnames';
 import React, {forwardRef, memo, useMemo, HTMLAttributes} from 'react';
 
-import {ComponentSizeXSToL} from '@/common/types';
 import FontAwesomeV6Icon, {FontAwesomeV6IconProps} from '@/fontAwesomeV6Icon';
 
-import {ButtonType, ButtonColor} from './types';
+import {ButtonType, ButtonColor, ButtonSize} from './types';
 
 import moduleStyles from './genericButton.module.scss';
 
@@ -49,7 +48,7 @@ export interface CoreButtonProps
       | React.MouseEvent<HTMLAnchorElement>,
   ) => void;
   /** Size of button */
-  size?: ComponentSizeXSToL;
+  size?: ButtonSize;
 }
 
 export interface LinkButtonSpecificProps {
@@ -113,24 +112,7 @@ const checkButtonPropsForErrors = ({
   download,
   text,
   isIconOnly,
-  color,
-  type,
 }: GenericButtonProps) => {
-  if (
-    (color === 'gray' && type == 'primary') ||
-    (color === 'gray' && type === 'tertiary' && !isIconOnly)
-  ) {
-    throw new Error(
-      'Expect type prop to be secondary or tertiary(with isIconOnly prop set to true) when color is gray',
-    );
-  }
-
-  if (color === 'purple' && type === 'secondary') {
-    console.warn(
-      'Warning: Button - Secondary Purple color is now deprecated. Please use different color or type. Secondary purple combination will be removed very soon.',
-    );
-  }
-
   if (useAsLink) {
     if (!href) {
       throw new Error('Expect href prop when useAsLink is true');
@@ -253,7 +235,6 @@ const GenericButton = forwardRef<
     useMemo(
       () =>
         checkButtonPropsForErrors({
-          type,
           icon,
           useAsLink,
           onClick,
@@ -261,9 +242,8 @@ const GenericButton = forwardRef<
           download,
           text,
           isIconOnly,
-          color,
         }),
-      [type, icon, useAsLink, onClick, href, download, text, isIconOnly, color],
+      [icon, useAsLink, onClick, href, download, text, isIconOnly],
     );
 
     /** Handling isPending state content & spinner show logic here.
@@ -291,6 +271,7 @@ const GenericButton = forwardRef<
           moduleStyles[`button-${size}`],
           forceHover && moduleStyles['button-withForcedHover'],
           isIconOnly && moduleStyles['button-iconOnly'],
+          isPending && moduleStyles['is-loading'],
           addPendingButtonWithHiddenTextClass &&
             moduleStyles.buttonPendingWithHiddenText,
           className,

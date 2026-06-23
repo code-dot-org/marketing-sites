@@ -38,7 +38,7 @@ import Image, {
   ImageCSforAllContentfulComponentDefinition,
 } from '@/components/contentful/image';
 import Link, {
-  LinkContentfulComponentDefinition,
+  LegacyLinkContentfulComponentDefinition,
 } from '@/components/contentful/link';
 import Overline, {
   OverlineContentfulComponentDefinition,
@@ -127,7 +127,7 @@ const contentfulRegistration = {
     },
     {
       component: Link,
-      definition: LinkContentfulComponentDefinition,
+      definition: LegacyLinkContentfulComponentDefinition,
     },
     {component: Overline, definition: OverlineContentfulComponentDefinition},
     {

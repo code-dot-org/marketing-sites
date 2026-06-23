@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import {HTMLAttributes, useMemo, forwardRef} from 'react';
+import {ComponentType, HTMLAttributes, useMemo, forwardRef} from 'react';
 
 import CloseButton from '@/closeButton';
 import {ComponentSizeXSToL} from '@/common/types';
@@ -32,6 +32,8 @@ export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
   text: string;
   /** Alert link */
   link?: LinkProps;
+  /** Optional override for the link renderer. See specs/008-brand-buttons/research.md R12. */
+  LinkComponent?: ComponentType<LinkProps>;
   /** Alert icon */
   icon?: FontAwesomeV6IconProps;
   /** Show icon */
@@ -92,6 +94,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
       showIcon = true,
       icon,
       link,
+      LinkComponent = Link,
       className,
       onClose,
       closeLabel = 'Close alert',
@@ -128,7 +131,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
             {link && (
               <>
                 &nbsp;&nbsp;
-                <Link {...link} size={size} />
+                <LinkComponent {...link} size={size} />
               </>
             )}
           </span>

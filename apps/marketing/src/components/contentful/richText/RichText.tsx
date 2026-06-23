@@ -75,6 +75,7 @@ const extractNodeContent = (node: RichTextNode): ReactNode[] => {
       const linkContent = getContent();
       return [
         <Link
+          inline
           removeMarginBottom
           isLinkExternal={false}
           key={linkContent.join('-') + node.data.uri}
