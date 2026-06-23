@@ -81,7 +81,10 @@ export const MuiVideoErrorPlaceholder = styled('div', {
   zindex: 1,
 
   svg: {
-    fontSize: '3rem',
+    // Spec 009 — SVG icon glyph at 48px (= Display lg cell). Routed through
+    // the shared CSS variable so the value tracks the scale; not tied to a
+    // role token so it won't drift if H3's mapping changes.
+    fontSize: 'var(--font-size-display-lg)',
     marginBottom: '1rem',
 
     // Hide the icon on small screens to leave more space

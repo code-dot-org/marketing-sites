@@ -11,15 +11,10 @@ import {
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 
-type ParagraphSemanticTag = 'body1' | 'body2' | 'body3' | 'body4';
-
-// Existing Contentful Paragraph visualAppearance values that
-// were set before using the MUI Typography component.
-type ParagraphVisualAppearance =
-  | 'body-one'
-  | 'body-two'
-  | 'body-three'
-  | 'body-four';
+import {
+  resolveParagraphStyles,
+  type ParagraphVisualAppearanceValue,
+} from './resolveParagraphStyles';
 
 type ParagraphColor = BrandColor | LegacyParagraphColor;
 
@@ -28,8 +23,12 @@ type ParagraphTextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 type ParagraphProps = RemoveMarginBottomProps & {
   /** Paragraph content */
   children: ReactNode;
-  /** Paragraph visual appearance */
-  visualAppearance?: ParagraphVisualAppearance;
+  /**
+   * Paragraph visual appearance. Spec 009 US3 widened the enum from 4 legacy
+   * `body-*` values to 12 (4 legacy + 8 new `text-*` cells). Legacy values
+   * keep their existing role-token bindings.
+   */
+  visualAppearance?: ParagraphVisualAppearanceValue;
   /** Whether the paragraph text is bold */
   isStrong?: boolean;
   /** Whether the paragraph text is italic */
@@ -46,25 +45,13 @@ type ParagraphProps = RemoveMarginBottomProps & {
   sx?: React.CSSProperties;
 };
 
-// Maps Contentful Paragraph visualAppearance values with
-// MUI Typography `variant` prop values.
-const visualAppearanceToMuiTagMap: Record<
-  ParagraphVisualAppearance,
-  ParagraphSemanticTag
-> = {
-  'body-one': 'body1',
-  'body-two': 'body2',
-  'body-three': 'body3',
-  'body-four': 'body4',
-};
-
 const isLegacyParagraphColor = (
   value: ParagraphColor,
 ): value is LegacyParagraphColor =>
   (LEGACY_PARAGRAPH_COLORS as readonly string[]).includes(value);
 
 const Paragraph: React.FunctionComponent<ParagraphProps> = ({
-  visualAppearance = 'body-two',
+  visualAppearance = 'text-md',
   isStrong = false,
   isItalic = false,
   color = 'black',
@@ -77,7 +64,7 @@ const Paragraph: React.FunctionComponent<ParagraphProps> = ({
 }) => {
   const legacy = isLegacyParagraphColor(color);
   const enclosingBackground = useSectionBackground();
-  // colorOverride wins over the contrast switch (FR-014).
+  // colorOverride wins over the contrast switch (spec 006 FR-014).
   const inlineColor =
     colorOverride ||
     (legacy
@@ -86,14 +73,19 @@ const Paragraph: React.FunctionComponent<ParagraphProps> = ({
   const legacyClassName =
     legacy && !colorOverride ? `paragraph--color-${color}` : undefined;
 
+  const {variantTag, sx: resolvedSx} = resolveParagraphStyles({
+    visualAppearance,
+    isStrong,
+    isItalic,
+  });
+
   return (
     <Typography
       className={classNames(legacyClassName, className)}
-      variant={visualAppearanceToMuiTagMap[visualAppearance]}
+      variant={variantTag}
       gutterBottom={!removeMarginBottom}
       sx={{
-        fontWeight: isStrong ? 600 : 400,
-        fontStyle: isItalic ? 'italic' : 'normal',
+        ...resolvedSx,
         ...(inlineColor && {color: inlineColor}),
         ...(textTransform !== 'none' && {textTransform}),
         ...sx,

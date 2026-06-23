@@ -25,21 +25,25 @@ export const TYPOGRAPHY_OVERRIDES: Components<Theme>['MuiTypography'] = {
       '&.MuiTypography-overline.overline--color-white': {
         color: 'var(--neutral-base-white)',
       },
+      // Overline size cells routed through the Text-track scale (spec 009 §R5).
+      // Note: overline--size-s was 0.625rem (10px) — below the Text scale floor
+      // of Text xs (0.75rem / 12px). Clamped up to Text xs. The ~20% visible
+      // growth is an intentional, documented change.
       '&.MuiTypography-overline.overline--size-s': {
-        fontSize: '0.625rem', // 10px
+        fontSize: 'var(--font-size-text-xs)',
       },
       '&.MuiTypography-overline.overline--size-m': {
-        fontSize: '0.75rem', // 12px
+        fontSize: 'var(--font-size-text-xs)',
       },
       '&.MuiTypography-overline.overline--size-l': {
-        fontSize: '0.875rem', // 14px
+        fontSize: 'var(--font-size-text-sm)',
       },
-      // Caption styles
+      // Caption — routed through Text sm.
       '&.MuiTypography-caption': {
         color: 'var(--text-neutral-primary)',
-        fontSize: '0.875rem', // 14px
+        fontSize: 'var(--font-size-text-sm)',
         fontWeight: '600',
-        margin: theme.spacing(1, 0, 0), // 8px 0 0
+        margin: theme.spacing(1, 0, 0),
       },
     }),
     gutterBottom: ({theme}) => ({

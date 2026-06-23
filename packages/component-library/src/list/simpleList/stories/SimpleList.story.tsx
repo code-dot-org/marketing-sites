@@ -242,6 +242,47 @@ export const Sizes: Story = {
   },
 };
 
+// Spec 009 amendment-5 — Text scale alignment with Paragraph.
+// Eight new size values (`text-xs` through `text-4xl`); `text-md` is the
+// default. text-xs/sm/md/lg render identically to legacy xs/s/m/l (same
+// underlying CSS variables); text-xl/2xl/3xl/4xl extend the scale upward.
+export const TextScaleSizes: Story = {
+  args: [
+    {
+      ...defaultArgs,
+      size: 'text-xs',
+      items: [
+        {key: 'item-a', label: 'text-xs Item A'},
+        {key: 'item-b', label: 'text-xs Item B'},
+      ],
+    },
+    {
+      ...defaultArgs,
+      size: 'text-md',
+      items: [
+        {key: 'item-a', label: 'text-md (default) Item A'},
+        {key: 'item-b', label: 'text-md (default) Item B'},
+      ],
+    },
+    {
+      ...defaultArgs,
+      size: 'text-xl',
+      items: [
+        {key: 'item-a', label: 'text-xl Item A'},
+        {key: 'item-b', label: 'text-xl Item B'},
+      ],
+    },
+    {
+      ...defaultArgs,
+      size: 'text-3xl',
+      items: [
+        {key: 'item-a', label: 'text-3xl Item A'},
+        {key: 'item-b', label: 'text-3xl Item B'},
+      ],
+    },
+  ],
+};
+
 export const CustomIconSizes: Story = {
   args: [
     {

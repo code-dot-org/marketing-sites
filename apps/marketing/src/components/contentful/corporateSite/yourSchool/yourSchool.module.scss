@@ -140,6 +140,10 @@
 
         .yourSchoolFormSubmittedIcon {
           color: var(--text-success-primary);
+          // 32px FontAwesome icon glyph — not body type. The typography scale
+          // has no 2rem cell (Text 4xl = 2.25rem; Text xl = 1.25rem). Left as
+          // a literal rem value per spec 009 deprecated-migration policy
+          // (sub-typography uses stay as-is).
           font-size: 2rem;
         }
       }
@@ -170,7 +174,9 @@
             @include font.main-font-semi-bold;
             display: flex;
             gap: 0.625rem;
-            font-size: 1.25rem;
+            font-size: var(
+              --font-size-text-xl
+            ); // spec 009 — was 1.25rem literal
             line-height: 1.4;
             margin: 0 0 1.25rem;
 
@@ -229,7 +235,9 @@
 
               legend {
                 @include font.main-font-semi-bold;
-                font-size: 0.875rem;
+                font-size: var(
+                  --font-size-text-sm
+                ); // spec 009 — was 0.875rem literal
                 line-height: 1.54;
                 margin-bottom: 0.5rem;
               }

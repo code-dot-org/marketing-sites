@@ -24,14 +24,23 @@ export const ParagraphContentfulComponentDefinition: ComponentDefinition = {
     visualAppearance: {
       displayName: 'Visual Appearance',
       type: 'Text',
-      defaultValue: 'body-two',
+      defaultValue: 'text-md',
       group: 'style',
+      // Spec 009 amendment-4 — narrowed to the 8 Text-scale cells with
+      // text-md (default) first. Legacy `body-*` stored values continue
+      // to render via the auto-map in resolveParagraphStyles.ts; they
+      // just no longer appear in the Studio dropdown. Matches the
+      // narrowing precedent set by spec 008 (Brand Text Link color enum).
       validations: {
         in: [
-          {value: 'body-one', displayName: 'Body L'},
-          {value: 'body-two', displayName: 'Body M'},
-          {value: 'body-three', displayName: 'Body S'},
-          {value: 'body-four', displayName: 'Body XS'},
+          {value: 'text-md', displayName: 'Text md (default)'},
+          {value: 'text-4xl', displayName: 'Text 4xl'},
+          {value: 'text-3xl', displayName: 'Text 3xl'},
+          {value: 'text-2xl', displayName: 'Text 2xl'},
+          {value: 'text-xl', displayName: 'Text xl'},
+          {value: 'text-lg', displayName: 'Text lg'},
+          {value: 'text-sm', displayName: 'Text sm'},
+          {value: 'text-xs', displayName: 'Text xs'},
         ],
       },
     },

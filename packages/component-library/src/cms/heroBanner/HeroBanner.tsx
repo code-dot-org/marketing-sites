@@ -1,3 +1,4 @@
+import Typography from '@mui/material/Typography';
 import classNames from 'classnames';
 import {ComponentType, ReactNode, HTMLAttributes, JSX} from 'react';
 
@@ -7,7 +8,7 @@ import {Theme} from '@/common/contexts';
 import {FontAwesomeV6IconProps} from '@/fontAwesomeV6Icon';
 import Image, {ImageProps} from '@/image';
 import {LinkProps} from '@/link';
-import {Heading1, BodyOneText, BodyTwoText} from '@/typography';
+import {BodyOneText, BodyTwoText} from '@/typography';
 import Video, {VideoProps} from '@/video';
 
 import moduleStyles from './heroBanner.module.scss';
@@ -128,7 +129,9 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
       <div className={classNames(moduleStyles.heroBannerContainer)}>
         <div className={moduleStyles.heroBannerTextContainer}>
           <div>
-            <Heading1>{heading}</Heading1>
+            <Typography component="h1" variant="h1">
+              {heading}
+            </Typography>
 
             {subHeading && <BodyOneText>{subHeading}</BodyOneText>}
 

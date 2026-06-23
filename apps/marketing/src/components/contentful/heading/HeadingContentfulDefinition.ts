@@ -57,6 +57,33 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
+    // Spec 009 US3 + amendment-4 — orthogonal to "Heading Level" above.
+    // SIZE-only override: the chosen Display cell changes size + line-height
+    // + letter-spacing while the semantic <h*> tag, font-family, and weight
+    // come from Heading Level. To match the H1 visual treatment on a
+    // different heading level, pair this with the Font weight override
+    // (Semibold to match H1; Medium otherwise).
+    appearance: {
+      displayName: 'Visual Appearance',
+      type: 'Text',
+      defaultValue: 'default',
+      group: 'style',
+      description:
+        'Override the size only while keeping the chosen Heading Level\'s semantic tag (<h1>..<h6>) and weight. "Default" inherits the canonical size for the chosen Heading Level.',
+      validations: {
+        in: [
+          {value: 'default', displayName: 'Default (from level)'},
+          {value: 'display-4xl', displayName: 'Display 4xl'},
+          {value: 'display-3xl', displayName: 'Display 3xl'},
+          {value: 'display-2xl', displayName: 'Display 2xl'},
+          {value: 'display-xl', displayName: 'Display xl'},
+          {value: 'display-lg', displayName: 'Display lg'},
+          {value: 'display-md', displayName: 'Display md'},
+          {value: 'display-sm', displayName: 'Display sm'},
+          {value: 'display-xs', displayName: 'Display xs'},
+        ],
+      },
+    },
     removeMarginBottom: {...removeMarginBottomDefinition},
     children: {
       displayName: 'Content',
@@ -83,12 +110,16 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
     fontWeight: {
       displayName: 'Override · Font weight',
       type: 'Text',
-      defaultValue: '500',
+      defaultValue: 'default',
       group: 'style',
-      description: 'Default is Medium.',
+      description:
+        '"Default (from level)" inherits the Heading Level\'s canonical weight (Heading 1 = Semibold; Heading 2–6 = Medium). Pick a specific weight to override.',
       validations: {
         in: [
+          {value: 'default', displayName: 'Default (from level)'},
+          {value: '400', displayName: 'Regular'},
           {value: '500', displayName: 'Medium'},
+          {value: '600', displayName: 'Semibold'},
           {value: '700', displayName: 'Bold'},
         ],
       },
