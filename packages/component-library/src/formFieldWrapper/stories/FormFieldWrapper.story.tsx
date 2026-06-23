@@ -171,10 +171,13 @@ export const Sizes: Story = {
 
     expect(sLabelText).toHaveStyle('font-size: 12px;');
     expect(sLabelText).toHaveStyle('line-height: 19.68px;');
-    expect(sHelperMessage).toHaveStyle('font-size: 13.008px;');
-    expect(sHelperMessage).toHaveStyle('line-height: 21.3331px;');
-    expect(sHelperIcon).toHaveStyle('font-size: 13.008px;');
-    expect(sHelperIcon).toHaveStyle('line-height: 13.008px;');
+    // Spec 009 amendment-4 — --font-size-body-xs now aliases to
+    // --font-size-text-xs (13.008px → 12px). Line-height multiplier
+    // (1.64) stays; resolved px values follow.
+    expect(sHelperMessage).toHaveStyle('font-size: 12px;');
+    expect(sHelperMessage).toHaveStyle('line-height: 19.68px;');
+    expect(sHelperIcon).toHaveStyle('font-size: 12px;');
+    expect(sHelperIcon).toHaveStyle('line-height: 12px;');
 
     const mLabelText = canvas.getAllByText('M Label text')[0];
     const mHelperMessage = canvas.getByText('M Helper message');

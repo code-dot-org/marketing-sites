@@ -218,7 +218,9 @@ export const Sizes: Story = {
     const canvas = within(canvasElement);
 
     [
-      {gap: '4px', iconSize: '8px', labelSize: '13.008px'}, // XS Size
+      // Spec 009 amendment-4 — --font-size-body-xs now aliases to
+      // --font-size-text-xs (0.813rem → 0.75rem; 13.008px → 12px).
+      {gap: '4px', iconSize: '8px', labelSize: '12px'}, // XS Size
       {gap: '6px', iconSize: '10px', labelSize: '14px'}, // S Size
       {gap: '8px', iconSize: '12px', labelSize: '16px'}, // M Size
       {gap: '10px', iconSize: '14px', labelSize: '20px'}, // L Size
@@ -335,7 +337,10 @@ export const CustomIconSizes: Story = {
     const canvas = within(canvasElement);
 
     [
-      {gap: '4px', iconSize: '13.008px', labelSize: '13.008px'}, // XS Size
+      // Spec 009 amendment-4 — --font-size-body-xs now aliases to
+      // --font-size-text-xs (13.008px → 12px). Icon dimension follows the
+      // same CSS variable.
+      {gap: '4px', iconSize: '12px', labelSize: '12px'}, // XS Size
       {gap: '6px', iconSize: '14px', labelSize: '14px'}, // S Size
       {gap: '8px', iconSize: '16px', labelSize: '16px'}, // M Size
       {gap: '10px', iconSize: '20px', labelSize: '20px'}, // L Size
