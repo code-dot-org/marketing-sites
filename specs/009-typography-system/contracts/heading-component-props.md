@@ -53,12 +53,12 @@ No content-type schema migration required — this is a ComponentDefinition vari
 
 ```ts
 type HeadingLevelValue =
-  | 'heading-xxl'   // → <h1>, seed role h1 (Display 2xl Semibold)
-  | 'heading-xl'    // → <h2>, seed role h2 (default)
-  | 'heading-lg'    // → <h3>, seed role h3
-  | 'heading-md'    // → <h4>, seed role h4
-  | 'heading-sm'    // → <h5>, seed role h5
-  | 'heading-xs';   // → <h6>, seed role h6
+  | 'heading-xxl' // → <h1>, seed role h1 (Display 2xl Semibold)
+  | 'heading-xl' // → <h2>, seed role h2 (default)
+  | 'heading-lg' // → <h3>, seed role h3
+  | 'heading-md' // → <h4>, seed role h4
+  | 'heading-sm' // → <h5>, seed role h5
+  | 'heading-xs'; // → <h6>, seed role h6
 
 type HeadingAppearanceValue =
   | 'default'
@@ -87,10 +87,10 @@ export type HeadingProps = {
   className?: string;
 
   /** Individual overrides — top precedence. Unchanged from current code. */
-  fontSize?: number;          // rem
-  lineHeight?: number;        // unitless
+  fontSize?: number; // rem
+  lineHeight?: number; // unitless
   fontWeight?: '500' | '700'; // Studio-validated weight enum (unchanged for this spec; 4-weight ladder deferred)
-  colorOverride?: string;     // hex; wins over the contrast switch
+  colorOverride?: string; // hex; wins over the contrast switch
   fontKerning?: 'auto' | 'normal' | 'none';
   textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
   zIndex?: string;
@@ -108,8 +108,8 @@ export type HeadingProps = {
 ```tsx
 <Typography
   className={className}
-  component={semanticTag}     // <h1>..<h6> from Heading Level
-  variant={variantTag}        // h1..h6 variant (carries family + per-breakpoint styles)
+  component={semanticTag} // <h1>..<h6> from Heading Level
+  variant={variantTag} // h1..h6 variant (carries family + per-breakpoint styles)
   gutterBottom={!removeMarginBottom}
   sx={{...sxFromResolve, ...colorSx, ...zIndexSx}}
 >
@@ -121,17 +121,17 @@ export type HeadingProps = {
 
 When `appearance` is non-`default`, the variant binding for MUI determines which set of styles flows in:
 
-| `appearance`   | `variantTag`     | Notes                                                          |
-| -------------- | ---------------- | -------------------------------------------------------------- |
-| `default`      | matches level    | Use the seed role's variant tag (h1..h6 from `visualAppearance`). |
-| `display-2xl`  | `h1`             | Same cell as canonical H1 → use h1 variant.                    |
-| `display-xl`   | `h2`             | Same cell as canonical H2 → use h2 variant.                    |
-| `display-lg`   | `h3`             | Same cell as canonical H3 → use h3 variant.                    |
-| `display-md`   | `h4`             | Same cell as canonical H4 → use h4 variant.                    |
-| `display-sm`   | `h5`             | Same cell as canonical H5 → use h5 variant.                    |
-| `display-xs`   | `h6`             | Same cell as canonical H6 → use h6 variant.                    |
-| `display-4xl`  | `h1` + inline sx | No canonical level matches; use h1 variant for the family + emit inline `sx.fontSize`/`lineHeight`/`letterSpacing` + per-breakpoint media queries for Display 4xl. |
-| `display-3xl`  | `h1` + inline sx | Same as above for Display 3xl.                                  |
+| `appearance`  | `variantTag`     | Notes                                                                                                                                                              |
+| ------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `default`     | matches level    | Use the seed role's variant tag (h1..h6 from `visualAppearance`).                                                                                                  |
+| `display-2xl` | `h1`             | Same cell as canonical H1 → use h1 variant.                                                                                                                        |
+| `display-xl`  | `h2`             | Same cell as canonical H2 → use h2 variant.                                                                                                                        |
+| `display-lg`  | `h3`             | Same cell as canonical H3 → use h3 variant.                                                                                                                        |
+| `display-md`  | `h4`             | Same cell as canonical H4 → use h4 variant.                                                                                                                        |
+| `display-sm`  | `h5`             | Same cell as canonical H5 → use h5 variant.                                                                                                                        |
+| `display-xs`  | `h6`             | Same cell as canonical H6 → use h6 variant.                                                                                                                        |
+| `display-4xl` | `h1` + inline sx | No canonical level matches; use h1 variant for the family + emit inline `sx.fontSize`/`lineHeight`/`letterSpacing` + per-breakpoint media queries for Display 4xl. |
+| `display-3xl` | `h1` + inline sx | Same as above for Display 3xl.                                                                                                                                     |
 
 For the 2 extra cells (`display-4xl`, `display-3xl`) the variant binding falls back to `h1` (any heading variant would work — picking h1 keeps the Display-track font-family inheritance) and the inline sx provides the full style payload.
 
@@ -153,15 +153,15 @@ When no individual overrides are set AND `appearance = 'default'`, the rendered 
 
 ### Resolution table (canonical examples)
 
-| `visualAppearance` | `appearance`     | Individual overrides       | Result                                                                  |
-| ------------------ | ---------------- | -------------------------- | ----------------------------------------------------------------------- |
-| `heading-xxl`      | (unset)          | (none)                     | `<h1>` + canonical H1 cell (Display 2xl Semibold, H1 breakpoint steps)   |
-| `heading-xxl`      | `default`        | (none)                     | Same as above — `default` is the sentinel for "use seed."                |
-| `heading-xl`       | `display-2xl`    | (none)                     | `<h2>` + Display 2xl cell (Display 2xl Semibold, Display 2xl steps)      |
-| `heading-xxl`      | `display-lg`     | (none)                     | `<h1>` + Display lg cell                                                  |
-| `heading-xl`       | `display-4xl`    | (none)                     | `<h2>` + Display 4xl cell (variant=h1 for family, inline sx for size)    |
-| `heading-lg`       | `default`        | `fontSize=5`               | `<h3>` + canonical H3 cell with `font-size: 5rem` override               |
-| `heading-xl`       | `display-xl`     | `fontWeight='700'`         | `<h2>` + Display xl cell with `font-weight: 700` override                |
+| `visualAppearance` | `appearance`  | Individual overrides | Result                                                                 |
+| ------------------ | ------------- | -------------------- | ---------------------------------------------------------------------- |
+| `heading-xxl`      | (unset)       | (none)               | `<h1>` + canonical H1 cell (Display 2xl Semibold, H1 breakpoint steps) |
+| `heading-xxl`      | `default`     | (none)               | Same as above — `default` is the sentinel for "use seed."              |
+| `heading-xl`       | `display-2xl` | (none)               | `<h2>` + Display 2xl cell (Display 2xl Semibold, Display 2xl steps)    |
+| `heading-xxl`      | `display-lg`  | (none)               | `<h1>` + Display lg cell                                               |
+| `heading-xl`       | `display-4xl` | (none)               | `<h2>` + Display 4xl cell (variant=h1 for family, inline sx for size)  |
+| `heading-lg`       | `default`     | `fontSize=5`         | `<h3>` + canonical H3 cell with `font-size: 5rem` override             |
+| `heading-xl`       | `display-xl`  | `fontWeight='700'`   | `<h2>` + Display xl cell with `font-weight: 700` override              |
 
 ## Diff from today
 

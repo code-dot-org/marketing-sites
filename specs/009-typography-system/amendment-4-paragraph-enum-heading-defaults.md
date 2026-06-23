@@ -64,7 +64,7 @@ Step ladders also shifted one cell. H1's new step table: `{md: 'xl', sm: 'lg', x
   {value: '500', displayName: 'Medium'},
   {value: '600', displayName: 'Semibold'},
   {value: '700', displayName: 'Bold'},
-]
+];
 ```
 
 `defaultValue` is `'default'`. Newly placed Heading entries inherit the level's canonical weight (H1 = Semibold; H2–H6 = Medium); only an explicit numeric pick overrides. This mirrors the `appearance` field's `'default'` sentinel pattern. Prior to this fix, the `fontWeight` field defaulted to `'500'`, so every new Heading entry silently shadowed the H1 canonical Semibold when authors switched the level to H1 — the override field was overriding even though the author hadn't touched it.
@@ -99,10 +99,12 @@ This is a behavior change from the original spec 009 US3 design (which had Visua
 `packages/component-library-styles/typography.module.scss` no longer declares separate numeric values for `--font-size-body-{xs,sm,md,lg}`. They alias to the Text scale:
 
 ```scss
---font-size-body-xs: var(--font-size-text-xs);  // 0.813rem → 0.75rem (intentional change)
---font-size-body-sm: var(--font-size-text-sm);  // 0.875rem unchanged
---font-size-body-md: var(--font-size-text-md);  // 1rem unchanged
---font-size-body-lg: var(--font-size-text-xl);  // 1.25rem unchanged
+--font-size-body-xs: var(
+  --font-size-text-xs
+); // 0.813rem → 0.75rem (intentional change)
+--font-size-body-sm: var(--font-size-text-sm); // 0.875rem unchanged
+--font-size-body-md: var(--font-size-text-md); // 1rem unchanged
+--font-size-body-lg: var(--font-size-text-xl); // 1.25rem unchanged
 ```
 
 The `body-xs` line shifts the resolved value from `0.813rem` (13px) to `0.75rem` (12px). One shared consumer (`packages/component-library/src/list/simpleList/simpleList.module.scss:114`) renders this on both tenants. The csforall SimpleList xs-size will visually shrink 1px. This is accepted as an intentional Applitools baseline change.
@@ -120,22 +122,22 @@ When pushing this branch and walking the Applitools dashboard, expect these inte
 
 ## Files changed
 
-| File                                                                                                  | Change                                                                                       |
-| ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `apps/marketing/src/themes/code.org/typography/tokens.ts`                                             | ROLE_TOKENS H1–H6 ladder + weights; body1–body4 weight = regular; PARAGRAPH_APPEARANCE_ROLES weights = regular; DISPLAY_APPEARANCE_ROLES re-aliased to new role tokens. |
-| `apps/marketing/src/components/contentful/heading/HeadingContentfulDefinition.ts`                     | fontWeight enum 4 values; appearance field comment updated for size-only semantics.          |
-| `apps/marketing/src/components/contentful/heading/Heading.tsx`                                        | fontWeight prop type widened to 4 values.                                                    |
-| `apps/marketing/src/components/contentful/heading/resolveHeadingStyles.ts`                            | Rewritten size-only Visual Appearance branch; variantTag always = semanticTag; per-breakpoint cell locks. |
-| `apps/marketing/src/components/contentful/paragraph/ParagraphContentfulDefinition.ts`                 | visualAppearance enum narrowed to 8 text-* options; defaultValue = 'text-md'; "Text md (default)" displayName. |
-| `apps/marketing/src/components/contentful/paragraph/Paragraph.tsx`                                    | Default prop value changed from 'body-two' to 'text-md'.                                     |
-| `apps/marketing/src/components/contentful/paragraph/resolveParagraphStyles.ts`                        | **No change** — legacy auto-map still handles `body-*` stored values; weight flows from variant. |
-| `packages/fonts/src/fonts/space-grotesk.scss`                                                         | Added @include for weights 400 and 600 (Regular + Semibold).                                  |
-| `packages/component-library-styles/typography.module.scss`                                            | Legacy `--font-size-body-*` block now aliases to `--font-size-text-*`.                       |
-| `apps/marketing-storybook/stories/Heading.story.tsx`                                                  | fontWeight argType widened; DefaultsPerLevel labels updated; OrthogonalHeadingLevelVsAppearance shows the "h2 looks like H1 with 2 clicks" recipe. |
-| `apps/marketing-storybook/stories/Paragraph.story.tsx`                                                | Playground argType narrowed to 8 text-* values; default arg changed; DefaultsByVariant + LegacyStoredValuesStillRender updated. |
-| `apps/marketing/src/themes/code.org/typography/__tests__/buildTypography.test.ts`                     | H1 size 4.5 → 3.75; H1 step values; H2 weight + size assertions; body2 weight 500 → 400; ROLE_TOKENS sanity. |
-| `apps/marketing/src/themes/code.org/typography/__tests__/buildTypography.responsive.test.ts`          | ROLE_TOKENS sanity for H1 new ladder + H2–H6 Medium + H6 step floor + body2 Regular.        |
-| `apps/marketing/src/components/contentful/heading/__tests__/resolveHeadingStyles.test.ts`             | Rewritten for the variantTag-always-equals-semanticTag rule; new size-only cell tests; "h2 looks like H1" requires 2 controls. |
+| File                                                                                         | Change                                                                                                                                                                  |
+| -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/marketing/src/themes/code.org/typography/tokens.ts`                                    | ROLE_TOKENS H1–H6 ladder + weights; body1–body4 weight = regular; PARAGRAPH_APPEARANCE_ROLES weights = regular; DISPLAY_APPEARANCE_ROLES re-aliased to new role tokens. |
+| `apps/marketing/src/components/contentful/heading/HeadingContentfulDefinition.ts`            | fontWeight enum 4 values; appearance field comment updated for size-only semantics.                                                                                     |
+| `apps/marketing/src/components/contentful/heading/Heading.tsx`                               | fontWeight prop type widened to 4 values.                                                                                                                               |
+| `apps/marketing/src/components/contentful/heading/resolveHeadingStyles.ts`                   | Rewritten size-only Visual Appearance branch; variantTag always = semanticTag; per-breakpoint cell locks.                                                               |
+| `apps/marketing/src/components/contentful/paragraph/ParagraphContentfulDefinition.ts`        | visualAppearance enum narrowed to 8 text-\* options; defaultValue = 'text-md'; "Text md (default)" displayName.                                                         |
+| `apps/marketing/src/components/contentful/paragraph/Paragraph.tsx`                           | Default prop value changed from 'body-two' to 'text-md'.                                                                                                                |
+| `apps/marketing/src/components/contentful/paragraph/resolveParagraphStyles.ts`               | **No change** — legacy auto-map still handles `body-*` stored values; weight flows from variant.                                                                        |
+| `packages/fonts/src/fonts/space-grotesk.scss`                                                | Added @include for weights 400 and 600 (Regular + Semibold).                                                                                                            |
+| `packages/component-library-styles/typography.module.scss`                                   | Legacy `--font-size-body-*` block now aliases to `--font-size-text-*`.                                                                                                  |
+| `apps/marketing-storybook/stories/Heading.story.tsx`                                         | fontWeight argType widened; DefaultsPerLevel labels updated; OrthogonalHeadingLevelVsAppearance shows the "h2 looks like H1 with 2 clicks" recipe.                      |
+| `apps/marketing-storybook/stories/Paragraph.story.tsx`                                       | Playground argType narrowed to 8 text-\* values; default arg changed; DefaultsByVariant + LegacyStoredValuesStillRender updated.                                        |
+| `apps/marketing/src/themes/code.org/typography/__tests__/buildTypography.test.ts`            | H1 size 4.5 → 3.75; H1 step values; H2 weight + size assertions; body2 weight 500 → 400; ROLE_TOKENS sanity.                                                            |
+| `apps/marketing/src/themes/code.org/typography/__tests__/buildTypography.responsive.test.ts` | ROLE_TOKENS sanity for H1 new ladder + H2–H6 Medium + H6 step floor + body2 Regular.                                                                                    |
+| `apps/marketing/src/components/contentful/heading/__tests__/resolveHeadingStyles.test.ts`    | Rewritten for the variantTag-always-equals-semanticTag rule; new size-only cell tests; "h2 looks like H1" requires 2 controls.                                          |
 
 ## Verification
 

@@ -180,6 +180,7 @@ See [docs/ui-convention.md](docs/ui-convention.md).
 - preview URL: `http://preview-[brand].marketing-sites.localhost:3001`
 
 ## Active Technologies
+
 - TypeScript ~5.x, React 18, Next.js 14 (existing marketing app), SCSS modules + MUI theme variants for component styling. + `@mui/material` (existing — uses `createTheme({cssVariables: true})`), `@code-dot-org/fonts` (existing — provides `FONT_FAMILY_NAMES`, `FALLBACK_FONT_FAMILIES_BY_LOCALE`, `loadFonts()`, locale resolver), `@code-dot-org/component-library-styles` (existing — SCSS primitives extended). No new third-party dependency. (009-typography-system)
 - N/A — Contentful entries are read-only for this feature. (009-typography-system)
 

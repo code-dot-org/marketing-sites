@@ -12,29 +12,29 @@ This document resolves the open items the spec deferred to `/plan` against Figma
 
 ### Display track (Space Grotesk) — confirmed from node `36:874`
 
-| Size | Font-size           | Line-height         | Letter-spacing | Source                                       |
-| ---- | ------------------- | ------------------- | -------------- | -------------------------------------------- |
-| 4xl  | `7.5rem` (120px)    | `8.125rem` (130px)  | `-2%`          | sub-node `36:907` — sample text "Display 4xl" |
-| 3xl  | `5.625rem` (90px)   | `6.875rem` (110px)  | `-2%`          | sub-node `36:916` — sample text "Display 3xl" |
-| 2xl  | `4.5rem` (72px)     | `5.625rem` (90px)   | `-2%`          | sub-node `36:925` — sample text "Display 2xl" |
-| xl   | `3.75rem` (60px)    | `4.5rem` (72px)     | `-2%`          | sub-node `36:934`                            |
-| lg   | `3rem` (48px)       | `3.75rem` (60px)    | `-2%`          | sub-node `36:943`                            |
-| md   | `2.25rem` (36px)    | `2.75rem` (44px)    | `-2%`          | sub-node `36:952`                            |
-| sm   | `1.875rem` (30px)   | `2.375rem` (38px)   | none           | sub-node `36:961`                            |
-| xs   | `1.5rem` (24px)     | `2rem` (32px)       | none           | sub-node `36:970`                            |
+| Size | Font-size         | Line-height        | Letter-spacing | Source                                        |
+| ---- | ----------------- | ------------------ | -------------- | --------------------------------------------- |
+| 4xl  | `7.5rem` (120px)  | `8.125rem` (130px) | `-2%`          | sub-node `36:907` — sample text "Display 4xl" |
+| 3xl  | `5.625rem` (90px) | `6.875rem` (110px) | `-2%`          | sub-node `36:916` — sample text "Display 3xl" |
+| 2xl  | `4.5rem` (72px)   | `5.625rem` (90px)  | `-2%`          | sub-node `36:925` — sample text "Display 2xl" |
+| xl   | `3.75rem` (60px)  | `4.5rem` (72px)    | `-2%`          | sub-node `36:934`                             |
+| lg   | `3rem` (48px)     | `3.75rem` (60px)   | `-2%`          | sub-node `36:943`                             |
+| md   | `2.25rem` (36px)  | `2.75rem` (44px)   | `-2%`          | sub-node `36:952`                             |
+| sm   | `1.875rem` (30px) | `2.375rem` (38px)  | none           | sub-node `36:961`                             |
+| xs   | `1.5rem` (24px)   | `2rem` (32px)      | none           | sub-node `36:970`                             |
 
 ### Text track (Geist) — confirmed from node `36:975`
 
-| Size | Font-size           | Line-height         | Letter-spacing | Source                                |
-| ---- | ------------------- | ------------------- | -------------- | ------------------------------------- |
-| 4xl  | `2.25rem` (36px)    | `2.75rem` (44px)    | `-2%`          | sub-node `36:1008` — sample text "Text 4XL" |
-| 3xl  | `1.875rem` (30px)   | `2.375rem` (38px)   | none           | sub-node `36:1017` — sample text "Text 3XL" |
-| 2xl  | `1.5rem` (24px)     | `2rem` (32px)       | none           | sub-node `36:1026` — sample text "Text 2XL" |
-| xl   | `1.25rem` (20px)    | `1.875rem` (30px)   | none           | sub-node `36:1035`                    |
-| lg   | `1.125rem` (18px)   | `1.75rem` (28px)    | none           | sub-node `36:1044`                    |
-| md   | `1rem` (16px)       | `1.5rem` (24px)     | none           | sub-node `36:1053`                    |
-| sm   | `0.875rem` (14px)   | `1.25rem` (20px)    | none           | sub-node `36:1062`                    |
-| xs   | `0.75rem` (12px)    | `1.125rem` (18px)   | none           | sub-node `36:1071`                    |
+| Size | Font-size         | Line-height       | Letter-spacing | Source                                      |
+| ---- | ----------------- | ----------------- | -------------- | ------------------------------------------- |
+| 4xl  | `2.25rem` (36px)  | `2.75rem` (44px)  | `-2%`          | sub-node `36:1008` — sample text "Text 4XL" |
+| 3xl  | `1.875rem` (30px) | `2.375rem` (38px) | none           | sub-node `36:1017` — sample text "Text 3XL" |
+| 2xl  | `1.5rem` (24px)   | `2rem` (32px)     | none           | sub-node `36:1026` — sample text "Text 2XL" |
+| xl   | `1.25rem` (20px)  | `1.875rem` (30px) | none           | sub-node `36:1035`                          |
+| lg   | `1.125rem` (18px) | `1.75rem` (28px)  | none           | sub-node `36:1044`                          |
+| md   | `1rem` (16px)     | `1.5rem` (24px)   | none           | sub-node `36:1053`                          |
+| sm   | `0.875rem` (14px) | `1.25rem` (20px)  | none           | sub-node `36:1062`                          |
+| xs   | `0.75rem` (12px)  | `1.125rem` (18px) | none           | sub-node `36:1071`                          |
 
 **Note on Display md vs Text 4xl collision**: both cells resolve to 36px / 44px line-height. Different family (Space Grotesk vs Geist), so they are distinct tokens at the type-system level — the values just happen to coincide.
 
@@ -51,12 +51,12 @@ This document resolves the open items the spec deferred to `/plan` against Figma
 
 **Rationale**: Figma's "Weights" section for both tracks lists exactly four cells labeled Regular / Medium / Semibold / Bold with the supporting text confirming "Font weight: 400 / 500 / 600 / 700". Mapping the existing SCSS-side mixins is 1:1 (`font.scss:22-25`).
 
-| Weight token | Numeric | SCSS mixin                          | Figma source |
-| ------------ | ------- | ----------------------------------- | ------------ |
-| `regular`    | `400`   | `font.$regular-font-weight`         | `36:887`     |
-| `medium`     | `500`   | `font.$medium-font-weight`          | `36:892`     |
-| `semibold`   | `600`   | `font.$semi-bold-font-weight`       | `36:897`     |
-| `bold`       | `700`   | `font.$bold-font-weight`            | `36:902`     |
+| Weight token | Numeric | SCSS mixin                    | Figma source |
+| ------------ | ------- | ----------------------------- | ------------ |
+| `regular`    | `400`   | `font.$regular-font-weight`   | `36:887`     |
+| `medium`     | `500`   | `font.$medium-font-weight`    | `36:892`     |
+| `semibold`   | `600`   | `font.$semi-bold-font-weight` | `36:897`     |
+| `bold`       | `700`   | `font.$bold-font-weight`      | `36:902`     |
 
 **Studio surface scope**: The existing `heading.fontWeight` Contentful field validates `'500' | '700'` only (`HeadingContentfulDefinition.ts:89-94`). Widening to four enums (Regular / Medium / Semibold / Bold) IS a Contentful schema delta requiring MCP confirmation. **This feature defers that widening** — authors retain Medium / Bold via Studio; the 4-weight ladder is exposed in the TS code, the theme, and Storybook for engineering / design / direct-component use. Widening the field is logged as a follow-up.
 
@@ -64,14 +64,14 @@ This document resolves the open items the spec deferred to `/plan` against Figma
 
 **Decision**: H1–H6 descend the Display scale in single-step increments at Semibold (600). Confirmed against the Figma scale; the floor is the body base (1rem), so H6 at any viewport is `Display xs` (1.5rem) and does not step below 1rem.
 
-| Level | Track   | Size   | Weight   | Desktop (md+) value         | Mobile (xs) step                | Notes                                       |
-| ----- | ------- | ------ | -------- | --------------------------- | ------------------------------- | ------------------------------------------- |
-| H1    | Display | 2xl    | Semibold | `4.5rem` / `5.625rem` line  | `3rem` (Display lg) / `3.75rem` | Locked by user. Steps down 2 cells at mobile. |
-| H2    | Display | xl     | Semibold | `3.75rem` / `4.5rem` line   | `2.25rem` (Display md) / `2.75rem` | Steps down 2 cells at mobile.            |
-| H3    | Display | lg     | Semibold | `3rem` / `3.75rem` line     | `1.875rem` (Display sm) / `2.375rem` | Steps down 2 cells at mobile.          |
-| H4    | Display | md     | Semibold | `2.25rem` / `2.75rem` line  | `1.5rem` (Display xs) / `2rem`  | Steps down 2 cells at mobile.            |
-| H5    | Display | sm     | Semibold | `1.875rem` / `2.375rem` line | `1.5rem` (Display xs) / `2rem`  | Steps down 1 cell at mobile.             |
-| H6    | Display | xs     | Semibold | `1.5rem` / `2rem` line      | `1.5rem` (Display xs) / `2rem`  | Floor — no step.                          |
+| Level | Track   | Size | Weight   | Desktop (md+) value          | Mobile (xs) step                     | Notes                                         |
+| ----- | ------- | ---- | -------- | ---------------------------- | ------------------------------------ | --------------------------------------------- |
+| H1    | Display | 2xl  | Semibold | `4.5rem` / `5.625rem` line   | `3rem` (Display lg) / `3.75rem`      | Locked by user. Steps down 2 cells at mobile. |
+| H2    | Display | xl   | Semibold | `3.75rem` / `4.5rem` line    | `2.25rem` (Display md) / `2.75rem`   | Steps down 2 cells at mobile.                 |
+| H3    | Display | lg   | Semibold | `3rem` / `3.75rem` line      | `1.875rem` (Display sm) / `2.375rem` | Steps down 2 cells at mobile.                 |
+| H4    | Display | md   | Semibold | `2.25rem` / `2.75rem` line   | `1.5rem` (Display xs) / `2rem`       | Steps down 2 cells at mobile.                 |
+| H5    | Display | sm   | Semibold | `1.875rem` / `2.375rem` line | `1.5rem` (Display xs) / `2rem`       | Steps down 1 cell at mobile.                  |
+| H6    | Display | xs   | Semibold | `1.5rem` / `2rem` line       | `1.5rem` (Display xs) / `2rem`       | Floor — no step.                              |
 
 **Tablet (sm, 600–900px)** step: H1–H4 each take an intermediate cell — H1=Display xl, H2=Display lg, H3=Display md, H4=Display sm. H5/H6 do not step at tablet.
 
@@ -87,12 +87,12 @@ This document resolves the open items the spec deferred to `/plan` against Figma
 
 **Decision**: Bind the existing `body-one`/`-two`/`-three`/`-four` enum to four cells in the Text track, with the locked **body default (body-two = Text md Medium)** in the middle:
 
-| `visualAppearance` | MUI variant | Track | Size | Weight  | Font-size / line-height                                |
-| ------------------ | ----------- | ----- | ---- | ------- | ------------------------------------------------------ |
-| `body-one`         | `body1`     | Text  | lg   | Medium  | `1.125rem` (18px) / `1.75rem` (28px) line, weight 500   |
+| `visualAppearance` | MUI variant | Track | Size | Weight  | Font-size / line-height                                                           |
+| ------------------ | ----------- | ----- | ---- | ------- | --------------------------------------------------------------------------------- |
+| `body-one`         | `body1`     | Text  | lg   | Medium  | `1.125rem` (18px) / `1.75rem` (28px) line, weight 500                             |
 | `body-two`         | `body2`     | Text  | md   | Medium  | **`1rem` (16px) / `1.5rem` (24px) line, weight 500** _(LOCKED — Figma `text-md`)_ |
-| `body-three`       | `body3`     | Text  | sm   | Regular | `0.875rem` (14px) / `1.25rem` (20px) line, weight 400   |
-| `body-four`        | `body4`     | Text  | xs   | Regular | `0.75rem` (12px) / `1.125rem` (18px) line, weight 400   |
+| `body-three`       | `body3`     | Text  | sm   | Regular | `0.875rem` (14px) / `1.25rem` (20px) line, weight 400                             |
+| `body-four`        | `body4`     | Text  | xs   | Regular | `0.75rem` (12px) / `1.125rem` (18px) line, weight 400                             |
 
 **Rationale**: `body-two` is already the Contentful default (`ParagraphContentfulDefinition.ts:27`) and matches the locked body default per user. The other three variants follow the Text-scale ladder one step in each direction. body1/body2 use Medium to match the body default's weight; body3/body4 drop to Regular because the smaller cells in the Figma reference use Regular at default.
 
@@ -102,12 +102,12 @@ This document resolves the open items the spec deferred to `/plan` against Figma
 
 **Decision**: Re-route the existing overline + caption font sizes (currently hardcoded in `themes/code.org/styleOverrides/typography.ts:28-43`) through Text-track cells, **at the same final rem values they have today** so no visible change occurs on existing entries:
 
-| Variant            | Current (px / rem) | Maps to        | New rem value | Δ visible?                |
-| ------------------ | ------------------ | -------------- | ------------- | ------------------------- |
-| `overline--size-s` | 10px / `0.625rem`  | Text xs (12px) | `0.75rem`     | Yes — grows ~20%          |
-| `overline--size-m` | 12px / `0.75rem`   | Text xs (12px) | `0.75rem`     | No                        |
-| `overline--size-l` | 14px / `0.875rem`  | Text sm (14px) | `0.875rem`    | No                        |
-| `caption`          | 14px / `0.875rem`  | Text sm (14px) | `0.875rem`    | No                        |
+| Variant            | Current (px / rem) | Maps to        | New rem value | Δ visible?       |
+| ------------------ | ------------------ | -------------- | ------------- | ---------------- |
+| `overline--size-s` | 10px / `0.625rem`  | Text xs (12px) | `0.75rem`     | Yes — grows ~20% |
+| `overline--size-m` | 12px / `0.75rem`   | Text xs (12px) | `0.75rem`     | No               |
+| `overline--size-l` | 14px / `0.875rem`  | Text sm (14px) | `0.875rem`    | No               |
+| `caption`          | 14px / `0.875rem`  | Text sm (14px) | `0.875rem`    | No               |
 
 The `overline--size-s` cell DOES change visibly (10px → 12px) — record this in the spec as an **intentional small change** under the legacy-mapping section. If a stakeholder objects, an alternative is to introduce an additional Text scale "xxs" cell at 0.625rem (10px) below xs, but that breaks the 8-cell symmetry the spec requires. Recommend keeping the change and validating with Applitools baseline diff.
 
@@ -206,18 +206,18 @@ export const createCodeOrgFontStack = (primary: string) =>
 
 ### In scope for this spec (US2 / FR-012)
 
-| File                                                                                              | Hardcoded values                                          | Migration target                                                                       |
-| ------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `apps/marketing/src/components/contentful/corporateSite/yourSchool/yourSchool.module.scss`        | `font-size: 2rem` (L143), `1.25rem` (L173), `0.875rem` (L232); `line-height: 1.4`, `1.54` | `2rem` → `var(--text-2xl)` _wait_ — there's no text-2xl that resolves to 2rem; 2rem = Display md (Space Grotesk, 36px). If this is a heading-like header, route to MUI `Typography variant="h4"`; if it's a numeric stat label, route to a new `--display-md`/`--text-3xl` shared SCSS var. **Per-line decision recorded in `contracts/deprecated-component-migration.md`.** |
-| `apps/marketing/src/components/contentful/corporateSite/adoptionMap/adoptionMap.module.scss`      | `font-size: 0.75rem` (L31, L96); `line-height: 1.64`; `font-weight: 600` (L48) | `0.75rem` = Text xs. Route via `var(--font-size-text-xs)` (extended in `typography.module.scss`). |
-| `apps/marketing/src/components/contentful/corporateSite/adoptionMap/adoptionMap.scss`             | `font-size: 1.5rem` (L18); `line-height: 0.55` (L19 — **bug** per fork agent) | `1.5rem` = Text 2xl OR Display xs. The 0.55 line-height looks like a typo — flag in PR. |
-| `apps/marketing/src/components/contentful/corporateSite/afeEligibility/afeEligibility.module.scss`| `font-size: 1rem` (L26), `0.625rem` (L148); `font-weight: 500` (L147)        | `1rem` = Text md. `0.625rem` is **sub-1rem and below Text xs** — clamp to `var(--font-size-text-xs)` (0.75rem) per the spec's "sub-1rem → smallest ≥ 1rem" rule for headings, or accept as a Text-xxs caption (spec scope ambiguous — recommend clamping to Text xs and documenting). |
-| `apps/marketing/src/components/contentful/activityCatalog/activitiesHero.tsx`                      | `fontSize: {xs: 36, md: 50}` **in px**, `fontWeight: 800` | px → rem (`{xs: '2.25rem', md: '3.125rem'}`); fontWeight 800 (Extra Bold) is **not in the 4-weight ladder** — research recommends routing to `Typography variant="h2"` or `h1` and dropping the inline `fontSize` / `fontWeight` overrides. Decision recorded in `contracts/deprecated-component-migration.md`. |
-| `apps/marketing/src/components/contentful/activityCatalog/facetBar/facetBar.tsx`                   | `fontWeight: 600/700`                                     | If the label semantics are body, use `<Paragraph isStrong>` (Semibold). If heading, use Heading + override.       |
-| `apps/marketing/src/components/contentful/activityCatalog/facetDrawer/facetDrawer.tsx`             | `fontWeight: 600/700` (L47, L100)                         | Same as facetBar.                                                                       |
-| `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`          | `fontWeight={700}` (L41)                                  | `<Paragraph isStrong>` (Semibold = 600) **OR** widen to `fontWeight={isStrong ? 700 : 400}` — per-line decision. |
-| `apps/marketing/src/components/contentful/video/videoComponents/styledMuiComponents/index.ts`      | `fontSize: '3rem'` (L84)                                  | `3rem` = Display lg → route to Heading variant.                                          |
-| `apps/marketing/src/components/contentful/card/Card.tsx`                                           | `fontWeight="bolder"` (L155)                              | Use `<Paragraph isStrong>` (numeric 600) — `"bolder"` is browser-relative and inconsistent across contexts. |
+| File                                                                                               | Hardcoded values                                                                          | Migration target                                                                                                                                                                                                                                                                                                                                                             |
+| -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/marketing/src/components/contentful/corporateSite/yourSchool/yourSchool.module.scss`         | `font-size: 2rem` (L143), `1.25rem` (L173), `0.875rem` (L232); `line-height: 1.4`, `1.54` | `2rem` → `var(--text-2xl)` _wait_ — there's no text-2xl that resolves to 2rem; 2rem = Display md (Space Grotesk, 36px). If this is a heading-like header, route to MUI `Typography variant="h4"`; if it's a numeric stat label, route to a new `--display-md`/`--text-3xl` shared SCSS var. **Per-line decision recorded in `contracts/deprecated-component-migration.md`.** |
+| `apps/marketing/src/components/contentful/corporateSite/adoptionMap/adoptionMap.module.scss`       | `font-size: 0.75rem` (L31, L96); `line-height: 1.64`; `font-weight: 600` (L48)            | `0.75rem` = Text xs. Route via `var(--font-size-text-xs)` (extended in `typography.module.scss`).                                                                                                                                                                                                                                                                            |
+| `apps/marketing/src/components/contentful/corporateSite/adoptionMap/adoptionMap.scss`              | `font-size: 1.5rem` (L18); `line-height: 0.55` (L19 — **bug** per fork agent)             | `1.5rem` = Text 2xl OR Display xs. The 0.55 line-height looks like a typo — flag in PR.                                                                                                                                                                                                                                                                                      |
+| `apps/marketing/src/components/contentful/corporateSite/afeEligibility/afeEligibility.module.scss` | `font-size: 1rem` (L26), `0.625rem` (L148); `font-weight: 500` (L147)                     | `1rem` = Text md. `0.625rem` is **sub-1rem and below Text xs** — clamp to `var(--font-size-text-xs)` (0.75rem) per the spec's "sub-1rem → smallest ≥ 1rem" rule for headings, or accept as a Text-xxs caption (spec scope ambiguous — recommend clamping to Text xs and documenting).                                                                                        |
+| `apps/marketing/src/components/contentful/activityCatalog/activitiesHero.tsx`                      | `fontSize: {xs: 36, md: 50}` **in px**, `fontWeight: 800`                                 | px → rem (`{xs: '2.25rem', md: '3.125rem'}`); fontWeight 800 (Extra Bold) is **not in the 4-weight ladder** — research recommends routing to `Typography variant="h2"` or `h1` and dropping the inline `fontSize` / `fontWeight` overrides. Decision recorded in `contracts/deprecated-component-migration.md`.                                                              |
+| `apps/marketing/src/components/contentful/activityCatalog/facetBar/facetBar.tsx`                   | `fontWeight: 600/700`                                                                     | If the label semantics are body, use `<Paragraph isStrong>` (Semibold). If heading, use Heading + override.                                                                                                                                                                                                                                                                  |
+| `apps/marketing/src/components/contentful/activityCatalog/facetDrawer/facetDrawer.tsx`             | `fontWeight: 600/700` (L47, L100)                                                         | Same as facetBar.                                                                                                                                                                                                                                                                                                                                                            |
+| `apps/marketing/src/components/contentful/corporateSite/stateGapMap/StateGapMapPanel.tsx`          | `fontWeight={700}` (L41)                                                                  | `<Paragraph isStrong>` (Semibold = 600) **OR** widen to `fontWeight={isStrong ? 700 : 400}` — per-line decision.                                                                                                                                                                                                                                                             |
+| `apps/marketing/src/components/contentful/video/videoComponents/styledMuiComponents/index.ts`      | `fontSize: '3rem'` (L84)                                                                  | `3rem` = Display lg → route to Heading variant.                                                                                                                                                                                                                                                                                                                              |
+| `apps/marketing/src/components/contentful/card/Card.tsx`                                           | `fontWeight="bolder"` (L155)                                                              | Use `<Paragraph isStrong>` (numeric 600) — `"bolder"` is browser-relative and inconsistent across contexts.                                                                                                                                                                                                                                                                  |
 
 Hero Banner: per the explore agent's first report there is a Hero Banner component reference in spec scope, but it was not surfaced in this inventory pass. **TBD in tasks**: run `find apps/marketing/src/components -iname '*hero*'` and add to the list. If no Hero Banner component exists at code.org-only scope today, scope shrinks accordingly. _(Action: confirm in `/speckit.tasks`.)_
 

@@ -215,8 +215,8 @@ export const TransparentOnDarkAncestor: Story = {
           White heading — literal #FFFFFF
         </Heading>
         <Paragraph color="white" removeMarginBottom={false}>
-          White paragraph — also literal #FFFFFF; no auto-flip to black under
-          a Transparent section.
+          White paragraph — also literal #FFFFFF; no auto-flip to black under a
+          Transparent section.
         </Paragraph>
         <Paragraph color="black" removeMarginBottom={false}>
           Black paragraph — renders black verbatim (author opted in).

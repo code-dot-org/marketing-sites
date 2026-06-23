@@ -6,45 +6,49 @@ This is the **authoritative table** of every (track, size) cell. Values come fro
 
 ## Display track — Space Grotesk
 
-| Size | `fontSize`           | `lineHeight`            | `letterSpacing` (CSS) | Figma node | Pixel (16px root) |
-| ---- | -------------------- | ----------------------- | --------------------- | ---------- | ----------------- |
-| `4xl` | `7.5rem`             | `8.125rem`              | `-0.02em` (`-2%`)     | `36:907`   | 120px / 130px     |
-| `3xl` | `5.625rem`           | `6.875rem`              | `-0.02em`             | `36:916`   | 90px / 110px      |
-| `2xl` | `4.5rem`             | `5.625rem`              | `-0.02em`             | `36:925`   | 72px / 90px       |
-| `xl`  | `3.75rem`            | `4.5rem`                | `-0.02em`             | `36:934`   | 60px / 72px       |
-| `lg`  | `3rem`               | `3.75rem`               | `-0.02em`             | `36:943`   | 48px / 60px       |
-| `md`  | `2.25rem`            | `2.75rem`               | `-0.02em`             | `36:952`   | 36px / 44px       |
-| `sm`  | `1.875rem`           | `2.375rem`              | _(none)_              | `36:961`   | 30px / 38px       |
-| `xs`  | `1.5rem`             | `2rem`                  | _(none)_              | `36:970`   | 24px / 32px       |
+| Size  | `fontSize` | `lineHeight` | `letterSpacing` (CSS) | Figma node | Pixel (16px root) |
+| ----- | ---------- | ------------ | --------------------- | ---------- | ----------------- |
+| `4xl` | `7.5rem`   | `8.125rem`   | `-0.02em` (`-2%`)     | `36:907`   | 120px / 130px     |
+| `3xl` | `5.625rem` | `6.875rem`   | `-0.02em`             | `36:916`   | 90px / 110px      |
+| `2xl` | `4.5rem`   | `5.625rem`   | `-0.02em`             | `36:925`   | 72px / 90px       |
+| `xl`  | `3.75rem`  | `4.5rem`     | `-0.02em`             | `36:934`   | 60px / 72px       |
+| `lg`  | `3rem`     | `3.75rem`    | `-0.02em`             | `36:943`   | 48px / 60px       |
+| `md`  | `2.25rem`  | `2.75rem`    | `-0.02em`             | `36:952`   | 36px / 44px       |
+| `sm`  | `1.875rem` | `2.375rem`   | _(none)_              | `36:961`   | 30px / 38px       |
+| `xs`  | `1.5rem`   | `2rem`       | _(none)_              | `36:970`   | 24px / 32px       |
 
 ## Text track — Geist
 
-| Size | `fontSize`           | `lineHeight`            | `letterSpacing` (CSS) | Figma node | Pixel (16px root) |
-| ---- | -------------------- | ----------------------- | --------------------- | ---------- | ----------------- |
-| `4xl` | `2.25rem`            | `2.75rem`               | `-0.02em` (`-2%`)     | `36:1008`  | 36px / 44px       |
-| `3xl` | `1.875rem`           | `2.375rem`              | _(none)_              | `36:1017`  | 30px / 38px       |
-| `2xl` | `1.5rem`             | `2rem`                  | _(none)_              | `36:1026`  | 24px / 32px       |
-| `xl`  | `1.25rem`            | `1.875rem`              | _(none)_              | `36:1035`  | 20px / 30px       |
-| `lg`  | `1.125rem`           | `1.75rem`               | _(none)_              | `36:1044`  | 18px / 28px       |
-| `md`  | `1rem` **LOCKED**    | `1.5rem` **LOCKED**     | _(none)_              | `36:1053`  | 16px / 24px       |
-| `sm`  | `0.875rem`           | `1.25rem`               | _(none)_              | `36:1062`  | 14px / 20px       |
-| `xs`  | `0.75rem`            | `1.125rem`              | _(none)_              | `36:1071`  | 12px / 18px       |
+| Size  | `fontSize`        | `lineHeight`        | `letterSpacing` (CSS) | Figma node | Pixel (16px root) |
+| ----- | ----------------- | ------------------- | --------------------- | ---------- | ----------------- |
+| `4xl` | `2.25rem`         | `2.75rem`           | `-0.02em` (`-2%`)     | `36:1008`  | 36px / 44px       |
+| `3xl` | `1.875rem`        | `2.375rem`          | _(none)_              | `36:1017`  | 30px / 38px       |
+| `2xl` | `1.5rem`          | `2rem`              | _(none)_              | `36:1026`  | 24px / 32px       |
+| `xl`  | `1.25rem`         | `1.875rem`          | _(none)_              | `36:1035`  | 20px / 30px       |
+| `lg`  | `1.125rem`        | `1.75rem`           | _(none)_              | `36:1044`  | 18px / 28px       |
+| `md`  | `1rem` **LOCKED** | `1.5rem` **LOCKED** | _(none)_              | `36:1053`  | 16px / 24px       |
+| `sm`  | `0.875rem`        | `1.25rem`           | _(none)_              | `36:1062`  | 14px / 20px       |
+| `xs`  | `0.75rem`         | `1.125rem`          | _(none)_              | `36:1071`  | 12px / 18px       |
 
 ## Weights (both tracks)
 
-| Token       | CSS `font-weight` | Figma label (node 36:874 / 36:975) |
-| ----------- | ----------------- | ---------------------------------- |
-| `regular`   | `400`             | "Regular" (36:886 / 36:987)        |
-| `medium`    | `500`             | "Medium" (36:891 / 36:992)         |
-| `semibold`  | `600`             | "Semibold" (36:896 / 36:997)       |
-| `bold`      | `700`             | "Bold" (36:901 / 36:1002)          |
+| Token      | CSS `font-weight` | Figma label (node 36:874 / 36:975) |
+| ---------- | ----------------- | ---------------------------------- |
+| `regular`  | `400`             | "Regular" (36:886 / 36:987)        |
+| `medium`   | `500`             | "Medium" (36:891 / 36:992)         |
+| `semibold` | `600`             | "Semibold" (36:896 / 36:997)       |
+| `bold`     | `700`             | "Bold" (36:901 / 36:1002)          |
 
 ## Verification snapshot
 
 To verify the implementation matches this contract:
 
 ```ts
-import {SCALE_DISPLAY, SCALE_TEXT, WEIGHTS} from '@/themes/code.org/typography/tokens';
+import {
+  SCALE_DISPLAY,
+  SCALE_TEXT,
+  WEIGHTS,
+} from '@/themes/code.org/typography/tokens';
 
 // Display 2xl (H1's locked cell)
 expect(SCALE_DISPLAY['2xl']).toEqual({

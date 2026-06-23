@@ -35,12 +35,12 @@ type WeightToken = 'regular' | 'medium' | 'semibold' | 'bold';
 
 Maps 1:1 to numeric CSS `font-weight`:
 
-| Token       | Numeric |
-| ----------- | ------- |
-| `regular`   | `400`   |
-| `medium`    | `500`   |
-| `semibold`  | `600`   |
-| `bold`      | `700`   |
+| Token      | Numeric |
+| ---------- | ------- |
+| `regular`  | `400`   |
+| `medium`   | `500`   |
+| `semibold` | `600`   |
+| `bold`     | `700`   |
 
 ### 4. `ScaleCell`
 
@@ -48,8 +48,8 @@ A single cell in the (track × size) grid, locked from Figma per research §R1.
 
 ```ts
 interface ScaleCell {
-  fontSize: string;       // rem
-  lineHeight: string;     // rem
+  fontSize: string; // rem
+  lineHeight: string; // rem
   letterSpacing?: string; // CSS letter-spacing value (e.g. '-0.02em' for -2%); omit when none
 }
 ```
@@ -95,7 +95,7 @@ A canonical binding from a semantic role to a (track, size, weight, breakpoints)
 ```ts
 interface RoleToken {
   track: TypographicTrack;
-  size: SizeToken;              // desktop (md+) cell
+  size: SizeToken; // desktop (md+) cell
   weight: WeightToken;
   steps?: Partial<Record<Breakpoint, SizeToken>>;
   // Optional per-breakpoint size deltas. The default cell applies at the largest
@@ -106,20 +106,20 @@ interface RoleToken {
 
 #### Role tokens (locked)
 
-| Role        | Track   | Size (md+) | Weight   | Steps                                                                            | Notes                                              |
-| ----------- | ------- | ---------- | -------- | -------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `h1`        | display | `2xl`      | semibold | `{ md: '2xl', sm: 'xl', xs: 'lg' }`                                              | **Locked by user.** Spec §FR-002.                  |
-| `h2`        | display | `xl`       | semibold | `{ md: 'xl', sm: 'lg', xs: 'md' }`                                               | Single-step descent.                               |
-| `h3`        | display | `lg`       | semibold | `{ md: 'lg', sm: 'md', xs: 'sm' }`                                               | Single-step descent.                               |
-| `h4`        | display | `md`       | semibold | `{ md: 'md', sm: 'sm', xs: 'xs' }`                                               | Single-step descent.                               |
-| `h5`        | display | `sm`       | semibold | `{ md: 'sm', sm: 'xs', xs: 'xs' }`                                               | Floors at Display xs (1.5rem); never below 1rem.   |
-| `h6`        | display | `xs`       | semibold | _(none — fixed at xs across all breakpoints)_                                    | Display xs = 1.5rem ≥ body floor 1rem.             |
-| `body1`     | text    | `lg`       | medium   | _(none — fixed across breakpoints)_                                              | "Body L".                                          |
-| `body2`     | text    | `md`       | medium   | _(none)_                                                                         | **Locked default** (`text-md` Medium, weight 500). Spec §FR-003. |
-| `body3`     | text    | `sm`       | regular  | _(none)_                                                                         | "Body S" — Text sm Regular.                        |
-| `body4`     | text    | `xs`       | regular  | _(none)_                                                                         | "Body XS" — Text xs Regular.                       |
-| `overline`  | text    | `xs`       | semibold | _(none)_                                                                         | Existing overline-s / overline-m / overline-l size cells routed through Text xs/xs/sm per research §R5. |
-| `caption`   | text    | `sm`       | semibold | _(none)_                                                                         | Per existing `theme.typography.caption` rules; weight stays at 600.        |
+| Role       | Track   | Size (md+) | Weight   | Steps                                         | Notes                                                                                                   |
+| ---------- | ------- | ---------- | -------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `h1`       | display | `2xl`      | semibold | `{ md: '2xl', sm: 'xl', xs: 'lg' }`           | **Locked by user.** Spec §FR-002.                                                                       |
+| `h2`       | display | `xl`       | semibold | `{ md: 'xl', sm: 'lg', xs: 'md' }`            | Single-step descent.                                                                                    |
+| `h3`       | display | `lg`       | semibold | `{ md: 'lg', sm: 'md', xs: 'sm' }`            | Single-step descent.                                                                                    |
+| `h4`       | display | `md`       | semibold | `{ md: 'md', sm: 'sm', xs: 'xs' }`            | Single-step descent.                                                                                    |
+| `h5`       | display | `sm`       | semibold | `{ md: 'sm', sm: 'xs', xs: 'xs' }`            | Floors at Display xs (1.5rem); never below 1rem.                                                        |
+| `h6`       | display | `xs`       | semibold | _(none — fixed at xs across all breakpoints)_ | Display xs = 1.5rem ≥ body floor 1rem.                                                                  |
+| `body1`    | text    | `lg`       | medium   | _(none — fixed across breakpoints)_           | "Body L".                                                                                               |
+| `body2`    | text    | `md`       | medium   | _(none)_                                      | **Locked default** (`text-md` Medium, weight 500). Spec §FR-003.                                        |
+| `body3`    | text    | `sm`       | regular  | _(none)_                                      | "Body S" — Text sm Regular.                                                                             |
+| `body4`    | text    | `xs`       | regular  | _(none)_                                      | "Body XS" — Text xs Regular.                                                                            |
+| `overline` | text    | `xs`       | semibold | _(none)_                                      | Existing overline-s / overline-m / overline-l size cells routed through Text xs/xs/sm per research §R5. |
+| `caption`  | text    | `sm`       | semibold | _(none)_                                      | Per existing `theme.typography.caption` rules; weight stays at 600.                                     |
 
 #### Validation rules
 
@@ -152,14 +152,14 @@ const createCodeOrgFontStack: (primary: string) => string;
 
 The existing Heading `visualAppearance` field (Studio displayName "Heading Level") drives BOTH the rendered semantic tag AND the seed canonical role token. Mapping preserved 1:1 from today's behavior.
 
-| `visualAppearance` value | Studio displayName | Semantic tag | Seed role token | Default size cell        |
-| ------------------------ | ------------------ | ------------ | --------------- | ------------------------ |
-| `heading-xxl`            | "Heading 1"        | `<h1>`       | `h1`            | Display 2xl Semibold     |
-| `heading-xl` (default)   | "Heading 2"        | `<h2>`       | `h2`            | Display xl Semibold      |
-| `heading-lg`             | "Heading 3"        | `<h3>`       | `h3`            | Display lg Semibold      |
-| `heading-md`             | "Heading 4"        | `<h4>`       | `h4`            | Display md Semibold      |
-| `heading-sm`             | "Heading 5"        | `<h5>`       | `h5`            | Display sm Semibold      |
-| `heading-xs`             | "Heading 6"        | `<h6>`       | `h6`            | Display xs Semibold      |
+| `visualAppearance` value | Studio displayName | Semantic tag | Seed role token | Default size cell    |
+| ------------------------ | ------------------ | ------------ | --------------- | -------------------- |
+| `heading-xxl`            | "Heading 1"        | `<h1>`       | `h1`            | Display 2xl Semibold |
+| `heading-xl` (default)   | "Heading 2"        | `<h2>`       | `h2`            | Display xl Semibold  |
+| `heading-lg`             | "Heading 3"        | `<h3>`       | `h3`            | Display lg Semibold  |
+| `heading-md`             | "Heading 4"        | `<h4>`       | `h4`            | Display md Semibold  |
+| `heading-sm`             | "Heading 5"        | `<h5>`       | `h5`            | Display sm Semibold  |
+| `heading-xs`             | "Heading 6"        | `<h6>`       | `h6`            | Display xs Semibold  |
 
 The internal Contentful field name `visualAppearance` is preserved (no Contentful migration); the field is now logically "the Heading Level selector" and that misnomer is documented in the ComponentDefinition source.
 
@@ -167,16 +167,16 @@ The internal Contentful field name `visualAppearance` is preserved (no Contentfu
 
 A new ComponentDefinition variable on Heading. Internal name `appearance`. Studio displayName "Visual Appearance". Default value `'default'` (the sentinel).
 
-| `appearance` value | Studio displayName     | Effect                                                                                |
-| ------------------ | ---------------------- | ------------------------------------------------------------------------------------- |
-| `default`          | "Default (from level)" | No override — render the seed role token from Heading Level unchanged.                |
-| `display-4xl`      | "Display 4xl"          | Override size cell to Display 4xl Semibold + Display 4xl's per-breakpoint steps.      |
-| `display-3xl`      | "Display 3xl"          | Override to Display 3xl Semibold + steps.                                              |
-| `display-2xl`      | "Display 2xl"          | Override to Display 2xl Semibold + steps. _(Same cell as canonical H1.)_              |
-| `display-xl`       | "Display xl"           | Override to Display xl Semibold + steps. _(Same cell as canonical H2.)_               |
-| `display-lg`       | "Display lg"           | Override to Display lg Semibold + steps. _(Same cell as canonical H3.)_               |
-| `display-md`       | "Display md"           | Override to Display md Semibold + steps. _(Same cell as canonical H4.)_               |
-| `display-sm`       | "Display sm"           | Override to Display sm Semibold + steps. _(Same cell as canonical H5.)_               |
+| `appearance` value | Studio displayName     | Effect                                                                                                              |
+| ------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `default`          | "Default (from level)" | No override — render the seed role token from Heading Level unchanged.                                              |
+| `display-4xl`      | "Display 4xl"          | Override size cell to Display 4xl Semibold + Display 4xl's per-breakpoint steps.                                    |
+| `display-3xl`      | "Display 3xl"          | Override to Display 3xl Semibold + steps.                                                                           |
+| `display-2xl`      | "Display 2xl"          | Override to Display 2xl Semibold + steps. _(Same cell as canonical H1.)_                                            |
+| `display-xl`       | "Display xl"           | Override to Display xl Semibold + steps. _(Same cell as canonical H2.)_                                             |
+| `display-lg`       | "Display lg"           | Override to Display lg Semibold + steps. _(Same cell as canonical H3.)_                                             |
+| `display-md`       | "Display md"           | Override to Display md Semibold + steps. _(Same cell as canonical H4.)_                                             |
+| `display-sm`       | "Display sm"           | Override to Display sm Semibold + steps. _(Same cell as canonical H5.)_                                             |
 | `display-xs`       | "Display xs"           | Override to Display xs Semibold (no per-breakpoint steps — Display xs is the floor). _(Same cell as canonical H6.)_ |
 
 The override replaces: `size`, `weight`, `lineHeight`, `letterSpacing`, and `steps` (per-breakpoint table). The override preserves: `track` (always Display), `fontFamily` (Display stack), and the rendered semantic tag (set by Heading Level).
@@ -193,20 +193,20 @@ The 8 cells of the Display scale are intentionally all listed even though canoni
 
 The existing Paragraph `visualAppearance` enum is widened from 4 to 12 values. Legacy values keep their existing role-token bindings; new values map to fresh role tokens.
 
-| `visualAppearance` value | Studio displayName | Maps to role | Maps to MUI variant | Default style                              | Legacy? |
-| ------------------------ | ------------------ | ------------ | ------------------- | ------------------------------------------ | ------- |
-| `body-one`               | "Body L"           | `body1`      | `body1`             | Text lg Medium (1.125rem / 1.75rem)        | Legacy  |
-| `body-two` (default)     | "Body M" (default) | `body2`      | `body2`             | **Text md Medium (1rem / 1.5rem)** LOCKED  | Legacy  |
-| `body-three`             | "Body S"           | `body3`      | `body3`             | Text sm Regular (0.875rem / 1.25rem)       | Legacy  |
-| `body-four`              | "Body XS"          | `body4`      | `body4`             | Text xs Regular (0.75rem / 1.125rem)       | Legacy  |
-| `text-4xl`               | "Text 4xl"         | `text-4xl`   | `body1`             | Text 4xl Medium (2.25rem / 2.75rem)        | New     |
-| `text-3xl`               | "Text 3xl"         | `text-3xl`   | `body1`             | Text 3xl Medium (1.875rem / 2.375rem)      | New     |
-| `text-2xl`               | "Text 2xl"         | `text-2xl`   | `body1`             | Text 2xl Medium (1.5rem / 2rem)            | New     |
-| `text-xl`                | "Text xl"          | `text-xl`    | `body1`             | Text xl Medium (1.25rem / 1.875rem)        | New     |
-| `text-lg`                | "Text lg"          | `text-lg`    | `body1`             | Text lg Medium (1.125rem / 1.75rem)        | New     |
-| `text-md`                | "Text md"          | `text-md`    | `body2`             | Text md Medium (1rem / 1.5rem)             | New     |
-| `text-sm`                | "Text sm"          | `text-sm`    | `body3`             | Text sm Regular (0.875rem / 1.25rem)       | New     |
-| `text-xs`                | "Text xs"          | `text-xs`    | `body4`             | Text xs Regular (0.75rem / 1.125rem)       | New     |
+| `visualAppearance` value | Studio displayName | Maps to role | Maps to MUI variant | Default style                             | Legacy? |
+| ------------------------ | ------------------ | ------------ | ------------------- | ----------------------------------------- | ------- |
+| `body-one`               | "Body L"           | `body1`      | `body1`             | Text lg Medium (1.125rem / 1.75rem)       | Legacy  |
+| `body-two` (default)     | "Body M" (default) | `body2`      | `body2`             | **Text md Medium (1rem / 1.5rem)** LOCKED | Legacy  |
+| `body-three`             | "Body S"           | `body3`      | `body3`             | Text sm Regular (0.875rem / 1.25rem)      | Legacy  |
+| `body-four`              | "Body XS"          | `body4`      | `body4`             | Text xs Regular (0.75rem / 1.125rem)      | Legacy  |
+| `text-4xl`               | "Text 4xl"         | `text-4xl`   | `body1`             | Text 4xl Medium (2.25rem / 2.75rem)       | New     |
+| `text-3xl`               | "Text 3xl"         | `text-3xl`   | `body1`             | Text 3xl Medium (1.875rem / 2.375rem)     | New     |
+| `text-2xl`               | "Text 2xl"         | `text-2xl`   | `body1`             | Text 2xl Medium (1.5rem / 2rem)           | New     |
+| `text-xl`                | "Text xl"          | `text-xl`    | `body1`             | Text xl Medium (1.25rem / 1.875rem)       | New     |
+| `text-lg`                | "Text lg"          | `text-lg`    | `body1`             | Text lg Medium (1.125rem / 1.75rem)       | New     |
+| `text-md`                | "Text md"          | `text-md`    | `body2`             | Text md Medium (1rem / 1.5rem)            | New     |
+| `text-sm`                | "Text sm"          | `text-sm`    | `body3`             | Text sm Regular (0.875rem / 1.25rem)      | New     |
+| `text-xs`                | "Text xs"          | `text-xs`    | `body4`             | Text xs Regular (0.75rem / 1.125rem)      | New     |
 
 **Notes**:
 
@@ -224,9 +224,9 @@ Pure-function resolution from (Heading Level, Visual Appearance, individual over
 ```ts
 interface ResolveHeadingArgs {
   visualAppearance: HeadingLevelValue; // legacy enum, drives tag + seed role
-  appearance: HeadingAppearanceValue;  // new enum, default 'default'
-  fontSize?: number;       // rem
-  lineHeight?: number;     // unitless
+  appearance: HeadingAppearanceValue; // new enum, default 'default'
+  fontSize?: number; // rem
+  lineHeight?: number; // unitless
   fontWeight?: '500' | '700';
   fontKerning?: 'auto' | 'normal' | 'none';
   textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
@@ -322,7 +322,7 @@ CSS custom properties exposed in `packages/component-library-styles/typography.m
   --font-size-display-4xl: 7.5rem;
 
   // Existing back-compat variables — KEEP, resolve to same values
-  --font-size-body-xs: 0.813rem;  // back-compat — keep
+  --font-size-body-xs: 0.813rem; // back-compat — keep
   --font-size-body-sm: var(--font-size-text-sm);
   --font-size-body-md: var(--font-size-text-md);
   --font-size-body-lg: var(--font-size-text-xl); // back-compat: was 1.25rem

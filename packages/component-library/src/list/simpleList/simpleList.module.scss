@@ -51,8 +51,17 @@
   }
 }
 
-// List sizes (legacy 4-cell scale — kept for backward compatibility
-// with consumers that still pass `xs`/`s`/`m`/`l`).
+// List sizes.
+// Two scales live under the same parent selector:
+//   - Legacy 4-cell scale (`xs`/`s`/`m`/`l`) — preserved for any consumer
+//     that still passes these values.
+//   - Spec 009 amendment-5 Text scale (`text-xs` through `text-4xl`) —
+//     mirrors the Paragraph Text scale. `text-xs`/`-sm`/`-md`/`-lg` resolve
+//     to the same values as the legacy cells (via the body-* alias from
+//     amendment-4); `text-xl` through `text-4xl` extend the scale upward.
+// Each Text-scale class also sets `font-size` on `.simpleListItemLabel`
+// directly to override the DSCO Typography's body-one fallback for cells
+// that don't have a matching body{N} variant.
 .simpleList-size {
   &-l {
     &.simpleList,
@@ -121,16 +130,7 @@
       }
     }
   }
-}
 
-// Spec 009 amendment-5 — Text scale alignment with Paragraph.
-// `text-xs` through `text-lg` mirror the legacy 4 sizes (their values match
-// the body-* CSS vars per amendment-4 aliasing). `text-xl` through
-// `text-4xl` are the new larger cells. Each class sets icon dimensions
-// proportional to the text cell AND overrides the label font-size via
-// the shared --font-size-text-* CSS variables (which override whatever
-// the DSCO Typography emits via its body-one fallback visualAppearance).
-.simpleList-size {
   &-text-xs {
     &.simpleList,
     .simpleListItem {

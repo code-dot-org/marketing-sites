@@ -249,11 +249,7 @@ export const Overrides: Story = {
       >
         body-two + isStrong → Semibold (600)
       </Paragraph>
-      <Paragraph
-        visualAppearance="text-lg"
-        isItalic
-        removeMarginBottom={false}
-      >
+      <Paragraph visualAppearance="text-lg" isItalic removeMarginBottom={false}>
         text-lg + isItalic → italic
       </Paragraph>
       <Paragraph

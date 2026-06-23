@@ -147,7 +147,19 @@ export const DefaultsPerLevel: Story = {
 // "Visual Appearance" is a SIZE-only override. To get "h2 looks like H1"
 // the author sets BOTH Visual Appearance = Display xl AND the individual
 // fontWeight override to '600' (Semibold) — two clicks, not one.
+//
+// The demo intentionally mixes h1/h2/h4 in one container to show that
+// the semantic tag stays tied to Heading Level regardless of size; the
+// axe `heading-order` rule is correctly flagging the mixed order, but
+// here it's a deliberate demonstration, not a production a11y concern.
 export const OrthogonalHeadingLevelVsAppearance: Story = {
+  parameters: {
+    a11y: {
+      config: {
+        rules: [{id: 'heading-order', enabled: false}],
+      },
+    },
+  },
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
       <Heading
@@ -156,8 +168,8 @@ export const OrthogonalHeadingLevelVsAppearance: Story = {
         fontWeight="600"
         removeMarginBottom={false}
       >
-        &lt;h2&gt; that looks like H1 — Level=Heading 2, Appearance=Display
-        xl, fontWeight=Semibold
+        &lt;h2&gt; that looks like H1 — Level=Heading 2, Appearance=Display xl,
+        fontWeight=Semibold
       </Heading>
       <Heading
         visualAppearance="heading-xl"
@@ -180,8 +192,8 @@ export const OrthogonalHeadingLevelVsAppearance: Story = {
         appearance="display-4xl"
         removeMarginBottom={false}
       >
-        &lt;h4&gt; visually huge — Level=Heading 4, Appearance=Display 4xl
-        (H4's Medium weight applied at Display 4xl size)
+        &lt;h4&gt; visually huge — Level=Heading 4, Appearance=Display 4xl (H4's
+        Medium weight applied at Display 4xl size)
       </Heading>
       <Heading
         visualAppearance="heading-xxl"

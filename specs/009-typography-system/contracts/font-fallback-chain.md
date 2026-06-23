@@ -82,7 +82,7 @@ const theme = createTheme({
   cssVariables: true,
   components: STYLE_OVERRIDES,
   shape: {borderRadius: 4},
-  typography: (palette) =>
+  typography: palette =>
     buildTypography({defaultFontFamily: createCodeOrgFontStack(GEIST_FONT)}),
   //                ^ buildTypography also internally composes the Display stack
   //                  for h1–h6 via createCodeOrgFontStack(SPACE_GROTESK_FONT)

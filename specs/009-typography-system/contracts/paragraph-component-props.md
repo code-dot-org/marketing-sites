@@ -50,19 +50,19 @@ No content-type schema migration. Studio sees the 12 enum values immediately aft
 ```ts
 type ParagraphVisualAppearanceValue =
   // Legacy
-  | 'body-one'    // → Text lg Medium (Medium = body-one's legacy weight)
-  | 'body-two'    // → Text md Medium (LOCKED body default)
-  | 'body-three'  // → Text sm Regular
-  | 'body-four'   // → Text xs Regular
+  | 'body-one' // → Text lg Medium (Medium = body-one's legacy weight)
+  | 'body-two' // → Text md Medium (LOCKED body default)
+  | 'body-three' // → Text sm Regular
+  | 'body-four' // → Text xs Regular
   // New
-  | 'text-4xl'    // → Text 4xl Medium
-  | 'text-3xl'    // → Text 3xl Medium
-  | 'text-2xl'    // → Text 2xl Medium
-  | 'text-xl'     // → Text xl Medium
-  | 'text-lg'     // → Text lg Medium
-  | 'text-md'     // → Text md Medium
-  | 'text-sm'     // → Text sm Regular
-  | 'text-xs';    // → Text xs Regular
+  | 'text-4xl' // → Text 4xl Medium
+  | 'text-3xl' // → Text 3xl Medium
+  | 'text-2xl' // → Text 2xl Medium
+  | 'text-xl' // → Text xl Medium
+  | 'text-lg' // → Text lg Medium
+  | 'text-md' // → Text md Medium
+  | 'text-sm' // → Text sm Regular
+  | 'text-xs'; // → Text xs Regular
 
 type ParagraphProps = {
   children: ReactNode;
@@ -102,20 +102,20 @@ type ParagraphProps = {
 
 ### Variant binding mapping
 
-| `visualAppearance` | `variantTag` | Inline sx needed?                                                          |
-| ------------------ | ------------ | -------------------------------------------------------------------------- |
-| `body-one`         | `body1`      | No — body1 variant = Text lg Medium.                                       |
-| `body-two`         | `body2`      | No — body2 variant = Text md Medium (locked).                              |
-| `body-three`       | `body3`      | No — body3 variant = Text sm Regular.                                      |
-| `body-four`        | `body4`      | No — body4 variant = Text xs Regular.                                      |
-| `text-4xl`         | `body1`      | Yes — override size + line-height + letter-spacing inline (Text 4xl).      |
-| `text-3xl`         | `body1`      | Yes — override size + line-height inline.                                  |
-| `text-2xl`         | `body1`      | Yes — override size + line-height inline.                                  |
-| `text-xl`          | `body1`      | Yes — override size + line-height inline.                                  |
-| `text-lg`          | `body1`      | No — body1 variant already = Text lg Medium.                               |
-| `text-md`          | `body2`      | No — body2 variant already = Text md Medium.                               |
-| `text-sm`          | `body3`      | No — body3 variant already = Text sm Regular.                              |
-| `text-xs`          | `body4`      | No — body4 variant already = Text xs Regular.                              |
+| `visualAppearance` | `variantTag` | Inline sx needed?                                                     |
+| ------------------ | ------------ | --------------------------------------------------------------------- |
+| `body-one`         | `body1`      | No — body1 variant = Text lg Medium.                                  |
+| `body-two`         | `body2`      | No — body2 variant = Text md Medium (locked).                         |
+| `body-three`       | `body3`      | No — body3 variant = Text sm Regular.                                 |
+| `body-four`        | `body4`      | No — body4 variant = Text xs Regular.                                 |
+| `text-4xl`         | `body1`      | Yes — override size + line-height + letter-spacing inline (Text 4xl). |
+| `text-3xl`         | `body1`      | Yes — override size + line-height inline.                             |
+| `text-2xl`         | `body1`      | Yes — override size + line-height inline.                             |
+| `text-xl`          | `body1`      | Yes — override size + line-height inline.                             |
+| `text-lg`          | `body1`      | No — body1 variant already = Text lg Medium.                          |
+| `text-md`          | `body2`      | No — body2 variant already = Text md Medium.                          |
+| `text-sm`          | `body3`      | No — body3 variant already = Text sm Regular.                         |
+| `text-xs`          | `body4`      | No — body4 variant already = Text xs Regular.                         |
 
 The new `text-md`/`text-lg`/`text-sm`/`text-xs` values produce IDENTICAL rendered styles to their legacy counterparts (`body-two`/`body-one`/`body-three`/`body-four`). They exist for naming clarity — new authoring uses the descriptive `text-*` names; old entries keep their `body-*` values without re-publish.
 

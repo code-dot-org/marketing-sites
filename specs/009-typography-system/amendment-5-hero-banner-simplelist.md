@@ -66,21 +66,21 @@ When pushing this branch and accepting Applitools baselines, expect these:
 
 ## Files changed
 
-| File                                                                                          | Change                                                                                          |
-| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `packages/component-library/src/cms/heroBanner/HeroBanner.tsx`                                | `<Heading1>` → `<Typography component="h1" variant="h1">`; updated imports.                     |
-| `packages/component-library/src/common/types/index.ts`                                        | New `TextScaleSize` type export.                                                                |
-| `packages/component-library/src/common/constants/index.ts`                                    | New `textScaleSizeToBodyTextSizeMap` constant.                                                  |
-| `packages/component-library/src/list/simpleList/SimpleList.tsx`                               | `size` prop type widened; default changed to `'text-md'`; new `isTextScaleSize` guard + branched visualAppearance lookup. |
-| `packages/component-library/src/list/simpleList/simpleList.module.scss`                       | Added 8 `.simpleList-size-text-*` SCSS classes consuming `--font-size-text-*` CSS variables; legacy 4 classes preserved. |
-| `packages/component-library/src/list/simpleList/index.ts` + `list/index.ts`                   | Barrel exports for `SimpleListSize`.                                                            |
-| `packages/component-library/src/list/simpleList/stories/SimpleList.story.tsx`                 | New `TextScaleSizes` story.                                                                     |
-| `apps/marketing/src/components/contentful/simpleList/SimpleListContentfulDefinition.ts`       | Inline `size` field with 8 enum values; `text-md (default)` first; default `'text-md'`.         |
-| `apps/marketing/src/components/contentful/simpleList/SimpleList.tsx`                          | Imports widened type; `resolveSize()` auto-maps legacy `xs`/`s`/`m`/`l` → `text-xs`/`sm`/`md`/`lg`; default falls through to `text-md`. |
+| File                                                                                    | Change                                                                                                                                  |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/component-library/src/cms/heroBanner/HeroBanner.tsx`                          | `<Heading1>` → `<Typography component="h1" variant="h1">`; updated imports.                                                             |
+| `packages/component-library/src/common/types/index.ts`                                  | New `TextScaleSize` type export.                                                                                                        |
+| `packages/component-library/src/common/constants/index.ts`                              | New `textScaleSizeToBodyTextSizeMap` constant.                                                                                          |
+| `packages/component-library/src/list/simpleList/SimpleList.tsx`                         | `size` prop type widened; default changed to `'text-md'`; new `isTextScaleSize` guard + branched visualAppearance lookup.               |
+| `packages/component-library/src/list/simpleList/simpleList.module.scss`                 | Added 8 `.simpleList-size-text-*` SCSS classes consuming `--font-size-text-*` CSS variables; legacy 4 classes preserved.                |
+| `packages/component-library/src/list/simpleList/index.ts` + `list/index.ts`             | Barrel exports for `SimpleListSize`.                                                                                                    |
+| `packages/component-library/src/list/simpleList/stories/SimpleList.story.tsx`           | New `TextScaleSizes` story.                                                                                                             |
+| `apps/marketing/src/components/contentful/simpleList/SimpleListContentfulDefinition.ts` | Inline `size` field with 8 enum values; `text-md (default)` first; default `'text-md'`.                                                 |
+| `apps/marketing/src/components/contentful/simpleList/SimpleList.tsx`                    | Imports widened type; `resolveSize()` auto-maps legacy `xs`/`s`/`m`/`l` → `text-xs`/`sm`/`md`/`lg`; default falls through to `text-md`. |
 
 ## Still awaiting user
 
-- Local dev-server smoke check (Hero Banner H1 visibly Display xl Semibold on code.org; SimpleList dropdown shows 8 text-* options with "Text md (default)" first; existing legacy SimpleList entries continue to render).
+- Local dev-server smoke check (Hero Banner H1 visibly Display xl Semibold on code.org; SimpleList dropdown shows 8 text-\* options with "Text md (default)" first; existing legacy SimpleList entries continue to render).
 - Applitools baselines — accept the code.org Hero Banner H1 visual shift and the csforall Hero Banner H1 shift (Geist 5rem 800wt) as the second documented intentional csforall delta.
 - Push + commit per `[[feedback_no_push_without_approval]]`.
 
@@ -88,4 +88,4 @@ When pushing this branch and accepting Applitools baselines, expect these:
 
 - Brand Text Link size widening — Figma-locked per user; not in scope.
 - Legacy `<Heading1>` DSCO primitive cleanup — still exists for non-HeroBanner consumers; could be migrated and the `.heading-xxl` SCSS class deleted in a follow-up.
-- Removing the legacy `--font-size-body-*` aliases — still used by SimpleList's legacy SCSS classes (preserved for back-compat); cleanup would require migrating those legacy classes to text-* equivalents and dropping the aliases.
+- Removing the legacy `--font-size-body-*` aliases — still used by SimpleList's legacy SCSS classes (preserved for back-compat); cleanup would require migrating those legacy classes to text-\* equivalents and dropping the aliases.
