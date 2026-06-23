@@ -2,7 +2,7 @@
 import './index.css';
 
 // Types
-export {ButtonType, ButtonColor} from './types';
+export type {ButtonType, ButtonColor, ButtonSize} from './types';
 
 // Component Props Types
 export type {ButtonProps} from './Button';

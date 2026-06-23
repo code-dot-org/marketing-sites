@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import {Key, ReactNode, HTMLAttributes} from 'react';
+import {ComponentType, Key, ReactNode, HTMLAttributes} from 'react';
 
 import FontAwesomeV6Icon, {FontAwesomeV6IconProps} from '@/fontAwesomeV6Icon';
 import Link, {LinkProps} from '@/link';
@@ -21,6 +21,8 @@ export interface IconHighlightProps extends HTMLAttributes<HTMLElement> {
   icon: FontAwesomeV6IconProps;
   /** IconHighlight links */
   links?: IconHighlightLinkProps[];
+  /** Optional override for the link renderer. See specs/008-brand-buttons/research.md R12. */
+  LinkComponent?: ComponentType<LinkProps>;
   /** IconHighlight class  */
   className?: string;
 }
@@ -44,6 +46,7 @@ const IconHighlight: React.FC<IconHighlightProps> = ({
   icon,
   className,
   links = [],
+  LinkComponent = Link,
   ...HTMLAttributes
 }: IconHighlightProps) => (
   <div
@@ -72,7 +75,7 @@ const IconHighlight: React.FC<IconHighlightProps> = ({
       <ul className={moduleStyles.iconHighlightLinkList}>
         {links.map(({key, className, text, external, ...link}) => (
           <li key={key}>
-            <Link
+            <LinkComponent
               {...link}
               size="s"
               className={classNames(moduleStyles.iconHighlightLink, className)}
@@ -86,7 +89,7 @@ const IconHighlight: React.FC<IconHighlightProps> = ({
                   aria-label="external link"
                 />
               )}
-            </Link>
+            </LinkComponent>
           </li>
         ))}
       </ul>

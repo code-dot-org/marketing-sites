@@ -37,6 +37,21 @@ export const ButtonLegacyContentfulComponentDefinition: ComponentDefinition = {
         in: [
           {value: 'primary', displayName: 'Primary'},
           {value: 'secondary', displayName: 'Secondary'},
+          {value: 'tertiary', displayName: 'Tertiary'},
+        ],
+      },
+    },
+    size: {
+      displayName: 'Size',
+      type: 'Text',
+      defaultValue: 'm',
+      group: 'style',
+      validations: {
+        in: [
+          {value: 's', displayName: 'Small'},
+          {value: 'm', displayName: 'Medium'},
+          {value: 'l', displayName: 'Large'},
+          {value: 'xl', displayName: 'Extra Large'},
         ],
       },
     },
@@ -82,6 +97,22 @@ export const ButtonLegacyContentfulComponentDefinition: ComponentDefinition = {
       type: 'Text',
       group: 'style',
       defaultValue: '',
+    },
+    iconRightName: {
+      displayName: 'Right Icon Name',
+      description:
+        'Optional. Font Awesome icon name to render on the right side of the label.',
+      type: 'Text',
+      group: 'style',
+      defaultValue: '',
+    },
+    isIconOnly: {
+      displayName: 'Icon Only',
+      description:
+        'When enabled, renders a square button with only the Left Icon Name as the glyph. Text is hidden. Aria Label is required for accessibility.',
+      type: 'Boolean',
+      defaultValue: false,
+      group: 'style',
     },
   },
 };

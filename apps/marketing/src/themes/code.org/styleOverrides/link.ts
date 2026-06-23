@@ -2,39 +2,97 @@ import {Components, Theme} from '@mui/material/styles';
 
 import {createFontStack} from '@/themes/common/constants';
 
-import {GEIST_FONT} from '../constants/fonts';
+import {SPACE_GROTESK_FONT} from '../constants/fonts';
 
+// Brand Text Link — see specs/008-brand-buttons/research.md R12.
 export const LINK_OVERRIDES: Components<Theme>['MuiLink'] = {
   styleOverrides: {
     root: ({theme}) => ({
-      fontFamily: createFontStack(GEIST_FONT),
-      lineHeight: 1.4,
+      fontFamily: createFontStack(SPACE_GROTESK_FONT),
+      fontWeight: 700,
+      padding: 0,
       marginBottom: theme.spacing(2),
       textDecoration: 'underline',
-      transition: 'color 0.2s ease-in-out, opacity 0.2s ease-in-out',
-      '& > i, & > svg': {
+      textDecorationStyle: 'solid',
+      textDecorationThickness: 'from-font',
+      transition: 'color 0.2s ease-in-out',
+
+      // Defeat the global MuiSvgIcon color override.
+      '& svg': {
         color: 'inherit',
-        transition: 'color 0.2s ease-in-out',
       },
-      '&:hover': {
-        opacity: 0.8,
+
+      '&[data-hierarchy="color"]': {
+        color: 'var(--button-color-purple-primary)',
+        '&:hover': {
+          color: 'var(--button-color-purple-hover)',
+        },
+        '&[data-loading="true"]': {
+          color: 'var(--button-color-purple-hover)',
+        },
+        '&[aria-disabled="true"]': {
+          color: 'var(--button-color-link-disabled)',
+        },
       },
+      '&[data-hierarchy="black"]': {
+        color: 'var(--button-color-black)',
+        '&[data-loading="true"]': {
+          color: 'var(--button-color-black)',
+        },
+        '&[aria-disabled="true"]': {
+          color: 'var(--button-color-link-disabled)',
+        },
+      },
+      '&[data-hierarchy="white"]': {
+        color: 'var(--button-color-white)',
+        '&[data-loading="true"]': {
+          color: 'var(--button-color-white)',
+        },
+        '&[aria-disabled="true"]': {
+          color: 'var(--button-color-disabled-light)',
+        },
+      },
+
+      '&[data-disable-underline="true"]': {
+        textDecoration: 'none',
+      },
+
+      '&[data-inline="true"]': {
+        fontFamily: 'inherit',
+        fontSize: 'inherit',
+        lineHeight: 'inherit',
+        letterSpacing: 'inherit',
+        textTransform: 'none',
+        marginBottom: 0,
+      },
+
       '&:focus-visible': {
-        outline: '2px solid var(--text-brand-teal-primary)',
-        outlineOffset: '2px',
-        borderRadius: theme.spacing(0.5),
+        outline: '2px solid var(--button-focus-ring)',
+        outlineOffset: '4px',
+        borderRadius: theme.spacing(1.25), // 10px
       },
-      '&.MuiLink-root.link--size-l': {
-        fontSize: '1.25rem', // 20px
-      },
-      '&.MuiLink-root.link--size-m': {
-        fontSize: '1rem', // 16px
-      },
+
       '&.MuiLink-root.link--size-s': {
         fontSize: '0.875rem', // 14px
+        lineHeight: '21.7px',
+        textTransform: 'none',
+        gap: '4px',
       },
-      '&.MuiLink-root.link--size-xs': {
-        fontSize: '0.75rem', // 12px
+      '&.MuiLink-root.link--size-m': {
+        fontSize: '0.875rem', // 14px
+        lineHeight: '21.7px',
+        textTransform: 'uppercase',
+        gap: '4px',
+      },
+      '&.MuiLink-root.link--size-l': {
+        fontSize: '1rem', // 16px
+        lineHeight: '24px',
+        textTransform: 'uppercase',
+        gap: '6px',
+      },
+
+      '&[data-loading="true"]': {
+        textTransform: 'none',
       },
     }),
   },

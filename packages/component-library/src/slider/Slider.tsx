@@ -66,7 +66,7 @@ const defaultSliderButtonProps: ButtonProps = {
   type: 'tertiary',
   color: 'black',
   isIconOnly: true,
-  size: 'xs',
+  size: 's',
 };
 
 const sliderTrackColorsMap = {

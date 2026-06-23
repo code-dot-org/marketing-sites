@@ -4,6 +4,7 @@ import DSCOHeroBanner from '@code-dot-org/component-library/cms/heroBanner';
 import {Theme} from '@code-dot-org/component-library/common/contexts';
 
 import {externalLinkIconProps} from '@/components/common/constants';
+import {BrandLinkAdapter} from '@/components/contentful/link';
 import Video from '@/components/contentful/video';
 import NextImage from '@/components/nextImage/NextImage';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
@@ -88,6 +89,7 @@ const HeroBanner: React.FunctionComponent<HeroBannerProps> = ({
       heading={heading}
       subHeading={subHeading}
       description={description}
+      LinkComponent={BrandLinkAdapter}
       announcementBannerProps={
         announcementBannerText
           ? {

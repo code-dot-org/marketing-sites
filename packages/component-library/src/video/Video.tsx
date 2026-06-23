@@ -165,13 +165,13 @@ const Video: React.FC<VideoProps> = ({
         {videoFallback && (
           <LinkButton
             className={moduleStyles.download}
-            color="gray"
+            color="black"
             href={videoFallback}
             iconLeft={{
               iconName: 'download',
               iconStyle: 'solid',
             }}
-            size="xs"
+            size="s"
             text={downloadLabel || 'Download'}
             type="secondary"
             target="_blank"

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import {ReactNode, HTMLAttributes, JSX} from 'react';
+import {ComponentType, ReactNode, HTMLAttributes, JSX} from 'react';
 
 import Alert from '@/alert';
 import {LinkButton, LinkButtonProps} from '@/button';
@@ -43,6 +43,8 @@ export interface HeroBannerProps extends HTMLAttributes<HTMLElement> {
   buttonProps?: LinkButtonProps;
   /** HeroBanner announcementBanner */
   announcementBannerProps?: AnnouncementBannerProps;
+  /** Optional override for the announcement-banner link renderer (forwarded to Alert). */
+  LinkComponent?: ComponentType<LinkProps>;
   /** HeroBanner custom background color.
    *  backgroundImageUrl is higher priority then backgroundColor. */
   backgroundColor?: string;
@@ -86,6 +88,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
   videoProps,
   buttonProps,
   announcementBannerProps,
+  LinkComponent,
   backgroundColor,
   backgroundImageUrl,
   withWideText = false,
@@ -104,6 +107,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
         text={announcementBannerProps.text}
         icon={announcementBannerProps.icon}
         link={announcementBannerProps.link}
+        LinkComponent={LinkComponent}
         type="gray"
       />
     )}

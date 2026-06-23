@@ -78,7 +78,7 @@ import Image, {
   ImageCorporateSiteContentfulComponentDefinition,
 } from '@/components/contentful/image';
 import Link, {
-  LinkContentfulComponentDefinition,
+  BrandLinkContentfulComponentDefinition,
 } from '@/components/contentful/link';
 import LogoTransitionModal, {
   LogoTransitionModalContentfulComponentDefinition,
@@ -283,7 +283,7 @@ const contentfulRegistration = {
     },
     {
       component: Link,
-      definition: LinkContentfulComponentDefinition,
+      definition: BrandLinkContentfulComponentDefinition,
     },
     {
       component: LogoTransitionModal,
