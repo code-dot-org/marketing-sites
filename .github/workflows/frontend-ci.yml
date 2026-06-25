@@ -1,5 +1,11 @@
-# Common workflow for execution of continuous integration for the `frontend` code base.
-# This workflow handles setup and teardown for parallel workflow execution for the various apps and packages in `frontend`.
+# EXPERIMENT: Test whether a second /complete call causes Applitools to
+# re-evaluate and update the tests/applitools status with newly arrived results.
+#
+# Sequence: component-library eyes → teardown-early (first /complete) →
+#           marketing eyes → teardown-final (second /complete)
+#
+# If re-evaluation works, the tests/applitools description should change
+# between teardown-early and teardown-final (different test counts).
 name: Frontend-CI
 
 on:
@@ -11,15 +17,11 @@ env:
   APPLITOOLS_BATCH_ID: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
-  # Initializes common variables and environment prior to executing other jobs
   setup:
     runs-on: ubuntu-24.04
     outputs:
       component-library-changed: ${{ steps.changes.outputs.component-library }}
     steps:
-      # Determine what changed to later skip workflows
-      # Github Actions does not offer conditional runtime path filtering, thus use this action to calculate the
-      # changes. Root level applications (such as marketing) are not skipped as its dependency tree always changes
       - name: Get Change Sets
         uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
         id: changes
@@ -32,31 +34,69 @@ jobs:
               - 'packages/fonts/**'
               - '*'
 
-  # Start the marketing app CI workflow
-  marketing:
-    needs: setup
-    uses: ./.github/workflows/marketing-app-ci.yml
-    with:
-      BRANCHED_TESTING_ENABLED: ${{ contains( github.event.pull_request.labels.*.name, 'All The Things') }}
-      PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
-    secrets: inherit
-
-  # Start the component library CI workflow
   component-library:
     if: ${{ needs.setup.outputs.component-library-changed == 'true' }}
     needs: setup
     uses: ./.github/workflows/component-library-ci.yml
     secrets: inherit
 
-  # Common teardown actions that must occur after _all_ workflows have completed.
-  # For example, closing the Applitools batch after its completion.
-  teardown:
+  # First /complete — only component-library eyes results should exist in the batch.
+  teardown-early:
+    needs: [setup, component-library]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: First /complete (component-library results only)
+        shell: bash
+        run: |
+          echo "APPLITOOLS_BATCH_ID=${{ env.APPLITOOLS_BATCH_ID }}"
+          echo "github.run_id=${{ github.run_id }}"
+          echo "github.sha=${{ github.sha }}"
+          echo "pr.head.sha=${{ github.event.pull_request.head.sha }}"
+          echo "--- Calling /complete with run_id=${{ github.run_id }} ---"
+          RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST \
+            "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ env.APPLITOOLS_BATCH_ID }}/${{ github.run_id }}/complete?apiKey=${{ secrets.APPLITOOLS_API_KEY }}")
+          echo "$RESP"
+
+      - name: Check commit statuses after first /complete
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "--- Statuses on ${{ env.APPLITOOLS_BATCH_ID }} after first /complete ---"
+          sleep 10
+          gh api repos/${{ github.repository }}/commits/${{ env.APPLITOOLS_BATCH_ID }}/statuses \
+            --jq '.[] | select(.context | test("applitools")) | {context, description, state, created_at}'
+
+  # Marketing runs AFTER teardown-early, so its eyes results arrive after the first /complete.
+  marketing:
+    needs: [setup, teardown-early]
+    uses: ./.github/workflows/marketing-app-ci.yml
+    with:
+      BRANCHED_TESTING_ENABLED: ${{ contains( github.event.pull_request.labels.*.name, 'All The Things') }}
+      PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+    secrets: inherit
+
+  # Second /complete — both component-library AND marketing eyes results should now exist.
+  teardown-final:
     needs: [setup, marketing, component-library]
     if: always()
     runs-on: ubuntu-24.04
     steps:
-      # Close the eyes batch after all distributed eyes tests have completed
-      - name: Update Applitools batch status
+      - name: Second /complete (all results)
         shell: bash
         run: |
-          curl -X POST "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ env.APPLITOOLS_BATCH_ID }}/${{ github.run_id }}/complete?apiKey=${{secrets.APPLITOOLS_API_KEY}}"
+          echo "--- Calling /complete with run_id=${{ github.run_number }} ---"
+          RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST \
+            "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ env.APPLITOOLS_BATCH_ID }}/${{ github.run_number }}/complete?apiKey=${{ secrets.APPLITOOLS_API_KEY }}")
+          echo "$RESP"
+
+      - name: Check commit statuses after second /complete
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "--- Statuses on ${{ env.APPLITOOLS_BATCH_ID }} after second /complete ---"
+          sleep 10
+          gh api repos/${{ github.repository }}/commits/${{ env.APPLITOOLS_BATCH_ID }}/statuses \
+            --jq '.[] | select(.context | test("applitools")) | {context, description, state, created_at}'
