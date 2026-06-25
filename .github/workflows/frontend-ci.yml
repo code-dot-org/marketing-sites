@@ -70,6 +70,7 @@ jobs:
 
   # Marketing runs AFTER teardown-early, so its eyes results arrive after the first /complete.
   marketing:
+    if: ${{ !cancelled() }}
     needs: [setup, teardown-early]
     uses: ./.github/workflows/marketing-app-ci.yml
     with:
