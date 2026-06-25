@@ -1,0 +1,29 @@
+# EXPERIMENT: Simulates Drone CI by posting a fake continuous-integration/drone/pr
+# status after a delay. This lets us test the Applitools coordinator without real Drone.
+name: Drone-Simulator
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  simulate-drone:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Wait for Frontend-CI to finish first
+        run: |
+          echo "Simulating Drone — waiting 5 minutes before posting status"
+          sleep 300
+
+      - name: Post fake Drone success status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHA="${{ github.event.pull_request.head.sha }}"
+          echo "Posting continuous-integration/drone/pr success for $SHA"
+          gh api repos/${{ github.repository }}/statuses/$SHA \
+            -f state=success \
+            -f context="continuous-integration/drone/pr" \
+            -f description="Simulated Drone CI passed"
+          echo "Done — coordinator should now fire"

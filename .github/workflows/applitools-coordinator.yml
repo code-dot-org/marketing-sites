@@ -1,0 +1,73 @@
+# Coordinator that calls Applitools /complete only after BOTH CI systems finish.
+# Fires on: (1) Frontend-CI completion, (2) any commit status change (catches Drone).
+# On each trigger, checks if both systems are terminal. Calls /complete only when both are done.
+name: Applitools-Coordinator
+
+on:
+  workflow_run:
+    workflows: ["Frontend-CI"]
+    types: [completed]
+  status:
+
+jobs:
+  coordinate:
+    runs-on: ubuntu-24.04
+    # Only run for PRs (workflow_run provides this; status events need filtering)
+    if: >-
+      (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request') ||
+      (github.event_name == 'status')
+    steps:
+      - name: Determine commit SHA
+        id: sha
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            SHA="${{ github.event.workflow_run.head_sha }}"
+          else
+            SHA="${{ github.event.commit.sha || github.sha }}"
+          fi
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Coordinator triggered by ${{ github.event_name }} for SHA=$SHA"
+
+      - name: Check if Frontend-CI is complete
+        id: gha
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          STATUS=$(gh api repos/${{ github.repository }}/commits/${{ steps.sha.outputs.sha }}/check-runs \
+            --jq '.check_runs[] | select(.name == "teardown") | .status' 2>/dev/null || echo "missing")
+          echo "frontend_ci_status=$STATUS"
+          if [ "$STATUS" = "completed" ]; then
+            echo "done=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "done=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check if Drone is complete
+        id: drone
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          STATE=$(gh api repos/${{ github.repository }}/commits/${{ steps.sha.outputs.sha }}/statuses \
+            --jq '[.[] | select(.context == "continuous-integration/drone/pr")] | first | .state' 2>/dev/null || echo "missing")
+          echo "drone_state=$STATE"
+          if [ "$STATE" = "success" ] || [ "$STATE" = "failure" ] || [ "$STATE" = "error" ]; then
+            echo "done=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "done=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Call /complete if both systems are done
+        if: steps.gha.outputs.done == 'true' && steps.drone.outputs.done == 'true'
+        run: |
+          echo "Both systems complete — calling /complete for SHA=${{ steps.sha.outputs.sha }}"
+          RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST \
+            "https://eyesapi.applitools.com/api/externals/github/servers/github.com/commit/${{ steps.sha.outputs.sha }}/${{ github.run_id }}/complete?apiKey=${{ secrets.APPLITOOLS_API_KEY }}")
+          echo "$RESP"
+
+      - name: Skip — not all systems done yet
+        if: steps.gha.outputs.done != 'true' || steps.drone.outputs.done != 'true'
+        run: |
+          echo "Not ready yet. Frontend-CI done=${{ steps.gha.outputs.done }}, Drone done=${{ steps.drone.outputs.done }}"
+          echo "Will re-trigger when the other system completes."
