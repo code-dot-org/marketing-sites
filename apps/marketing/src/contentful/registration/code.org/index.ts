@@ -50,6 +50,9 @@ import StateGapMap, {
 import YourSchool, {
   YourSchoolContentfulComponentDefinition,
 } from '@/components/contentful/corporateSite/yourSchool';
+import CustomText, {
+  CustomTextContentfulComponentDefinition,
+} from '@/components/contentful/customText';
 import Divider, {
   DividerContentfulComponentDefinition,
 } from '@/components/contentful/divider';
@@ -326,6 +329,10 @@ const contentfulRegistration = {
     {
       component: CurriculumSnapshot,
       definition: CurriculumSnapshotContentfulComponentDefinition,
+    },
+    {
+      component: CustomText,
+      definition: CustomTextContentfulComponentDefinition,
     },
     {component: TabGroup, definition: TabGroupContentfulComponentDefinition},
     {

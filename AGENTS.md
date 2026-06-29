@@ -181,6 +181,9 @@ See [docs/ui-convention.md](docs/ui-convention.md).
 
 ## Active Technologies
 
+- TypeScript 5.x / React 18 (Next.js App Router) + `@mui/material` (Typography, Box), `@contentful/experiences-sdk-react` (ComponentDefinition), `@code-dot-org/component-library/fontAwesomeV6Icon`; internal `@/components/common/colors`, `@/themes/code.org/typography/tokens`, `@/themes/code.org/typography/fontStack`, `@/components/contentful/section/SectionBackgroundContext` (010-custom-text)
+- N/A (presentational; content authored in Contentful) (010-custom-text)
+
 - TypeScript ~5.x, React 18, Next.js 14 (existing marketing app), SCSS modules + MUI theme variants for component styling. + `@mui/material` (existing — uses `createTheme({cssVariables: true})`), `@code-dot-org/fonts` (existing — provides `FONT_FAMILY_NAMES`, `FALLBACK_FONT_FAMILIES_BY_LOCALE`, `loadFonts()`, locale resolver), `@code-dot-org/component-library-styles` (existing — SCSS primitives extended). No new third-party dependency. (009-typography-system)
 - N/A — Contentful entries are read-only for this feature. (009-typography-system)
 
