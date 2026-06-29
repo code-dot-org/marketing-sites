@@ -73,7 +73,11 @@ interface CustomTextDefault {
   backgroundShape: CustomTextBackgroundShape;
   backgroundColor?: BrandColor; // fill color (used when fill is 'filled')
   borderColor?: BrandColor;
+  padding?: string; // chip padding (used when backgrounded)
 }
+
+// Chip padding used when a backgrounded type doesn't specify its own.
+const DEFAULT_CHIP_PADDING = '0.25em 0.5em';
 
 // Per-type default style sets.
 // TODO(design): the chip fills/borders, Statistic display size, and exact
@@ -97,7 +101,7 @@ export const CUSTOM_TEXT_TYPE_DEFAULTS: Record<
   subtitle: {
     tag: 'p', // the only type defaulting to <p>
     track: 'text',
-    size: 'lg',
+    size: 'xl',
     weight: 'regular',
     color: 'black',
     textTransform: 'none',
@@ -106,13 +110,12 @@ export const CUSTOM_TEXT_TYPE_DEFAULTS: Record<
     backgroundShape: 'pill',
   },
   overline: {
-    // Reproduces the `overline` role token (text / xs / semibold).
     tag: 'span',
     track: 'text',
-    size: 'xs',
+    size: 'md',
     weight: 'semibold',
     color: 'black',
-    textTransform: 'uppercase',
+    textTransform: 'capitalize',
     lineHeight: 1,
     backgroundFill: 'none',
     backgroundShape: 'pill',
@@ -132,14 +135,15 @@ export const CUSTOM_TEXT_TYPE_DEFAULTS: Record<
     tag: 'span',
     track: 'text',
     size: 'sm',
-    weight: 'semibold',
+    weight: 'medium',
     color: 'purpleDark',
-    textTransform: 'none',
+    textTransform: 'capitalize',
     lineHeight: 1,
     backgroundFill: 'filled',
     backgroundShape: 'pill',
-    backgroundColor: 'purpleLight',
-    borderColor: 'purplePrimary',
+    backgroundColor: 'white',
+    borderColor: 'black',
+    padding: '0.25em 0.5em',
   },
   courseLabs: {
     tag: 'span',
@@ -147,12 +151,13 @@ export const CUSTOM_TEXT_TYPE_DEFAULTS: Record<
     size: 'sm',
     weight: 'semibold',
     color: 'blueDark',
-    textTransform: 'none',
+    textTransform: 'capitalize',
     lineHeight: 1,
     backgroundFill: 'filled',
-    backgroundShape: 'pill',
-    backgroundColor: 'blueLight',
-    borderColor: 'bluePrimary',
+    backgroundShape: 'roundedSquare',
+    backgroundColor: 'purpleLight',
+    borderColor: 'purpleMid',
+    padding: '0.25em 0.5em',
   },
 };
 
@@ -209,6 +214,7 @@ export interface ResolveCustomTextResult {
     backgroundColor: string;
     border: string;
     borderRadius: string;
+    padding: string;
   } | null;
   icon: {name: string; side: 'left' | 'right'} | null;
 }
@@ -274,6 +280,7 @@ export const resolveCustomTextStyles = (
           borderColor,
         )}`,
         borderRadius: SHAPE_RADIUS[backgroundShape],
+        padding: def.padding ?? DEFAULT_CHIP_PADDING,
       }
     : null;
 

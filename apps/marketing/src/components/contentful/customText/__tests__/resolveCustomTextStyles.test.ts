@@ -17,9 +17,9 @@ describe('resolveCustomTextStyles', () => {
 
       const overline = resolveCustomTextStyles({type: 'overline'});
       expect(overline.tag).toBe('span');
-      expect(overline.sx.fontSize).toBe(SCALE_TEXT.xs.fontSize);
+      expect(overline.sx.fontSize).toBe(SCALE_TEXT.md.fontSize);
       expect(overline.sx.fontWeight).toBe(600);
-      expect(overline.sx.textTransform).toBe('uppercase');
+      expect(overline.sx.textTransform).toBe('capitalize');
 
       const statistic = resolveCustomTextStyles({type: 'statistic'});
       expect(statistic.sx.fontSize).toBe(SCALE_DISPLAY.lg.fontSize);
@@ -33,7 +33,7 @@ describe('resolveCustomTextStyles', () => {
         1,
       );
       expect(resolveCustomTextStyles({type: 'subtitle'}).sx.lineHeight).toBe(
-        SCALE_TEXT.lg.lineHeight,
+        SCALE_TEXT.xl.lineHeight,
       );
     });
 
@@ -65,8 +65,8 @@ describe('resolveCustomTextStyles', () => {
     it('htmlTag override changes only the tag, including overriding Subtitle p', () => {
       const r = resolveCustomTextStyles({type: 'subtitle', htmlTag: 'span'});
       expect(r.tag).toBe('span');
-      // size/weight still from subtitle default (text/lg/regular)
-      expect(r.sx.fontSize).toBe(SCALE_TEXT.lg.fontSize);
+      // size/weight still from subtitle default (text/xl/regular)
+      expect(r.sx.fontSize).toBe(SCALE_TEXT.xl.fontSize);
       expect(r.sx.fontWeight).toBe(400);
     });
 
@@ -99,9 +99,9 @@ describe('resolveCustomTextStyles', () => {
       });
       const def = CUSTOM_TEXT_TYPE_DEFAULTS.overline;
       expect(r.tag).toBe(def.tag);
-      expect(r.sx.fontSize).toBe(SCALE_TEXT.xs.fontSize);
+      expect(r.sx.fontSize).toBe(SCALE_TEXT.md.fontSize);
       expect(r.sx.fontWeight).toBe(600);
-      expect(r.sx.textTransform).toBe('uppercase');
+      expect(r.sx.textTransform).toBe('capitalize');
     });
 
     it("textTransform 'none' forces no transform over a type default", () => {
@@ -139,6 +139,7 @@ describe('resolveCustomTextStyles', () => {
         backgroundColor: 'var(--codeai-purple-light)',
         border: '1px solid var(--codeai-purple-primary)',
         borderRadius: '999px',
+        padding: '0.25em 0.5em',
       });
     });
 
@@ -160,6 +161,29 @@ describe('resolveCustomTextStyles', () => {
       const r = resolveCustomTextStyles({type: 'courseTopics'});
       expect(r.background).not.toBeNull();
       expect(r.background?.border).toContain('1px solid');
+    });
+
+    it('Course Topics default: white fill, black border, pill, 0.25em 0.5em padding, medium weight, capitalize', () => {
+      const r = resolveCustomTextStyles({type: 'courseTopics'});
+      expect(r.sx.fontWeight).toBe(500);
+      expect(r.sx.textTransform).toBe('capitalize');
+      expect(r.background).toEqual({
+        backgroundColor: 'white',
+        border: '1px solid #000000',
+        borderRadius: '999px',
+        padding: '0.25em 0.5em',
+      });
+    });
+
+    it('Course Labs default: purpleLight fill, purpleMid border, rounded square, 0.25em 0.5em padding, capitalize', () => {
+      const r = resolveCustomTextStyles({type: 'courseLabs'});
+      expect(r.sx.textTransform).toBe('capitalize');
+      expect(r.background).toEqual({
+        backgroundColor: 'var(--codeai-purple-light)',
+        border: '1px solid var(--codeai-purple-mid)',
+        borderRadius: '0.25rem',
+        padding: '0.25em 0.5em',
+      });
     });
 
     it("backgroundFill 'none' removes a chip type's default background", () => {

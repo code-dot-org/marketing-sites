@@ -143,11 +143,11 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
     return text;
   }
 
-  // Backgrounded chip: fill + 1px border + shape radius wrap the text run.
-  // inline-flex + center + line-height:1 makes the chip hug the actual text
-  // line box (not the inherited 16px strut), so the shape isn't taller than
-  // the glyph. fontSize is pinned to the text size so the em padding tracks it.
-  // TODO(design): confirm chip padding (research.md O3).
+  // Backgrounded chip: fill + 1px border + shape radius + padding wrap the text
+  // run. inline-flex + center + line-height:1 makes the chip hug the actual
+  // text line box (not the inherited 16px strut), so the shape isn't taller
+  // than the glyph. fontSize is pinned to the text size so the em padding
+  // (carried on `background`) tracks the text.
   return (
     <Box
       component="span"
@@ -157,7 +157,6 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
         alignItems: 'center',
         lineHeight: 1,
         fontSize: sx.fontSize as string,
-        padding: '0.125em 0.5em',
         ...background,
       }}
     >
