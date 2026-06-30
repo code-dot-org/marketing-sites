@@ -1,0 +1,175 @@
+import {BRAND_COLORS} from '@/components/common/colors';
+import CustomText from '@/components/contentful/customText';
+import Section from '@/components/contentful/section';
+import type {Meta, StoryObj} from '@storybook/nextjs-vite';
+import {expect} from 'storybook/test';
+
+const meta: Meta<typeof CustomText> = {
+  title: 'Marketing/CustomText',
+  component: CustomText,
+  tags: ['autodocs', 'marketing'],
+};
+export default meta;
+type Story = StoryObj<typeof CustomText>;
+
+const TYPES = [
+  'custom',
+  'subtitle',
+  'overline',
+  'statistic',
+  'courseTopics',
+  'courseLabs',
+] as const;
+
+const SIZES = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl'] as const;
+
+export const Playground: Story = {
+  args: {
+    children: 'Custom text',
+    type: 'custom',
+  },
+  argTypes: {
+    children: {control: 'text'},
+    type: {control: {type: 'select'}, options: TYPES},
+    htmlTag: {
+      control: {type: 'select'},
+      options: ['default', 'span', 'p'],
+    },
+    color: {control: {type: 'select'}, options: BRAND_COLORS.map(c => c.value)},
+    backgroundFill: {
+      control: {type: 'select'},
+      options: ['default', 'none', 'filled', 'outline'],
+    },
+    backgroundShape: {
+      control: {type: 'select'},
+      options: ['default', 'pill', 'roundedSquare'],
+    },
+    backgroundColor: {
+      control: {type: 'select'},
+      options: ['default', ...BRAND_COLORS.map(c => c.value)],
+    },
+    borderColor: {
+      control: {type: 'select'},
+      options: ['default', ...BRAND_COLORS.map(c => c.value)],
+    },
+    textSize: {control: {type: 'select'}, options: ['default', ...SIZES]},
+    font: {control: {type: 'select'}, options: ['default', 'text', 'display']},
+    fontWeight: {
+      control: {type: 'select'},
+      options: ['default', '400', '500', '600', '700'],
+    },
+    textTransform: {
+      control: {type: 'select'},
+      options: ['default', 'none', 'uppercase', 'lowercase', 'capitalize'],
+    },
+    iconNameLeft: {control: 'text'},
+    iconNameRight: {control: 'text'},
+  },
+};
+
+// US1 — each type renders with its own complete default style set.
+export const DefaultsPerType: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      {TYPES.map(type => (
+        <CustomText key={type} type={type}>
+          {`${type} default`}
+        </CustomText>
+      ))}
+    </div>
+  ),
+  play: async ({canvas}) => {
+    expect(canvas.getByText('subtitle default').tagName).toBe('P');
+    expect(canvas.getByText('custom default').tagName).toBe('SPAN');
+  },
+};
+
+// US2 — a single override changes only its dimension; the rest stay default.
+export const Overrides: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      <CustomText type="custom" textSize="2xl">
+        custom | textSize 2xl
+      </CustomText>
+      <CustomText type="custom" font="display">
+        custom | font Display (Space Grotesk)
+      </CustomText>
+      <CustomText type="custom" fontWeight="700">
+        custom | fontWeight Bold
+      </CustomText>
+      <CustomText type="custom" color="purplePrimary">
+        custom | color purplePrimary
+      </CustomText>
+      <CustomText type="subtitle" htmlTag="span">
+        subtitle | htmlTag span (overrides the default p)
+      </CustomText>
+      <CustomText type="overline" textTransform="none">
+        overline | transform none (overrides the default uppercase)
+      </CustomText>
+    </div>
+  ),
+};
+
+// US3 — backgrounded chip types render a fixed 2px border. Filled (default
+// chips) vs. an outline-only fill, and pill vs. rounded-square shapes.
+export const Chips: Story = {
+  render: () => (
+    <div style={{display: 'flex', gap: 16, flexWrap: 'wrap'}}>
+      <CustomText type="courseTopics">Loops</CustomText>
+      <CustomText type="courseLabs">Sprite Lab</CustomText>
+      <CustomText
+        type="custom"
+        backgroundFill="filled"
+        backgroundShape="pill"
+        backgroundColor="greenLight"
+        borderColor="greenPrimary"
+        color="greenDark"
+      >
+        filled pill
+      </CustomText>
+      <CustomText
+        type="custom"
+        backgroundFill="outline"
+        backgroundShape="roundedSquare"
+        borderColor="purplePrimary"
+        color="purpleDark"
+      >
+        outline rounded square
+      </CustomText>
+    </div>
+  ),
+};
+
+// US3 — contrast switching: the same plain text on light vs. dark Sections.
+export const ContrastSwitch: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      <Section background="white" padding="m">
+        <CustomText type="custom">black text on white (passthrough)</CustomText>
+      </Section>
+      <Section background="purpleDark" padding="m">
+        <CustomText type="custom">
+          black text on purpleDark (switches to white)
+        </CustomText>
+      </Section>
+    </div>
+  ),
+};
+
+// US4 — single leading or trailing icon, inheriting the text color.
+export const Icons: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      <CustomText type="courseLabs" iconNameLeft="flask">
+        Sprite Lab
+      </CustomText>
+      <CustomText
+        type="custom"
+        color="purplePrimary"
+        iconNameRight="arrow-right"
+      >
+        Learn more
+      </CustomText>
+    </div>
+  ),
+};
