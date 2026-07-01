@@ -5,12 +5,17 @@
   display: block;
   box-sizing: border-box;
   width: 100%;
-  padding: 4rem 1.5rem;
+  padding: 4rem 2rem;
   margin: 0;
+
+  @media (max-width: 600px) {
+    padding-inline: 1rem;
+  }
 
   > * {
     width: 100%;
-    max-width: 960px;
+    // 1216px — matches Section content (1280px cap − 2rem gutters)
+    max-width: calc(1280px - 4rem);
     margin: 0 auto;
   }
 

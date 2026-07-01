@@ -4,9 +4,15 @@
 $mobileBreakpoint: 970px;
 
 .skinnyBannerWrapper {
+  box-sizing: border-box;
   width: 100%;
   background: var(--background-brand-purple-extra-light);
   background-size: cover;
+  padding-inline: 2rem;
+
+  @media (max-width: 600px) {
+    padding-inline: 1rem;
+  }
 }
 
 .skinnyBannerContainer {
@@ -15,12 +21,12 @@ $mobileBreakpoint: 970px;
   justify-content: center;
   align-items: center;
   gap: 2.5rem;
-  max-width: 60rem;
+  // 1216px — matches Section content (1280px cap − 2rem gutters)
+  max-width: calc(1280px - 4rem);
   margin: 0 auto;
 
   @media (max-width: $mobileBreakpoint) {
     display: flex;
-    padding: 1.875rem 1.5rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;
