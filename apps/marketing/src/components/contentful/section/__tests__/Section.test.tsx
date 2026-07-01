@@ -84,6 +84,32 @@ describe('Section Component', () => {
     expect(section).toHaveStyle('border-bottom-color: ');
   });
 
+  it('marks the outer section with the section-root class', () => {
+    renderComponent();
+    const section = screen
+      .getByText('This is content.')
+      .closest('.container')?.parentElement;
+
+    expect(section).toHaveClass('section-root');
+  });
+
+  it('toggles the full-width container class with disableContentPadding', () => {
+    const {rerender} = renderComponent();
+    let container = screen.getByText('This is content.').closest('.container');
+
+    // Default: inner container keeps its side padding.
+    expect(container).not.toHaveClass('container--full-width');
+
+    rerender(
+      <Section disableContentPadding>
+        <div>This is content.</div>
+      </Section>,
+    );
+    container = screen.getByText('This is content.').closest('.container');
+
+    expect(container).toHaveClass('container--full-width');
+  });
+
   it('applies a custom ID to the section', () => {
     renderComponent({id: 'section-id'});
 

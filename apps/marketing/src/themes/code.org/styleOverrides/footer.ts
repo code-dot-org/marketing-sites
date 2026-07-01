@@ -1,11 +1,16 @@
 import {alpha, Components, Theme} from '@mui/material/styles';
 
+import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
+
 export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
   styleOverrides: {
     root: ({theme}) => ({
       backgroundColor: 'var(--background-neutral-primary-inverse)',
       paddingBlock: theme.spacing(5),
       paddingInline: theme.spacing(4),
+      [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
+        paddingInline: theme.spacing(2),
+      },
       // Social icon styles
       '& .MuiStack-root': {
         marginInlineStart: theme.spacing(-0.5),
@@ -70,7 +75,9 @@ export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
       },
     }),
     grid: ({theme}) => ({
-      maxWidth: '960px',
+      // Match the Section content width: 1280px cap minus the 4rem (spacing(8))
+      // of side gutters supplied by the footer root's paddingInline.
+      maxWidth: `calc(${SECTION_MAX_WIDTH} - ${theme.spacing(8)})`,
       margin: '0 auto',
       rowGap: theme.spacing(3),
     }),

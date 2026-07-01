@@ -117,6 +117,12 @@ export interface SectionProps {
   theme?: 'Light' | 'Dark';
   /** Has bottom divider */
   divider?: SectionDivider;
+  /**
+   * Remove the inner container's side padding so content spans the full
+   * max-width. The padding moves to the outer section, so gutters still appear
+   * as the viewport narrows. code.org only.
+   */
+  disableContentPadding?: boolean;
   /** Section ID */
   id?: string;
   /** Section className */
@@ -129,7 +135,6 @@ const styles = {
   section: {
     display: 'block',
     boxSizing: 'border-box',
-    paddingInline: '1.5rem',
     width: '100%',
   },
 };
@@ -161,6 +166,7 @@ const Section: React.FC<SectionProps> = ({
   backgroundImageUnset,
   theme = 'Light',
   divider = sectionDivider.none,
+  disableContentPadding = false,
   id,
   className,
   children,
@@ -242,7 +248,11 @@ const Section: React.FC<SectionProps> = ({
       // Dark theme is used on the Corporate Site only
       data-theme={hasPatternBackground || useDarkTheme ? 'Dark' : theme}
       data-bg-tone={dataBgTone}
-      className={classNames(`section-background-${background}`, className)}
+      className={classNames(
+        'section-root',
+        `section-background-${background}`,
+        className,
+      )}
       sx={{
         ...styles.section,
         // Fallback dark bg color for older browsers that don't support CSS :has()
@@ -268,6 +278,7 @@ const Section: React.FC<SectionProps> = ({
           'container',
           `container--spacing-${padding}`,
           divider !== 'none' && `container--divider-${divider}`,
+          disableContentPadding && 'container--full-width',
         )}
       >
         <SectionBackgroundProvider value={providerValue}>

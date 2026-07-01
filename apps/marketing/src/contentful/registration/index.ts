@@ -4,6 +4,7 @@
  * Note: This file must be imported both server-side and client-side to ensure Contentful is able to map on both rendering modes.
  */
 import {
+  defineBreakpoints,
   defineComponents,
   defineDesignTokens,
 } from '@contentful/experiences-sdk-react';
@@ -28,6 +29,9 @@ export function registerContentfulComponents(brand: Brand) {
   if (registration) {
     if ('designTokens' in registration && registration.designTokens) {
       defineDesignTokens(registration.designTokens);
+    }
+    if ('breakpoints' in registration && registration.breakpoints) {
+      defineBreakpoints(registration.breakpoints);
     }
     defineComponents(registration.componentRegistrations, registration.options);
   }
