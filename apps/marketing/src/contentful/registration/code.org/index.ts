@@ -123,6 +123,7 @@ import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
 
+import {codeOrgBreakpoints} from './breakpoints';
 import {codeOrgDesignTokens} from './designTokens';
 
 // Re-categorize the three native structure components into our numbered
@@ -415,6 +416,7 @@ const contentfulRegistration = {
     __unsafe__enableBuiltInStructureOverwrites: true,
   },
   designTokens: codeOrgDesignTokens,
+  breakpoints: codeOrgBreakpoints,
 };
 
 export default contentfulRegistration;
