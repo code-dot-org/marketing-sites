@@ -122,6 +122,7 @@ import Testimonial, {
 import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
+import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
 
 import {codeOrgBreakpoints} from './breakpoints';
 import {codeOrgDesignTokens} from './designTokens';
@@ -148,7 +149,7 @@ const containerDefinitionWithOverrides: ComponentDefinition = {
     cfMaxWidth: {
       ...containerDefinition.variables.cfMaxWidth,
       type: 'Text',
-      defaultValue: '960px',
+      defaultValue: SECTION_MAX_WIDTH,
     },
     cfGap: {
       ...containerDefinition.variables.cfGap,

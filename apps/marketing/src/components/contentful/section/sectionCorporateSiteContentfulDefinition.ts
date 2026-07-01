@@ -155,6 +155,14 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
         group: 'style',
         description: 'Check to hide the background image at this viewport.',
       },
+      disableContentPadding: {
+        displayName: 'Disable content padding',
+        type: 'Boolean',
+        group: 'style',
+        defaultValue: false,
+        description:
+          'Let content span the full width by removing the inner side padding. Standard side padding still applies as the screen narrows.',
+      },
       backgroundImage: {
         displayName: 'Background image',
         type: 'Media',
