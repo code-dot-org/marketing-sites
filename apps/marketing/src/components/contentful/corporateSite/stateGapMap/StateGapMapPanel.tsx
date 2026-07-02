@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import {useTheme} from '@mui/material/styles';
 
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
+
 import {getModeTextColors, getTierColors, getUnavailableColors} from './theme';
 import {StateGapMapDataset, StateGapMapMode, StateGapMapRecord} from './types';
 import {
@@ -78,7 +80,7 @@ export default function StateGapMapPanel({
         minWidth: 0,
         boxSizing: 'border-box',
         p: {xs: 1.5, md: 2},
-        borderRadius: 3,
+        borderRadius: codeaiRadius('md', '12px'),
         bgcolor: textColors.surface,
         color: textColors.primary,
         backdropFilter: 'blur(12px)',

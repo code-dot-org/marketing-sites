@@ -102,7 +102,7 @@ div.heroBannerAnnouncementBanner {
   figure {
     max-height: 28.125rem;
     flex: 1;
-    border-radius: variables.$regular-border-radius;
+    border-radius: var(--codeai-radius-md, #{variables.$regular-border-radius});
   }
 
   .heroBannerMediaImage img {

@@ -154,7 +154,9 @@ describe('resolveCustomTextStyles', () => {
       expect(r.background?.border).toBe(
         '1px solid var(--codeai-green-primary)',
       );
-      expect(r.background?.borderRadius).toBe('0.25rem');
+      expect(r.background?.borderRadius).toBe(
+        'var(--codeai-radius-md, 0.25rem)',
+      );
     });
 
     it('chip types carry a default filled background + border', () => {
@@ -181,7 +183,7 @@ describe('resolveCustomTextStyles', () => {
       expect(r.background).toEqual({
         backgroundColor: 'var(--codeai-purple-light)',
         border: '1px solid var(--codeai-purple-mid)',
-        borderRadius: '0.25rem',
+        borderRadius: 'var(--codeai-radius-md, 0.25rem)',
         padding: '0.25em 0.5em',
       });
     });

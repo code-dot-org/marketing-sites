@@ -117,7 +117,7 @@ const Card: React.FC<CardProps> = ({
       sx={{
         border: `1px solid ${theme.palette.common.black}`,
         boxShadow: 'none',
-        borderRadius: '12px',
+        borderRadius: 'var(--codeai-radius-md, 12px)',
         minWidth: 275,
       }}
     >

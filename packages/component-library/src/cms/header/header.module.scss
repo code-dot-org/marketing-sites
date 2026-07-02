@@ -194,14 +194,20 @@ header .menu {
     @include mixins.transition-all;
 
     &:hover {
-      border-radius: variables.$regular-border-radius;
+      border-radius: var(
+        --codeai-radius-md,
+        #{variables.$regular-border-radius}
+      );
       background: var(--background-neutral-tertiary);
     }
 
     &:focus-visible {
       @include mixins.focus-styles;
       outline-offset: 0;
-      border-radius: variables.$regular-border-radius;
+      border-radius: var(
+        --codeai-radius-md,
+        #{variables.$regular-border-radius}
+      );
     }
   }
 }
@@ -318,7 +324,8 @@ header .newProjectMenu {
       display: block;
       padding: 0.375rem;
       background: var(--background-neutral-secondary);
-      border-radius: 0.25rem 0.25rem 0 0;
+      border-radius: var(--codeai-radius-md, 0.25rem)
+        var(--codeai-radius-md, 0.25rem) 0 0;
       border-bottom: 0;
     }
 
@@ -335,7 +342,8 @@ header .newProjectMenu {
       position: relative;
       top: unset;
       margin: 0;
-      border-radius: 0 0 0.25rem 0.25rem;
+      border-radius: 0 0 var(--codeai-radius-md, 0.25rem)
+        var(--codeai-radius-md, 0.25rem);
       box-shadow: none;
     }
   }

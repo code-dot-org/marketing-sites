@@ -1,6 +1,7 @@
 import {alpha, Components, Theme} from '@mui/material/styles';
 
 import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
 
 export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
   styleOverrides: {
@@ -46,7 +47,7 @@ export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
         color: theme.palette.common.white,
         fontSize: '0.875rem',
         border: `1px solid ${theme.palette.common.white}`,
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: codeaiRadius('md', '4px'),
         '& .MuiSvgIcon-root': {
           color: theme.palette.common.white,
           right: 'unset',
@@ -56,7 +57,7 @@ export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
       '& .MuiNativeSelect-select': {
         paddingInlineStart: theme.spacing(1.5),
         paddingInlineEnd: theme.spacing(4),
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: codeaiRadius('md', '4px'),
         '& option': {
           background: theme.palette.common.white,
           color: theme.palette.text.primary,
@@ -64,7 +65,7 @@ export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
         '&:focus-visible': {
           outline: `1px solid ${theme.palette.common.white}`,
           outlineOffset: 4,
-          borderRadius: theme.shape.borderRadius,
+          borderRadius: codeaiRadius('md', '4px'),
         },
       },
       // Top section styles

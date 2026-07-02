@@ -1,13 +1,14 @@
 import {Components, Theme} from '@mui/material/styles';
 
 import {GEIST_FONT} from '@/themes/code.org/constants/fonts';
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
 import {createFontStack} from '@/themes/common/constants';
 
 export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
   styleOverrides: {
     root: ({theme}) => ({
       boxShadow: 'none',
-      borderRadius: '4px',
+      borderRadius: codeaiRadius('md', '4px'),
       border: '1px solid var(--borders-neutral-primary)',
       padding: 0,
       margin: 0,
@@ -21,7 +22,7 @@ export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
       '&:has(.Mui-focusVisible)': {
         outline: '2px solid var(--borders-brand-teal-primary)',
         outlineOffset: '2px',
-        borderRadius: '6px',
+        borderRadius: codeaiRadius('md', '6px'),
       },
     }),
   },

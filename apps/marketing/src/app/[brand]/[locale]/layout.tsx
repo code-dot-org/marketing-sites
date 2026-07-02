@@ -39,7 +39,11 @@ export default async function Layout({
   const isDraftModeEnabled = (await draftMode()).isEnabled;
 
   return (
-    <html lang={locale} dir={localeConfig?.isRTL ? 'rtl' : 'ltr'}>
+    <html
+      lang={locale}
+      dir={localeConfig?.isRTL ? 'rtl' : 'ltr'}
+      data-brand={brand}
+    >
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>

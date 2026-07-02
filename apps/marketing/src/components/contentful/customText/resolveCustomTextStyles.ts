@@ -21,6 +21,7 @@ import {
   cssVarForBrandColor,
   resolvedCssVarForBrandColor,
 } from '@/components/common/colors';
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
 import {
   CODE_ORG_DISPLAY_FONT_STACK,
   CODE_ORG_TEXT_FONT_STACK,
@@ -167,7 +168,7 @@ export const CUSTOM_TEXT_BORDER_WIDTH = '1px';
 
 const SHAPE_RADIUS: Record<CustomTextBackgroundShape, string> = {
   pill: '999px',
-  roundedSquare: '0.25rem',
+  roundedSquare: codeaiRadius('md', '0.25rem'),
 };
 
 const FONT_STACK: Record<CustomTextFontTrack, string> = {

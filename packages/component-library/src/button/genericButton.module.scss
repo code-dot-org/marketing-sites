@@ -9,7 +9,7 @@ a.button {
   justify-content: center;
   text-align: center;
   align-items: center;
-  border-radius: variables.$button-border-radius;
+  border-radius: var(--codeai-radius-sm, #{variables.$button-border-radius});
   box-sizing: border-box;
 
   margin: 0;
@@ -48,7 +48,7 @@ a.button {
   &:focus-visible {
     outline: 2px solid var(--button-focus-ring);
     outline-offset: 4px;
-    border-radius: 10px;
+    border-radius: var(--codeai-radius-sm, 10px);
   }
 
   &:active {

@@ -10,7 +10,7 @@
 
   &:focus-visible {
     @include mixins.focus-styles;
-    border-radius: 0.25rem;
+    border-radius: var(--codeai-radius-sm, 0.25rem);
   }
 
   &:active:not([aria-disabled='true']) {
