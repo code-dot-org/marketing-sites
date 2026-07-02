@@ -1,5 +1,7 @@
 import {Components, Theme, createTheme} from '@mui/material/styles';
 
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
+
 // Setting these colors here to only apply to buttons
 // since we aren't using MUI colors elsewhere.
 const customTheme = (theme: Theme) =>
@@ -21,7 +23,7 @@ export const BUTTON_OVERRIDES: Components<Theme>['MuiButton'] = {
         alignItems: 'center',
         gap: localTheme.spacing(0.75),
         textTransform: 'none',
-        borderRadius: 4,
+        borderRadius: codeaiRadius('sm', '4px'),
         'html[dir="rtl"] & svg': {
           transform: 'scaleX(-1)',
         },
@@ -62,7 +64,7 @@ export const BUTTON_OVERRIDES: Components<Theme>['MuiButton'] = {
             lineHeight: '148%',
             fontStyle: 'normal',
             padding: localTheme.spacing(0.75, 2),
-            borderRadius: 4,
+            borderRadius: codeaiRadius('sm', '4px'),
           },
         '&.MuiButton-outlined.button--color-secondary': {
           color: 'var(--text-neutral-primary)',

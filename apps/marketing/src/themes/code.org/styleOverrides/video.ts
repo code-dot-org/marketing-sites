@@ -1,11 +1,13 @@
 import {Components, Theme} from '@mui/material/styles';
 
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
+
 export const VIDEO_OVERRIDES: Components<Theme>['MuiVideo'] = {
   styleOverrides: {
     root: () => ({}),
     wrapper: () => ({
       border: '1px solid var(--background-neutral-tertiary)',
-      borderRadius: '0.25rem',
+      borderRadius: codeaiRadius('none', '0.25rem'),
     }),
     facade: () => ({
       '.video-play-button': {

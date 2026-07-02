@@ -1,0 +1,9 @@
+// CodeAI corner-radius tokens, scoped to the Code.org brand only. Shared
+// styles reference these vars with their historical values as fallbacks, so
+// CSForAll and HOC (which lack the data-brand match) stay unchanged.
+[data-brand='Code.org'] {
+  --codeai-radius-none: 0rem; /* videos */
+  --codeai-radius-sm: 0.5rem; /* buttons only */
+  --codeai-radius-md: 0.625rem; /* cards, UI chrome */
+  --codeai-radius-lg: 1.25rem; /* images */
+}

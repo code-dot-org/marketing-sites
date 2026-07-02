@@ -1,6 +1,7 @@
 import {Components, Theme} from '@mui/material/styles';
 
 import {SPACE_GROTESK_FONT} from '@/themes/code.org/constants/fonts';
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
 
 // Empty template for table component overrides in MUI theme.
 export const TABLE_OVERRIDES: Components<Theme>['MuiTable'] = {
@@ -68,7 +69,7 @@ export const TABLE_CONTAINER_OVERRIDES: Components<Theme>['MuiTableContainer'] =
   {
     styleOverrides: {
       root: () => ({
-        borderRadius: '0.25rem',
+        borderRadius: codeaiRadius('md', '0.25rem'),
       }),
     },
   };

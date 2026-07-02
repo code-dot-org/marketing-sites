@@ -1,5 +1,6 @@
 import {Components, Theme} from '@mui/material/styles';
 
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
 import {createFontStack} from '@/themes/common/constants';
 
 import {SPACE_GROTESK_FONT} from '../constants/fonts';
@@ -69,7 +70,7 @@ export const LINK_OVERRIDES: Components<Theme>['MuiLink'] = {
       '&:focus-visible': {
         outline: '2px solid var(--button-focus-ring)',
         outlineOffset: '4px',
-        borderRadius: theme.spacing(1.25), // 10px
+        borderRadius: codeaiRadius('sm', '10px'), // matches button radius
       },
 
       '&.MuiLink-root.link--size-s': {

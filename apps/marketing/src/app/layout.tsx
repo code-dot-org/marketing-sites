@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 
 import '@code-dot-org/component-library-styles/colors.scss';
+import '@code-dot-org/component-library-styles/radii.scss';
 
 import './globals.css';
 

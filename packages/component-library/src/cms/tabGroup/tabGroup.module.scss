@@ -38,8 +38,9 @@ $mobileBreakpoint: 1024px;
   align-items: center;
   gap: 1.875rem;
   align-self: stretch;
-  border-radius: 0 0 variables.$regular-border-radius
-    variables.$regular-border-radius;
+  border-radius: 0 0
+    var(--codeai-radius-md, #{variables.$regular-border-radius})
+    var(--codeai-radius-md, #{variables.$regular-border-radius});
   border: 1px solid var(--borders-neutral-primary);
   border-top: 0;
   background: var(--background-neutral-primary);

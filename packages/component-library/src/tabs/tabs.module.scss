@@ -139,7 +139,8 @@
 .tabs-secondary {
   li button[role='tab'] {
     align-items: center;
-    border-radius: 0.25rem 0.25rem 0 0;
+    border-radius: var(--codeai-radius-md, 0.25rem)
+      var(--codeai-radius-md, 0.25rem) 0 0;
   }
 
   &.tabs-light {
@@ -285,7 +286,8 @@
     align-items: center;
     gap: 0.625rem;
 
-    border-radius: 0.5rem 0.5rem 0 0;
+    border-radius: var(--codeai-radius-md, 0.5rem)
+      var(--codeai-radius-md, 0.5rem) 0 0;
     border-top: 1px solid var(--borders-neutral-primary);
     border-right: 1px solid var(--borders-neutral-primary);
     border-left: 1px solid var(--borders-neutral-primary);
@@ -308,13 +310,15 @@
     }
 
     &:active:not(:disabled, .selectedTab) {
-      border-radius: 0.5rem 0.5rem 0 0;
+      border-radius: var(--codeai-radius-md, 0.5rem)
+        var(--codeai-radius-md, 0.5rem) 0 0;
       border: 1px solid var(--borders-neutral-strong) !important;
       border-bottom: 0 solid transparent !important;
     }
 
     &.selectedTab {
-      border-radius: 0.5rem 0.5rem 0 0;
+      border-radius: var(--codeai-radius-md, 0.5rem)
+        var(--codeai-radius-md, 0.5rem) 0 0;
       background: var(--background-brand-teal-primary);
       border-color: var(--borders-brand-teal-primary);
       color: var(--text-neutral-white-fixed);
