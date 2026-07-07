@@ -15,6 +15,9 @@ import ActionBlock, {
 import FullWidthActionBlock, {
   FullWidthActionBlockContentfulComponentDefinition,
 } from '@/components/contentful/actionBlocks/fullWidthActionBlock';
+import Badge, {
+  BadgeContentfulComponentDefinition,
+} from '@/components/contentful/badge';
 import ActionBlockCarousel, {
   ActionBlockCarouselContentfulComponentDefinition,
 } from '@/components/contentful/carousels/actionBlockCarousel';
@@ -197,6 +200,10 @@ const contentfulRegistration = {
     {
       component: AFEEligibility,
       definition: AFEEligibilityContentfulComponentDefinition,
+    },
+    {
+      component: Badge,
+      definition: BadgeContentfulComponentDefinition,
     },
     {
       component: Button,
