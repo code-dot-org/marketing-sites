@@ -9,6 +9,7 @@ export const BRAND_COLOR_FAMILIES = [
   'green',
   'orange',
   'pink',
+  'gray',
   'black',
   'white',
 ] as const;
@@ -26,9 +27,10 @@ export type BrandColorShade = (typeof BRAND_COLOR_SHADES)[number];
 
 export const BRAND_COLORS = [
   // CodeAI brand palette — neutrals first (Black, White), then 5 families ×
-  // 4 shades. Legacy `primary` is preserved at the end of the list so existing
-  // Contentful entries keep validating; it surfaces as "Primary (legacy)" and
-  // will be retired once consuming pages are rebuilt.
+  // 4 shades, then the 9-step gray ramp. Legacy `primary` is preserved at the
+  // end of the list so existing Contentful entries keep validating; it
+  // surfaces as "Primary (legacy)" and will be retired once consuming pages
+  // are rebuilt.
   {
     value: 'black',
     displayName: 'Black',
@@ -182,6 +184,73 @@ export const BRAND_COLORS = [
     cssVar: 'var(--codeai-pink-light)',
     family: 'pink',
     shade: 'light',
+  },
+  // Gray ramp — numbered 1 (lightest) to 9 (darkest) rather than shade-
+  // suffixed. Per the Figma split, Gray 1–5 carry shade 'light' and Gray 6–9
+  // 'dark' (Gray 6 is the first AA-on-white shade), which is what drives the
+  // contrast switch below.
+  {
+    value: 'gray1',
+    displayName: 'Gray 1',
+    cssVar: 'var(--codeai-gray-1)',
+    family: 'gray',
+    shade: 'light',
+  },
+  {
+    value: 'gray2',
+    displayName: 'Gray 2',
+    cssVar: 'var(--codeai-gray-2)',
+    family: 'gray',
+    shade: 'light',
+  },
+  {
+    value: 'gray3',
+    displayName: 'Gray 3',
+    cssVar: 'var(--codeai-gray-3)',
+    family: 'gray',
+    shade: 'light',
+  },
+  {
+    value: 'gray4',
+    displayName: 'Gray 4',
+    cssVar: 'var(--codeai-gray-4)',
+    family: 'gray',
+    shade: 'light',
+  },
+  {
+    value: 'gray5',
+    displayName: 'Gray 5',
+    cssVar: 'var(--codeai-gray-5)',
+    family: 'gray',
+    shade: 'light',
+  },
+  {
+    value: 'gray6',
+    displayName: 'Gray 6',
+    cssVar: 'var(--codeai-gray-6)',
+    family: 'gray',
+    shade: 'dark',
+  },
+  {
+    value: 'gray7',
+    displayName: 'Gray 7',
+    cssVar: 'var(--codeai-gray-7)',
+    family: 'gray',
+    shade: 'dark',
+  },
+  {
+    value: 'gray8',
+    displayName: 'Gray 8',
+    cssVar: 'var(--codeai-gray-8)',
+    family: 'gray',
+    shade: 'dark',
+  },
+  {
+    value: 'gray9',
+    displayName: 'Gray 9',
+    cssVar: 'var(--codeai-gray-9)',
+    family: 'gray',
+    shade: 'dark',
   },
   // Legacy entry — `primary` predates the CodeAI brand palette. Renamed to
   // "Primary (legacy)" in the Studio dropdown and dropped to the bottom of the
@@ -352,15 +421,24 @@ export const resolveTextColorForBackground = (
     return {value: textValue, behavior: 'passthrough'};
   }
   if (isLowContrastText(textToken)) {
+    // Gray uses a numbered ramp, not shade-suffixed names: gray8 plays the
+    // "family dark" role; gray6 is the first AA-on-white shade, so it plays
+    // "family primary".
     if (tone === 'light') {
-      const shifted = `${textToken.family}Dark` as BrandColor;
+      const shifted =
+        textToken.family === 'gray'
+          ? ('gray8' as BrandColor)
+          : (`${textToken.family}Dark` as BrandColor);
       return {
         value: shifted,
         behavior: 'low-contrast-text-on-light-bg-shifts-to-family-dark',
       };
     }
     // tone === 'mid' (covers both *-mid and white backgrounds).
-    const shifted = `${textToken.family}Primary` as BrandColor;
+    const shifted =
+      textToken.family === 'gray'
+        ? ('gray6' as BrandColor)
+        : (`${textToken.family}Primary` as BrandColor);
     return {
       value: shifted,
       behavior: 'low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary',

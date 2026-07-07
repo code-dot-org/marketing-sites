@@ -17,6 +17,8 @@ describe('backgroundToneFor', () => {
     ['purplePrimary', 'dark'],
     ['bluePrimary', 'dark'],
     ['greenDark', 'dark'],
+    ['gray6', 'dark'],
+    ['gray9', 'dark'],
   ])('maps %s background to %s tone', (bg, expected) => {
     expect(backgroundToneFor(bg as BrandColor)).toBe(expected);
   });
@@ -27,6 +29,10 @@ describe('backgroundToneFor', () => {
     ['greenLight', 'light'],
     ['orangeLight', 'light'],
     ['pinkLight', 'light'],
+    // Gray 1–5 all carry shade 'light' per the Figma split — including
+    // mid-looking Gray 5.
+    ['gray1', 'light'],
+    ['gray5', 'light'],
   ])('maps %s background to light tone', (bg, expected) => {
     expect(backgroundToneFor(bg as BrandColor)).toBe(expected);
   });
@@ -178,6 +184,62 @@ describe('resolveTextColorForBackground', () => {
       ['greenLight'],
     ])('%s text on transparent bg passes through', text => {
       const result = resolveTextColorForBackground(text, 'transparent');
+      expect(result.value).toBe(text);
+      expect(result.behavior).toBe('passthrough');
+    });
+  });
+
+  describe('gray ramp — numbered shades route through the gray special case', () => {
+    it.each<[BrandColor, BrandColor]>([
+      ['gray6', 'purpleDark'],
+      ['gray8', 'black'],
+      ['gray9', 'gray8'],
+    ])('%s text on %s bg → white', (text, bg) => {
+      const result = resolveTextColorForBackground(text, bg);
+      expect(result.value).toBe('white');
+      expect(result.behavior).toBe('dark-text-on-dark-bg-becomes-white');
+    });
+
+    it.each<[BrandColor, BrandColor]>([
+      ['gray1', 'black'],
+      ['gray2', 'purpleDark'],
+      ['gray5', 'gray9'],
+    ])('%s text on dark %s bg passes through', (text, bg) => {
+      const result = resolveTextColorForBackground(text, bg);
+      expect(result.value).toBe(text);
+      expect(result.behavior).toBe('passthrough');
+    });
+
+    it.each<[BrandColor, BrandColor]>([
+      ['gray1', 'gray2'],
+      ['gray3', 'purpleLight'],
+      ['gray5', 'gray1'],
+    ])('%s text on light %s bg → gray8', (text, bg) => {
+      const result = resolveTextColorForBackground(text, bg);
+      expect(result.value).toBe('gray8');
+      expect(result.behavior).toBe(
+        'low-contrast-text-on-light-bg-shifts-to-family-dark',
+      );
+    });
+
+    it.each<[BrandColor, BrandColor | null]>([
+      ['gray1', 'white'],
+      ['gray4', 'purpleMid'],
+      ['gray5', null],
+    ])('%s text on mid %s bg → gray6', (text, bg) => {
+      const result = resolveTextColorForBackground(text, bg);
+      expect(result.value).toBe('gray6');
+      expect(result.behavior).toBe(
+        'low-contrast-text-on-mid-or-white-bg-shifts-to-family-primary',
+      );
+    });
+
+    it.each<[BrandColor, BrandColor]>([
+      ['gray6', 'purpleLight'],
+      ['gray8', 'white'],
+      ['gray9', 'gray1'],
+    ])('%s text on light/mid %s bg passes through', (text, bg) => {
+      const result = resolveTextColorForBackground(text, bg);
       expect(result.value).toBe(text);
       expect(result.behavior).toBe('passthrough');
     });

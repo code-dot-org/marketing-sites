@@ -5,12 +5,12 @@ import {brandColorOptionsWithDefault} from '@/components/common/colors';
 
 import {ICON_LIGHT_GREY} from './Icon';
 
-// 22 universal brand-color options in canonical manifest order; default is
+// Universal brand-color options in canonical manifest order; default is
 // `purplePrimary` (matches Divider). No legacy filter — Icon doesn't carry
 // legacy values.
 const ICON_GLYPH_COLOR_OPTIONS = brandColorOptionsWithDefault('purplePrimary');
 
-// Background color list: Icon-local Light Grey default, then the 22 universal
+// Background color list: Icon-local Light Grey default, then the universal
 // brand options. Light Grey lives only on this dropdown.
 const ICON_BACKGROUND_COLOR_OPTIONS = [
   {value: ICON_LIGHT_GREY, displayName: 'Light Grey (default)'},
