@@ -3,7 +3,7 @@
 // Provides the resolved enclosing brand-color background to descendants so
 // they can route their authored color through the contrast switch. Set by
 // Section (and any future Container) when its `background` prop is one of the
-// 22 CodeAI brand tokens. csforall background values and Corporate Site legacy
+// CodeAI brand tokens. csforall background values and Corporate Site legacy
 // values produce `null` here (value-space guard — see Section.tsx and
 // research.md §10). A Section with `background='transparent'` emits the
 // 'transparent' sentinel so descendants short-circuit the contrast switch.
