@@ -1808,7 +1808,7 @@ __metadata:
     "@applitools/eyes-playwright": "npm:^1.36.3"
     "@code-dot-org/component-library": "workspace:*"
     "@code-dot-org/fonts": "workspace:*"
-    "@contentful/experiences-sdk-react": "npm:^3.8.9"
+    "@contentful/experiences-sdk-react": "npm:^3.8.10"
     "@contentful/rich-text-html-renderer": "npm:^17.2.2"
     "@contentful/rich-text-plain-text-renderer": "npm:^17.2.1"
     "@emotion/cache": "npm:^11.14.0"
@@ -1917,44 +1917,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/experiences-components-react@npm:3.8.9":
-  version: 3.8.9
-  resolution: "@contentful/experiences-components-react@npm:3.8.9"
+"@contentful/experiences-components-react@npm:3.8.10":
+  version: 3.8.10
+  resolution: "@contentful/experiences-components-react@npm:3.8.10"
   dependencies:
-    "@contentful/experiences-core": "npm:3.8.9"
+    "@contentful/experiences-core": "npm:3.8.10"
     "@contentful/rich-text-react-renderer": "npm:^16.0.1"
     postcss-import: "npm:^16.0.1"
     style-inject: "npm:^0.3.0"
   peerDependencies:
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
-  checksum: 10c0/60370ae3904163c7db0d0f471924ec3450c3a7801c3efae6a46c1f0c5bf81285026302bff91ef66b082403272292390547e994de1670cdade70d3c28361a439f
+  checksum: 10c0/43f16c405f8a581c359ac85773f2be7ed05595f48f63032f028f1f44512f2131c4af57429da10a73345f3b40f572ffd50d0f44c9c32f5d858eec4fd0ae1acd0a
   languageName: node
   linkType: hard
 
-"@contentful/experiences-core@npm:3.8.9":
-  version: 3.8.9
-  resolution: "@contentful/experiences-core@npm:3.8.9"
+"@contentful/experiences-core@npm:3.8.10":
+  version: 3.8.10
+  resolution: "@contentful/experiences-core@npm:3.8.10"
   dependencies:
-    "@contentful/experiences-validators": "npm:3.8.9"
+    "@contentful/experiences-validators": "npm:3.8.10"
     "@contentful/rich-text-types": "npm:^17.0.0"
     lodash.clonedeep: "npm:^4.5.0"
     md5: "npm:2.3.0"
     zustand: "npm:^4.4.7"
   peerDependencies:
     contentful: ">=10.6.0"
-  checksum: 10c0/6f49866595b89cb05ca6bd388a5bb38c170c36dbca96ad6ae66af869bf4f1f9d634ee6e2cdfa76d242625114fe13e0fdd98f43c29936495bd0b02d70a51a9f4c
+  checksum: 10c0/b1c06c7dec4bccc6a015c07244b9e01eb9c01fb9459da43c0a716d533339658ab0d8757b8b5af573b1d08fd34844eb46290ee13bb11f222bc29da4117c4bbd15
   languageName: node
   linkType: hard
 
-"@contentful/experiences-sdk-react@npm:^3.8.9":
-  version: 3.8.9
-  resolution: "@contentful/experiences-sdk-react@npm:3.8.9"
+"@contentful/experiences-sdk-react@npm:^3.8.10":
+  version: 3.8.10
+  resolution: "@contentful/experiences-sdk-react@npm:3.8.10"
   dependencies:
-    "@contentful/experiences-components-react": "npm:3.8.9"
-    "@contentful/experiences-core": "npm:3.8.9"
-    "@contentful/experiences-validators": "npm:3.8.9"
-    "@contentful/experiences-visual-editor-react": "npm:3.8.9"
+    "@contentful/experiences-components-react": "npm:3.8.10"
+    "@contentful/experiences-core": "npm:3.8.10"
+    "@contentful/experiences-validators": "npm:3.8.10"
+    "@contentful/experiences-visual-editor-react": "npm:3.8.10"
     "@contentful/rich-text-types": "npm:^17.0.0"
     csstype: "npm:^3.1.2"
     immer: "npm:^10.0.3"
@@ -1964,25 +1964,25 @@ __metadata:
     contentful: ">=10.6.0"
     react: ">=16.0.0"
     react-dom: ">=16.0.0"
-  checksum: 10c0/77bce6914bd8ed06ce48330749ce2ce65b514d6c511df76118d22f9a6510b456ecc160a510e42597bf3e3600efb5300d6ab410aa1de1ba4e0271d84478140e90
+  checksum: 10c0/1c0a12dacaacb75dfd0a05e407acabe0a16c71e66be7b6c9f40259151b406f31040b900b3c1fff70313c92c8fcc0f950cc1a4b692dfd858bcd2a5f4e0c534d0e
   languageName: node
   linkType: hard
 
-"@contentful/experiences-validators@npm:3.8.9":
-  version: 3.8.9
-  resolution: "@contentful/experiences-validators@npm:3.8.9"
+"@contentful/experiences-validators@npm:3.8.10":
+  version: 3.8.10
+  resolution: "@contentful/experiences-validators@npm:3.8.10"
   dependencies:
     zod: "npm:^3.22.4"
-  checksum: 10c0/b8d0ce2aeac3c7521fefb242e566c85951a75b7cc35013bed855e39ce991c9789e90e97f9a6996b2d286feec44236f4069d796f6716ea658355d720150f2fdd5
+  checksum: 10c0/279cafd96437c77144f6f638864f03b82ffb67fce0ea32a3b5631d0932c99bd43d50632ad46e585f5e77cab1d326127bbced4741e36d4568a26f9fe168203e93
   languageName: node
   linkType: hard
 
-"@contentful/experiences-visual-editor-react@npm:3.8.9":
-  version: 3.8.9
-  resolution: "@contentful/experiences-visual-editor-react@npm:3.8.9"
+"@contentful/experiences-visual-editor-react@npm:3.8.10":
+  version: 3.8.10
+  resolution: "@contentful/experiences-visual-editor-react@npm:3.8.10"
   dependencies:
-    "@contentful/experiences-components-react": "npm:3.8.9"
-    "@contentful/experiences-core": "npm:3.8.9"
+    "@contentful/experiences-components-react": "npm:3.8.10"
+    "@contentful/experiences-core": "npm:3.8.10"
     immer: "npm:^10.0.3"
     lodash-es: "npm:^4.17.21"
     md5: "npm:^2.3.0"
@@ -1993,7 +1993,7 @@ __metadata:
   peerDependencies:
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
-  checksum: 10c0/809e2e13e4ba0fb3dd5c0a0339391d3537f3940be224408902152702aed6ec83b2323069d514a381a4785bda96788e31860ec7dcf5bdf05bfc25649e8f7ef934
+  checksum: 10c0/b1dbe523878d84ae82f7160137509df2217e2322589df2b91e1909c537da1152ee7f5ab7a4f13f61478ce189a9fb9d6e726d21921658bcbc8a081b9e42cde8f1
   languageName: node
   linkType: hard
 
