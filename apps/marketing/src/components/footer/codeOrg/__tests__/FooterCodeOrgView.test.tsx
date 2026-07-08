@@ -37,9 +37,7 @@ describe('FooterCodeOrgView', () => {
     renderFooter();
 
     for (const column of DEFAULT_FOOTER_CONTENT.linkColumns) {
-      expect(
-        screen.getByRole('heading', {level: 3, name: column.heading}),
-      ).toBeVisible();
+      expect(screen.getByText(column.heading)).toBeVisible();
       for (const link of column.links) {
         const anchor = screen.getByRole('link', {name: link.label});
         expect(anchor).toHaveAttribute('href', link.href);

@@ -97,7 +97,9 @@ const LinkColumn = styled('div')(({theme}) => ({
   gap: theme.spacing(2),
 }));
 
-const ColumnHeading = styled('h3')({
+// Not a heading element: the footer follows arbitrary page content, so any
+// fixed h-level can break axe's heading-order rule (e.g. h1 → h3).
+const ColumnHeading = styled('span')({
   fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
   fontWeight: 700,
   fontSize: '1rem',
