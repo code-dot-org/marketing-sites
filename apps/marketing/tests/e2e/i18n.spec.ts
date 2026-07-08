@@ -13,9 +13,7 @@ test.describe('i18n', () => {
     // Wait until window.Localize is available and truthy
     await page.waitForFunction(() => !!window.Localize);
 
-    const languageDropdown = page.locator(
-      '[aria-label="Language selection dropdown"]',
-    );
+    const languageDropdown = page.getByLabel('Select language');
     await expect(languageDropdown).toBeVisible();
 
     await languageDropdown.selectOption('ar');

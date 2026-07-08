@@ -55,6 +55,12 @@ jest.mock(
     ({brand}: {brand: string}) => <div>OrganizationJsonLd for {brand}</div>,
 );
 
+// The Code.org footer is an async server component (it fetches Contentful
+// content), which @testing-library/react cannot render.
+jest.mock('@/components/footer/Footer', () => ({
+  getFooter: jest.fn(async () => <footer>Footer</footer>),
+}));
+
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(() => ({
     push: jest.fn(),
