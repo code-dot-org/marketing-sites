@@ -57,7 +57,7 @@ import CustomText, {
   CustomTextContentfulComponentDefinition,
 } from '@/components/contentful/customText';
 import Divider, {
-  DividerContentfulComponentDefinition,
+  CodeOrgDividerContentfulComponentDefinition,
 } from '@/components/contentful/divider';
 import EditorialCard, {
   EditorialCardContentfulComponentDefinition,
@@ -223,7 +223,7 @@ const contentfulRegistration = {
     },
     {
       component: Divider,
-      definition: DividerContentfulComponentDefinition,
+      definition: CodeOrgDividerContentfulComponentDefinition,
       options: {
         wrapContainerWidth: '100%',
       },

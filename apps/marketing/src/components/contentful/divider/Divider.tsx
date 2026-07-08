@@ -20,6 +20,11 @@ export type DividerProps = HTMLAttributes<HTMLElement> & {
   color?: DividerLegacyColor | BrandColor;
   /** Divider margin */
   margin?: keyof SpacingProps;
+  /** Divider direction. Vertical relies on `flexItem` stretching, so it only
+   * shows inside row-direction flex containers. */
+  direction?: 'horizontal' | 'vertical';
+  /** Divider line thickness — small is 1px, medium is 2px */
+  width?: 'small' | 'medium';
   /** Divider custom className */
   className?: string;
 };
@@ -32,24 +37,32 @@ const isLegacyDividerColor = (
 const Divider: React.FC<DividerProps> = ({
   color = 'primary',
   margin = 'm',
+  direction = 'horizontal',
+  width = 'small',
   className,
 }) => {
   const legacy = isLegacyDividerColor(color);
+  const vertical = direction === 'vertical';
+  const sx = {
+    ...(legacy ? {} : {borderColor: cssVarForBrandColor(color as BrandColor)}),
+    // Small adds nothing: MUI's default `thin` border stays as-is. Vertical
+    // dividers draw their line on the right border in MUI.
+    ...(width === 'medium'
+      ? {[vertical ? 'borderRightWidth' : 'borderBottomWidth']: '2px'}
+      : {}),
+  };
   return (
     <MuiDivider
       className={classNames(
         legacy && `divider--color-${color}`,
         `divider--margin-${margin}`,
+        vertical && 'divider--vertical',
         className,
       )}
-      orientation="horizontal"
+      orientation={direction}
       variant="fullWidth"
       flexItem
-      sx={
-        legacy
-          ? undefined
-          : {borderColor: cssVarForBrandColor(color as BrandColor)}
-      }
+      sx={Object.keys(sx).length ? sx : undefined}
     />
   );
 };
