@@ -88,7 +88,10 @@ export const CodeOrgDividerContentfulComponentDefinition: ComponentDefinition =
         ...DividerContentfulComponentDefinition.variables.color,
         defaultValue: 'gray5',
         validations: {
-          in: [...dividerBrandOptions('gray5'), ...DIVIDER_LEGACY_COLOR_OPTIONS],
+          in: [
+            ...dividerBrandOptions('gray5'),
+            ...DIVIDER_LEGACY_COLOR_OPTIONS,
+          ],
         },
       },
       direction: {
