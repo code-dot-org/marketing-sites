@@ -1,16 +1,30 @@
 // Creates a definition for the Divider component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
-import {brandColorOptionsWithDefault} from '@/components/common/colors';
+import {
+  BrandColor,
+  brandColorOptionsWithDefault,
+} from '@/components/common/colors';
 
 // Brand options for the Divider dropdown. `primary` and `white` are filtered
 // out because their value strings collide with the legacy Divider color
 // values (also `primary` and `white`), which render via the existing
 // class-based theme overrides. Authors who want a white divider should pick
 // the "White (legacy)" option at the bottom of the list.
-const DIVIDER_BRAND_OPTIONS = brandColorOptionsWithDefault(
-  'purplePrimary',
-).filter(opt => opt.value !== 'primary' && opt.value !== 'white');
+const dividerBrandOptions = (defaultValue: BrandColor) =>
+  brandColorOptionsWithDefault(defaultValue).filter(
+    opt => opt.value !== 'primary' && opt.value !== 'white',
+  );
+
+// Legacy Divider colors — render via the existing `.divider--color-{value}`
+// CSS classes. Kept at the bottom of the list so existing Contentful entries
+// continue to validate. `strong` displays as "Secondary (legacy)" — the
+// stored value remains `strong` so existing usage on Code.org keeps working.
+const DIVIDER_LEGACY_COLOR_OPTIONS = [
+  {value: 'primary', displayName: 'Primary (legacy)'},
+  {value: 'strong', displayName: 'Secondary (legacy)'},
+  {value: 'white', displayName: 'White (legacy)'},
+];
 
 export const DividerContentfulComponentDefinition: ComponentDefinition = {
   id: 'divider',
@@ -34,15 +48,8 @@ export const DividerContentfulComponentDefinition: ComponentDefinition = {
       group: 'style',
       validations: {
         in: [
-          ...DIVIDER_BRAND_OPTIONS,
-          // Legacy Divider colors — render via the existing
-          // `.divider--color-{value}` CSS classes. Kept at the bottom of the
-          // list so existing Contentful entries continue to validate.
-          // `strong` displays as "Secondary (legacy)" — the stored value
-          // remains `strong` so existing usage on Code.org keeps working.
-          {value: 'primary', displayName: 'Primary (legacy)'},
-          {value: 'strong', displayName: 'Secondary (legacy)'},
-          {value: 'white', displayName: 'White (legacy)'},
+          ...dividerBrandOptions('purplePrimary'),
+          ...DIVIDER_LEGACY_COLOR_OPTIONS,
         ],
       },
     },
@@ -63,3 +70,53 @@ export const DividerContentfulComponentDefinition: ComponentDefinition = {
     },
   },
 };
+
+// Code.org-only variant: adds Direction and Width options and defaults the
+// color to Gray 5. CSforAll keeps the base definition above, so these options
+// never appear there. Same `id` — only one definition is registered per brand.
+export const CodeOrgDividerContentfulComponentDefinition: ComponentDefinition =
+  {
+    ...DividerContentfulComponentDefinition,
+    tooltip: {
+      ...DividerContentfulComponentDefinition.tooltip,
+      description:
+        'Use a divider to visually separate content sections. Horizontal dividers span the full width; vertical dividers stretch to the height of a row layout (e.g. between columns).',
+    },
+    variables: {
+      ...DividerContentfulComponentDefinition.variables,
+      color: {
+        ...DividerContentfulComponentDefinition.variables.color,
+        defaultValue: 'gray5',
+        validations: {
+          in: [
+            ...dividerBrandOptions('gray5'),
+            ...DIVIDER_LEGACY_COLOR_OPTIONS,
+          ],
+        },
+      },
+      direction: {
+        displayName: 'Direction',
+        type: 'Text',
+        defaultValue: 'horizontal',
+        group: 'style',
+        validations: {
+          in: [
+            {value: 'horizontal', displayName: 'Horizontal'},
+            {value: 'vertical', displayName: 'Vertical'},
+          ],
+        },
+      },
+      width: {
+        displayName: 'Width',
+        type: 'Text',
+        defaultValue: 'small',
+        group: 'style',
+        validations: {
+          in: [
+            {value: 'small', displayName: 'Small'},
+            {value: 'medium', displayName: 'Medium'},
+          ],
+        },
+      },
+    },
+  };
