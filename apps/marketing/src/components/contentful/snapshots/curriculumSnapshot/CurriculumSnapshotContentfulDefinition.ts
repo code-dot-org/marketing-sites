@@ -5,7 +5,7 @@ export const CurriculumSnapshotContentfulComponentDefinition: ComponentDefinitio
   {
     id: 'curriculumSnapshot',
     name: 'Curriculum Snapshot',
-    category: '07: Curriculum',
+    category: '10: Deprecated',
     thumbnailUrl:
       'https://contentful-images.code.org/90t6bu6vlf76/2EWViyGBTdt0mXADkbonFA/f77fc4788be65bc013d40c6965d782a4/component_curriculum_snapshot_thumbnail.png',
     tooltip: {

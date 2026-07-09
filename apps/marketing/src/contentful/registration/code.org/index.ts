@@ -218,15 +218,6 @@ const contentfulRegistration = {
       definition: BadgeContentfulComponentDefinition,
     },
     {
-      component: CatalogInterstitial,
-      definition: CatalogInterstitialContentfulComponentDefinition,
-      options: {
-        enableEditorProperties: {
-          isEditorMode: true,
-        },
-      },
-    },
-    {
       component: Button,
       definition: ButtonLegacyContentfulComponentDefinition,
     },
@@ -361,16 +352,6 @@ const contentfulRegistration = {
       definition: CurriculumSnapshotContentfulComponentDefinition,
     },
     {
-      component: CourseCatalog,
-      definition: CourseCatalogContentfulComponentDefinition,
-      options: {
-        wrapContainerWidth: '100%',
-        enableEditorProperties: {
-          isEditorMode: true,
-        },
-      },
-    },
-    {
       component: CustomText,
       definition: CustomTextContentfulComponentDefinition,
     },
@@ -382,6 +363,7 @@ const contentfulRegistration = {
         wrapContainerWidth: '100%',
       },
     },
+    // Curriculum category components, in palette display order.
     {
       component: UnitCard,
       definition: UnitCardContentfulComponentDefinition,
@@ -389,6 +371,25 @@ const contentfulRegistration = {
     {
       component: UnitCarousel,
       definition: UnitCarouselContentfulComponentDefinition,
+    },
+    {
+      component: CourseCatalog,
+      definition: CourseCatalogContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
+      },
+    },
+    {
+      component: CatalogInterstitial,
+      definition: CatalogInterstitialContentfulComponentDefinition,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
+      },
     },
     {
       component: Video,
