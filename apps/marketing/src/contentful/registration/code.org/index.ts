@@ -27,6 +27,9 @@ import ImageCarousel, {
 import VideoCarousel, {
   VideoCarouselContentfulComponentDefinition,
 } from '@/components/contentful/carousels/videoCarousel';
+import CatalogInterstitial, {
+  CatalogInterstitialContentfulComponentDefinition,
+} from '@/components/contentful/catalogInterstitial';
 import ActionBlockCollection, {
   ActionBlockCollectionContentfulComponentDefinition,
 } from '@/components/contentful/collections/actionBlockCollection';
@@ -53,6 +56,9 @@ import StateGapMap, {
 import YourSchool, {
   YourSchoolContentfulComponentDefinition,
 } from '@/components/contentful/corporateSite/yourSchool';
+import CourseCatalog, {
+  CourseCatalogContentfulComponentDefinition,
+} from '@/components/contentful/courseCatalog';
 import CustomText, {
   CustomTextContentfulComponentDefinition,
 } from '@/components/contentful/customText';
@@ -212,6 +218,15 @@ const contentfulRegistration = {
       definition: BadgeContentfulComponentDefinition,
     },
     {
+      component: CatalogInterstitial,
+      definition: CatalogInterstitialContentfulComponentDefinition,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
+      },
+    },
+    {
       component: Button,
       definition: ButtonLegacyContentfulComponentDefinition,
     },
@@ -344,6 +359,16 @@ const contentfulRegistration = {
     {
       component: CurriculumSnapshot,
       definition: CurriculumSnapshotContentfulComponentDefinition,
+    },
+    {
+      component: CourseCatalog,
+      definition: CourseCatalogContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
+      },
     },
     {
       component: CustomText,
