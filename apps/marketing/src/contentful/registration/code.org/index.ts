@@ -125,6 +125,9 @@ import Testimonial, {
 import UnitCard, {
   UnitCardContentfulComponentDefinition,
 } from '@/components/contentful/unitCard';
+import UnitCarousel, {
+  UnitCarouselContentfulComponentDefinition,
+} from '@/components/contentful/unitCarousel';
 import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
@@ -357,6 +360,10 @@ const contentfulRegistration = {
     {
       component: UnitCard,
       definition: UnitCardContentfulComponentDefinition,
+    },
+    {
+      component: UnitCarousel,
+      definition: UnitCarouselContentfulComponentDefinition,
     },
     {
       component: Video,
