@@ -1870,6 +1870,7 @@ __metadata:
     simple-git: "npm:^3.28.0"
     sitemap: "npm:^8.0.0"
     stylelint: "npm:^16.14.1"
+    swiper: "npm:^11.0.5"
     ts-node: "npm:^10.9.2"
     tsx: "npm:^4.19.3"
     typescript: "npm:^5"

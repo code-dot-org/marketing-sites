@@ -27,6 +27,9 @@ import ImageCarousel, {
 import VideoCarousel, {
   VideoCarouselContentfulComponentDefinition,
 } from '@/components/contentful/carousels/videoCarousel';
+import CatalogInterstitial, {
+  CatalogInterstitialContentfulComponentDefinition,
+} from '@/components/contentful/catalogInterstitial';
 import ActionBlockCollection, {
   ActionBlockCollectionContentfulComponentDefinition,
 } from '@/components/contentful/collections/actionBlockCollection';
@@ -53,6 +56,9 @@ import StateGapMap, {
 import YourSchool, {
   YourSchoolContentfulComponentDefinition,
 } from '@/components/contentful/corporateSite/yourSchool';
+import CourseCatalog, {
+  CourseCatalogContentfulComponentDefinition,
+} from '@/components/contentful/courseCatalog';
 import CustomText, {
   CustomTextContentfulComponentDefinition,
 } from '@/components/contentful/customText';
@@ -122,6 +128,12 @@ import TabGroup, {
 import Testimonial, {
   TestimonialContentfulComponentDefinition,
 } from '@/components/contentful/testimonial';
+import UnitCard, {
+  UnitCardContentfulComponentDefinition,
+} from '@/components/contentful/unitCard';
+import UnitCarousel, {
+  UnitCarouselContentfulComponentDefinition,
+} from '@/components/contentful/unitCarousel';
 import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
@@ -349,6 +361,34 @@ const contentfulRegistration = {
       definition: TestimonialContentfulComponentDefinition,
       options: {
         wrapContainerWidth: '100%',
+      },
+    },
+    // Curriculum category components, in palette display order.
+    {
+      component: UnitCard,
+      definition: UnitCardContentfulComponentDefinition,
+    },
+    {
+      component: UnitCarousel,
+      definition: UnitCarouselContentfulComponentDefinition,
+    },
+    {
+      component: CourseCatalog,
+      definition: CourseCatalogContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
+      },
+    },
+    {
+      component: CatalogInterstitial,
+      definition: CatalogInterstitialContentfulComponentDefinition,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
       },
     },
     {
