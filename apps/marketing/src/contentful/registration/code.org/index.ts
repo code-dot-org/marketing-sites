@@ -122,6 +122,9 @@ import TabGroup, {
 import Testimonial, {
   TestimonialContentfulComponentDefinition,
 } from '@/components/contentful/testimonial';
+import UnitCard, {
+  UnitCardContentfulComponentDefinition,
+} from '@/components/contentful/unitCard';
 import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
@@ -350,6 +353,10 @@ const contentfulRegistration = {
       options: {
         wrapContainerWidth: '100%',
       },
+    },
+    {
+      component: UnitCard,
+      definition: UnitCardContentfulComponentDefinition,
     },
     {
       component: Video,
