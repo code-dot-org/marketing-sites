@@ -18,6 +18,9 @@ import FullWidthActionBlock, {
 import Badge, {
   BadgeContentfulComponentDefinition,
 } from '@/components/contentful/badge';
+import CardCarousel, {
+  CardCarouselContentfulComponentDefinition,
+} from '@/components/contentful/cardCarousel';
 import ActionBlockCarousel, {
   ActionBlockCarouselContentfulComponentDefinition,
 } from '@/components/contentful/carousels/actionBlockCarousel';
@@ -39,6 +42,9 @@ import LogoCollection, {
 import PeopleCollection, {
   PeopleCollectionContentfulComponentDefinition,
 } from '@/components/contentful/collections/peopleCollection';
+import ContentCard, {
+  ContentCardContentfulComponentDefinition,
+} from '@/components/contentful/contentCard';
 import AdoptionMap, {
   AdoptionMapContentfulComponentDefinition,
 } from '@/components/contentful/corporateSite/adoptionMap';
@@ -232,6 +238,20 @@ const contentfulRegistration = {
     {
       component: PeopleCollection,
       definition: PeopleCollectionContentfulComponentDefinition,
+    },
+    {
+      component: ContentCard,
+      definition: ContentCardContentfulComponentDefinition,
+    },
+    {
+      component: CardCarousel,
+      definition: CardCarouselContentfulComponentDefinition,
+      options: {
+        // The container centers items instead of stretching them, so the
+        // SDK wrapper otherwise shrink-wraps to the slide row's intrinsic
+        // width and overflows once slides outgrow the container.
+        wrapContainerWidth: '100%',
+      },
     },
     {
       component: Divider,
