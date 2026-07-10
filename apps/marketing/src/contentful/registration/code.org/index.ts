@@ -39,6 +39,9 @@ import LogoCollection, {
 import PeopleCollection, {
   PeopleCollectionContentfulComponentDefinition,
 } from '@/components/contentful/collections/peopleCollection';
+import ContentCard, {
+  ContentCardContentfulComponentDefinition,
+} from '@/components/contentful/contentCard';
 import AdoptionMap, {
   AdoptionMapContentfulComponentDefinition,
 } from '@/components/contentful/corporateSite/adoptionMap';
@@ -232,6 +235,10 @@ const contentfulRegistration = {
     {
       component: PeopleCollection,
       definition: PeopleCollectionContentfulComponentDefinition,
+    },
+    {
+      component: ContentCard,
+      definition: ContentCardContentfulComponentDefinition,
     },
     {
       component: Divider,
