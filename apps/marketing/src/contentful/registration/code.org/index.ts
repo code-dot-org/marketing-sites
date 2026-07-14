@@ -175,7 +175,15 @@ const containerDefinitionWithOverrides: ComponentDefinition = {
     cfGap: {
       ...containerDefinition.variables.cfGap,
       type: 'Text',
-      defaultValue: '0rem 0rem',
+      // row gap, column gap
+      defaultValue: '0rem 2rem',
+    },
+    // Note the SDK's axis naming is swapped from the Studio UI: this is the
+    // control Studio surfaces as horizontal "Align left".
+    cfVerticalAlignment: {
+      ...containerDefinition.variables.cfVerticalAlignment,
+      type: 'Text',
+      defaultValue: 'start', // Left
     },
   },
 };
