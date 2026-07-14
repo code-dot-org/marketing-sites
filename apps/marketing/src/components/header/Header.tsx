@@ -1,6 +1,6 @@
 import {Brand} from '@/config/brand';
 
-import HeaderCorporateSite from './corporateSite';
+import HeaderCodeOrg from './codeOrg';
 import HeaderCSforAll from './csForAll';
 
 export const getHeader = (brand: Brand) => {
@@ -8,6 +8,6 @@ export const getHeader = (brand: Brand) => {
     case Brand.CS_FOR_ALL:
       return <HeaderCSforAll />;
     case Brand.CODE_DOT_ORG:
-      return <HeaderCorporateSite />;
+      return <HeaderCodeOrg />;
   }
 };
