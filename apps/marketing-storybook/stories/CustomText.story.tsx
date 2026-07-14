@@ -12,14 +12,7 @@ const meta: Meta<typeof CustomText> = {
 export default meta;
 type Story = StoryObj<typeof CustomText>;
 
-const TYPES = [
-  'custom',
-  'subtitle',
-  'overline',
-  'statistic',
-  'courseTopics',
-  'courseLabs',
-] as const;
+const TYPES = ['custom', 'subtitle', 'overline', 'statistic'] as const;
 
 const SIZES = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl'] as const;
 
@@ -36,22 +29,6 @@ export const Playground: Story = {
       options: ['default', 'span', 'p'],
     },
     color: {control: {type: 'select'}, options: BRAND_COLORS.map(c => c.value)},
-    backgroundFill: {
-      control: {type: 'select'},
-      options: ['default', 'none', 'filled', 'outline'],
-    },
-    backgroundShape: {
-      control: {type: 'select'},
-      options: ['default', 'pill', 'roundedSquare'],
-    },
-    backgroundColor: {
-      control: {type: 'select'},
-      options: ['default', ...BRAND_COLORS.map(c => c.value)],
-    },
-    borderColor: {
-      control: {type: 'select'},
-      options: ['default', ...BRAND_COLORS.map(c => c.value)],
-    },
     textSize: {control: {type: 'select'}, options: ['default', ...SIZES]},
     font: {control: {type: 'select'}, options: ['default', 'text', 'display']},
     fontWeight: {
@@ -110,36 +87,6 @@ export const Overrides: Story = {
   ),
 };
 
-// US3 — backgrounded chip types render a fixed 2px border. Filled (default
-// chips) vs. an outline-only fill, and pill vs. rounded-square shapes.
-export const Chips: Story = {
-  render: () => (
-    <div style={{display: 'flex', gap: 16, flexWrap: 'wrap'}}>
-      <CustomText type="courseTopics">Loops</CustomText>
-      <CustomText type="courseLabs">Sprite Lab</CustomText>
-      <CustomText
-        type="custom"
-        backgroundFill="filled"
-        backgroundShape="pill"
-        backgroundColor="greenLight"
-        borderColor="greenPrimary"
-        color="greenDark"
-      >
-        filled pill
-      </CustomText>
-      <CustomText
-        type="custom"
-        backgroundFill="outline"
-        backgroundShape="roundedSquare"
-        borderColor="purplePrimary"
-        color="purpleDark"
-      >
-        outline rounded square
-      </CustomText>
-    </div>
-  ),
-};
-
 // US3 — contrast switching: the same plain text on light vs. dark Sections.
 export const ContrastSwitch: Story = {
   render: () => (
@@ -160,7 +107,7 @@ export const ContrastSwitch: Story = {
 export const Icons: Story = {
   render: () => (
     <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-      <CustomText type="courseLabs" iconNameLeft="flask">
+      <CustomText type="overline" iconNameLeft="flask">
         Sprite Lab
       </CustomText>
       <CustomText

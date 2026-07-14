@@ -42,14 +42,4 @@ describe('CustomText component', () => {
     // FontAwesomeV6Icon renders a single <i> glyph element.
     expect(container.querySelectorAll('i').length).toBe(1);
   });
-
-  it('wraps backgrounded (chip) types so a border can render', () => {
-    const {container} = render(
-      <CustomText type="courseTopics">Topic</CustomText>,
-    );
-    // The outer wrapper carries the chip background/border.
-    const wrapper = container.firstElementChild as HTMLElement;
-    expect(wrapper).toBeInTheDocument();
-    expect(screen.getByText('Topic')).toBeInTheDocument();
-  });
 });

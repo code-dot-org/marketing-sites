@@ -8,26 +8,7 @@
 
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
-import {
-  brandColorOptionsWithDefault,
-  brandTextColorOptions,
-} from '@/components/common/colors';
-
-// Color dropdowns prefixed with a "Default (from type)" sentinel so a chosen
-// type's color flows through unless the author explicitly overrides it.
-const DEFAULT_FROM_TYPE = {
-  value: 'default',
-  displayName: 'Default (from type)',
-};
-const BRAND_COLORS_WITH_TYPE_DEFAULT = [
-  DEFAULT_FROM_TYPE,
-  ...brandColorOptionsWithDefault('purplePrimary').map(
-    ({value, displayName}) => ({
-      value,
-      displayName: displayName.replace(/ \(default\)$/, ''),
-    }),
-  ),
-];
+import {brandTextColorOptions} from '@/components/common/colors';
 
 export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
   id: 'customText',
@@ -54,8 +35,6 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
           {value: 'subtitle', displayName: 'Subtitle'},
           {value: 'overline', displayName: 'Overline'},
           {value: 'statistic', displayName: 'Statistic'},
-          {value: 'courseTopics', displayName: 'Course Topics'},
-          {value: 'courseLabs', displayName: 'Course Labs'},
         ],
       },
     },
@@ -75,56 +54,6 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
       group: 'style',
       validations: {
         in: brandTextColorOptions('black'),
-      },
-    },
-    backgroundFill: {
-      displayName: 'Background fill',
-      type: 'Text',
-      defaultValue: 'default',
-      group: 'style',
-      description:
-        'Controls whether the text is backgrounded. Filled adds the fill color plus a 1px border; Outline draws only the border.',
-      validations: {
-        in: [
-          {value: 'default', displayName: 'Default (from type)'},
-          {value: 'none', displayName: 'None'},
-          {value: 'filled', displayName: 'Filled'},
-          {value: 'outline', displayName: 'Outline'},
-        ],
-      },
-    },
-    backgroundShape: {
-      displayName: 'Background shape',
-      type: 'Text',
-      defaultValue: 'default',
-      group: 'style',
-      validations: {
-        in: [
-          {value: 'default', displayName: 'Default (from type)'},
-          {value: 'pill', displayName: 'Pill'},
-          {value: 'roundedSquare', displayName: 'Rounded Square'},
-        ],
-      },
-    },
-    backgroundColor: {
-      displayName: 'Background color',
-      type: 'Text',
-      defaultValue: 'default',
-      group: 'style',
-      description: 'Fill color used when Background fill is Filled.',
-      validations: {
-        in: BRAND_COLORS_WITH_TYPE_DEFAULT,
-      },
-    },
-    borderColor: {
-      displayName: 'Border color',
-      type: 'Text',
-      defaultValue: 'default',
-      group: 'style',
-      description:
-        'Border color used by Filled/Outline fills. Border width is fixed at 1px.',
-      validations: {
-        in: BRAND_COLORS_WITH_TYPE_DEFAULT,
       },
     },
     textSize: {
