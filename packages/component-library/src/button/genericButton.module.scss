@@ -1,3 +1,4 @@
+@use '@code-dot-org/component-library-styles/font.scss' as font;
 @use '@code-dot-org/component-library-styles/mixins.scss' as mixins;
 @use '@code-dot-org/component-library-styles/variables.scss' as variables;
 
@@ -18,8 +19,12 @@ a.button {
   border: 2px solid transparent;
   background-color: transparent;
   color: unset;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: font.$geist-font, font.$noto-sans-fonts, sans-serif;
   font-weight: 700;
+  // Keep the label on one line: never wrap, and don't let flex parents
+  // squeeze the button below its natural width.
+  white-space: nowrap;
+  flex-shrink: 0;
   text-decoration: none !important;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -344,12 +349,7 @@ a.button-tertiary {
 
 // Sizes — see figma-tokens.md per-size table.
 .button {
-  text-transform: uppercase;
-
-  &.button-s,
-  &.is-loading {
-    text-transform: none;
-  }
+  text-transform: none;
 }
 
 .button-s,
@@ -359,7 +359,6 @@ a.button-s {
   font-size: 14px;
   line-height: 21.7px;
   letter-spacing: 0;
-  text-transform: none;
 
   span {
     margin: 0;
@@ -390,7 +389,6 @@ a.button-m {
   font-size: 14px;
   line-height: 21.7px;
   letter-spacing: 0;
-  text-transform: uppercase;
 
   span {
     margin: 0;
@@ -421,7 +419,6 @@ a.button-l {
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0;
-  text-transform: uppercase;
 
   span {
     margin: 0;
@@ -452,7 +449,6 @@ a.button-xl {
   font-size: 20px;
   line-height: 28px;
   letter-spacing: -0.2px;
-  text-transform: uppercase;
 
   span {
     margin: 0;
