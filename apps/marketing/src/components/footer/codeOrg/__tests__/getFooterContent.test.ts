@@ -1,5 +1,6 @@
 import {draftMode} from 'next/headers';
 
+import {isExternalLink} from '@/components/common/utils';
 import {getContentfulClient} from '@/contentful/client';
 
 import {DEFAULT_FOOTER_CONTENT} from '../config';
@@ -13,21 +14,16 @@ jest.mock('@/logger/contentful', () => ({
   __esModule: true,
   default: {warn: jest.fn(), info: jest.fn()},
 }));
+jest.mock('@/components/common/utils', () => ({
+  isExternalLink: jest.fn().mockReturnValue(false),
+}));
 
-const resolvedLink = (label: string, href: string, isExternal = false) => ({
-  sys: {id: `link-${label}`},
+const resolvedItem = (title: string, href: string) => ({
+  sys: {id: `item-${title}`},
   fields: {
-    label,
+    internalName: `Footer Item: ${title}`,
+    title,
     primaryTarget: href,
-    isThisAnExternalLink: isExternal,
-  },
-});
-
-const resolvedList = (heading: string, items: unknown[]) => ({
-  sys: {id: `list-${heading}`},
-  fields: {
-    listHeading: heading,
-    itemsInThisList: items,
   },
 });
 
@@ -47,23 +43,25 @@ describe('getFooterContent', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    (isExternalLink as jest.Mock).mockReturnValue(false);
   });
 
-  it('maps the siteFooter entry with resolved list and link references', async () => {
+  it('maps the siteFooter entry with column heading and item list fields', async () => {
+    (isExternalLink as jest.Mock).mockImplementation((href: string) =>
+      href.startsWith('https://'),
+    );
     mockGetEntries.mockResolvedValue(
       siteFooterResponse({
         tagline: 'Tagline',
         mission: 'Mission',
         copyright: 'Copyright',
-        linkColumns: [
-          resolvedList('Who We Serve', [
-            resolvedLink('Teachers', '/teach'),
-            resolvedLink('Districts', '/administrators'),
-          ]),
-          resolvedList('Legal', [
-            resolvedLink('Store', 'https://x.test', true),
-          ]),
+        column1Heading: 'Who We Serve',
+        column1ItemList: [
+          resolvedItem('Teachers', '/teach'),
+          resolvedItem('Districts', '/administrators'),
         ],
+        column2Heading: 'Legal',
+        column2ItemList: [resolvedItem('Store', 'https://x.test')],
       }),
     );
 
@@ -82,34 +80,64 @@ describe('getFooterContent', () => {
       linkColumns: [
         {
           heading: 'Who We Serve',
-          links: [
-            {
-              label: 'Teachers',
-              href: '/teach',
-              ariaLabel: undefined,
-              isExternal: false,
-            },
-            {
-              label: 'Districts',
-              href: '/administrators',
-              ariaLabel: undefined,
-              isExternal: false,
-            },
+          lists: [
+            [
+              {label: 'Teachers', href: '/teach', isExternal: false},
+              {label: 'Districts', href: '/administrators', isExternal: false},
+            ],
           ],
         },
         {
           heading: 'Legal',
-          links: [
-            {
-              label: 'Store',
-              href: 'https://x.test',
-              ariaLabel: undefined,
-              isExternal: true,
-            },
-          ],
+          lists: [[{label: 'Store', href: 'https://x.test', isExternal: true}]],
         },
       ],
     });
+  });
+
+  it('merges a heading-less column into the preceding heading group', async () => {
+    mockGetEntries.mockResolvedValue(
+      siteFooterResponse({
+        column1Heading: 'Organization',
+        column1ItemList: [resolvedItem('About', '/about')],
+        column2ItemList: [resolvedItem('Careers', '/about/careers')],
+        column3Heading: 'Legal',
+        column3ItemList: [resolvedItem('Terms', '/tos')],
+      }),
+    );
+
+    const result = await getFooterContent();
+
+    expect(result?.linkColumns).toEqual([
+      {
+        heading: 'Organization',
+        lists: [
+          [{label: 'About', href: '/about', isExternal: false}],
+          [{label: 'Careers', href: '/about/careers', isExternal: false}],
+        ],
+      },
+      {
+        heading: 'Legal',
+        lists: [[{label: 'Terms', href: '/tos', isExternal: false}]],
+      },
+    ]);
+  });
+
+  it('keeps a leading heading-less column as its own group', async () => {
+    mockGetEntries.mockResolvedValue(
+      siteFooterResponse({
+        column1ItemList: [resolvedItem('About', '/about')],
+      }),
+    );
+
+    const result = await getFooterContent();
+
+    expect(result?.linkColumns).toEqual([
+      {
+        heading: undefined,
+        lists: [[{label: 'About', href: '/about', isExternal: false}]],
+      },
+    ]);
   });
 
   it('uses the preview client when draft mode is enabled', async () => {
@@ -140,19 +168,19 @@ describe('getFooterContent', () => {
     expect(await getFooterContent()).toBeNull();
   });
 
-  it('skips unresolved references and falls back per field', async () => {
+  it('skips unresolved and incomplete items and falls back per field', async () => {
     mockGetEntries.mockResolvedValue(
       siteFooterResponse({
-        linkColumns: [
-          // Unresolved list stub (unpublished): no fields
+        column1Heading: 'Partial',
+        column1ItemList: [
+          // Unresolved item stub (unpublished): no fields
           {sys: {type: 'Link', linkType: 'Entry', id: 'unpublished'}},
-          resolvedList('Partial', [
-            {sys: {type: 'Link', linkType: 'Entry', id: 'unpublished-link'}},
-            resolvedLink('Kept', '/kept'),
-          ]),
-          // Heading missing → column dropped
-          {sys: {id: 'no-heading'}, fields: {itemsInThisList: []}},
+          {sys: {id: 'no-title'}, fields: {primaryTarget: '/no-title'}},
+          {sys: {id: 'no-target'}, fields: {title: 'No Target'}},
+          resolvedItem('Kept', '/kept'),
         ],
+        // Heading with no items → column dropped
+        column2Heading: 'Empty',
       }),
     );
 
@@ -165,14 +193,7 @@ describe('getFooterContent', () => {
       linkColumns: [
         {
           heading: 'Partial',
-          links: [
-            {
-              label: 'Kept',
-              href: '/kept',
-              ariaLabel: undefined,
-              isExternal: false,
-            },
-          ],
+          lists: [[{label: 'Kept', href: '/kept', isExternal: false}]],
         },
       ],
     });
@@ -180,7 +201,7 @@ describe('getFooterContent', () => {
 
   it('falls back to default columns when none resolve', async () => {
     mockGetEntries.mockResolvedValue(
-      siteFooterResponse({tagline: 'T', mission: 'M', linkColumns: []}),
+      siteFooterResponse({tagline: 'T', mission: 'M', column1ItemList: []}),
     );
 
     const result = await getFooterContent();

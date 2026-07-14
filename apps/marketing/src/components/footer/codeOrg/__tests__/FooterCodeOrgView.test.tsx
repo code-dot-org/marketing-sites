@@ -36,13 +36,47 @@ describe('FooterCodeOrgView', () => {
   it('renders every link column with heading and links', () => {
     renderFooter();
 
-    for (const column of DEFAULT_FOOTER_CONTENT.linkColumns) {
-      expect(screen.getByText(column.heading)).toBeVisible();
-      for (const link of column.links) {
-        const anchor = screen.getByRole('link', {name: link.label});
-        expect(anchor).toHaveAttribute('href', link.href);
-      }
+    const columns = DEFAULT_FOOTER_CONTENT.linkColumns;
+    for (const heading of columns.flatMap(c => c.heading ?? [])) {
+      expect(screen.getByText(heading)).toBeVisible();
     }
+    for (const link of columns.flatMap(c => c.lists.flat())) {
+      const anchor = screen.getByRole('link', {name: link.label});
+      expect(anchor).toHaveAttribute('href', link.href);
+    }
+  });
+
+  it('renders continuation lists under a shared heading', () => {
+    render(
+      <FooterCodeOrgView
+        locale="en-US"
+        content={{
+          ...DEFAULT_FOOTER_CONTENT,
+          linkColumns: [
+            {
+              heading: 'Organization',
+              lists: [
+                [{label: 'About', href: '/about'}],
+                [{label: 'Careers', href: '/about/careers'}],
+              ],
+            },
+            {
+              heading: undefined,
+              lists: [[{label: 'Standalone', href: '/standalone'}]],
+            },
+          ],
+        }}
+      />,
+    );
+
+    const nav = screen.getByRole('navigation', {name: 'Footer'});
+    expect(screen.getByText('Organization')).toBeVisible();
+    // Both lists render inside the same headed column group.
+    expect(screen.getByRole('link', {name: 'About'})).toBeVisible();
+    expect(screen.getByRole('link', {name: 'Careers'})).toBeVisible();
+    expect(nav.querySelectorAll('ul')).toHaveLength(3);
+    // A heading-less group renders its links without a heading element.
+    expect(screen.getByRole('link', {name: 'Standalone'})).toBeVisible();
   });
 
   it('renders social links with accessible labels', () => {

@@ -22,55 +22,65 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
   linkColumns: [
     {
       heading: 'Who We Serve',
-      links: [
-        {label: 'Teachers', href: '/teach'},
-        {label: 'Districts', href: '/administrators'},
-        {label: 'Advocates & Policy Makers', href: '/advocacy'},
-        {label: 'Donors', href: '/donate'},
-        {label: 'Parents', href: '/parents'},
-        {label: 'Students', href: '/students'},
+      lists: [
+        [
+          {label: 'Teachers', href: '/teach'},
+          {label: 'Districts', href: '/administrators'},
+          {label: 'Advocates & Policy Makers', href: '/advocacy'},
+          {label: 'Donors', href: '/donate'},
+          {label: 'Parents', href: '/parents'},
+          {label: 'Students', href: '/students'},
+        ],
       ],
     },
     {
       heading: 'Organization',
-      links: [
-        {label: 'Our History', href: '/about'},
-        {label: 'Our Approach', href: '/about/approach'},
-        {label: 'Our People', href: '/about/leadership'},
-        {label: 'Insights', href: '/insights'},
-        {label: 'News & Events', href: '/news'},
-        {label: 'Press & Media', href: '/press'},
-        {label: 'Careers', href: '/about/careers'},
-        {label: 'Contact', href: '/contact'},
+      lists: [
+        [
+          {label: 'Our History', href: '/about'},
+          {label: 'Our Approach', href: '/about/approach'},
+          {label: 'Our People', href: '/about/leadership'},
+          {label: 'Insights', href: '/insights'},
+          {label: 'News & Events', href: '/news'},
+          {label: 'Press & Media', href: '/press'},
+          {label: 'Careers', href: '/about/careers'},
+          {label: 'Contact', href: '/contact'},
+        ],
       ],
     },
     {
       heading: 'Ways to Support',
-      links: [
-        {label: 'One-time donation', href: '/donate'},
-        {label: 'Monthly giving', href: '/donate/monthly'},
-        {label: 'Corporate Partnership', href: '/partners'},
-        {label: 'Fundraise for CodeAI', href: '/fundraise'},
-        {label: 'Advocate for CodeAI', href: '/advocacy'},
-        {label: 'Get CodeAI in your school', href: '/yourschool'},
+      lists: [
+        [
+          {label: 'One-time donation', href: '/donate'},
+          {label: 'Monthly giving', href: '/donate/monthly'},
+          {label: 'Corporate Partnership', href: '/partners'},
+          {label: 'Fundraise for CodeAI', href: '/fundraise'},
+          {label: 'Advocate for CodeAI', href: '/advocacy'},
+          {label: 'Get CodeAI in your school', href: '/yourschool'},
+        ],
       ],
     },
     {
       heading: 'Privacy & Safety',
-      links: [
-        {label: 'Accessibility', href: '/accessibility'},
-        {label: 'IT Requirements', href: '/it-requirements'},
-        {label: 'Security', href: '/security'},
-        {label: 'DPA Illinois', href: '/dpa/illinois'},
-        {label: 'DPA Montana', href: '/dpa/montana'},
-        {label: 'DPA New York', href: '/dpa/new-york'},
+      lists: [
+        [
+          {label: 'Accessibility', href: '/accessibility'},
+          {label: 'IT Requirements', href: '/it-requirements'},
+          {label: 'Security', href: '/security'},
+          {label: 'DPA Illinois', href: '/dpa/illinois'},
+          {label: 'DPA Montana', href: '/dpa/montana'},
+          {label: 'DPA New York', href: '/dpa/new-york'},
+        ],
       ],
     },
     {
       heading: 'Legal',
-      links: [
-        {label: 'Terms', href: '/tos'},
-        {label: 'Cookies', href: '/cookies'},
+      lists: [
+        [
+          {label: 'Terms', href: '/tos'},
+          {label: 'Cookies', href: '/cookies'},
+        ],
       ],
     },
   ],
