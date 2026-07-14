@@ -76,9 +76,11 @@ export const LINK_OVERRIDES: Components<Theme>['MuiLink'] = {
         borderRadius: codeaiRadius('sm', '10px'), // matches button radius
       },
 
+      // One step below M so the sizes stay distinct now that every size
+      // shares the body font with no casing difference.
       '&.MuiLink-root.link--size-s': {
-        fontSize: '0.875rem', // 14px
-        lineHeight: '21.7px',
+        fontSize: '0.75rem', // 12px
+        lineHeight: '1.125rem', // 18px
         gap: '4px',
       },
       '&.MuiLink-root.link--size-m': {
