@@ -24,7 +24,6 @@ const BrandLinkAdapter: React.FC<
     'aria-label'?: string;
   };
 
-  // IconHighlight strips `external` before spreading; also accept target='_blank'.
   const isLinkExternal = !!external || !!openInNewTab || target === '_blank';
 
   return (

@@ -1,6 +1,13 @@
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {render, screen} from '@testing-library/react';
 
 import Link, {LinkProps} from '@/components/contentful/link';
+
+// The Link discriminates tenants by font stack; Geist selects the code.org
+// brand render path.
+const brandTheme = createTheme({
+  typography: {fontFamily: 'Geist, sans-serif'},
+});
 
 describe('Link Component', () => {
   const defaultProps = {
@@ -81,12 +88,16 @@ describe('Link Component', () => {
 
   it('suppresses the user icon when the link is external', () => {
     const {container} = render(
-      <Link {...defaultProps} icon="arrow-right" isLinkExternal={true}>
-        Click me
-      </Link>,
+      <ThemeProvider theme={brandTheme}>
+        <Link {...defaultProps} icon="arrow-right" isLinkExternal={true}>
+          Click me
+        </Link>
+      </ThemeProvider>,
     );
     expect(container.querySelector('i.fa-arrow-right')).not.toBeInTheDocument();
-    // External OpenInNew icon renders as an svg from MUI Icons.
-    expect(container.querySelector('svg')).toBeInTheDocument();
+    // External links render the FontAwesome external-link icon.
+    expect(
+      container.querySelector('i.fa-up-right-from-square'),
+    ).toBeInTheDocument();
   });
 });

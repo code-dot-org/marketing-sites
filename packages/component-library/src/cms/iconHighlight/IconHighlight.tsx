@@ -73,7 +73,9 @@ const IconHighlight: React.FC<IconHighlightProps> = ({
 
     {!!links.length && (
       <ul className={moduleStyles.iconHighlightLinkList}>
-        {links.map(({key, className, text, external, ...link}) => (
+        {/* `external` passes through the spread; the LinkComponent renders
+            its own external-link icon. */}
+        {links.map(({key, className, text, ...link}) => (
           <li key={key}>
             <LinkComponent
               {...link}
@@ -81,14 +83,6 @@ const IconHighlight: React.FC<IconHighlightProps> = ({
               className={classNames(moduleStyles.iconHighlightLink, className)}
             >
               {text}
-              {external && (
-                <FontAwesomeV6Icon
-                  iconName="up-right-from-square"
-                  iconStyle="solid"
-                  role="img"
-                  aria-label="external link"
-                />
-              )}
             </LinkComponent>
           </li>
         ))}

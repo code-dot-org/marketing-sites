@@ -1,3 +1,4 @@
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {render, screen, within} from '@testing-library/react';
 import '@testing-library/jest-dom';
 
@@ -5,6 +6,12 @@ import IconHighlight, {
   IconHighlightContentfulProps,
 } from '@/components/contentful/iconHighlight/IconHighlight';
 import {LinkEntry} from '@/types/contentful/entries/Link';
+
+// The Link inside BrandLinkAdapter discriminates tenants by font stack;
+// Geist selects the code.org brand render path.
+const brandTheme = createTheme({
+  typography: {fontFamily: 'Geist, sans-serif'},
+});
 
 describe('IconHighlight component', () => {
   const heading = 'Icon Highlight Heading';
@@ -15,12 +22,14 @@ describe('IconHighlight component', () => {
     props: Partial<IconHighlightContentfulProps> = {},
   ) => {
     render(
-      <IconHighlight
-        {...props}
-        heading={heading}
-        text={text}
-        iconName={iconName}
-      />,
+      <ThemeProvider theme={brandTheme}>
+        <IconHighlight
+          {...props}
+          heading={heading}
+          text={text}
+          iconName={iconName}
+        />
+      </ThemeProvider>,
     );
   };
 
@@ -123,8 +132,10 @@ describe('IconHighlight component', () => {
       externalLinkEntry.fields.primaryTarget,
     );
     expect(externalLink).toHaveAttribute('target', '_blank');
+    // The external icon comes from the Link component (FontAwesome), not
+    // from IconHighlight's own markup.
     expect(
-      within(externalLink).queryByRole('img', {name: 'external link'}),
+      externalLink.querySelector('i.fa-up-right-from-square'),
     ).toBeInTheDocument();
   });
 });
