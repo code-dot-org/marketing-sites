@@ -89,7 +89,7 @@ export const withLocale: MiddlewareFactory = next => {
     const redirectUrl = new URL(localizedPath, request.url);
     // Preserve query parameters
     redirectUrl.search = request.nextUrl.search;
-    const response = getCachedRedirectResponse(redirectUrl);
+    const response = getCachedRedirectResponse(redirectUrl, {status: 308});
 
     // Set the language cookie if discovered via Accept-Language header
     setLanguageCookie({
