@@ -40,25 +40,27 @@ export const WEIGHTS: Record<WeightToken, number> = {
   bold: 700,
 };
 
+// Display line-heights are font-size + 0.25rem (tightened July 2026 from the
+// original Figma values, anchored on lg 3.25rem and md 2.5rem).
 export const SCALE_DISPLAY: Record<SizeToken, ScaleCell> = {
-  xs: {fontSize: '1.5rem', lineHeight: '2rem'},
-  sm: {fontSize: '1.875rem', lineHeight: '2.375rem'},
-  md: {fontSize: '2.25rem', lineHeight: '2.75rem', letterSpacing: '-0.02em'},
-  lg: {fontSize: '3rem', lineHeight: '3.75rem', letterSpacing: '-0.02em'},
-  xl: {fontSize: '3.75rem', lineHeight: '4.5rem', letterSpacing: '-0.02em'},
+  xs: {fontSize: '1.5rem', lineHeight: '1.75rem'},
+  sm: {fontSize: '1.875rem', lineHeight: '2.125rem'},
+  md: {fontSize: '2.25rem', lineHeight: '2.5rem', letterSpacing: '-0.02em'},
+  lg: {fontSize: '3rem', lineHeight: '3.25rem', letterSpacing: '-0.02em'},
+  xl: {fontSize: '3.75rem', lineHeight: '4rem', letterSpacing: '-0.02em'},
   '2xl': {
     fontSize: '4.5rem',
-    lineHeight: '5.625rem',
+    lineHeight: '4.75rem',
     letterSpacing: '-0.02em',
   },
   '3xl': {
     fontSize: '5.625rem',
-    lineHeight: '6.875rem',
+    lineHeight: '5.875rem',
     letterSpacing: '-0.02em',
   },
   '4xl': {
     fontSize: '7.5rem',
-    lineHeight: '8.125rem',
+    lineHeight: '7.75rem',
     letterSpacing: '-0.02em',
   },
 };

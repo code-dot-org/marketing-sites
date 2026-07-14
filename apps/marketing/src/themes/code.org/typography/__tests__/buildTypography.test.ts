@@ -17,9 +17,9 @@ describe('buildTypography', () => {
       expect(typography.h1.fontFamily).toBe(CODE_ORG_DISPLAY_FONT_STACK);
     });
 
-    it('renders 3.75rem / 4.5rem / -0.02em at desktop default', () => {
+    it('renders 3.75rem / 4rem / -0.02em at desktop default', () => {
       expect(typography.h1.fontSize).toBe('3.75rem');
-      expect(typography.h1.lineHeight).toBe('4.5rem');
+      expect(typography.h1.lineHeight).toBe('4rem');
       expect(typography.h1.letterSpacing).toBe('-0.02em');
     });
 
@@ -49,9 +49,9 @@ describe('buildTypography', () => {
       expect(typography.h2.fontWeight).toBe(500);
     });
 
-    it('renders 3rem / 3.75rem at desktop default', () => {
+    it('renders 3rem / 3.25rem at desktop default', () => {
       expect(typography.h2.fontSize).toBe('3rem');
-      expect(typography.h2.lineHeight).toBe('3.75rem');
+      expect(typography.h2.lineHeight).toBe('3.25rem');
     });
   });
 

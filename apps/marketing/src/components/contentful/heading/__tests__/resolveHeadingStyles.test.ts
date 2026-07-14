@@ -82,7 +82,7 @@ describe('resolveHeadingStyles', () => {
       expect(result.semanticTag).toBe('h2');
       expect(result.variantTag).toBe('h2');
       expect(result.sx.fontSize).toBe('3.75rem');
-      expect(result.sx.lineHeight).toBe('4.5rem');
+      expect(result.sx.lineHeight).toBe('4rem');
       expect(result.sx.letterSpacing).toBe('-0.02em');
     });
 
@@ -94,7 +94,7 @@ describe('resolveHeadingStyles', () => {
       expect(result.semanticTag).toBe('h1');
       expect(result.variantTag).toBe('h1');
       expect(result.sx.fontSize).toBe('3rem');
-      expect(result.sx.lineHeight).toBe('3.75rem');
+      expect(result.sx.lineHeight).toBe('3.25rem');
     });
 
     it('appearance=display-4xl emits the largest Display cell inline', () => {
@@ -103,7 +103,7 @@ describe('resolveHeadingStyles', () => {
         appearance: 'display-4xl',
       });
       expect(result.sx.fontSize).toBe('7.5rem');
-      expect(result.sx.lineHeight).toBe('8.125rem');
+      expect(result.sx.lineHeight).toBe('7.75rem');
       expect(result.sx.letterSpacing).toBe('-0.02em');
     });
 
@@ -113,7 +113,7 @@ describe('resolveHeadingStyles', () => {
         appearance: 'display-2xl',
       });
       expect(result.sx.fontSize).toBe('4.5rem');
-      expect(result.sx.lineHeight).toBe('5.625rem');
+      expect(result.sx.lineHeight).toBe('4.75rem');
       // The cell's step table locks per-viewport sizes so the variant's
       // smaller-viewport sizes don't take over.
       const mdDown = result.sx[breakpoints.down('md')] as Record<
@@ -217,7 +217,7 @@ describe('resolveHeadingStyles', () => {
       });
       expect(result.sx.fontSize).toBe('5rem');
       // line-height + letter-spacing from the Display 4xl cell remain.
-      expect(result.sx.lineHeight).toBe('8.125rem');
+      expect(result.sx.lineHeight).toBe('7.75rem');
       expect(result.sx.letterSpacing).toBe('-0.02em');
     });
 
