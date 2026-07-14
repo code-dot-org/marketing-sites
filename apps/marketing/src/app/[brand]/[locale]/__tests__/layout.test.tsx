@@ -61,6 +61,11 @@ jest.mock('@/components/footer/Footer', () => ({
   getFooter: jest.fn(async () => <footer>Footer</footer>),
 }));
 
+// Same for the Code.org header.
+jest.mock('@/components/header/Header', () => ({
+  getHeader: jest.fn(() => <header>Header</header>),
+}));
+
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(() => ({
     push: jest.fn(),
