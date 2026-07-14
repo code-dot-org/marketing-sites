@@ -131,6 +131,29 @@ describe('CourseCatalog component', () => {
     expect(screen.getAllByRole('link', {name: 'Explore'})).not.toHaveLength(0);
   });
 
+  it('forwards link text override and title colors to every carousel', () => {
+    render(
+      <CourseCatalog
+        {...defaultProps}
+        linkTextOverride="View unit"
+        headingColor="orange"
+        unitTitleColor="pink"
+      />,
+    );
+    expect(screen.getAllByRole('link', {name: 'View unit'})).not.toHaveLength(
+      0,
+    );
+    expect(
+      screen.getByRole('heading', {level: 2, name: 'CS Fundamentals'}),
+    ).toHaveStyle({color: 'var(--codeai-orange-primary)'});
+    for (const cardTitle of screen.getAllByRole('heading', {
+      level: 3,
+      name: 'Unit 1',
+    })) {
+      expect(cardTitle).toHaveStyle({color: 'var(--codeai-pink-primary)'});
+    }
+  });
+
   it('ignores bound entries of another content type', () => {
     const wrongEntry = {
       sys: {id: 'x', contentType: {sys: {id: 'curriculum'}}},

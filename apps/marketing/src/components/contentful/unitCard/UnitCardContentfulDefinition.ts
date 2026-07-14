@@ -96,5 +96,30 @@ export const UnitCardContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
+    titleColor: {
+      displayName: 'Unit Title Color',
+      description: 'Applied to the unit title.',
+      type: 'Text',
+      defaultValue: 'black',
+      group: 'style',
+      validations: {
+        in: [
+          {value: 'black', displayName: 'Black'},
+          {value: 'purple', displayName: 'Purple'},
+          {value: 'blue', displayName: 'Blue'},
+          {value: 'green', displayName: 'Green'},
+          {value: 'orange', displayName: 'Orange'},
+          {value: 'pink', displayName: 'Pink'},
+        ],
+      },
+    },
+    fullWidth: {
+      displayName: 'Full Width',
+      description:
+        'When checked, the card grows to the width of its container instead of the standard card width.',
+      type: 'Boolean',
+      defaultValue: false,
+      group: 'style',
+    },
   },
 };
