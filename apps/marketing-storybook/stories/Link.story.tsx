@@ -52,11 +52,15 @@ async function testLinkMatrix(canvas: any, size: string, color: string) {
       if (isLinkExternal) {
         await expect(link).toHaveAttribute('target', '_blank');
         await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-        await expect(link.querySelector('svg')).toBeInTheDocument();
+        await expect(
+          link.querySelector('i.fa-up-right-from-square'),
+        ).toBeInTheDocument();
       } else {
         await expect(link).not.toHaveAttribute('target');
         await expect(link).not.toHaveAttribute('rel');
-        await expect(link.querySelector('svg')).not.toBeInTheDocument();
+        await expect(
+          link.querySelector('i.fa-up-right-from-square'),
+        ).not.toBeInTheDocument();
       }
     }
   }
