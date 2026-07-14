@@ -37,7 +37,7 @@ const Bar = styled('div')({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: 16,
-  paddingInline: 8,
+  paddingInline: '8px 12px',
   backgroundColor: CODEAI_PURPLE_PRIMARY,
 });
 
