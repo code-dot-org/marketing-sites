@@ -13,9 +13,11 @@ export const LINK_OVERRIDES: Components<Theme>['MuiLink'] = {
       marginBottom: theme.spacing(2),
       textTransform: 'none',
       // The underline lives on the label span (Link.tsx wraps its text in a
-      // <span>) so sibling icons never render underlined.
+      // <span>) so sibling icons never render underlined. Scoped to
+      // [data-hierarchy] (always set by Link.tsx) so raw MuiLink usages —
+      // e.g. header submenu items — don't inherit it.
       textDecoration: 'none',
-      '& > span': {
+      '&[data-hierarchy] > span': {
         textDecoration: 'underline',
         textDecorationStyle: 'solid',
         textDecorationThickness: 'from-font',
