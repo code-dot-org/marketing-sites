@@ -31,6 +31,10 @@ const COOKIES_PATH = '/cookies';
 const CODEAI_PURPLE_DARK = 'var(--codeai-purple-dark, #1f1976)';
 const CODEAI_PURPLE_LIGHT = 'var(--codeai-purple-light, #e4e2f8)';
 
+// Below this width the brand block and the link nav each go full width and
+// stack; above it they share one row and the link columns never wrap.
+const STACK_BREAKPOINT = 1000;
+
 const FooterRoot = styled('footer')(({theme}) => ({
   backgroundColor: theme.palette.common.white,
 }));
@@ -52,7 +56,7 @@ const MainSection = styled('div')(({theme}) => ({
 const BrandBlock = styled('div')(({theme}) => ({
   width: 360,
   flexShrink: 0,
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down(STACK_BREAKPOINT)]: {
     width: '100%',
   },
 }));
@@ -79,22 +83,29 @@ const LinksNav = styled('nav')(({theme}) => ({
   flex: '1 1 0',
   minWidth: 0,
   display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'space-between',
   columnGap: theme.spacing(4),
   rowGap: theme.spacing(6),
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down(STACK_BREAKPOINT)]: {
     flexBasis: '100%',
-    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
     columnGap: theme.spacing(6),
   },
 }));
 
-const LinkColumn = styled('div')(({theme}) => ({
-  minWidth: 96,
+// `listCount` keeps every rendered link list the same width: a group with a
+// continuation list grows proportionally, and the lists split it evenly.
+const LinkColumn = styled('div', {
+  shouldForwardProp: prop => prop !== 'listCount',
+})<{listCount: number}>(({theme, listCount}) => ({
+  flex: `${listCount} 1 0`,
+  minWidth: 0,
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
+  [theme.breakpoints.down(STACK_BREAKPOINT)]: {
+    flex: '0 1 auto',
+    minWidth: 96,
+  },
 }));
 
 // Not a heading element: the footer follows arbitrary page content, so any
@@ -110,13 +121,26 @@ const ColumnHeading = styled('span')({
   margin: 0,
 });
 
+// Continuation lists (heading-less Contentful columns) sit beside the
+// heading's first list, tighter than the gap between headed columns.
+const LinkListRow = styled('div')(({theme}) => ({
+  display: 'flex',
+  alignItems: 'flex-start',
+  columnGap: theme.spacing(3),
+}));
+
 const LinkList = styled('ul')(({theme}) => ({
   listStyle: 'none',
   margin: 0,
   padding: 0,
+  flex: '1 1 0',
+  minWidth: 0,
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(1.5),
+  [theme.breakpoints.down(STACK_BREAKPOINT)]: {
+    flex: '0 1 auto',
+  },
 }));
 
 const FooterNavLink = styled(MuiLink)(({theme}) => ({
@@ -262,28 +286,39 @@ const FooterCodeOrgView: React.FC<FooterCodeOrgViewProps> = ({
           <Mission>{content.mission}</Mission>
         </BrandBlock>
         <LinksNav aria-label="Footer">
-          {content.linkColumns.map(column => (
-            <LinkColumn key={column.heading}>
-              <ColumnHeading>{column.heading}</ColumnHeading>
-              <LinkList>
-                {column.links.map(link => (
-                  <li key={`${column.heading}-${link.label}`}>
-                    <FooterNavLink
-                      href={link.href}
-                      aria-label={link.ariaLabel}
-                      target={link.isExternal ? '_blank' : undefined}
-                      rel={link.isExternal ? 'noopener noreferrer' : undefined}
-                      onClick={
-                        link.href === COOKIES_PATH
-                          ? handleCookiesClick
-                          : undefined
-                      }
-                    >
-                      {link.label}
-                    </FooterNavLink>
-                  </li>
+          {content.linkColumns.map((column, columnIndex) => (
+            <LinkColumn
+              key={column.heading ?? `column-${columnIndex}`}
+              listCount={column.lists.length}
+            >
+              {column.heading && (
+                <ColumnHeading>{column.heading}</ColumnHeading>
+              )}
+              <LinkListRow>
+                {column.lists.map((links, listIndex) => (
+                  <LinkList key={listIndex}>
+                    {links.map(link => (
+                      <li key={`${link.href}-${link.label}`}>
+                        <FooterNavLink
+                          href={link.href}
+                          aria-label={link.ariaLabel}
+                          target={link.isExternal ? '_blank' : undefined}
+                          rel={
+                            link.isExternal ? 'noopener noreferrer' : undefined
+                          }
+                          onClick={
+                            link.href === COOKIES_PATH
+                              ? handleCookiesClick
+                              : undefined
+                          }
+                        >
+                          {link.label}
+                        </FooterNavLink>
+                      </li>
+                    ))}
+                  </LinkList>
                 ))}
-              </LinkList>
+              </LinkListRow>
             </LinkColumn>
           ))}
         </LinksNav>

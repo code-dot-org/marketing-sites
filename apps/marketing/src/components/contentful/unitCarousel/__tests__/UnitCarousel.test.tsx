@@ -197,7 +197,7 @@ describe('UnitCarousel component', () => {
     );
   });
 
-  it('resolves each unit link and overrides its label with "Explore"', () => {
+  it('resolves each unit link and overrides its label with "Explore" by default', () => {
     render(<UnitCarousel {...defaultProps} />);
     // The bound Link entry's label ("Explore this unit") is replaced, while
     // its target is inherited.
@@ -205,6 +205,34 @@ describe('UnitCarousel component', () => {
     expect(links).toHaveLength(3);
     expect(links[0]).toHaveAttribute('href', '/unit-1');
     expect(screen.queryByText('Explore this unit')).not.toBeInTheDocument();
+  });
+
+  it('applies a custom link text override to every card', () => {
+    render(<UnitCarousel {...defaultProps} linkTextOverride="View unit" />);
+    expect(screen.getAllByRole('link', {name: 'View unit'})).toHaveLength(3);
+  });
+
+  it('falls back to each entry label when the override is cleared', () => {
+    render(<UnitCarousel {...defaultProps} linkTextOverride="" />);
+    expect(
+      screen.getAllByRole('link', {name: 'Explore this unit'}),
+    ).toHaveLength(3);
+  });
+
+  it('applies the heading color and the unit title color', () => {
+    render(
+      <UnitCarousel
+        {...defaultProps}
+        headingColor="blue"
+        unitTitleColor="green"
+      />,
+    );
+    expect(
+      screen.getByRole('heading', {level: 2, name: 'AI Foundations'}),
+    ).toHaveStyle({color: 'var(--codeai-blue-primary)'});
+    for (const cardTitle of screen.getAllByRole('heading', {level: 3})) {
+      expect(cardTitle).toHaveStyle({color: 'var(--codeai-green-primary)'});
+    }
   });
 
   it('hides topics on every card when showTopics is false', () => {

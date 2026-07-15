@@ -18,6 +18,22 @@ import {LinkEntry} from '@/types/contentful/entries/Link';
 
 import {mergeGradeBands} from './mergeGradeBands';
 
+// Black renders the default gray-8 text; the rest map to the family's
+// primary CSS variable. Shared by the title-color fields on Unit Card,
+// Unit Carousel (heading + unit titles), and Course Catalog.
+export type UnitTitleColor =
+  | 'black'
+  | 'purple'
+  | 'blue'
+  | 'green'
+  | 'orange'
+  | 'pink';
+
+export const unitTitleColorCss = (color: UnitTitleColor): string =>
+  color === 'black'
+    ? 'var(--codeai-gray-8, #292f36)'
+    : `var(--codeai-${color}-primary)`;
+
 export interface UnitCardProps {
   /** Unit title */
   title?: string;
@@ -37,17 +53,25 @@ export interface UnitCardProps {
   showTopics?: boolean;
   /** Badge color applied to every topic on the card */
   topicBadgeColor?: BadgeColor;
+  /** Unit title color */
+  titleColor?: UnitTitleColor;
+  /** Grow to the surrounding container's width instead of the standard card width */
+  fullWidth?: boolean;
   /** Custom classname */
   className?: string;
 }
 
 const IMAGE_HEIGHT_PX = 134;
 
-const CardRoot = styled('article')({
+const CardRoot = styled('article', {
+  shouldForwardProp: prop => prop !== 'fullWidth',
+})<{fullWidth: boolean}>(({fullWidth}) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  maxWidth: '300px',
+  // 264px matches the Unit Carousel's slide width so standalone cards and
+  // carousel cards render identically; fullWidth defers to the container.
+  maxWidth: fullWidth ? 'none' : '264px',
   // Fills the row container so cards in a grid share one height.
   height: '100%',
   overflow: 'hidden',
@@ -55,7 +79,7 @@ const CardRoot = styled('article')({
   borderRadius: codeaiRadius('md', '0.625rem'),
   // The card surface stays white regardless of the enclosing Section tone.
   backgroundColor: '#ffffff',
-});
+}));
 
 const ImageArea = styled('div')({
   position: 'relative',
@@ -78,15 +102,17 @@ const TopicsRow = styled('div')({
   paddingBottom: '12px',
 });
 
-const Title = styled('h3')({
+const Title = styled('h3', {
+  shouldForwardProp: prop => prop !== 'titleColor',
+})<{titleColor: UnitTitleColor}>(({titleColor}) => ({
   fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
   fontSize: '1.25rem',
   lineHeight: '1.5rem',
   fontWeight: 500,
-  color: 'var(--codeai-gray-8, #292f36)',
+  color: unitTitleColorCss(titleColor),
   margin: 0,
   paddingBottom: '8px',
-});
+}));
 
 const Description = styled('p')({
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
@@ -125,7 +151,7 @@ const BottomBlock = styled('div')({
 
 const FooterRow = styled('div')({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'end',
   justifyContent: 'space-between',
   gap: '8px',
   alignSelf: 'stretch',
@@ -159,6 +185,8 @@ const UnitCard: React.FC<UnitCardProps> = ({
   link,
   showTopics = true,
   topicBadgeColor = 'purple',
+  titleColor = 'black',
+  fullWidth = false,
   className,
 }) => {
   // Show placeholder text until a content entry is bound
@@ -178,7 +206,7 @@ const UnitCard: React.FC<UnitCardProps> = ({
   const linkFields = link?.fields;
 
   return (
-    <CardRoot className={className}>
+    <CardRoot className={className} fullWidth={fullWidth}>
       {imageUrl && (
         <ImageArea>
           <NextImage src={imageUrl} alt="" style={{objectFit: 'cover'}} />
@@ -200,7 +228,7 @@ const UnitCard: React.FC<UnitCardProps> = ({
             ))}
           </TopicsRow>
         )}
-        <Title>{title}</Title>
+        <Title titleColor={titleColor}>{title}</Title>
         {shortDescription && <Description>{shortDescription}</Description>}
         <BottomBlock>
           {gradeBand && <GradeChip>Grades {gradeBand}</GradeChip>}

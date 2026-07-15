@@ -80,8 +80,9 @@ describe('CMS IconHighlight', () => {
     });
     expect(externalLink).toBeVisible();
     expect(externalLink).toHaveAttribute('href', externalLinkProps.href);
+    // The external-link icon is delegated to the LinkComponent.
     expect(
-      within(externalLink).queryByRole('img', {name: 'external link'}),
+      externalLink.querySelector('i.fa-up-right-from-square'),
     ).toBeInTheDocument();
   });
 

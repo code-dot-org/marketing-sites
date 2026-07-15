@@ -1,11 +1,25 @@
 import {Components, Theme} from '@mui/material/styles';
 
+import {BRAND_COLORS} from '@/components/common/colors';
 import {BRAND_GRADIENTS} from '@/components/common/gradients';
 import {
   SECTION_MAX_WIDTH,
   SECTION_PADDING_INLINE,
   SECTION_PADDING_INLINE_MOBILE,
 } from '@/themes/code.org/constants';
+
+// CodeAI brand-palette section backgrounds, generated from the color manifest
+// so every `--codeai-*` token (color families and the gray ramp) gets a rule
+// automatically. Black/white map to neutral-base primitives and legacy
+// `primary` to a text variable, so they're excluded here and handled by the
+// explicit rules below. csforall has no equivalent rules — see
+// `apps/marketing/src/themes/csforall/styleOverrides/container.ts`.
+const sectionBrandColorBackgroundRules = Object.fromEntries(
+  BRAND_COLORS.filter(c => c.cssVar.startsWith('var(--codeai-')).map(c => [
+    `.section-background-${c.value}:has(&.MuiContainer-root)`,
+    {backgroundColor: c.cssVar},
+  ]),
+);
 
 // Brand-gradient background rules, mirroring the brand-color `:has()` pattern
 // above but using `background` (shorthand) so the linear-gradient applies.
@@ -89,75 +103,16 @@ export const CONTAINER_OVERRIDES: Components<Theme>['MuiContainer'] = {
       '.section-background-transparent:has(&.MuiContainer-root)': {
         backgroundColor: undefined,
       },
-      // CodeAI brand-palette section backgrounds. Each maps to its primitive
-      // `--codeai-{family}-{shade}` CSS variable. csforall has no equivalent
-      // rules — see `apps/marketing/src/themes/csforall/styleOverrides/container.ts`.
+      // CodeAI brand-palette section backgrounds. Black/white map to the
+      // neutral-base primitives; the `--codeai-*` families and gray ramp are
+      // generated from the manifest above.
       '.section-background-black:has(&.MuiContainer-root)': {
         backgroundColor: 'var(--neutral-base-true-black)',
       },
       '.section-background-white:has(&.MuiContainer-root)': {
         backgroundColor: 'var(--neutral-base-white)',
       },
-      '.section-background-purpleDark:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-purple-dark)',
-      },
-      '.section-background-purplePrimary:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-purple-primary)',
-      },
-      '.section-background-purpleMid:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-purple-mid)',
-      },
-      '.section-background-purpleLight:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-purple-light)',
-      },
-      '.section-background-blueDark:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-blue-dark)',
-      },
-      '.section-background-bluePrimary:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-blue-primary)',
-      },
-      '.section-background-blueMid:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-blue-mid)',
-      },
-      '.section-background-blueLight:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-blue-light)',
-      },
-      '.section-background-greenDark:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-green-dark)',
-      },
-      '.section-background-greenPrimary:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-green-primary)',
-      },
-      '.section-background-greenMid:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-green-mid)',
-      },
-      '.section-background-greenLight:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-green-light)',
-      },
-      '.section-background-orangeDark:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-orange-dark)',
-      },
-      '.section-background-orangePrimary:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-orange-primary)',
-      },
-      '.section-background-orangeMid:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-orange-mid)',
-      },
-      '.section-background-orangeLight:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-orange-light)',
-      },
-      '.section-background-pinkDark:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-pink-dark)',
-      },
-      '.section-background-pinkPrimary:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-pink-primary)',
-      },
-      '.section-background-pinkMid:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-pink-mid)',
-      },
-      '.section-background-pinkLight:has(&.MuiContainer-root)': {
-        backgroundColor: 'var(--codeai-pink-light)',
-      },
+      ...sectionBrandColorBackgroundRules,
       ...sectionGradientBackgroundRules,
     }),
   },

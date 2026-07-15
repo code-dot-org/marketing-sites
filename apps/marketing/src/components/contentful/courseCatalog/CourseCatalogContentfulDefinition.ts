@@ -55,5 +55,47 @@ export const CourseCatalogContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
+    linkTextOverride: {
+      displayName: 'Link Text Override',
+      description:
+        "Overrides every card's Link entry label; clear to use the entry labels.",
+      type: 'Text',
+      defaultValue: 'Explore',
+      group: 'style',
+    },
+    unitTitleColor: {
+      displayName: 'Unit Title Color',
+      description: 'Applied to the unit title on every card.',
+      type: 'Text',
+      defaultValue: 'black',
+      group: 'style',
+      validations: {
+        in: [
+          {value: 'black', displayName: 'Black'},
+          {value: 'purple', displayName: 'Purple'},
+          {value: 'blue', displayName: 'Blue'},
+          {value: 'green', displayName: 'Green'},
+          {value: 'orange', displayName: 'Orange'},
+          {value: 'pink', displayName: 'Pink'},
+        ],
+      },
+    },
+    headingColor: {
+      displayName: 'Heading Color',
+      description: 'Applied to the course title heading on every carousel.',
+      type: 'Text',
+      defaultValue: 'black',
+      group: 'style',
+      validations: {
+        in: [
+          {value: 'black', displayName: 'Black'},
+          {value: 'purple', displayName: 'Purple'},
+          {value: 'blue', displayName: 'Blue'},
+          {value: 'green', displayName: 'Green'},
+          {value: 'orange', displayName: 'Orange'},
+          {value: 'pink', displayName: 'Pink'},
+        ],
+      },
+    },
   },
 };

@@ -130,7 +130,7 @@ describe('ContentCard component', () => {
     render(<ContentCard {...defaultProps} titleAppearance="display-md" />);
     expect(screen.getByRole('heading', {level: 3})).toHaveStyle({
       fontSize: '2.25rem',
-      lineHeight: '2.75rem',
+      lineHeight: '2.5rem',
       letterSpacing: '-0.02em',
       fontWeight: 500,
     });

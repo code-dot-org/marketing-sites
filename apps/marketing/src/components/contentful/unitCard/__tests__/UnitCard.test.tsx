@@ -55,6 +55,23 @@ describe('UnitCard component', () => {
     }
   });
 
+  it('renders the title in gray-8 by default and a family primary when set', () => {
+    const heading = () =>
+      screen.getByRole('heading', {level: 3, name: 'Problem Solving with AI'});
+    const {rerender} = render(<UnitCard {...defaultProps} />);
+    expect(heading()).toHaveStyle({color: 'var(--codeai-gray-8, #292f36)'});
+    rerender(<UnitCard {...defaultProps} titleColor="orange" />);
+    expect(heading()).toHaveStyle({color: 'var(--codeai-orange-primary)'});
+  });
+
+  it('caps the card at the standard width unless fullWidth is set', () => {
+    const {container, rerender} = render(<UnitCard {...defaultProps} />);
+    const card = () => container.querySelector('article');
+    expect(card()).toHaveStyle({maxWidth: '264px'});
+    rerender(<UnitCard {...defaultProps} fullWidth />);
+    expect(card()).toHaveStyle({maxWidth: 'none'});
+  });
+
   it('hides topics when showTopics is false', () => {
     render(<UnitCard {...defaultProps} showTopics={false} />);
     expect(screen.queryByText('Special Topic')).not.toBeInTheDocument();

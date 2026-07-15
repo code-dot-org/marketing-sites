@@ -1,7 +1,10 @@
 // Creates a definition for the Section component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
-import {brandColorOptionsWithDefault} from '@/components/common/colors';
+import {
+  BRAND_COLORS,
+  brandColorOptionsWithDefault,
+} from '@/components/common/colors';
 import {
   sectionIdDefinition,
   sectionPaddingDefinition,
@@ -17,18 +20,38 @@ const TRANSPARENT_BACKGROUND_OPTION = {
   displayName: 'Transparent',
 };
 
-// Legacy backgrounds predate the CodeAI palette. Kept (with " (legacy)"
-// suffix) so existing Contentful entries keep validating; they fall to the
-// bottom of the dropdown.
-const LEGACY_SECTION_BACKGROUND_OPTIONS = [
-  {value: 'primary', displayName: 'Primary white (legacy)'},
-  {value: 'secondary', displayName: 'Secondary light gray (legacy)'},
-  {value: 'dark', displayName: 'Dark gray (legacy)'},
-  {value: 'brandLightPrimary', displayName: 'Light teal (legacy)'},
-  {value: 'brandLightSecondary', displayName: 'Light purple (legacy)'},
-  {value: 'patternDark', displayName: 'Pattern dark (legacy)'},
-  {value: 'patternPrimary', displayName: 'Pattern teal (legacy)'},
-];
+// Legacy backgrounds (Corporate Site primitives, patterns, and the `primary`
+// manifest entry) are deliberately absent from the picker: existing entries
+// still render — Section.tsx keeps the value space and the theme keeps their
+// CSS rules — but authors can no longer select them.
+//
+// Order: White (default), Gray 1, the color families, the remaining grays,
+// gradients, Black, Transparent.
+const SECTION_BACKGROUND_OPTIONS = ((): {
+  value: string;
+  displayName: string;
+}[] => {
+  const options = brandColorOptionsWithDefault('white');
+  const byValue = new Map(options.map(o => [o.value, o]));
+  const familyOf = new Map(BRAND_COLORS.map(c => [c.value, c.family]));
+  const grayValues = BRAND_COLORS.filter(c => c.family === 'gray').map(
+    c => c.value,
+  );
+  const colorOptions = options.filter(
+    o =>
+      o.value !== 'primary' &&
+      !['black', 'white', 'gray'].includes(familyOf.get(o.value) ?? ''),
+  );
+  return [
+    byValue.get('white'),
+    byValue.get('gray1'),
+    ...colorOptions,
+    ...grayValues.filter(v => v !== 'gray1').map(v => byValue.get(v)),
+    ...SECTION_GRADIENT_OPTIONS,
+    byValue.get('black'),
+    TRANSPARENT_BACKGROUND_OPTION,
+  ].filter((o): o is {value: string; displayName: string} => o !== undefined);
+})();
 
 export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinition =
   {
@@ -54,23 +77,7 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
         description: 'The background color of the section.',
         defaultValue: 'white',
         validations: {
-          // Transparent sits directly below "White (default)" so authors who
-          // want to wrap the Section in a custom parent (Contentful native
-          // section, background image, etc.) find it among the foundational
-          // options rather than buried with legacy values. Brand gradients
-          // sit between the brand-color block and the legacy block so they're
-          // grouped with the modern palette.
-          in: ((): {value: string; displayName: string}[] => {
-            const brandOptions = brandColorOptionsWithDefault('white');
-            const whiteIndex = brandOptions.findIndex(o => o.value === 'white');
-            return [
-              ...brandOptions.slice(0, whiteIndex + 1),
-              TRANSPARENT_BACKGROUND_OPTION,
-              ...brandOptions.slice(whiteIndex + 1),
-              ...SECTION_GRADIENT_OPTIONS,
-              ...LEGACY_SECTION_BACKGROUND_OPTIONS,
-            ];
-          })(),
+          in: SECTION_BACKGROUND_OPTIONS,
         },
       },
       ...sectionPaddingDefinition,

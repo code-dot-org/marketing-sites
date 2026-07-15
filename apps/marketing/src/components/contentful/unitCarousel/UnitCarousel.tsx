@@ -12,9 +12,13 @@ import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon
 
 import {BadgeColor} from '@/components/contentful/badge/Badge';
 import Link from '@/components/contentful/link';
-import UnitCard from '@/components/contentful/unitCard';
+import UnitCard, {
+  UnitTitleColor,
+  unitTitleColorCss,
+} from '@/components/contentful/unitCard';
 import {mergeGradeBands} from '@/components/contentful/unitCard/mergeGradeBands';
 import {resolveContentfulLink} from '@/contentful/resolveLink';
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
 import {
   CODE_ORG_DISPLAY_FONT_STACK,
   CODE_ORG_TEXT_FONT_STACK,
@@ -59,6 +63,12 @@ export interface UnitCarouselProps {
   showTopics?: boolean;
   /** Badge color applied to every topic on every card */
   topicBadgeColor?: BadgeColor;
+  /** Overrides every card's Link entry label; empty uses the entry label */
+  linkTextOverride?: string;
+  /** Title color applied to every card's unit title */
+  unitTitleColor?: UnitTitleColor;
+  /** Course title heading color */
+  headingColor?: UnitTitleColor;
   /** Custom classname */
   className?: string;
 }
@@ -93,14 +103,16 @@ const TitleRow = styled('div')({
   rowGap: '4px',
 });
 
-const Title = styled('h2')({
+const Title = styled('h2', {
+  shouldForwardProp: prop => prop !== 'headingColor',
+})<{headingColor: UnitTitleColor}>(({headingColor}) => ({
   fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
   fontSize: '1.5rem',
   lineHeight: '2rem',
   fontWeight: 600,
-  color: 'var(--codeai-gray-8, #292f36)',
+  color: unitTitleColorCss(headingColor),
   margin: 0,
-});
+}));
 
 const Subtitle = styled('p')({
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
@@ -110,9 +122,11 @@ const Subtitle = styled('p')({
   margin: '4px 0 0',
 });
 
+// Nav buttons mirror the Card Carousel's exactly; here they are fixed to the
+// header's top-right slot (no position option).
 const NavButtons = styled('div')({
   display: 'flex',
-  gap: '16px',
+  gap: '3px',
   flexShrink: 0,
 });
 
@@ -122,18 +136,20 @@ const NavButton = styled('button')({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  border: '1px solid var(--codeai-gray-2, #e4e6e9)',
-  borderRadius: '50%',
+  border: '2px solid var(--codeai-purple-primary, #4c42cf)',
+  // sm is the buttons-only radius token.
+  borderRadius: codeaiRadius('sm', '0.5rem'),
   backgroundColor: '#ffffff',
-  color: 'var(--codeai-gray-8, #292f36)',
+  color: 'var(--codeai-purple-primary, #4c42cf)',
   cursor: 'pointer',
   fontSize: '20px',
   '&:hover:not(:disabled)': {
-    backgroundColor: 'var(--codeai-gray-1, #f2f2f2)',
+    backgroundColor: 'var(--codeai-purple-light, #e4e2f8)',
   },
   '&:disabled': {
     cursor: 'not-allowed',
-    color: 'var(--codeai-gray-4, #a0a7ae)',
+    borderColor: 'var(--codeai-gray-3, #d1d4d8)',
+    color: 'var(--codeai-gray-4, #afb8c2)',
   },
   // Swiper's watchOverflow adds this class when every card already fits.
   '&.swiper-button-lock': {
@@ -176,6 +192,9 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
   showUnitCount = true,
   showTopics = true,
   topicBadgeColor = 'purple',
+  linkTextOverride = 'Explore',
+  unitTitleColor = 'black',
+  headingColor = 'black',
   className,
 }) => {
   const carouselId = `id-${useId().replaceAll(':', '')}`;
@@ -202,12 +221,17 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
           const resolvedLink = resolveContentfulLink<LinkEntry>(
             fields.primaryLinkRef,
           );
-          // Carousel cards always label the link "Explore"; target and aria
-          // label stay inherited from the bound Link entry.
-          const link = resolvedLink?.fields && {
-            ...resolvedLink,
-            fields: {...resolvedLink.fields, label: 'Explore'},
-          };
+          // Link Text Override relabels every card's link; when cleared, the
+          // bound Link entry's label shows. Target and aria label always stay
+          // inherited from the entry.
+          const link =
+            resolvedLink?.fields &&
+            (linkTextOverride
+              ? {
+                  ...resolvedLink,
+                  fields: {...resolvedLink.fields, label: linkTextOverride},
+                }
+              : resolvedLink);
           return {
             id: sys.id,
             props: {
@@ -220,10 +244,11 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
               link,
               showTopics,
               topicBadgeColor,
+              titleColor: unitTitleColor,
             },
           };
         }),
-    [units, showTopics, topicBadgeColor],
+    [units, showTopics, topicBadgeColor, linkTextOverride, unitTitleColor],
   );
 
   // Show placeholder text until a content entry is bound
@@ -254,7 +279,7 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
       <Header>
         <div>
           <TitleRow>
-            {title && <Title>{title}</Title>}
+            {title && <Title headingColor={headingColor}>{title}</Title>}
             {linkFields && (
               <Link
                 href={linkFields.primaryTarget}
@@ -273,10 +298,10 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
         </div>
         <NavButtons>
           <NavButton id={`${carouselId}-prev`} aria-label="Previous units">
-            <FontAwesomeV6Icon iconName="arrow-left" iconStyle="solid" />
+            <FontAwesomeV6Icon iconName="chevron-left" iconStyle="solid" />
           </NavButton>
           <NavButton id={`${carouselId}-next`} aria-label="Next units">
-            <FontAwesomeV6Icon iconName="arrow-right" iconStyle="solid" />
+            <FontAwesomeV6Icon iconName="chevron-right" iconStyle="solid" />
           </NavButton>
         </NavButtons>
       </Header>

@@ -13,6 +13,7 @@ import {
   EnclosingBackground,
   resolveTextColorForBackground,
 } from '@/components/common/colors';
+import {externalLinkIconProps} from '@/components/common/constants';
 import {
   ComponentSize,
   RemoveMarginBottomProps,
@@ -164,7 +165,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
         {userIcon && iconPosition === 'left' && userIcon}
         <span>{children}</span>
         {userIcon && iconPosition === 'right' && userIcon}
-        {isLinkExternal && <OpenInNew fontSize="inherit" />}
+        {isLinkExternal && <FontAwesomeV6Icon {...externalLinkIconProps} />}
         {isPending && (
           <FontAwesomeV6Icon
             iconName="spinner"

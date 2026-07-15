@@ -11,8 +11,6 @@ import type {SizeToken} from '@/themes/code.org/typography/tokens';
 
 import {
   resolveCustomTextStyles,
-  type CustomTextBackgroundFill,
-  type CustomTextBackgroundShape,
   type CustomTextFontTrack,
   type CustomTextTag,
   type CustomTextTransform,
@@ -29,16 +27,8 @@ export type CustomTextProps = {
   type?: CustomTextType;
   /** Semantic element override. 'default' inherits the type's tag. */
   htmlTag?: CustomTextTag | Sentinel;
-  /** Text color token. Contrast-switches vs. Section bg unless backgrounded. */
+  /** Text color token. Contrast-switches vs. the Section background. */
   color?: BrandColor;
-  /** Background fill treatment. 'default' inherits; 'none' = no background. */
-  backgroundFill?: CustomTextBackgroundFill | Sentinel;
-  /** Background shape (border radius). 'default' inherits. */
-  backgroundShape?: CustomTextBackgroundShape | Sentinel;
-  /** Fill color token (used when fill is 'filled'). 'default' inherits. */
-  backgroundColor?: BrandColor | Sentinel;
-  /** Border color token. Used by filled/outline fills; width fixed at 1px. */
-  borderColor?: BrandColor | Sentinel;
   /** Theme size step on the resolved track. 'default' inherits. */
   textSize?: SizeToken | Sentinel;
   /** Font track override. 'default' inherits. */
@@ -60,10 +50,6 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
   type = 'custom',
   htmlTag,
   color,
-  backgroundFill,
-  backgroundShape,
-  backgroundColor,
-  borderColor,
   textSize,
   font,
   fontWeight,
@@ -73,14 +59,10 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
   className,
 }) => {
   const enclosingBackground = useSectionBackground();
-  const {tag, sx, resolvedColor, background, icon} = resolveCustomTextStyles({
+  const {tag, sx, resolvedColor, icon} = resolveCustomTextStyles({
     type,
     htmlTag,
     color,
-    backgroundFill,
-    backgroundShape,
-    backgroundColor,
-    borderColor,
     textSize,
     font,
     fontWeight,
@@ -120,48 +102,23 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
     children
   );
 
-  const text = (
+  return (
     <Typography
       component={tag}
       variant="inherit"
-      className={background ? undefined : className}
-      // Custom Text is always a standalone element. Rendering the plain
-      // (non-backgrounded) text as block-level makes it establish its own line
-      // box at the text's size, so the surrounding container hugs the text
-      // instead of reserving the root 16px inline strut above/below it.
+      className={className}
+      // Custom Text is always a standalone element. Rendering it block-level
+      // makes it establish its own line box at the text's size, so the
+      // surrounding container hugs the text instead of reserving the root
+      // 16px inline strut above/below it.
       sx={{
         ...sx,
         color: resolvedColor,
-        ...(background ? {} : {display: 'block'}),
+        display: 'block',
       }}
     >
       {content}
     </Typography>
-  );
-
-  if (!background) {
-    return text;
-  }
-
-  // Backgrounded chip: fill + 1px border + shape radius + padding wrap the text
-  // run. inline-flex + center + line-height:1 makes the chip hug the actual
-  // text line box (not the inherited 16px strut), so the shape isn't taller
-  // than the glyph. fontSize is pinned to the text size so the em padding
-  // (carried on `background`) tracks the text.
-  return (
-    <Box
-      component="span"
-      className={className}
-      sx={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        lineHeight: 1,
-        fontSize: sx.fontSize as string,
-        ...background,
-      }}
-    >
-      {text}
-    </Box>
   );
 };
 
