@@ -42,6 +42,8 @@ export type CustomTextProps = Partial<RemoveMarginBottomProps> & {
   fontWeight?: CustomTextWeight | Sentinel;
   /** Case transform. 'default' inherits the type default; 'none' forces none. */
   textTransform?: CustomTextTransform | Sentinel;
+  /** Stacking order. Applies with position: relative so the value is honored. */
+  zIndex?: string;
   /** Leading icon (Font Awesome name). Takes precedence over the right icon. */
   iconNameLeft?: string;
   /** Trailing icon (Font Awesome name). Ignored if a left icon is set. */
@@ -61,6 +63,7 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
   font,
   fontWeight,
   textTransform,
+  zIndex,
   iconNameLeft,
   iconNameRight,
   removeMarginBottom = false,
@@ -128,6 +131,7 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
         // Normalized bottom margin so authors don't need spacer elements.
         // Toggleable off via the Design-tab checkbox.
         ...(removeMarginBottom ? {} : {marginBottom: 'var(--mui-spacing)'}),
+        ...(zIndex && {position: 'relative', zIndex}),
       }}
     >
       {content}

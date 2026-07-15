@@ -138,6 +138,13 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
       description:
         'Unitless line-height (e.g. 1.2). Overrides the Appearance line-height when set.',
     },
+    zIndex: {
+      displayName: 'Z-index',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Stacking order. Leave blank for default. Set an integer (e.g. 10 or -1) to layer above or below sibling elements.',
+    },
     iconNameLeft: {
       displayName: 'Left icon name',
       type: 'Text',

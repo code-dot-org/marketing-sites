@@ -9,8 +9,8 @@
 //   3. Contrast rule — the text color contrast-switches against the
 //      enclosing Section background.
 //
-// Line-height always comes from the resolved size cell, so the type/size
-// pairing renders with the scale's defined leading.
+// Line-height comes from the resolved size cell unless the numeric line-height
+// override is set, so the type/size pairing renders with the scale's leading.
 
 import {
   BrandColor,
@@ -163,7 +163,8 @@ export const resolveCustomTextStyles = (
   // (unitless) are independent so authors can tune each on its own.
   const fontSize =
     args.fontSize != null ? `${args.fontSize}rem` : cell.fontSize;
-  const lineHeight = args.lineHeight != null ? args.lineHeight : cell.lineHeight;
+  const lineHeight =
+    args.lineHeight != null ? args.lineHeight : cell.lineHeight;
   const sx: Record<string, unknown> = {
     fontFamily: FONT_STACK[track],
     fontSize,

@@ -33,6 +33,7 @@ export const Playground: Story = {
     textSize: {control: {type: 'select'}, options: ['default', ...SIZES]},
     fontSize: {control: {type: 'number', min: 0.5, max: 8, step: 0.125}},
     lineHeight: {control: {type: 'number', min: 0.8, max: 3, step: 0.05}},
+    zIndex: {control: 'text'},
     fontWeight: {
       control: {type: 'select'},
       options: ['default', '400', '500', '600', '700'],

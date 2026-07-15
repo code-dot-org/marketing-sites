@@ -23,6 +23,16 @@ describe('CustomText component', () => {
     expect(screen.getByText('Tagged').tagName).toBe('P');
   });
 
+  it('applies zIndex with position relative so the stacking value is honored', () => {
+    render(
+      <CustomText type="custom" zIndex="10">
+        Layered
+      </CustomText>,
+    );
+    const el = screen.getByText('Layered');
+    expect(el).toHaveStyle({position: 'relative', zIndex: '10'});
+  });
+
   it('renders a single leading icon and the text', () => {
     const {container} = render(
       <CustomText type="custom" iconNameLeft="star">
