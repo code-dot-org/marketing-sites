@@ -1,5 +1,5 @@
 import {BRAND_COLORS} from '@/components/common/colors';
-import Icon, {ICON_LIGHT_GREY} from '@/components/contentful/icon/Icon';
+import Icon from '@/components/contentful/icon/Icon';
 import Section from '@/components/contentful/section';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 
@@ -17,8 +17,8 @@ export const Playground: Story = {
     color: 'purplePrimary',
     backgroundFill: 'none',
     backgroundShape: 'circle',
-    backgroundColor: ICON_LIGHT_GREY,
-    iconSize: 32,
+    backgroundColor: 'gray1',
+    iconSize: 24,
   },
   argTypes: {
     iconName: {control: 'text'},
@@ -37,7 +37,7 @@ export const Playground: Story = {
     },
     backgroundColor: {
       control: {type: 'select'},
-      options: [ICON_LIGHT_GREY, ...BRAND_COLORS.map(c => c.value)],
+      options: BRAND_COLORS.map(c => c.value),
     },
   },
 };
