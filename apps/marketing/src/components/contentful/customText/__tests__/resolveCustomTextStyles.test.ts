@@ -37,7 +37,7 @@ describe('resolveCustomTextStyles', () => {
         SCALE_DISPLAY['2xl'].lineHeight,
       );
       expect(resolveCustomTextStyles({type: 'subtitle'}).sx.lineHeight).toBe(
-        SCALE_TEXT.xl.lineHeight,
+        SCALE_DISPLAY.xs.lineHeight,
       );
     });
 
@@ -58,6 +58,13 @@ describe('resolveCustomTextStyles', () => {
       });
     });
 
+    it('seeds Featured Subtitle with the display track, XS size and Medium weight', () => {
+      const r = resolveCustomTextStyles({type: 'subtitle'});
+      expect(r.sx.fontFamily).toContain('Space Grotesk');
+      expect(r.sx.fontSize).toBe(SCALE_DISPLAY.xs.fontSize);
+      expect(r.sx.fontWeight).toBe(500);
+    });
+
     it('falls back to the custom type for an unknown value', () => {
       const result = resolveCustomTextStyles({
         type: 'bogus' as unknown as CustomTextType,
@@ -71,15 +78,31 @@ describe('resolveCustomTextStyles', () => {
     it('htmlTag override changes only the tag, including overriding Subtitle p', () => {
       const r = resolveCustomTextStyles({type: 'subtitle', htmlTag: 'span'});
       expect(r.tag).toBe('span');
-      // size/weight still from subtitle default (text/xl/regular)
-      expect(r.sx.fontSize).toBe(SCALE_TEXT.xl.fontSize);
-      expect(r.sx.fontWeight).toBe(400);
+      // size/weight still from subtitle default (display/xs/medium)
+      expect(r.sx.fontSize).toBe(SCALE_DISPLAY.xs.fontSize);
+      expect(r.sx.fontWeight).toBe(500);
     });
 
     it('textSize override swaps the size cell on the resolved track only', () => {
       const r = resolveCustomTextStyles({type: 'custom', textSize: 'xl'});
       expect(r.sx.fontSize).toBe(SCALE_TEXT.xl.fontSize);
       expect(r.sx.fontWeight).toBe(400); // unchanged
+    });
+
+    it('numeric fontSize override wins over the size cell, keeping the cell line-height', () => {
+      const r = resolveCustomTextStyles({type: 'custom', fontSize: 2.5});
+      expect(r.sx.fontSize).toBe('2.5rem');
+      expect(r.sx.lineHeight).toBe(SCALE_TEXT.md.lineHeight);
+    });
+
+    it('numeric lineHeight override is independent of fontSize', () => {
+      const r = resolveCustomTextStyles({
+        type: 'custom',
+        fontSize: 2.5,
+        lineHeight: 1.1,
+      });
+      expect(r.sx.fontSize).toBe('2.5rem');
+      expect(r.sx.lineHeight).toBe(1.1);
     });
 
     it('font override swaps the track (and font family)', () => {

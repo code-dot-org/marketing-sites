@@ -9,6 +9,7 @@
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {brandTextColorOptions} from '@/components/common/colors';
+import {removeMarginBottomDefinition} from '@/components/common/definitions';
 
 export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
   id: 'customText',
@@ -32,7 +33,7 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
       validations: {
         in: [
           {value: 'custom', displayName: 'Custom'},
-          {value: 'subtitle', displayName: 'Subtitle'},
+          {value: 'subtitle', displayName: 'Featured Subtitle'},
           {value: 'overline', displayName: 'Overline'},
           {value: 'statistic', displayName: 'Statistic'},
         ],
@@ -56,8 +57,21 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
         in: brandTextColorOptions('black'),
       },
     },
+    font: {
+      displayName: 'Font Family',
+      type: 'Text',
+      defaultValue: 'default',
+      group: 'style',
+      validations: {
+        in: [
+          {value: 'default', displayName: 'Default (from type)'},
+          {value: 'text', displayName: 'Text (Geist)'},
+          {value: 'display', displayName: 'Display (Space Grotesk)'},
+        ],
+      },
+    },
     textSize: {
-      displayName: 'Override · Text size',
+      displayName: 'Appearance',
       type: 'Text',
       defaultValue: 'default',
       group: 'style',
@@ -75,21 +89,8 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
-    font: {
-      displayName: 'Override · Font',
-      type: 'Text',
-      defaultValue: 'default',
-      group: 'style',
-      validations: {
-        in: [
-          {value: 'default', displayName: 'Default (from type)'},
-          {value: 'text', displayName: 'Text (Geist)'},
-          {value: 'display', displayName: 'Display (Space Grotesk)'},
-        ],
-      },
-    },
     fontWeight: {
-      displayName: 'Override · Font weight',
+      displayName: 'Font weight',
       type: 'Text',
       defaultValue: 'default',
       group: 'style',
@@ -120,6 +121,23 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
+    removeMarginBottom: {...removeMarginBottomDefinition},
+    // Advanced numeric overrides — grouped with the HTML tag override near the
+    // bottom of the Design tab.
+    fontSize: {
+      displayName: 'Override · Text size',
+      type: 'Number',
+      group: 'style',
+      description:
+        'Font size in rem (e.g. 1.5). Overrides the Appearance size when set.',
+    },
+    lineHeight: {
+      displayName: 'Override · Line height',
+      type: 'Number',
+      group: 'style',
+      description:
+        'Unitless line-height (e.g. 1.2). Overrides the Appearance line-height when set.',
+    },
     iconNameLeft: {
       displayName: 'Left icon name',
       type: 'Text',
@@ -136,7 +154,7 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
     },
     // HTML tag override is intentionally the LAST option in the Design tab.
     htmlTag: {
-      displayName: 'Override · HTML tag',
+      displayName: 'HTML tag',
       type: 'Text',
       defaultValue: 'default',
       group: 'style',

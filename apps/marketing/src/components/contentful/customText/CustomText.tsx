@@ -6,6 +6,7 @@ import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon
 
 import {BrandColor} from '@/components/common/colors';
 import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
+import {RemoveMarginBottomProps} from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 import type {SizeToken} from '@/themes/code.org/typography/tokens';
 
@@ -20,7 +21,7 @@ import {
 
 type Sentinel = 'default';
 
-export type CustomTextProps = {
+export type CustomTextProps = Partial<RemoveMarginBottomProps> & {
   /** Text content. */
   children: ReactNode;
   /** Preset supplying all default style values. Defaults to 'custom'. */
@@ -31,6 +32,10 @@ export type CustomTextProps = {
   color?: BrandColor;
   /** Theme size step on the resolved track. 'default' inherits. */
   textSize?: SizeToken | Sentinel;
+  /** Numeric font-size override in rem. Wins over the resolved size cell. */
+  fontSize?: number;
+  /** Unitless line-height override. Wins over the resolved size cell. */
+  lineHeight?: number;
   /** Font track override. 'default' inherits. */
   font?: CustomTextFontTrack | Sentinel;
   /** Weight override. 'default' inherits. */
@@ -51,11 +56,14 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
   htmlTag,
   color,
   textSize,
+  fontSize,
+  lineHeight,
   font,
   fontWeight,
   textTransform,
   iconNameLeft,
   iconNameRight,
+  removeMarginBottom = false,
   className,
 }) => {
   const enclosingBackground = useSectionBackground();
@@ -64,6 +72,8 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
     htmlTag,
     color,
     textSize,
+    fontSize,
+    lineHeight,
     font,
     fontWeight,
     textTransform,
@@ -115,6 +125,9 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
         ...sx,
         color: resolvedColor,
         display: 'block',
+        // Normalized bottom margin so authors don't need spacer elements.
+        // Toggleable off via the Design-tab checkbox.
+        ...(removeMarginBottom ? {} : {marginBottom: 'var(--mui-spacing)'}),
       }}
     >
       {content}

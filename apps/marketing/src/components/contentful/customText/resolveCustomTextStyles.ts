@@ -71,9 +71,9 @@ export const CUSTOM_TEXT_TYPE_DEFAULTS: Record<
   },
   subtitle: {
     tag: 'p', // the only type defaulting to <p>
-    track: 'text',
-    size: 'xl',
-    weight: 'regular',
+    track: 'display', // Space Grotesk
+    size: 'xs',
+    weight: 'medium',
     color: 'black',
     textTransform: 'none',
   },
@@ -119,6 +119,10 @@ export interface ResolveCustomTextArgs {
   htmlTag?: CustomTextTag | Sentinel;
   color?: BrandColor | Sentinel;
   textSize?: SizeToken | Sentinel;
+  /** Numeric font-size override in rem. Wins over the resolved size cell. */
+  fontSize?: number;
+  /** Unitless line-height override. Wins over the resolved size cell. */
+  lineHeight?: number;
   font?: CustomTextFontTrack | Sentinel;
   fontWeight?: CustomTextWeight | Sentinel;
   textTransform?: CustomTextTransform | Sentinel;
@@ -155,10 +159,15 @@ export const resolveCustomTextStyles = (
     : WEIGHTS[def.weight];
 
   const cell = SCALE[track][size];
+  // Numeric overrides win over the size cell. Text size (rem) and line-height
+  // (unitless) are independent so authors can tune each on its own.
+  const fontSize =
+    args.fontSize != null ? `${args.fontSize}rem` : cell.fontSize;
+  const lineHeight = args.lineHeight != null ? args.lineHeight : cell.lineHeight;
   const sx: Record<string, unknown> = {
     fontFamily: FONT_STACK[track],
-    fontSize: cell.fontSize,
-    lineHeight: cell.lineHeight,
+    fontSize,
+    lineHeight,
     fontWeight,
     ...(cell.letterSpacing ? {letterSpacing: cell.letterSpacing} : {}),
     ...(textTransform !== 'none' ? {textTransform} : {}),

@@ -29,8 +29,10 @@ export const Playground: Story = {
       options: ['default', 'span', 'p'],
     },
     color: {control: {type: 'select'}, options: BRAND_COLORS.map(c => c.value)},
-    textSize: {control: {type: 'select'}, options: ['default', ...SIZES]},
     font: {control: {type: 'select'}, options: ['default', 'text', 'display']},
+    textSize: {control: {type: 'select'}, options: ['default', ...SIZES]},
+    fontSize: {control: {type: 'number', min: 0.5, max: 8, step: 0.125}},
+    lineHeight: {control: {type: 'number', min: 0.8, max: 3, step: 0.05}},
     fontWeight: {
       control: {type: 'select'},
       options: ['default', '400', '500', '600', '700'],
