@@ -2,27 +2,20 @@
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {brandColorOptionsWithDefault} from '@/components/common/colors';
-
-import {ICON_LIGHT_GREY} from './Icon';
+import {removeMarginBottomDefinition} from '@/components/common/definitions';
 
 // Universal brand-color options in canonical manifest order; default is
-// `purplePrimary` (matches Divider). No legacy filter — Icon doesn't carry
-// legacy values.
-const ICON_GLYPH_COLOR_OPTIONS = brandColorOptionsWithDefault('purplePrimary');
+// `purplePrimary` (matches Divider). Legacy `primary` is filtered out — Icon
+// doesn't carry legacy values.
+const ICON_GLYPH_COLOR_OPTIONS = brandColorOptionsWithDefault(
+  'purplePrimary',
+).filter(({value}) => value !== 'primary');
 
-// Background color list: Icon-local Light Grey default, then the universal
-// brand options. Light Grey lives only on this dropdown.
-const ICON_BACKGROUND_COLOR_OPTIONS = [
-  {value: ICON_LIGHT_GREY, displayName: 'Light Grey (default)'},
-  ...brandColorOptionsWithDefault('purplePrimary').map(
-    ({value, displayName}) => ({
-      value,
-      // Strip the "(default)" annotation off the brand list — Light Grey is the
-      // default on this field, not purplePrimary.
-      displayName: displayName.replace(/ \(default\)$/, ''),
-    }),
-  ),
-];
+// Background color list: universal brand options with Gray 1 as the default.
+// Legacy `primary` filtered out — Icon doesn't carry legacy values.
+const ICON_BACKGROUND_COLOR_OPTIONS = brandColorOptionsWithDefault(
+  'gray1',
+).filter(({value}) => value !== 'primary');
 
 export const IconContentfulComponentDefinition: ComponentDefinition = {
   id: 'icon',
@@ -52,7 +45,7 @@ export const IconContentfulComponentDefinition: ComponentDefinition = {
       displayName: 'Icon size (px)',
       type: 'Number',
       group: 'style',
-      defaultValue: 32,
+      defaultValue: 24,
     },
     color: {
       displayName: 'Color',
@@ -92,10 +85,11 @@ export const IconContentfulComponentDefinition: ComponentDefinition = {
       displayName: 'Background color',
       type: 'Text',
       group: 'style',
-      defaultValue: ICON_LIGHT_GREY,
+      defaultValue: 'gray1',
       validations: {
         in: ICON_BACKGROUND_COLOR_OPTIONS,
       },
     },
+    removeMarginBottom: {...removeMarginBottomDefinition},
   },
 };

@@ -2,7 +2,7 @@ import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import {cssVarForBrandColor} from '@/components/common/colors';
-import Icon, {ICON_LIGHT_GREY} from '@/components/contentful/icon/Icon';
+import Icon from '@/components/contentful/icon/Icon';
 import {SectionBackgroundProvider} from '@/components/contentful/section/SectionBackgroundContext';
 
 describe('Icon component', () => {
@@ -34,10 +34,34 @@ describe('Icon component', () => {
     expect(icon).toHaveStyle({color: cssVarForBrandColor('bluePrimary')});
   });
 
+  it('defaults the icon size to 24px', () => {
+    render(<Icon iconName="lightbulb" />);
+    const icon = screen.getByTestId('font-awesome-v6-icon');
+    expect(icon).toHaveStyle({fontSize: '24px'});
+  });
+
   it('applies a custom icon size', () => {
     render(<Icon iconName="lightbulb" iconSize={48} />);
     const icon = screen.getByTestId('font-awesome-v6-icon');
     expect(icon).toHaveStyle({fontSize: '48px'});
+  });
+
+  // jsdom's CSS parser silently drops `calc(... var(--x) ...)`, so the margin
+  // value isn't observable on the DOM node. Assert the inline-block display it
+  // rides on renders by default and is gone when the margin is removed.
+  it('renders inline-block (margin carrier) by default, plain span when margin removed', () => {
+    const {container: withMargin} = render(<Icon iconName="lightbulb" />);
+    expect(withMargin.querySelector('span')).toHaveStyle({
+      display: 'inline-block',
+    });
+
+    const {container: noMargin} = render(
+      <Icon iconName="lightbulb" removeMarginBottom />,
+    );
+    // display still renders; only the (unobservable) margin differs.
+    expect(noMargin.querySelector('span')).toHaveStyle({
+      display: 'inline-block',
+    });
   });
 
   it('emits no wrapper when backgroundFill is "none"', () => {
@@ -46,17 +70,17 @@ describe('Icon component', () => {
     expect(container.querySelector('.MuiBox-root')).not.toBeInTheDocument();
   });
 
-  it('renders a filled circle wrapper with the default light-grey background', () => {
+  it('renders a filled circle wrapper with the default Gray 1 background', () => {
     const {container} = render(
       <Icon iconName="lightbulb" backgroundFill="filled" />,
     );
     const wrapper = container.querySelector('.MuiBox-root') as HTMLElement;
     expect(wrapper).toBeInTheDocument();
     expect(wrapper).toHaveStyle({
-      width: `${32 * 1.75}px`,
-      height: `${32 * 1.75}px`,
+      width: `${24 * 1.75}px`,
+      height: `${24 * 1.75}px`,
       borderRadius: '50%',
-      backgroundColor: ICON_LIGHT_GREY,
+      backgroundColor: cssVarForBrandColor('gray1'),
     });
   });
 
@@ -145,7 +169,7 @@ describe('Icon component', () => {
       </SectionBackgroundProvider>,
     );
     const icon = screen.getByTestId('font-awesome-v6-icon');
-    // Author chose purplePrimary on a (light-grey) fill — must pass through
+    // Author chose purplePrimary on a filled background — must pass through
     // even though the enclosing Section is purplePrimary.
     expect(icon).toHaveStyle({color: cssVarForBrandColor('purplePrimary')});
   });
