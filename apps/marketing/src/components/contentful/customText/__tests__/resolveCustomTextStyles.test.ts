@@ -17,9 +17,10 @@ describe('resolveCustomTextStyles', () => {
 
       const overline = resolveCustomTextStyles({type: 'overline'});
       expect(overline.tag).toBe('span');
-      expect(overline.sx.fontSize).toBe(SCALE_TEXT.md.fontSize);
+      expect(overline.sx.fontSize).toBe(SCALE_TEXT.sm.fontSize);
       expect(overline.sx.fontWeight).toBe(600);
-      expect(overline.sx.textTransform).toBe('capitalize');
+      expect(overline.sx.textTransform).toBe('uppercase');
+      expect(overline.resolvedColor).toBe('var(--codeai-gray-6)');
 
       const statistic = resolveCustomTextStyles({type: 'statistic'});
       expect(statistic.sx.fontSize).toBe(SCALE_DISPLAY['2xl'].fontSize);
@@ -31,7 +32,7 @@ describe('resolveCustomTextStyles', () => {
         SCALE_TEXT.md.lineHeight,
       );
       expect(resolveCustomTextStyles({type: 'overline'}).sx.lineHeight).toBe(
-        SCALE_TEXT.md.lineHeight,
+        SCALE_TEXT.sm.lineHeight,
       );
       expect(resolveCustomTextStyles({type: 'statistic'}).sx.lineHeight).toBe(
         SCALE_DISPLAY['2xl'].lineHeight,
@@ -128,9 +129,9 @@ describe('resolveCustomTextStyles', () => {
       });
       const def = CUSTOM_TEXT_TYPE_DEFAULTS.overline;
       expect(r.tag).toBe(def.tag);
-      expect(r.sx.fontSize).toBe(SCALE_TEXT.md.fontSize);
+      expect(r.sx.fontSize).toBe(SCALE_TEXT.sm.fontSize);
       expect(r.sx.fontWeight).toBe(600);
-      expect(r.sx.textTransform).toBe('capitalize');
+      expect(r.sx.textTransform).toBe('uppercase');
     });
 
     it("textTransform 'none' forces no transform over a type default", () => {
