@@ -114,8 +114,9 @@ export const ContrastSwitchSuppressedByFill: Story = {
   ),
 };
 
-// Side-by-side: the same Icon with vs without a fill, inside the same dark
-// Section — makes the conditional contrast-switch behavior visible at a glance.
+// Side-by-side: bare, filled, and outline icons inside the same dark Section.
+// Bare and outline glyphs contrast-switch to white (the Section background
+// shows behind both); only the filled icon keeps the authored color.
 export const ContrastSwitchSideBySide: Story = {
   render: () => (
     <Section background="purplePrimary">
