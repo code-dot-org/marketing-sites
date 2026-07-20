@@ -63,7 +63,6 @@ describe('ContentCard component', () => {
     });
   });
 
-
   it('contrast-switches flat-style text on a dark Section', () => {
     render(
       <SectionBackgroundProvider value="purpleDark">
