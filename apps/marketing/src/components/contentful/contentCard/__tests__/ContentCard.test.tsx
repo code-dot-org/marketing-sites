@@ -4,6 +4,7 @@ import '@testing-library/jest-dom';
 import ContentCard, {
   ContentCardProps,
 } from '@/components/contentful/contentCard';
+import {SectionBackgroundProvider} from '@/components/contentful/section/SectionBackgroundContext';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
 const linkEntry = {
@@ -51,6 +52,40 @@ describe('ContentCard component', () => {
     render(<ContentCard {...defaultProps} badgeColor="green" />);
     expect(screen.getByText('News')).toHaveStyle({
       backgroundColor: 'var(--codeai-green-primary)',
+    });
+  });
+
+  it('renders Light picks with the light badge variant (light bg, dark text)', () => {
+    render(<ContentCard {...defaultProps} badgeColor="greenLight" />);
+    expect(screen.getByText('News')).toHaveStyle({
+      backgroundColor: 'var(--codeai-green-light)',
+      color: 'var(--codeai-green-dark)',
+    });
+  });
+
+
+  it('contrast-switches flat-style text on a dark Section', () => {
+    render(
+      <SectionBackgroundProvider value="purpleDark">
+        <ContentCard {...defaultProps} cardStyle="flat" />
+      </SectionBackgroundProvider>,
+    );
+    expect(screen.getByRole('heading', {level: 3})).toHaveStyle({
+      color: '#ffffff',
+    });
+    expect(screen.getByText(defaultProps.description as string)).toHaveStyle({
+      color: '#ffffff',
+    });
+  });
+
+  it('keeps outline-style text dark on a dark Section (white surface)', () => {
+    render(
+      <SectionBackgroundProvider value="purpleDark">
+        <ContentCard {...defaultProps} cardStyle="outline" />
+      </SectionBackgroundProvider>,
+    );
+    expect(screen.getByRole('heading', {level: 3})).toHaveStyle({
+      color: 'var(--codeai-gray-8, #292f36)',
     });
   });
 

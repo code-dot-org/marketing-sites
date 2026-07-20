@@ -10,7 +10,7 @@ import 'swiper/css';
 
 import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
 
-import {BadgeColor} from '@/components/contentful/badge/Badge';
+import {CardBadgeColor} from '@/components/contentful/badge/constants';
 import ContentCard, {
   ContentCardColor,
   ContentCardStyle,
@@ -55,7 +55,7 @@ export interface CardCarouselProps {
   maxDescriptionLength?: number;
   /** Card style options forwarded to every card */
   cardStyle?: ContentCardStyle;
-  badgeColor?: BadgeColor;
+  badgeColor?: CardBadgeColor;
   titleColor?: ContentCardColor;
   titleCase?: ContentCardTitleCase;
   titleAppearance?: ContentCardTitleAppearance;

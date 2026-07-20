@@ -3,7 +3,7 @@
 import {styled, Theme} from '@mui/material/styles';
 import React, {useMemo, useState} from 'react';
 
-import {BadgeColor} from '@/components/contentful/badge/Badge';
+import {CardBadgeColor} from '@/components/contentful/badge/constants';
 import {UnitTitleColor} from '@/components/contentful/unitCard';
 import {
   gradeRangesOverlap,
@@ -58,7 +58,7 @@ export interface CourseCatalogProps {
   /** Whether to render the topics row on every card */
   showTopics?: boolean;
   /** Badge color applied to every topic on every card */
-  topicBadgeColor?: BadgeColor;
+  topicBadgeColor?: CardBadgeColor;
   /** Overrides every card's Link entry label; empty uses the entry labels */
   linkTextOverride?: string;
   /** Title color applied to every card's unit title */

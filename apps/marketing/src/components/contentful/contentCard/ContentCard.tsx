@@ -3,9 +3,15 @@
 import {styled, type CSSObject} from '@mui/material/styles';
 import React from 'react';
 
-import Badge, {BadgeColor} from '@/components/contentful/badge/Badge';
+import {backgroundToneFor} from '@/components/common/colors';
+import Badge from '@/components/contentful/badge/Badge';
+import {
+  CardBadgeColor,
+  parseCardBadgeColor,
+} from '@/components/contentful/badge/constants';
 import {resolveHeadingStyles} from '@/components/contentful/heading/resolveHeadingStyles';
 import Link from '@/components/contentful/link';
+import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 import NextImage from '@/components/nextImage/NextImage';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
@@ -48,8 +54,9 @@ export interface ContentCardProps {
   image?: string;
   /** Visual treatment */
   cardStyle?: ContentCardStyle;
-  /** Badge color */
-  badgeColor?: BadgeColor;
+  /** Badge color. Light variants render Badge's light appearance (light
+   *  background, dark text). */
+  badgeColor?: CardBadgeColor;
   /** Title color; black follows the card style's default text color */
   titleColor?: ContentCardColor;
   /** Title casing */
@@ -243,6 +250,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   titleOverlay = false,
   className,
 }) => {
+  const enclosingBackground = useSectionBackground();
   // Show placeholder text until a content entry is bound
   if (!title) {
     return (
@@ -257,6 +265,17 @@ const ContentCard: React.FC<ContentCardProps> = ({
   const linkFields = link?.fields;
   const isOverlayStyle = cardStyle === 'overlay';
   const showTitleOverlay = !isOverlayStyle && titleOverlay && !!imageUrl;
+  const {color: badgeFamily, isLight: badgeIsLight} =
+    parseCardBadgeColor(badgeColor);
+  // Flat cards have no surface of their own — the Section background shows
+  // through — so their text contrast-switches with the Section tone. Outline
+  // (white surface) and overlay (dark glass) own their backgrounds and stay
+  // fixed. 'transparent' Sections opt out (luminance can't be inferred).
+  const isFlatOnDark =
+    cardStyle === 'flat' &&
+    enclosingBackground !== 'transparent' &&
+    backgroundToneFor(enclosingBackground) === 'dark';
+  const lightText = isOverlayStyle || isFlatOnDark;
 
   return (
     <CardRoot
@@ -297,17 +316,18 @@ const ContentCard: React.FC<ContentCardProps> = ({
             <Badge
               text={badge}
               size="small"
-              color={badgeColor}
-              // The card interior is white (outline/flat) or dark glass
-              // (overlay), so Badge's section-tone auto-detection would pick
-              // the wrong variant.
-              appearance={isOverlayStyle ? 'light' : 'dark'}
+              color={badgeFamily}
+              // Outline is white and overlay is dark glass, so Badge's
+              // section-tone auto-detection would pick the wrong variant;
+              // flat rides the Section tone. Light picks force the light
+              // variant, which is also the dark-surface treatment.
+              appearance={badgeIsLight || lightText ? 'light' : 'dark'}
             />
           </BadgeRow>
         )}
         {!showTitleOverlay && (
           <Title
-            light={isOverlayStyle}
+            light={lightText}
             titleColor={titleColor}
             titleCase={titleCase}
             titleAppearance={titleAppearance}
@@ -316,7 +336,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
           </Title>
         )}
         {description && (
-          <Description light={isOverlayStyle}>{description}</Description>
+          <Description light={lightText}>{description}</Description>
         )}
         {linkFields && (
           <LinkRow linkColor={linkColor}>
@@ -324,7 +344,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
               href={linkFields.primaryTarget}
               isLinkExternal={!!linkFields.isThisAnExternalLink}
               ariaLabel={linkFields.ariaLabel || undefined}
-              color={isOverlayStyle ? 'white' : 'black'}
+              color={lightText ? 'white' : 'black'}
               size="s"
               icon={linkIconOverride || 'arrow-right'}
               removeMarginBottom
