@@ -2,6 +2,7 @@ import {
   BRAND_COLORS,
   BrandColor,
   backgroundToneFor,
+  brandTextColorOptionsWithTypeDefault,
   resolveTextColorForBackground,
 } from '../colors';
 
@@ -253,5 +254,18 @@ describe('resolveTextColorForBackground', () => {
         expect(valid.has(result.value as string)).toBe(true);
       }
     }
+  });
+});
+
+describe('brandTextColorOptionsWithTypeDefault', () => {
+  it("leads with the 'default' sentinel and names black plainly — one Default entry", () => {
+    const options = brandTextColorOptionsWithTypeDefault();
+    expect(options[0]).toEqual({
+      value: 'default',
+      displayName: 'Default (from type)',
+    });
+    expect(options).toContainEqual({value: 'black', displayName: 'Black'});
+    const defaultish = options.filter(o => /default/i.test(o.displayName));
+    expect(defaultish).toHaveLength(1);
   });
 });

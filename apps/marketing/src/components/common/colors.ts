@@ -323,6 +323,17 @@ export const brandTextColorOptions = (defaultValue: BrandColor) => {
   });
 };
 
+// Custom Text variant: the chosen type seeds the color, so the picker leads
+// with a true 'default' sentinel ("Default (from type)") and black gets its
+// plain name back — exactly one "Default"-named entry.
+export const brandTextColorOptionsWithTypeDefault = () => [
+  {value: 'default', displayName: 'Default (from type)'},
+  ...brandTextColorOptions('black').map(({value, displayName}) => ({
+    value,
+    displayName: value === 'black' ? 'Black' : displayName,
+  })),
+];
+
 export const cssVarForBrandColor = (value: BrandColor): string =>
   BRAND_COLORS.find(c => c.value === value)?.cssVar ?? 'inherit';
 
