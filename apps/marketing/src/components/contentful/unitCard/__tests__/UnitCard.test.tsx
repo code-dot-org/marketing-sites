@@ -55,6 +55,16 @@ describe('UnitCard component', () => {
     }
   });
 
+  it('renders Light picks with the light badge variant (light bg, dark text)', () => {
+    render(<UnitCard {...defaultProps} topicBadgeColor="greenLight" />);
+    for (const topic of ['Special Topic', 'AI']) {
+      expect(screen.getByText(topic)).toHaveStyle({
+        backgroundColor: 'var(--codeai-green-light)',
+        color: 'var(--codeai-green-dark)',
+      });
+    }
+  });
+
   it('renders the title in gray-8 by default and a family primary when set', () => {
     const heading = () =>
       screen.getByRole('heading', {level: 3, name: 'Problem Solving with AI'});

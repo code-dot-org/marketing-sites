@@ -227,13 +227,56 @@ const contentfulRegistration = {
       component: AFEEligibility,
       definition: AFEEligibilityContentfulComponentDefinition,
     },
+    // '03: Content Building Blocks' components, in palette display order.
+    {
+      component: Heading,
+      definition: HeadingContentfulComponentDefinition,
+    },
+    {
+      component: Paragraph,
+      definition: ParagraphContentfulComponentDefinition,
+    },
+    {
+      component: CustomText,
+      definition: CustomTextContentfulComponentDefinition,
+    },
+    {
+      component: RichText,
+      definition: RichTextContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+      },
+    },
+    {
+      component: Button,
+      definition: ButtonLegacyContentfulComponentDefinition,
+    },
+    {
+      component: Link,
+      definition: BrandLinkContentfulComponentDefinition,
+    },
     {
       component: Badge,
       definition: BadgeContentfulComponentDefinition,
     },
     {
-      component: Button,
-      definition: ButtonLegacyContentfulComponentDefinition,
+      component: Icon,
+      definition: IconContentfulComponentDefinition,
+    },
+    {
+      component: SimpleList,
+      definition: SimpleListContentfulComponentDefinition,
+    },
+    {
+      component: Image,
+      definition: ImageCorporateSiteContentfulComponentDefinition,
+    },
+    {
+      component: Video,
+      definition: VideoContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+      },
     },
     {
       component: ActionBlockCollection,
@@ -296,19 +339,11 @@ const contentfulRegistration = {
       },
     },
     {
-      component: Heading,
-      definition: HeadingContentfulComponentDefinition,
-    },
-    {
       component: HeroBanner,
       definition: HeroBannerContentfulComponentDefinition,
       options: {
         wrapContainerWidth: '100%',
       },
-    },
-    {
-      component: Icon,
-      definition: IconContentfulComponentDefinition,
     },
     {
       component: IconHighlight,
@@ -322,10 +357,6 @@ const contentfulRegistration = {
       },
     },
     {
-      component: Image,
-      definition: ImageCorporateSiteContentfulComponentDefinition,
-    },
-    {
       component: ImageCarousel,
       definition: ImageCarouselContentfulComponentDefinition,
     },
@@ -334,35 +365,16 @@ const contentfulRegistration = {
       definition: LabSnapshotContentfulComponentDefinition,
     },
     {
-      component: Link,
-      definition: BrandLinkContentfulComponentDefinition,
-    },
-    {
       component: LogoTransitionModal,
       definition: LogoTransitionModalContentfulComponentDefinition,
     },
     {component: Overline, definition: OverlineContentfulComponentDefinition},
-    {
-      component: Paragraph,
-      definition: ParagraphContentfulComponentDefinition,
-    },
-    {
-      component: RichText,
-      definition: RichTextContentfulComponentDefinition,
-      options: {
-        wrapContainerWidth: '100%',
-      },
-    },
     {
       component: Section,
       definition: SectionCorporateSiteContentfulComponentDefinition,
       options: {
         wrapContainerWidth: '100%',
       },
-    },
-    {
-      component: SimpleList,
-      definition: SimpleListContentfulComponentDefinition,
     },
     {
       component: SkinnyBanner,
@@ -378,10 +390,6 @@ const contentfulRegistration = {
     {
       component: CurriculumSnapshot,
       definition: CurriculumSnapshotContentfulComponentDefinition,
-    },
-    {
-      component: CustomText,
-      definition: CustomTextContentfulComponentDefinition,
     },
     {component: TabGroup, definition: TabGroupContentfulComponentDefinition},
     {
@@ -417,13 +425,6 @@ const contentfulRegistration = {
         enableEditorProperties: {
           isEditorMode: true,
         },
-      },
-    },
-    {
-      component: Video,
-      definition: VideoContentfulComponentDefinition,
-      options: {
-        wrapContainerWidth: '100%',
       },
     },
     {

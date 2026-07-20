@@ -10,6 +10,11 @@
   --swiper-pagination-bullet-horizontal-gap: 0.25rem;
 }
 
+// CodeAI rebrand; CSForAll/HOC keep the legacy teal.
+:root[data-brand='Code.org'] {
+  --swiper-pagination-color: var(--codeai-purple-primary);
+}
+
 // Carousel common styles
 .carouselWrapper {
   max-width: 100%;

@@ -48,11 +48,22 @@
 
     .testimonialQuoteIcon {
       color: var(--text-brand-teal-primary-fixed);
+
+      // CodeAI rebrand; mid purple keeps contrast on the dark background.
+      // CSForAll/HOC keep the legacy teal.
+      :root[data-brand='Code.org'] & {
+        color: var(--codeai-purple-mid);
+      }
     }
   }
 
   &-primary {
     background-color: var(--brand-teal-50);
+
+    // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
+    :root[data-brand='Code.org'] & {
+      background-color: var(--codeai-purple-primary);
+    }
   }
 }
 

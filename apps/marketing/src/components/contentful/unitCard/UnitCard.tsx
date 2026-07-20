@@ -5,7 +5,11 @@ import React from 'react';
 
 import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
 
-import Badge, {BadgeColor} from '@/components/contentful/badge/Badge';
+import Badge from '@/components/contentful/badge/Badge';
+import {
+  CardBadgeColor,
+  parseCardBadgeColor,
+} from '@/components/contentful/badge/constants';
 import Link from '@/components/contentful/link';
 import NextImage from '@/components/nextImage/NextImage';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
@@ -51,8 +55,9 @@ export interface UnitCardProps {
   link?: LinkEntry;
   /** Whether to render the topics row */
   showTopics?: boolean;
-  /** Badge color applied to every topic on the card */
-  topicBadgeColor?: BadgeColor;
+  /** Badge color applied to every topic on the card. Light variants render
+   *  Badge's light appearance (light background, dark text). */
+  topicBadgeColor?: CardBadgeColor;
   /** Unit title color */
   titleColor?: UnitTitleColor;
   /** Grow to the surrounding container's width instead of the standard card width */
@@ -203,6 +208,8 @@ const UnitCard: React.FC<UnitCardProps> = ({
   const gradeBand = mergeGradeBands(gradeBands);
   const durationText = (duration ?? []).filter(Boolean).join(', ');
   const visibleTopics = showTopics ? (topics ?? []).filter(Boolean) : [];
+  const {color: badgeFamily, isLight: badgeIsLight} =
+    parseCardBadgeColor(topicBadgeColor);
   const linkFields = link?.fields;
 
   return (
@@ -220,10 +227,11 @@ const UnitCard: React.FC<UnitCardProps> = ({
                 key={topic}
                 text={topic}
                 size="small"
-                color={topicBadgeColor}
+                color={badgeFamily}
                 // The card interior is always white, so Badge's section-tone
-                // auto-detection would pick the wrong variant on dark sections.
-                appearance="dark"
+                // auto-detection would pick the wrong variant on dark
+                // sections. Light picks force the light variant.
+                appearance={badgeIsLight ? 'light' : 'dark'}
               />
             ))}
           </TopicsRow>

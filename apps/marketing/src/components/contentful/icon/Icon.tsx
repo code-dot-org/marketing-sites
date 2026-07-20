@@ -49,13 +49,14 @@ const Icon: React.FC<IconProps> = ({
 }) => {
   const marginBottom = removeMarginBottom ? undefined : MARGIN_BOTTOM;
   const enclosingBackground = useSectionBackground();
-  // Contrast switch fires only when the icon sits "naked" on the Section
-  // background. With a fill or outline, the icon's local background is
-  // author-controlled and the chosen glyph color passes through.
+  // Contrast switch is skipped only for 'filled': there the glyph sits on the
+  // author-controlled fill, so the chosen color passes through. 'none' and
+  // 'outline' both show the Section background behind the glyph (an outline
+  // is just a ring), so the glyph color must adapt to it.
   const glyphColor =
-    backgroundFill === 'none'
-      ? resolvedCssVarForBrandColor(color, enclosingBackground)
-      : cssVarForBrandColor(color);
+    backgroundFill === 'filled'
+      ? cssVarForBrandColor(color)
+      : resolvedCssVarForBrandColor(color, enclosingBackground);
 
   const iconFamily = fontAwesomeV6BrandIconsMap.has(iconName)
     ? 'brands'

@@ -4,6 +4,7 @@ import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 // Imported from the server-safe constants module (not the contentCard
 // barrel) — this file evaluates in the RSC layer, where values re-exported
 // through the 'use client' component would arrive as reference proxies.
+import {CARD_BADGE_COLOR_OPTIONS} from '@/components/contentful/badge/constants';
 import {
   CONTENT_CARD_COLORS,
   CONTENT_CARD_STYLES,
@@ -135,7 +136,7 @@ export const CardCarouselContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'purple',
       group: 'style',
       validations: {
-        in: CONTENT_CARD_COLORS.map(opt),
+        in: CARD_BADGE_COLOR_OPTIONS,
       },
     },
     titleColor: {

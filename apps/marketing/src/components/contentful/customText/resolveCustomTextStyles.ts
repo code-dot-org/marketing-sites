@@ -80,10 +80,10 @@ export const CUSTOM_TEXT_TYPE_DEFAULTS: Record<
   overline: {
     tag: 'span',
     track: 'text',
-    size: 'md',
+    size: 'sm',
     weight: 'semibold',
-    color: 'black',
-    textTransform: 'capitalize',
+    color: 'gray6',
+    textTransform: 'uppercase',
   },
   statistic: {
     tag: 'span',

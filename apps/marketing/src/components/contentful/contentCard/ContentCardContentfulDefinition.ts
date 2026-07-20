@@ -1,6 +1,8 @@
 // Creates a definition for the Content Card component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {CARD_BADGE_COLOR_OPTIONS} from '@/components/contentful/badge/constants';
+
 export const ContentCardContentfulComponentDefinition: ComponentDefinition = {
   id: 'contentCard',
   name: 'Content Card',
@@ -74,14 +76,7 @@ export const ContentCardContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'purple',
       group: 'style',
       validations: {
-        in: [
-          {value: 'black', displayName: 'Black'},
-          {value: 'purple', displayName: 'Purple'},
-          {value: 'blue', displayName: 'Blue'},
-          {value: 'green', displayName: 'Green'},
-          {value: 'orange', displayName: 'Orange'},
-          {value: 'pink', displayName: 'Pink'},
-        ],
+        in: CARD_BADGE_COLOR_OPTIONS,
       },
     },
     titleColor: {

@@ -28,8 +28,9 @@ export type CustomTextProps = Partial<RemoveMarginBottomProps> & {
   type?: CustomTextType;
   /** Semantic element override. 'default' inherits the type's tag. */
   htmlTag?: CustomTextTag | Sentinel;
-  /** Text color token. Contrast-switches vs. the Section background. */
-  color?: BrandColor;
+  /** Text color token. 'default' inherits the type's color (e.g. Overline →
+   *  Gray 6). Contrast-switches vs. the Section background. */
+  color?: BrandColor | Sentinel;
   /** Theme size step on the resolved track. 'default' inherits. */
   textSize?: SizeToken | Sentinel;
   /** Numeric font-size override in rem. Wins over the resolved size cell. */

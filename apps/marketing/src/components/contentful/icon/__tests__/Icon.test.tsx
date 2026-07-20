@@ -174,7 +174,7 @@ describe('Icon component', () => {
     expect(icon).toHaveStyle({color: cssVarForBrandColor('purplePrimary')});
   });
 
-  it('skips the contrast switch when backgroundFill is "outline"', () => {
+  it('routes the glyph color through the contrast switch when backgroundFill is "outline"', () => {
     render(
       <SectionBackgroundProvider value="purplePrimary">
         <Icon
@@ -185,6 +185,8 @@ describe('Icon component', () => {
       </SectionBackgroundProvider>,
     );
     const icon = screen.getByTestId('font-awesome-v6-icon');
-    expect(icon).toHaveStyle({color: cssVarForBrandColor('purplePrimary')});
+    // An outline is just a ring — the Section background still shows behind
+    // the glyph, so purplePrimary on purplePrimary flips to white.
+    expect(icon).toHaveStyle({color: cssVarForBrandColor('white')});
   });
 });

@@ -134,6 +134,11 @@ $playButtonIconSize: 64px;
   .playButton {
     font-size: 2rem;
     color: var(--brand-purple-50);
+
+    // CodeAI rebrand; CSForAll/HOC keep the legacy purple.
+    :root[data-brand='Code.org'] & {
+      color: var(--codeai-purple-primary);
+    }
     // Since the play button is the same in RTL, use margin-left
     // instead of margin-inline-start which changes based on direction.
     // This keeps the play button visually centered.

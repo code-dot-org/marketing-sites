@@ -47,6 +47,11 @@
   &-brand {
     .simpleListItemIcon {
       color: var(--text-brand-teal-primary);
+
+      // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
+      :root[data-brand='Code.org'] & {
+        color: var(--codeai-purple-primary);
+      }
     }
   }
 }

@@ -10,8 +10,10 @@ import 'swiper/css';
 
 import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
 
-import {BadgeColor} from '@/components/contentful/badge/Badge';
+import {backgroundToneFor} from '@/components/common/colors';
+import {CardBadgeColor} from '@/components/contentful/badge/constants';
 import Link from '@/components/contentful/link';
+import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 import UnitCard, {
   UnitTitleColor,
   unitTitleColorCss,
@@ -62,7 +64,7 @@ export interface UnitCarouselProps {
   /** Whether to render the topics row on every card */
   showTopics?: boolean;
   /** Badge color applied to every topic on every card */
-  topicBadgeColor?: BadgeColor;
+  topicBadgeColor?: CardBadgeColor;
   /** Overrides every card's Link entry label; empty uses the entry label */
   linkTextOverride?: string;
   /** Title color applied to every card's unit title */
@@ -104,23 +106,32 @@ const TitleRow = styled('div')({
 });
 
 const Title = styled('h2', {
-  shouldForwardProp: prop => prop !== 'headingColor',
-})<{headingColor: UnitTitleColor}>(({headingColor}) => ({
-  fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
-  fontSize: '1.5rem',
-  lineHeight: '2rem',
-  fontWeight: 600,
-  color: unitTitleColorCss(headingColor),
-  margin: 0,
-}));
+  shouldForwardProp: prop => prop !== 'headingColor' && prop !== 'light',
+})<{headingColor: UnitTitleColor; light?: boolean}>(
+  ({headingColor, light}) => ({
+    fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
+    fontSize: '1.5rem',
+    lineHeight: '2rem',
+    fontWeight: 600,
+    // Black contrast-switches to white on dark Sections; explicit family
+    // picks pass through (same rule as the cards' titles).
+    color:
+      light && headingColor === 'black'
+        ? '#ffffff'
+        : unitTitleColorCss(headingColor),
+    margin: 0,
+  }),
+);
 
-const Subtitle = styled('p')({
+const Subtitle = styled('p', {
+  shouldForwardProp: prop => prop !== 'light',
+})<{light?: boolean}>(({light}) => ({
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
   fontSize: '0.875rem',
   lineHeight: '1.25rem',
-  color: 'var(--codeai-gray-6, #5f6872)',
+  color: light ? '#ffffff' : 'var(--codeai-gray-6, #5f6872)',
   margin: '4px 0 0',
-});
+}));
 
 // Nav buttons mirror the Card Carousel's exactly; here they are fixed to the
 // header's top-right slot (no position option).
@@ -198,6 +209,15 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
   className,
 }) => {
   const carouselId = `id-${useId().replaceAll(':', '')}`;
+
+  // Header text (title, details link, subtitle) sits directly on the Section
+  // background — the cards are white surfaces and stay fixed. The Course
+  // Catalog renders outside the custom Section, so the context is empty
+  // there and this never flips.
+  const enclosingBackground = useSectionBackground();
+  const onDarkSection =
+    enclosingBackground !== 'transparent' &&
+    backgroundToneFor(enclosingBackground) === 'dark';
 
   // Fade the trailing edge only while more cards remain to scroll to.
   // Driven by progress (fires on every translate change, including drags
@@ -279,13 +299,17 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
       <Header>
         <div>
           <TitleRow>
-            {title && <Title headingColor={headingColor}>{title}</Title>}
+            {title && (
+              <Title headingColor={headingColor} light={onDarkSection}>
+                {title}
+              </Title>
+            )}
             {linkFields && (
               <Link
                 href={linkFields.primaryTarget}
                 isLinkExternal={!!linkFields.isThisAnExternalLink}
                 ariaLabel={linkFields.ariaLabel || undefined}
-                color="black"
+                color={onDarkSection ? 'white' : 'black'}
                 size="s"
                 icon="arrow-right"
                 removeMarginBottom
@@ -294,7 +318,7 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
               </Link>
             )}
           </TitleRow>
-          {subtitle && <Subtitle>{subtitle}</Subtitle>}
+          {subtitle && <Subtitle light={onDarkSection}>{subtitle}</Subtitle>}
         </div>
         <NavButtons>
           <NavButton id={`${carouselId}-prev`} aria-label="Previous units">

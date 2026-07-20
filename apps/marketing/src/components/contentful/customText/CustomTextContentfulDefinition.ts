@@ -8,7 +8,7 @@
 
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
-import {brandTextColorOptions} from '@/components/common/colors';
+import {brandTextColorOptionsWithTypeDefault} from '@/components/common/colors';
 import {removeMarginBottomDefinition} from '@/components/common/definitions';
 
 export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
@@ -51,10 +51,13 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
     color: {
       displayName: 'Text color',
       type: 'Text',
-      defaultValue: 'black',
+      // The 'default' sentinel defers to the type's color (e.g. Overline →
+      // Gray 6). A concrete defaultValue here would silently override every
+      // type default.
+      defaultValue: 'default',
       group: 'style',
       validations: {
-        in: brandTextColorOptions('black'),
+        in: brandTextColorOptionsWithTypeDefault(),
       },
     },
     font: {
