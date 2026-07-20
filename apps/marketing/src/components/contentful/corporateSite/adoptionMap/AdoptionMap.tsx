@@ -18,12 +18,10 @@ import {getMapboxAccessToken} from '@/config/mapbox';
 
 import AdoptionMapInfo from './AdoptionMapInfo';
 import AdoptionMapPoint, {
-  MAP_POINT_NO_DATA_COLOR,
-  MAP_POINT_HAS_CS_COLOR,
-  MAP_POINT_NO_CS_COLOR,
   MAP_POINT_STROKE_COLOR,
   MAP_POINT_STROKE_WIDTH,
   MAP_POINT_TYPES,
+  useMapPointColors,
 } from './AdoptionMapPoint';
 import type {School} from './types';
 import './adoptionMap.scss';
@@ -55,6 +53,7 @@ const AdoptionMap: React.FC<AdoptionMapMapProps> = ({
 }) => {
   const mapRef = useRef<MapRef>(null);
   const searchParams = useSearchParams();
+  const pointColors = useMapPointColors();
 
   const tilesetUrlParam = searchParams?.get('tileset');
   const mapTileset = tilesetUrlParam ?? MAP_TILESET_ID;
@@ -238,8 +237,8 @@ const AdoptionMap: React.FC<AdoptionMapMapProps> = ({
                 'match',
                 ['get', 'teaches_cs'],
                 ['NO', 'N', 'HISTORICAL_NO', 'HN'],
-                MAP_POINT_NO_CS_COLOR,
-                MAP_POINT_NO_DATA_COLOR,
+                pointColors[MAP_POINT_TYPES.NO_CS],
+                pointColors[MAP_POINT_TYPES.NO_DATA],
               ],
               'circle-stroke-width': MAP_POINT_STROKE_WIDTH,
               'circle-stroke-color': MAP_POINT_STROKE_COLOR,
@@ -265,8 +264,8 @@ const AdoptionMap: React.FC<AdoptionMapMapProps> = ({
                 'match',
                 ['get', 'teaches_cs'],
                 ['YES', 'Y', 'HISTORICAL_YES', 'HY'],
-                MAP_POINT_HAS_CS_COLOR,
-                MAP_POINT_NO_DATA_COLOR,
+                pointColors[MAP_POINT_TYPES.HAS_CS],
+                pointColors[MAP_POINT_TYPES.NO_DATA],
               ],
               'circle-stroke-width': MAP_POINT_STROKE_WIDTH,
               'circle-stroke-color': MAP_POINT_STROKE_COLOR,

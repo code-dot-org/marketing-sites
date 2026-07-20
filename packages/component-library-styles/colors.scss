@@ -266,3 +266,10 @@
 [data-bg-tone='mid'] {
   color: var(--neutral-base-true-black);
 }
+
+/* CodeAI brand-scoped color tokens, Code.org only (see radii.scss for the
+ * pattern). Shared styles reference these with their legacy values as
+ * fallbacks, so CSForAll and HOC stay unchanged. */
+[data-brand='Code.org'] {
+  --focus-ring-color: var(--codeai-purple-primary);
+}

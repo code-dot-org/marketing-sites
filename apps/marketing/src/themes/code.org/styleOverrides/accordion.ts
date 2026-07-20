@@ -20,7 +20,7 @@ export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
         marginBottom: 0,
       },
       '&:has(.Mui-focusVisible)': {
-        outline: '2px solid var(--borders-brand-teal-primary)',
+        outline: '2px solid var(--codeai-purple-primary)',
         outlineOffset: '2px',
         borderRadius: codeaiRadius('md', '6px'),
       },

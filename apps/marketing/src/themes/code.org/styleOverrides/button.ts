@@ -32,7 +32,7 @@ export const BUTTON_OVERRIDES: Components<Theme>['MuiButton'] = {
           marginLeft: 0,
         },
         '&:focus-visible': {
-          outline: '2px solid var(--borders-brand-teal-primary)',
+          outline: '2px solid var(--codeai-purple-primary)',
           outlineOffset: '2px',
         },
         '&.MuiButton-contained': {
