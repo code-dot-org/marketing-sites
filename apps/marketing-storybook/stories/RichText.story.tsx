@@ -96,6 +96,57 @@ const richTextDoc = (text: string) => ({
       data: {},
       content: [{nodeType: 'text', value: text, marks: [], data: {}}],
     },
+    // Lists regressed separately from paragraphs: item text resolves through
+    // Paragraph, but the ::marker color comes from the MuiListItem theme
+    // override — both must flip with the section tone.
+    {
+      nodeType: BLOCKS.UL_LIST,
+      data: {},
+      content: [
+        {
+          nodeType: BLOCKS.LIST_ITEM,
+          data: {},
+          content: [
+            {
+              nodeType: BLOCKS.PARAGRAPH,
+              data: {},
+              content: [
+                {
+                  nodeType: 'text',
+                  value: 'Bullet item — text and marker must match the tone.',
+                  marks: [],
+                  data: {},
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      nodeType: BLOCKS.OL_LIST,
+      data: {},
+      content: [
+        {
+          nodeType: BLOCKS.LIST_ITEM,
+          data: {},
+          content: [
+            {
+              nodeType: BLOCKS.PARAGRAPH,
+              data: {},
+              content: [
+                {
+                  nodeType: 'text',
+                  value: 'Numbered item — text and marker must match the tone.',
+                  marks: [],
+                  data: {},
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 });
 

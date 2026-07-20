@@ -157,7 +157,10 @@ const richTextRenderOptions: Options = {
         >
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <MuiListItem key={index}>
-              <Paragraph removeMarginBottom>
+              {/* color="primary" matches BLOCKS.PARAGRAPH: theme-aware, so
+                  legacy data-theme='Dark' Sections flip it to white. The
+                  default ('black') is a fixed black that ignores that cascade. */}
+              <Paragraph removeMarginBottom color="primary">
                 {extractNodeContent(itemNode)}
               </Paragraph>
             </MuiListItem>
@@ -174,7 +177,11 @@ const richTextRenderOptions: Options = {
         >
           {listNode.content.map((itemNode: RichTextNode, index) => (
             <MuiListItem key={index} sx={{display: 'list-item'}}>
-              <Paragraph removeMarginBottom sx={richTextParagraphStyles}>
+              <Paragraph
+                removeMarginBottom
+                color="primary"
+                sx={richTextParagraphStyles}
+              >
                 {extractNodeContent(itemNode)}
               </Paragraph>
             </MuiListItem>

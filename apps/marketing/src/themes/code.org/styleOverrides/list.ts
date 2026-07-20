@@ -35,6 +35,17 @@ export const LIST_ITEM_OVERRIDES: Components<Theme>['MuiListItem'] = {
         color: 'var(--text-neutral-primary)',
         fontFamily: GEIST_FONT,
       },
+
+      // Mirror the CodeAI contrast switch (colors.scss [data-bg-tone]): on
+      // brand dark Sections inherited text flips to white, but the explicit
+      // colors above (and the ::marker reading them) would stay dark.
+      '[data-bg-tone="dark"] &': {
+        color: 'var(--neutral-base-white)',
+
+        '&::marker': {
+          color: 'var(--neutral-base-white)',
+        },
+      },
     }),
   },
 };
