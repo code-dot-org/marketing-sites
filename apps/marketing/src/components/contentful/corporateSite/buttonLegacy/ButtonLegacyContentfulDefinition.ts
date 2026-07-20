@@ -109,7 +109,7 @@ export const ButtonLegacyContentfulComponentDefinition: ComponentDefinition = {
     isIconOnly: {
       displayName: 'Icon Only',
       description:
-        'When enabled, renders a square button with only the Left Icon Name as the glyph. Text is hidden. Aria Label is required for accessibility.',
+        'When enabled, renders a square button with only the Left Icon Name as the glyph. Text is hidden. Aria Label is required for accessibility. Until a Left Icon Name is set, the regular text button renders.',
       type: 'Boolean',
       defaultValue: false,
       group: 'style',

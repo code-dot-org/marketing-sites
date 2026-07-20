@@ -1,4 +1,5 @@
 // This Button component is used specifically on Code.org
+import Typography from '@mui/material/Typography';
 import {EntryFields} from 'contentful';
 import React, {useMemo} from 'react';
 
@@ -80,8 +81,33 @@ const Button: React.FunctionComponent<ButtonProps> = ({
     ariaLabel,
   } as const;
 
-  if (isIconOnly) {
-    return <LinkButton {...sharedProps} isIconOnly icon={authorIconLeft} />;
+  // "Icon only" needs a glyph — GenericButton throws without one, which
+  // crashes the experience builder. Until the author fills in Left Icon
+  // Name, fall back to the regular text button below.
+  if (isIconOnly && authorIconLeft) {
+    return (
+      <LinkButton
+        {...sharedProps}
+        isIconOnly
+        icon={authorIconLeft}
+        // Icon-only buttons have no visible text, so the hidden text is the
+        // fallback accessible name (same pattern as Badge).
+        ariaLabel={ariaLabel || text}
+      />
+    );
+  }
+
+  // GenericButton also throws when text is missing on a regular button —
+  // show the editor placeholder instead (same pattern as Image/RichText).
+  if (!text) {
+    return (
+      <Typography variant="body3" sx={{color: 'var(--text-neutral-primary)'}}>
+        <em>
+          <strong>🔘 Button placeholder.</strong> Add button "Text", or set a
+          "Left Icon Name" to use "Icon Only".
+        </em>
+      </Typography>
+    );
   }
 
   return (
