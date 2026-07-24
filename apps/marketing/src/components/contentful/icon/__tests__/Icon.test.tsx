@@ -70,7 +70,7 @@ describe('Icon component', () => {
     expect(container.querySelector('.MuiBox-root')).not.toBeInTheDocument();
   });
 
-  it('renders a filled circle wrapper with the default Gray 1 background', () => {
+  it('renders a filled rounded-square wrapper with the default Gray 1 background', () => {
     const {container} = render(
       <Icon iconName="lightbulb" backgroundFill="filled" />,
     );
@@ -79,21 +79,9 @@ describe('Icon component', () => {
     expect(wrapper).toHaveStyle({
       width: `${24 * 1.75}px`,
       height: `${24 * 1.75}px`,
-      borderRadius: '50%',
+      borderRadius: 'var(--codeai-radius-md, 0.625rem)',
       backgroundColor: cssVarForBrandColor('gray1'),
     });
-  });
-
-  it('renders a filled rounded-square wrapper', () => {
-    const {container} = render(
-      <Icon
-        iconName="lightbulb"
-        backgroundFill="filled"
-        backgroundShape="square"
-      />,
-    );
-    const wrapper = container.querySelector('.MuiBox-root') as HTMLElement;
-    expect(wrapper).toHaveStyle({borderRadius: '25%'});
   });
 
   it('applies a brand backgroundColor when filled', () => {
