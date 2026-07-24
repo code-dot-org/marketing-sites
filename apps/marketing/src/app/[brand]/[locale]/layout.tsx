@@ -3,6 +3,12 @@ import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
 import {GoogleAnalytics} from '@next/third-parties/google';
 import {draftMode} from 'next/headers';
 
+import {
+  FONT_AWESOME_ORIGIN,
+  FONT_AWESOME_STYLESHEETS,
+} from '@code-dot-org/fonts';
+
+import Bootstrap from '@/bootstrap';
 import {LogoTransitionProvider} from '@/components/contentful/logoTransitionModal/logoTransitionState';
 import {getFooter} from '@/components/footer/Footer';
 import {getHeader} from '@/components/header/Header';
@@ -45,6 +51,18 @@ export default async function Layout({
       data-brand={brand}
     >
       <body>
+        {/* Fonts are served cross-origin; CSS uses one connection, font files
+            a CORS one, so preconnect both. React hoists these into <head>. */}
+        <link rel="preconnect" href={FONT_AWESOME_ORIGIN} />
+        <link
+          rel="preconnect"
+          href={FONT_AWESOME_ORIGIN}
+          crossOrigin="anonymous"
+        />
+        {FONT_AWESOME_STYLESHEETS.map(href => (
+          <link key={href} rel="stylesheet" href={href} precedence="default" />
+        ))}
+        <Bootstrap locale={locale} />
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <EnvironmentLoader brand={brand} />

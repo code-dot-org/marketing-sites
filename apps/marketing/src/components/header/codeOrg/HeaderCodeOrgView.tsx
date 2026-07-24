@@ -18,7 +18,16 @@ import {HAMBURGER_BREAKPOINT, HEADER_HEIGHT} from './config';
 import MobileMenu from './MobileMenu';
 import SubmenuPanel from './SubmenuPanel';
 import {HeaderContent, HeaderMenuItem, HeaderSubmenu} from './types';
+import {useAutoCollapse} from './useAutoCollapse';
 import {getExternalLinkProps} from './utils';
+
+/*
+ * Menu collapse is content-aware: useAutoCollapse measures two invisible
+ * ghost rows and stamps `data-collapse="none|secondary|all"` on the header.
+ * The media queries on the styled components below (1000px hamburger
+ * breakpoint, md) are only the SSR/no-JS baseline; once the attribute is
+ * present, its rules win.
+ */
 
 export interface HeaderCodeOrgViewProps {
   content: HeaderContent;
@@ -37,7 +46,7 @@ const Bar = styled('div')({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: 16,
-  paddingInline: '8px 12px',
+  paddingInline: '14px',
   backgroundColor: CODEAI_PURPLE_PRIMARY,
 });
 
@@ -48,43 +57,68 @@ const LeftGroup = styled('div')({
   minWidth: 0,
 });
 
+// No start padding: the Bar's 14px inline padding alone sets the logo's
+// distance from the viewport edge, mirroring studio.code.org.
 const LogoLink = styled('a')({
   display: 'flex',
   alignItems: 'center',
-  paddingInline: 12,
+  paddingInlineEnd: 12,
   flexShrink: 0,
 });
 
-// The desktop menus collapse into the hamburger below the tablet breakpoint.
-const DesktopNav = styled('nav')(({theme}) => ({
+const NavRow = styled('nav')({
   display: 'flex',
   alignItems: 'center',
+  gap: 8,
+});
+
+// The main menu is the second stage to collapse into the hamburger.
+const DesktopNav = styled(NavRow)(({theme}) => ({
   [theme.breakpoints.down('md')]: {
+    display: 'none',
+  },
+  '[data-collapse] &': {
+    display: 'flex',
+  },
+  '[data-collapse="all"] &': {
     display: 'none',
   },
 }));
 
+// Button box: 20px line box + 6px block padding = 32px tall (the hover/fill
+// box). Even height on purpose — it centers in the even 50px bar at integer
+// y=9, so edges stay on the pixel grid (an odd height lands on y=x.5 and
+// anti-aliases into slivers).
 const tabStyles = {
   color: 'white',
   fontSize: '0.875rem',
   fontWeight: 600,
-  lineHeight: 1.5,
+  lineHeight: '20px',
   textTransform: 'none',
   whiteSpace: 'nowrap',
   minWidth: 0,
-  paddingBlock: '5px',
+  boxSizing: 'border-box',
+  height: '32px',
+  paddingBlock: '6px',
   paddingInline: '12px',
   borderRadius: codeaiRadius('sm', '6px'),
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
+  // Default focus indicators are invisible on the purple bar.
+  '&:focus-visible': {
+    outline: '2px solid white',
+    outlineOffset: '2px',
+  },
 } as const;
 
+// Casts restore the polymorphic `component` prop that styled() drops from
+// MUI's typings; the ghosts render these as inert spans.
 const Tab = styled(Button)(({theme}) => ({
   ...tabStyles,
   gap: theme.spacing(0.75),
   paddingInline: '10px',
-}));
+})) as typeof Button;
 
 const Caret = styled(Icon)({
   fontSize: '0.875rem',
@@ -99,32 +133,82 @@ const RightGroup = styled('nav')({
   gap: 8,
 });
 
-// The secondary menu is the first to collapse into the hamburger; the main
-// menu follows at the md breakpoint.
-const SecondaryButton = styled(Button)(({theme}) => ({
-  ...tabStyles,
+const SecondaryButtonBase = styled(Button)(tabStyles) as typeof Button;
+
+// The secondary menu is the first stage to collapse into the hamburger.
+const SecondaryButton = styled(SecondaryButtonBase)(({theme}) => ({
   [theme.breakpoints.down(HAMBURGER_BREAKPOINT)]: {
     display: 'none',
   },
-}));
-
-// Narrower end padding: the caret's fixed icon slot already carries space.
-const SignInButton = styled(Button)({
-  ...tabStyles,
-  gap: 6,
-  paddingInline: '12px 6px',
-  backgroundColor: '#121212',
-  '&:hover': {
-    backgroundColor: '#3a3a3a',
+  '[data-collapse="none"] &': {
+    display: 'inline-flex',
   },
-});
-
-const HamburgerButton = styled(IconButton)(({theme}) => ({
-  color: 'white',
-  [theme.breakpoints.up(HAMBURGER_BREAKPOINT)]: {
+  '[data-collapse="secondary"] &, [data-collapse="all"] &': {
     display: 'none',
   },
 }));
+
+// Follows the studio.code.org sign-in button construction (border + block
+// padding + 20px line box) at our 32px height: 1px + 5px + 20px + 5px + 1px.
+const SignInButton = styled(Button)({
+  ...tabStyles,
+  gap: 6,
+  border: '1px solid white',
+  paddingBlock: '5px',
+  color: '#121212',
+  backgroundColor: 'white',
+  '&:hover': {
+    backgroundColor: '#e6e6e6',
+  },
+}) as typeof Button;
+
+// Hugs the glyph so the 6px gap and the button's own 12px end padding set the
+// spacing; the nav Tabs' caret keeps its fixed slot for dropdown alignment.
+const SignInCaret = styled(Caret)({
+  width: 'auto',
+});
+
+const HamburgerButtonBase = styled(IconButton)({
+  color: 'white',
+  '&:focus-visible': {
+    outline: '2px solid white',
+    outlineOffset: '2px',
+  },
+}) as typeof IconButton;
+
+const HamburgerButton = styled(HamburgerButtonBase)(({theme}) => ({
+  [theme.breakpoints.up(HAMBURGER_BREAKPOINT)]: {
+    display: 'none',
+  },
+  '[data-collapse="none"] &': {
+    display: 'none',
+  },
+  '[data-collapse="secondary"] &, [data-collapse="all"] &': {
+    display: 'inline-flex',
+  },
+}));
+
+// Clips the ghost rows: at natural width they're wider than narrow
+// viewports and would otherwise extend the document's scrollable overflow
+// (globals.css hides overflow-x today, but the header shouldn't depend on
+// that). visibility:hidden keeps the ghosts out of paint, hit-testing,
+// focus order, and the accessibility tree.
+const GhostClip = styled('div')({
+  position: 'absolute',
+  inset: 0,
+  overflow: 'hidden',
+  visibility: 'hidden',
+  pointerEvents: 'none',
+});
+
+// Invisible measuring row for useAutoCollapse: same composition and styles
+// as the real Bar, laid out at natural width.
+const GhostBar = styled(Bar)({
+  position: 'absolute',
+  insetBlockStart: 0,
+  insetInlineStart: 0,
+  width: 'max-content',
+});
 
 // Three bars that rotate into an X while the menu opens, like the
 // studio.code.org hamburger.
@@ -163,8 +247,24 @@ const hasSubmenu = (
 
 const panelId = (index: number) => `header-submenu-${index}`;
 
+// alt is set literally at each <img> — jsx-a11y/alt-text can't see into a
+// spread and fails the production build otherwise.
+const logoImgProps = {
+  src: logoImage.src,
+  width: 130,
+  height: 22,
+  // Sized to match the studio.code.org logo exactly; the SVG's viewBox
+  // shares the same 591.15/100 ratio.
+  style: {
+    height: '22px',
+    width: 'auto',
+    aspectRatio: '591.15 / 100',
+  },
+} as const;
+
 const HeaderCodeOrgView = ({content}: HeaderCodeOrgViewProps) => {
   const {active} = useLogoTransition();
+  const {collapse, barRef, ghostFullRef, ghostCompactRef} = useAutoCollapse();
   // Items are tracked by index, not label: authors can link the same
   // siteHeaderItem entry under multiple tabs.
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -200,21 +300,59 @@ const HeaderCodeOrgView = ({content}: HeaderCodeOrgViewProps) => {
     }
   };
 
+  const signInLabel = isSignedIn ? 'Go to Dashboard' : 'Sign in';
+  const signInHref = getStudioUrl(isSignedIn ? '/home' : '/users/sign_in');
+
+  // Ghost copies for useAutoCollapse: presentational only (spans, no hrefs,
+  // no handlers). The same element arrays render in both ghost rows.
+  const ghostTabs = content.mainMenu.map((item, index) => (
+    <Tab key={`${item.label}-${index}`} component="span" disableRipple>
+      {item.label}
+      {hasSubmenu(item) && (
+        <Caret baseClassName="fa-solid" className="fa-angle-down" />
+      )}
+    </Tab>
+  ));
+  const ghostSecondary = content.secondaryMenu.map((item, index) => (
+    <SecondaryButtonBase
+      key={`${item.label}-${index}`}
+      component="span"
+      disableRipple
+    >
+      {item.label}
+    </SecondaryButtonBase>
+  ));
+  const ghostSignIn = (
+    <SignInButton component="span" disableRipple>
+      {signInLabel}
+      <SignInCaret baseClassName="fa-solid" className="fa-angle-right" />
+    </SignInButton>
+  );
+  const ghostLogo = (
+    <LogoLink as="span">
+      <img {...logoImgProps} alt="" />
+    </LogoLink>
+  );
+
   return (
     <ClickAwayListener onClickAway={closeAll}>
-      <HeaderRoot onKeyDown={handleKeyDown}>
-        <Bar>
+      <HeaderRoot
+        onKeyDown={handleKeyDown}
+        data-collapse={collapse ?? undefined}
+      >
+        <Bar ref={barRef}>
           <LeftGroup>
             <LogoLink href="/" aria-label="CodeAI home">
               {/* The logo transition overlay FLIPs onto this img and expects
                   it hidden while the transition is active. */}
               <img
-                src={logoImage.src}
+                {...logoImgProps}
                 alt=""
-                width={148}
-                height={25}
                 data-logo-transition-target
-                style={{opacity: active ? 0 : undefined}}
+                style={{
+                  ...logoImgProps.style,
+                  opacity: active ? 0 : undefined,
+                }}
               />
             </LogoLink>
             <DesktopNav aria-label="Main">
@@ -269,12 +407,12 @@ const HeaderCodeOrgView = ({content}: HeaderCodeOrgViewProps) => {
                 {item.label}
               </SecondaryButton>
             ))}
-            <SignInButton
-              href={getStudioUrl(isSignedIn ? '/home' : '/users/sign_in')}
-              disableRipple
-            >
-              {isSignedIn ? 'Go to Dashboard' : 'Sign in'}
-              <Caret baseClassName="fa-solid" className="fa-angle-right" />
+            <SignInButton href={signInHref} disableRipple>
+              {signInLabel}
+              <SignInCaret
+                baseClassName="fa-solid"
+                className="fa-angle-right"
+              />
             </SignInButton>
             <HamburgerButton
               ref={hamburgerRef}
@@ -291,6 +429,38 @@ const HeaderCodeOrgView = ({content}: HeaderCodeOrgViewProps) => {
             </HamburgerButton>
           </RightGroup>
         </Bar>
+
+        {/* Measuring rows: "full" is the bar with everything visible;
+            "compact" is the secondary-collapsed stage (hamburger instead of
+            the secondary menu). See useAutoCollapse. */}
+        <GhostClip aria-hidden="true">
+          <GhostBar ref={ghostFullRef}>
+            <LeftGroup>
+              {ghostLogo}
+              <NavRow as="div">{ghostTabs}</NavRow>
+            </LeftGroup>
+            <RightGroup as="div">
+              {ghostSecondary}
+              {ghostSignIn}
+            </RightGroup>
+          </GhostBar>
+          <GhostBar ref={ghostCompactRef}>
+            <LeftGroup>
+              {ghostLogo}
+              <NavRow as="div">{ghostTabs}</NavRow>
+            </LeftGroup>
+            <RightGroup as="div">
+              {ghostSignIn}
+              <HamburgerButtonBase component="span" disableRipple>
+                <HamburgerLines open={false}>
+                  <span />
+                  <span />
+                  <span />
+                </HamburgerLines>
+              </HamburgerButtonBase>
+            </RightGroup>
+          </GhostBar>
+        </GhostClip>
 
         {openItem && openIndex !== null && (
           <SubmenuPanel

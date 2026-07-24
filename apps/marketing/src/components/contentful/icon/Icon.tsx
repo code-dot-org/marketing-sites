@@ -14,7 +14,6 @@ import {RemoveMarginBottomProps} from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 
 export type IconBackgroundFill = 'none' | 'filled' | 'outline';
-export type IconBackgroundShape = 'circle' | 'square';
 
 // Bottom-margin rhythm shared with Heading/Paragraph. Toggleable off via the
 // Design-tab checkbox (removeMarginBottom).
@@ -24,24 +23,23 @@ export type IconProps = Partial<RemoveMarginBottomProps> & {
   iconName: string;
   color?: BrandColor;
   backgroundFill?: IconBackgroundFill;
-  backgroundShape?: IconBackgroundShape;
   backgroundColor?: BrandColor;
   iconSize?: number;
   className?: string;
 };
 
 // Shape outer dimension is 1.75 × the icon size — gives the icon comfortable
-// padding without dwarfing it. Constants are Icon-local on purpose; they're
-// shape geometry, not brand tokens.
+// padding without dwarfing it. Filled/outline backgrounds are always the
+// rounded square (the circle option was retired), cornered with the CodeAI
+// md radius token; fallback covers brands without the token scope.
 const SHAPE_RATIO = 1.75;
-const SQUARE_RADIUS = '25%';
+const SQUARE_RADIUS = 'var(--codeai-radius-md, 0.625rem)';
 const OUTLINE_WIDTH = 3;
 
 const Icon: React.FC<IconProps> = ({
   iconName,
   color = 'purplePrimary',
   backgroundFill = 'none',
-  backgroundShape = 'circle',
   backgroundColor = 'gray1',
   iconSize = 24,
   removeMarginBottom = false,
@@ -84,7 +82,6 @@ const Icon: React.FC<IconProps> = ({
 
   const outerSize = iconSize * SHAPE_RATIO;
   const bg = cssVarForBrandColor(backgroundColor);
-  const borderRadius = backgroundShape === 'circle' ? '50%' : SQUARE_RADIUS;
 
   return (
     <Box
@@ -96,7 +93,7 @@ const Icon: React.FC<IconProps> = ({
         marginBottom,
         width: `${outerSize}px`,
         height: `${outerSize}px`,
-        borderRadius,
+        borderRadius: SQUARE_RADIUS,
         backgroundColor: backgroundFill === 'filled' ? bg : 'transparent',
         border:
           backgroundFill === 'outline'

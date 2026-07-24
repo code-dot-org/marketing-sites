@@ -39,7 +39,10 @@ test.describe('Home Page', () => {
 
       await marketingPage.goto('/');
 
-      const studioButton = page.getByText('Go to Dashboard');
+      // Role query: the header renders aria-hidden ghost copies of the
+      // sign-in button for menu-collapse measurement, which a text query
+      // would also match.
+      const studioButton = page.getByRole('link', {name: 'Go to Dashboard'});
 
       await expect(studioButton).toBeVisible();
 

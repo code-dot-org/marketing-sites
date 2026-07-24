@@ -20,12 +20,20 @@ export interface MobileMenuProps {
 
 // Anchors the dropdown under the bar's end edge; the Collapse inside
 // animates the card downward on open, like the studio.code.org menu.
+// Media query is the SSR/no-JS baseline; the header's measured
+// `data-collapse` attribute takes over once present (see useAutoCollapse).
 const MenuPositioner = styled('div')(({theme}) => ({
   position: 'absolute',
   top: '100%',
   insetInlineEnd: theme.spacing(1),
   [theme.breakpoints.up(HAMBURGER_BREAKPOINT)]: {
     display: 'none',
+  },
+  '[data-collapse="none"] &': {
+    display: 'none',
+  },
+  '[data-collapse="secondary"] &, [data-collapse="all"] &': {
+    display: 'block',
   },
 }));
 
@@ -45,11 +53,17 @@ const MenuCard = styled('nav')(({theme}) => ({
     '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
 }));
 
-// Between the hamburger breakpoint and md, the main menu tabs are still in
-// the bar, so the dropdown carries only the secondary menu.
+// While only the secondary menu is collapsed, the main menu tabs are still
+// in the bar, so the dropdown carries only the secondary menu.
 const MainMenuSection = styled('div')(({theme}) => ({
   [theme.breakpoints.up('md')]: {
     display: 'none',
+  },
+  '[data-collapse="secondary"] &': {
+    display: 'none',
+  },
+  '[data-collapse="all"] &': {
+    display: 'block',
   },
 }));
 

@@ -69,18 +69,6 @@ export const IconContentfulComponentDefinition: ComponentDefinition = {
         ],
       },
     },
-    backgroundShape: {
-      displayName: 'Background shape',
-      type: 'Text',
-      group: 'style',
-      defaultValue: 'circle',
-      validations: {
-        in: [
-          {value: 'circle', displayName: 'Circle (default)'},
-          {value: 'square', displayName: 'Square (rounded)'},
-        ],
-      },
-    },
     backgroundColor: {
       displayName: 'Background color',
       type: 'Text',
