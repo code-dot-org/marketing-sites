@@ -37,7 +37,7 @@ const Bar = styled('div')({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: 16,
-  paddingInline: '8px 12px',
+  paddingInline: '14px',
   backgroundColor: CODEAI_PURPLE_PRIMARY,
 });
 
@@ -48,10 +48,12 @@ const LeftGroup = styled('div')({
   minWidth: 0,
 });
 
+// No start padding: the Bar's 14px inline padding alone sets the logo's
+// distance from the viewport edge, mirroring studio.code.org.
 const LogoLink = styled('a')({
   display: 'flex',
   alignItems: 'center',
-  paddingInline: 12,
+  paddingInlineEnd: 12,
   flexShrink: 0,
 });
 
@@ -59,24 +61,36 @@ const LogoLink = styled('a')({
 const DesktopNav = styled('nav')(({theme}) => ({
   display: 'flex',
   alignItems: 'center',
+  gap: 8,
   [theme.breakpoints.down('md')]: {
     display: 'none',
   },
 }));
 
+// Button box: 20px line box + 6px block padding = 32px tall (the hover/fill
+// box). Even height on purpose — it centers in the even 50px bar at integer
+// y=9, so edges stay on the pixel grid (an odd height lands on y=x.5 and
+// anti-aliases into slivers).
 const tabStyles = {
   color: 'white',
   fontSize: '0.875rem',
   fontWeight: 600,
-  lineHeight: 1.5,
+  lineHeight: '20px',
   textTransform: 'none',
   whiteSpace: 'nowrap',
   minWidth: 0,
-  paddingBlock: '5px',
+  boxSizing: 'border-box',
+  height: '32px',
+  paddingBlock: '6px',
   paddingInline: '12px',
   borderRadius: codeaiRadius('sm', '6px'),
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  // Default focus indicators are invisible on the purple bar.
+  '&:focus-visible': {
+    outline: '2px solid white',
+    outlineOffset: '2px',
   },
 } as const;
 
@@ -108,19 +122,32 @@ const SecondaryButton = styled(Button)(({theme}) => ({
   },
 }));
 
-// Narrower end padding: the caret's fixed icon slot already carries space.
+// Follows the studio.code.org sign-in button construction (border + block
+// padding + 20px line box) at our 32px height: 1px + 5px + 20px + 5px + 1px.
 const SignInButton = styled(Button)({
   ...tabStyles,
   gap: 6,
-  paddingInline: '12px 6px',
-  backgroundColor: '#121212',
+  border: '1px solid white',
+  paddingBlock: '5px',
+  color: '#121212',
+  backgroundColor: 'white',
   '&:hover': {
-    backgroundColor: '#3a3a3a',
+    backgroundColor: '#e6e6e6',
   },
+});
+
+// Hugs the glyph so the 6px gap and the button's own 12px end padding set the
+// spacing; the nav Tabs' caret keeps its fixed slot for dropdown alignment.
+const SignInCaret = styled(Caret)({
+  width: 'auto',
 });
 
 const HamburgerButton = styled(IconButton)(({theme}) => ({
   color: 'white',
+  '&:focus-visible': {
+    outline: '2px solid white',
+    outlineOffset: '2px',
+  },
   [theme.breakpoints.up(HAMBURGER_BREAKPOINT)]: {
     display: 'none',
   },
@@ -208,13 +235,20 @@ const HeaderCodeOrgView = ({content}: HeaderCodeOrgViewProps) => {
             <LogoLink href="/" aria-label="CodeAI home">
               {/* The logo transition overlay FLIPs onto this img and expects
                   it hidden while the transition is active. */}
+              {/* Sized to match the studio.code.org logo exactly; the SVG's
+                  viewBox shares the same 591.15/100 ratio. */}
               <img
                 src={logoImage.src}
                 alt=""
-                width={148}
-                height={25}
+                width={130}
+                height={22}
                 data-logo-transition-target
-                style={{opacity: active ? 0 : undefined}}
+                style={{
+                  height: '22px',
+                  width: 'auto',
+                  aspectRatio: '591.15 / 100',
+                  opacity: active ? 0 : undefined,
+                }}
               />
             </LogoLink>
             <DesktopNav aria-label="Main">
@@ -274,7 +308,10 @@ const HeaderCodeOrgView = ({content}: HeaderCodeOrgViewProps) => {
               disableRipple
             >
               {isSignedIn ? 'Go to Dashboard' : 'Sign in'}
-              <Caret baseClassName="fa-solid" className="fa-angle-right" />
+              <SignInCaret
+                baseClassName="fa-solid"
+                className="fa-angle-right"
+              />
             </SignInButton>
             <HamburgerButton
               ref={hamburgerRef}
