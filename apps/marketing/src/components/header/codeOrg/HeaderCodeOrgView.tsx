@@ -247,9 +247,10 @@ const hasSubmenu = (
 
 const panelId = (index: number) => `header-submenu-${index}`;
 
+// alt is set literally at each <img> — jsx-a11y/alt-text can't see into a
+// spread and fails the production build otherwise.
 const logoImgProps = {
   src: logoImage.src,
-  alt: '',
   width: 130,
   height: 22,
   // Sized to match the studio.code.org logo exactly; the SVG's viewBox
@@ -329,7 +330,7 @@ const HeaderCodeOrgView = ({content}: HeaderCodeOrgViewProps) => {
   );
   const ghostLogo = (
     <LogoLink as="span">
-      <img {...logoImgProps} />
+      <img {...logoImgProps} alt="" />
     </LogoLink>
   );
 
@@ -346,6 +347,7 @@ const HeaderCodeOrgView = ({content}: HeaderCodeOrgViewProps) => {
                   it hidden while the transition is active. */}
               <img
                 {...logoImgProps}
+                alt=""
                 data-logo-transition-target
                 style={{
                   ...logoImgProps.style,
