@@ -12,6 +12,7 @@ import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
 import {CODE_ORG_DISPLAY_FONT_STACK} from '@/themes/code.org/typography/fontStack';
 import logoImage from '@public/images/codeai-logo-primary.svg';
+import awsLogo from '@public/images/powered-by-aws.webp';
 
 import {useFooterLocalization} from '../common/utils';
 
@@ -197,6 +198,16 @@ const BottomActions = styled('div')(({theme}) => ({
   gap: theme.spacing(2.25),
 }));
 
+const AwsLogoLink = styled('a')(({theme}) => ({
+  display: 'flex',
+  alignItems: 'center',
+  flexShrink: 0,
+  '&:focus-visible': {
+    outline: `1px solid ${theme.palette.common.white}`,
+    outlineOffset: '2px',
+  },
+}));
+
 const LanguageSelectWrapper = styled('div')(({theme}) => ({
   display: 'flex',
   alignItems: 'center',
@@ -215,25 +226,25 @@ const LanguageLabel = styled('label')(({theme}) => ({
 
 const LanguageSelect = styled(NativeSelect)(({theme}) => ({
   backgroundColor: theme.palette.common.white,
-  borderRadius: codeaiRadius('md', '5px'),
+  borderRadius: codeaiRadius('sm', '5px'),
   fontFamily: theme.typography.fontFamily,
-  fontWeight: 700,
-  fontSize: '0.875rem',
+  fontWeight: 400,
+  fontSize: '0.75rem',
   color: theme.palette.text.primary,
   '& .MuiNativeSelect-select': {
-    paddingBlock: theme.spacing(1),
-    paddingInlineStart: theme.spacing(2),
-    paddingInlineEnd: theme.spacing(4),
-    borderRadius: codeaiRadius('md', '5px'),
+    paddingBlock: theme.spacing(0.75),
+    paddingInlineStart: theme.spacing(1.5),
+    paddingInlineEnd: theme.spacing(3),
+    borderRadius: codeaiRadius('sm', '5px'),
     '&:focus': {
       backgroundColor: 'transparent',
-      borderRadius: codeaiRadius('md', '5px'),
+      borderRadius: codeaiRadius('sm', '5px'),
     },
   },
   '& .MuiSvgIcon-root': {
     color: theme.palette.text.primary,
     right: 'unset',
-    insetInlineEnd: theme.spacing(1.5),
+    insetInlineEnd: theme.spacing(1),
   },
 }));
 
@@ -364,6 +375,19 @@ const FooterCodeOrgView: React.FC<FooterCodeOrgViewProps> = ({
                 </SocialIconButton>
               ))}
             </SocialLinks>
+            <AwsLogoLink
+              href="https://aws.amazon.com/what-is-cloud-computing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={awsLogo.src}
+                alt="Powered by AWS Cloud Computing"
+                width={140}
+                height={25}
+                style={{width: '140px', height: 'auto'}}
+              />
+            </AwsLogoLink>
           </BottomActions>
         </BottomContent>
       </BottomBar>
