@@ -3,7 +3,6 @@ import {Metadata} from 'next';
 import {draftMode} from 'next/headers';
 import {notFound} from 'next/navigation';
 
-import Bootstrap from '@/bootstrap';
 import ContentEditorHelper from '@/components/contentEditorHelper';
 import {Brand} from '@/config/brand';
 import {getIcons} from '@/config/metadata/icons';
@@ -117,7 +116,6 @@ export default async function ExperiencePage({
 
   return (
     <main style={{width: '100%'}}>
-      <Bootstrap locale={pageProps.locale} />
       <ContentEditorHelper isDraftModeEnabled={isDraftModeEnabled} />
       {stylesheet && <style>{stylesheet}</style>}
       <ExperiencePageLoader
