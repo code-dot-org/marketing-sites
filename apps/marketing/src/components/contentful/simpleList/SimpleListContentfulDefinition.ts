@@ -92,7 +92,9 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'purplePrimary',
       validations: {
         in: [
-          ...brandColorOptionsWithDefault('purplePrimary'),
+          ...brandColorOptionsWithDefault('purplePrimary').filter(
+            ({value}) => value !== 'primary',
+          ),
           ...LEGACY_ICON_COLOR_OPTIONS,
         ],
       },

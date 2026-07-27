@@ -130,7 +130,7 @@ describe('responsive ladder invariants', () => {
       });
     });
 
-    it('H2–H6 are Display Medium (amendment-4: weight shifted from Semibold)', () => {
+    it('H2–H6 are Medium (amendment-4: weight shifted from Semibold)', () => {
       expect(ROLE_TOKENS.h2.weight).toBe('medium');
       expect(ROLE_TOKENS.h3.weight).toBe('medium');
       expect(ROLE_TOKENS.h4.weight).toBe('medium');
@@ -138,12 +138,26 @@ describe('responsive ladder invariants', () => {
       expect(ROLE_TOKENS.h6.weight).toBe('medium');
     });
 
-    it('H5 + H6 both render at Display xs (floor of the ladder)', () => {
-      expect(ROLE_TOKENS.h5.size).toBe('xs');
-      expect(ROLE_TOKENS.h6.size).toBe('xs');
+    it('only H1 + H2 are Display track (Space Grotesk); H3–H6 are Text (Geist)', () => {
+      expect(ROLE_TOKENS.h1.track).toBe('display');
+      expect(ROLE_TOKENS.h2.track).toBe('display');
+      expect(ROLE_TOKENS.h3.track).toBe('text');
+      expect(ROLE_TOKENS.h4.track).toBe('text');
+      expect(ROLE_TOKENS.h5.track).toBe('text');
+      expect(ROLE_TOKENS.h6.track).toBe('text');
     });
 
-    it('H6 has no step table — Display xs floors the ladder at 1.5rem', () => {
+    it('H3–H6 text cells keep the old display font-sizes (4xl=md, 3xl=sm, 2xl=xs)', () => {
+      expect(ROLE_TOKENS.h3.size).toBe('4xl');
+      expect(ROLE_TOKENS.h4.size).toBe('3xl');
+      expect(ROLE_TOKENS.h5.size).toBe('2xl');
+      expect(ROLE_TOKENS.h6.size).toBe('2xl');
+      expect(SCALE_TEXT['4xl'].fontSize).toBe(SCALE_DISPLAY.md.fontSize);
+      expect(SCALE_TEXT['3xl'].fontSize).toBe(SCALE_DISPLAY.sm.fontSize);
+      expect(SCALE_TEXT['2xl'].fontSize).toBe(SCALE_DISPLAY.xs.fontSize);
+    });
+
+    it('H6 has no step table — Text 2xl floors the ladder at 1.5rem', () => {
       expect((ROLE_TOKENS.h6 as {steps?: unknown}).steps).toBeUndefined();
     });
 

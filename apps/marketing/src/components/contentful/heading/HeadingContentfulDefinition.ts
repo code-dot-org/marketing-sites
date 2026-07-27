@@ -37,10 +37,10 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
     color: {
       displayName: 'Color',
       type: 'Text',
-      defaultValue: 'black',
+      defaultValue: 'purpleDark',
       group: 'style',
       validations: {
-        in: brandTextColorOptions('black'),
+        in: brandTextColorOptions('purpleDark'),
       },
     },
     textTransform: {

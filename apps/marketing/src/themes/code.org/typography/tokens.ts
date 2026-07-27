@@ -95,20 +95,23 @@ export const ROLE_TOKENS = {
     weight: 'medium',
     steps: {md: 'lg', sm: 'md', xs: 'sm'},
   },
+  // h3–h6 moved to the text track (Geist) July 2026 — only H1/H2 keep Space
+  // Grotesk. The text cells match the old display cells' font-sizes exactly
+  // (4xl=md, 3xl=sm, 2xl=xs); line-heights are the text track's own.
   h3: {
-    track: 'display',
-    size: 'md',
+    track: 'text',
+    size: '4xl',
     weight: 'medium',
-    steps: {md: 'md', sm: 'sm', xs: 'xs'},
+    steps: {md: '4xl', sm: '3xl', xs: '2xl'},
   },
   h4: {
-    track: 'display',
-    size: 'sm',
+    track: 'text',
+    size: '3xl',
     weight: 'medium',
-    steps: {md: 'sm', sm: 'xs', xs: 'xs'},
+    steps: {md: '3xl', sm: '2xl', xs: '2xl'},
   },
-  h5: {track: 'display', size: 'xs', weight: 'medium'},
-  h6: {track: 'display', size: 'xs', weight: 'medium'},
+  h5: {track: 'text', size: '2xl', weight: 'medium'},
+  h6: {track: 'text', size: '2xl', weight: 'medium'},
 
   body1: {track: 'text', size: 'lg', weight: 'regular'},
   body2: {track: 'text', size: 'md', weight: 'regular'}, // LOCKED default — Regular
@@ -159,9 +162,23 @@ export const DISPLAY_APPEARANCE_ROLES: Record<
   },
   'display-xl': ROLE_TOKENS.h1, // canonical match for H1 (xl Semibold)
   'display-lg': ROLE_TOKENS.h2, // canonical match for H2 (lg Medium)
-  'display-md': ROLE_TOKENS.h3, // canonical match for H3 (md Medium)
-  'display-sm': ROLE_TOKENS.h4, // canonical match for H4 (sm Medium)
-  'display-xs': ROLE_TOKENS.h5, // canonical match for H5 & H6 (xs Medium)
+  // md/sm/xs are no longer aliases of h3–h5: those roles moved to the text
+  // track (Geist), while `display-*` appearance values must keep resolving
+  // against the Display scale. These literals preserve the pre-move h3–h5
+  // display cells and step tables.
+  'display-md': {
+    track: 'display',
+    size: 'md',
+    weight: 'medium',
+    steps: {md: 'md', sm: 'sm', xs: 'xs'},
+  },
+  'display-sm': {
+    track: 'display',
+    size: 'sm',
+    weight: 'medium',
+    steps: {md: 'sm', sm: 'xs', xs: 'xs'},
+  },
+  'display-xs': {track: 'display', size: 'xs', weight: 'medium'},
 };
 
 // Text cell-as-role tokens used by the widened Paragraph `visualAppearance`
