@@ -33,7 +33,7 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
       validations: {
         in: [
           {value: 'custom', displayName: 'Custom'},
-          {value: 'subtitle', displayName: 'Featured Subtitle'},
+          {value: 'subtitle', displayName: 'Featured Subhead'},
           {value: 'overline', displayName: 'Overline'},
           {value: 'statistic', displayName: 'Statistic'},
         ],
@@ -169,7 +169,7 @@ export const CustomTextContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'default',
       group: 'style',
       description:
-        "Default uses the type's tag (span; p for Subtitle). Override to render the other element.",
+        "Default uses the type's tag (span; p for Featured Subhead). Override to render the other element.",
       validations: {
         in: [
           {value: 'default', displayName: 'Default (from type)'},
