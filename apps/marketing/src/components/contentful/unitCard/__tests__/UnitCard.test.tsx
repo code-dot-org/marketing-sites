@@ -23,10 +23,10 @@ const defaultProps: UnitCardProps = {
 };
 
 describe('UnitCard component', () => {
-  it('renders the title as a level-3 heading', () => {
+  it('renders the title as a level-4 heading', () => {
     render(<UnitCard {...defaultProps} />);
     expect(
-      screen.getByRole('heading', {level: 3, name: 'Problem Solving with AI'}),
+      screen.getByRole('heading', {level: 4, name: 'Problem Solving with AI'}),
     ).toBeInTheDocument();
   });
 
@@ -65,13 +65,15 @@ describe('UnitCard component', () => {
     }
   });
 
-  it('renders the title in gray-8 by default and a family primary when set', () => {
+  it('renders the title in black by default and a family primary when set', () => {
     const heading = () =>
-      screen.getByRole('heading', {level: 3, name: 'Problem Solving with AI'});
+      screen.getByRole('heading', {level: 4, name: 'Problem Solving with AI'});
     const {rerender} = render(<UnitCard {...defaultProps} />);
-    expect(heading()).toHaveStyle({color: 'var(--codeai-gray-8, #292f36)'});
+    expect(heading()).toHaveStyle({color: '#000000'});
     rerender(<UnitCard {...defaultProps} titleColor="orange" />);
     expect(heading()).toHaveStyle({color: 'var(--codeai-orange-primary)'});
+    rerender(<UnitCard {...defaultProps} titleColor="purpleDark" />);
+    expect(heading()).toHaveStyle({color: 'var(--codeai-purple-dark)'});
   });
 
   it('caps the card at the standard width unless fullWidth is set', () => {

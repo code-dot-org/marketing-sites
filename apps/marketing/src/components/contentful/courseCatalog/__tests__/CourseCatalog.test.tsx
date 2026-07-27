@@ -92,6 +92,7 @@ const makeCourse = (
     sys: {id, contentType: {sys: {id: 'course'}}},
     fields: {
       title,
+      courseDescription: `${title} description`,
       grade: grades,
       secondaryLinkRef: {
         sys: {type: 'Link', linkType: 'Entry', id: 'course-link-1'},
@@ -117,7 +118,7 @@ describe('CourseCatalog component', () => {
     render(<CourseCatalog {...defaultProps} />);
     for (const title of ['CS Fundamentals', 'CS Discoveries', 'AI Foundations'])
       expect(
-        screen.getByRole('heading', {level: 2, name: title}),
+        screen.getByRole('heading', {level: 3, name: title}),
       ).toBeInTheDocument();
     const detailLinks = screen.getAllByRole('link', {
       name: 'View course details',
@@ -126,9 +127,11 @@ describe('CourseCatalog component', () => {
     expect(detailLinks[0]).toHaveAttribute('href', '/course-details');
     // Unit chain resolves: card titles, explore links, and images render.
     expect(
-      screen.getAllByRole('heading', {level: 3, name: 'Unit 1'}),
+      screen.getAllByRole('heading', {level: 4, name: 'Unit 1'}),
     ).not.toHaveLength(0);
     expect(screen.getAllByRole('link', {name: 'Explore'})).not.toHaveLength(0);
+    // Course description flows through to each carousel header.
+    expect(screen.getByText('CS Fundamentals description')).toBeInTheDocument();
   });
 
   it('forwards link text override and title colors to every carousel', () => {
@@ -144,10 +147,10 @@ describe('CourseCatalog component', () => {
       0,
     );
     expect(
-      screen.getByRole('heading', {level: 2, name: 'CS Fundamentals'}),
+      screen.getByRole('heading', {level: 3, name: 'CS Fundamentals'}),
     ).toHaveStyle({color: 'var(--codeai-orange-primary)'});
     for (const cardTitle of screen.getAllByRole('heading', {
-      level: 3,
+      level: 4,
       name: 'Unit 1',
     })) {
       expect(cardTitle).toHaveStyle({color: 'var(--codeai-pink-primary)'});
@@ -161,13 +164,13 @@ describe('CourseCatalog component', () => {
     } as unknown as CourseEntry;
     render(<CourseCatalog courses={[...defaultProps.courses!, wrongEntry]} />);
     expect(screen.queryByText('Not a course')).not.toBeInTheDocument();
-    expect(screen.getAllByRole('heading', {level: 2})).toHaveLength(3);
+    expect(screen.getAllByRole('heading', {level: 3})).toHaveLength(3);
   });
 
   it('shows all courses under the default All Grades selection', () => {
     render(<CourseCatalog {...defaultProps} />);
     expect(getPill('All Grades')).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getAllByRole('heading', {level: 2})).toHaveLength(3);
+    expect(screen.getAllByRole('heading', {level: 3})).toHaveLength(3);
   });
 
   it('only renders band pills that match at least one course', () => {
@@ -193,7 +196,7 @@ describe('CourseCatalog component', () => {
     expect(getPill('Grades 9-12')).toHaveAttribute('aria-pressed', 'true');
     expect(getPill('All Grades')).toHaveAttribute('aria-pressed', 'false');
     expect(
-      screen.getByRole('heading', {level: 2, name: 'AI Foundations'}),
+      screen.getByRole('heading', {level: 3, name: 'AI Foundations'}),
     ).toBeInTheDocument();
     expect(screen.queryByText('CS Fundamentals')).not.toBeInTheDocument();
     expect(screen.queryByText('CS Discoveries')).not.toBeInTheDocument();
@@ -228,7 +231,7 @@ describe('CourseCatalog component', () => {
     render(<CourseCatalog {...defaultProps} />);
     await user.click(getPill('Grades 6-8'));
     const heading = screen.getByRole('heading', {
-      level: 2,
+      level: 3,
       name: 'CS Discoveries',
     });
     // The remaining course is first in the filtered list → order 10.
@@ -268,7 +271,7 @@ describe('CourseCatalog component', () => {
     const pill = getPill('Grades 9-12');
     expect(pill).toHaveAttribute('aria-disabled', 'true');
     await user.click(pill);
-    expect(screen.getAllByRole('heading', {level: 2})).toHaveLength(3);
+    expect(screen.getAllByRole('heading', {level: 3})).toHaveLength(3);
   });
 
   it('does not show the editor hint in live mode', () => {
@@ -292,7 +295,7 @@ describe('CourseCatalog component', () => {
   it('constrains course sections and the filter row to the site content width', () => {
     render(<CourseCatalog {...defaultProps} />);
     const heading = screen.getByRole('heading', {
-      level: 2,
+      level: 3,
       name: 'CS Fundamentals',
     });
     const section = heading.closest('[style]') as HTMLElement;
@@ -320,7 +323,7 @@ describe('CourseCatalog component', () => {
       flexDirection: 'column',
     });
     expect(
-      within(flexContainer).getAllByRole('heading', {level: 2}),
+      within(flexContainer).getAllByRole('heading', {level: 3}),
     ).toHaveLength(3);
   });
 });

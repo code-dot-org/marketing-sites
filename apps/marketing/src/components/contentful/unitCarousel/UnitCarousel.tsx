@@ -8,11 +8,12 @@ import {Swiper, SwiperSlide} from 'swiper/react';
 
 import 'swiper/css';
 
-import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
+import NavIconButton, {
+  LinkButton,
+} from '@code-dot-org/component-library/button';
 
 import {backgroundToneFor} from '@/components/common/colors';
 import {CardBadgeColor} from '@/components/contentful/badge/constants';
-import Link from '@/components/contentful/link';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 import UnitCard, {
   UnitTitleColor,
@@ -20,11 +21,7 @@ import UnitCard, {
 } from '@/components/contentful/unitCard';
 import {mergeGradeBands} from '@/components/contentful/unitCard/mergeGradeBands';
 import {resolveContentfulLink} from '@/contentful/resolveLink';
-import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {
-  CODE_ORG_DISPLAY_FONT_STACK,
-  CODE_ORG_TEXT_FONT_STACK,
-} from '@/themes/code.org/typography/fontStack';
+import {CODE_ORG_TEXT_FONT_STACK} from '@/themes/code.org/typography/fontStack';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 import {Entry} from '@/types/contentful/Entry';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
@@ -53,6 +50,8 @@ export type CourseUnitEntry = Entry<CourseUnitFields>;
 export interface UnitCarouselProps {
   /** Course title */
   title?: string;
+  /** Course description paragraph, shown beside the title */
+  courseDescription?: string;
   /** Link content-type entry for the "View course details" link */
   courseDetailsLink?: LinkEntry;
   /** Course grade-band values, merged into one span in the subtitle */
@@ -88,31 +87,74 @@ const Root = styled('div')({
   },
 });
 
-const Header = styled('div')({
+// Header row: course info (title, metadata, description) on the left taking
+// all leftover width, actions (details button, nav arrows) in an auto-width
+// right column. Default stretch alignment gives both columns equal height.
+const Header = styled('div')(({theme}) => ({
   display: 'flex',
   flexWrap: 'wrap',
-  alignItems: 'flex-end',
-  justifyContent: 'space-between',
-  gap: '24px',
+  gap: '2rem',
   marginBottom: '24px',
-});
+  // Mobile: stack vertically — actions drop below the heading content.
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+  },
+}));
 
-const TitleRow = styled('div')({
+const HeaderInfo = styled('div')(({theme}) => ({
+  flex: '1 1 260px',
   display: 'flex',
-  alignItems: 'baseline',
-  flexWrap: 'wrap',
-  columnGap: '16px',
-  rowGap: '4px',
-});
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  // Mobile: the header stacks vertically, so the 260px flex-basis would
+  // become a min-height — size to content instead.
+  [theme.breakpoints.down('sm')]: {
+    flex: '0 0 auto',
+  },
+}));
 
-const Title = styled('h2', {
+// Details button pinned to the top, nav arrows to the bottom (margin-top
+// auto on NavButtons), both aligned to the right edge. margin-inline-start
+// keeps the column on the right when flex-wrap drops it to its own row.
+const HeaderActions = styled('div')(({theme}) => ({
+  flex: '0 0 auto',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-end',
+  rowGap: '16px',
+  marginInlineStart: 'auto',
+  // Mobile: single row under the heading content — details button on the
+  // left, nav arrows on the right, vertically centered. Wraps on its own
+  // when the pair doesn't fit.
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '16px',
+    alignSelf: 'stretch',
+    marginInlineStart: 0,
+  },
+}));
+
+// Default paragraph style (theme body2), left aligned.
+const DescriptionParagraph = styled('p', {
+  shouldForwardProp: prop => prop !== 'light',
+})<{light?: boolean}>(({theme, light}) => ({
+  ...theme.typography.body2,
+  textAlign: 'left',
+  color: light ? '#ffffff' : '#000000',
+  maxWidth: '550px',
+  margin: '8px 0 0',
+}));
+
+// The course heading is a standard H3 — everything inherits from the theme's
+// h3 variant (family, weight, sizes, responsive steps); only color is custom.
+const Title = styled('h3', {
   shouldForwardProp: prop => prop !== 'headingColor' && prop !== 'light',
 })<{headingColor: UnitTitleColor; light?: boolean}>(
-  ({headingColor, light}) => ({
-    fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
-    fontSize: '1.5rem',
-    lineHeight: '2rem',
-    fontWeight: 600,
+  ({theme, headingColor, light}) => ({
+    ...theme.typography.h3,
     // Black contrast-switches to white on dark Sections; explicit family
     // picks pass through (same rule as the cards' titles).
     color:
@@ -133,43 +175,27 @@ const Subtitle = styled('p', {
   margin: '4px 0 0',
 }));
 
-// Nav buttons mirror the Card Carousel's exactly; here they are fixed to the
-// header's top-right slot (no position option).
-const NavButtons = styled('div')({
+// Nav arrows are design-system icon-only buttons (secondary purple, size l).
+// Swiper drives their disabled state through the id selectors.
+const NavButtons = styled('div')(({theme}) => ({
   display: 'flex',
-  gap: '3px',
+  gap: '6px',
   flexShrink: 0,
-});
-
-const NavButton = styled('button')({
-  width: '56px',
-  height: '56px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  border: '2px solid var(--codeai-purple-primary, #4c42cf)',
-  // sm is the buttons-only radius token.
-  borderRadius: codeaiRadius('sm', '0.5rem'),
-  backgroundColor: '#ffffff',
-  color: 'var(--codeai-purple-primary, #4c42cf)',
-  cursor: 'pointer',
-  fontSize: '20px',
-  '&:hover:not(:disabled)': {
-    backgroundColor: 'var(--codeai-purple-light, #e4e2f8)',
-  },
-  '&:disabled': {
-    cursor: 'not-allowed',
-    borderColor: 'var(--codeai-gray-3, #d1d4d8)',
-    color: 'var(--codeai-gray-4, #afb8c2)',
+  // Sinks to the bottom of the stretched actions column.
+  marginTop: 'auto',
+  // Mobile: the actions column becomes a centered row — drop the auto
+  // margin so the arrows don't pin to the row's cross-axis bottom.
+  [theme.breakpoints.down('sm')]: {
+    marginTop: 0,
   },
   // Swiper's watchOverflow adds this class when every card already fits.
-  '&.swiper-button-lock': {
+  '& .swiper-button-lock': {
     display: 'none',
   },
   'html[dir="rtl"] & svg, html[dir="rtl"] & i': {
     transform: 'scaleX(-1)',
   },
-});
+}));
 
 // Narrow enough that at the exact content width it only covers the peeking
 // sliver and trailing gap, never the last fully visible card.
@@ -197,6 +223,7 @@ const CarouselViewport = styled('div', {
 
 const UnitCarousel: React.FC<UnitCarouselProps> = ({
   title,
+  courseDescription,
   courseDetailsLink,
   gradeBands,
   units,
@@ -297,37 +324,57 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
   return (
     <Root className={className}>
       <Header>
-        <div>
-          <TitleRow>
-            {title && (
-              <Title headingColor={headingColor} light={onDarkSection}>
-                {title}
-              </Title>
-            )}
-            {linkFields && (
-              <Link
-                href={linkFields.primaryTarget}
-                isLinkExternal={!!linkFields.isThisAnExternalLink}
-                ariaLabel={linkFields.ariaLabel || undefined}
-                color={onDarkSection ? 'white' : 'black'}
-                size="s"
-                icon="arrow-right"
-                removeMarginBottom
-              >
-                {linkFields.label}
-              </Link>
-            )}
-          </TitleRow>
+        <HeaderInfo>
+          {title && (
+            <Title headingColor={headingColor} light={onDarkSection}>
+              {title}
+            </Title>
+          )}
           {subtitle && <Subtitle light={onDarkSection}>{subtitle}</Subtitle>}
-        </div>
-        <NavButtons>
-          <NavButton id={`${carouselId}-prev`} aria-label="Previous units">
-            <FontAwesomeV6Icon iconName="chevron-left" iconStyle="solid" />
-          </NavButton>
-          <NavButton id={`${carouselId}-next`} aria-label="Next units">
-            <FontAwesomeV6Icon iconName="chevron-right" iconStyle="solid" />
-          </NavButton>
-        </NavButtons>
+          {courseDescription && (
+            <DescriptionParagraph light={onDarkSection}>
+              {courseDescription}
+            </DescriptionParagraph>
+          )}
+        </HeaderInfo>
+        <HeaderActions>
+          {linkFields && (
+            <LinkButton
+              text={linkFields.label}
+              type="primary"
+              color="purple"
+              size="m"
+              href={linkFields.primaryTarget}
+              target={linkFields.isThisAnExternalLink ? '_blank' : undefined}
+              iconRight={{iconName: 'angle-right', iconStyle: 'solid'}}
+              ariaLabel={linkFields.ariaLabel || undefined}
+            />
+          )}
+          <NavButtons>
+            {/* Swiper binds the real click handlers to these ids; the no-op
+              onClick only satisfies GenericButton's non-link contract. */}
+            <NavIconButton
+              id={`${carouselId}-prev`}
+              type="secondary"
+              color="purple"
+              size="l"
+              isIconOnly
+              icon={{iconName: 'chevron-left', iconStyle: 'solid'}}
+              ariaLabel="Previous units"
+              onClick={() => undefined}
+            />
+            <NavIconButton
+              id={`${carouselId}-next`}
+              type="secondary"
+              color="purple"
+              size="l"
+              isIconOnly
+              icon={{iconName: 'chevron-right', iconStyle: 'solid'}}
+              ariaLabel="Next units"
+              onClick={() => undefined}
+            />
+          </NavButtons>
+        </HeaderActions>
       </Header>
       <CarouselViewport showEndFade={showEndFade}>
         <Swiper

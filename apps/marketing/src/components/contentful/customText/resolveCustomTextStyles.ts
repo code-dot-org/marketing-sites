@@ -12,6 +12,8 @@
 // Line-height comes from the resolved size cell unless the numeric line-height
 // override is set, so the type/size pairing renders with the scale's leading.
 
+import {createTheme} from '@mui/material/styles';
+
 import {
   BrandColor,
   EnclosingBackground,
@@ -34,7 +36,7 @@ import {
 export type CustomTextType = 'custom' | 'subtitle' | 'overline' | 'statistic';
 
 // Only <span> and <p> are supported. <span> is the default for every type
-// except Subtitle, which uses <p>.
+// except Featured Subhead (`subtitle`), which uses <p>.
 export type CustomTextTag = 'span' | 'p';
 export type CustomTextFontTrack = TypographicTrack; // 'text' | 'display'
 export type CustomTextTransform =
@@ -54,6 +56,10 @@ interface CustomTextDefault {
   weight: WeightToken;
   color: BrandColor;
   textTransform: CustomTextTransform;
+  /** Responsive size ladder, keyed by viewport like RoleToken.steps
+   * (`sm` = tablet, `xs` = mobile). Applied only while the author leaves
+   * size and line-height on the type default. */
+  steps?: Partial<Record<'sm' | 'xs', SizeToken>>;
 }
 
 // Per-type default style sets.
@@ -69,13 +75,15 @@ export const CUSTOM_TEXT_TYPE_DEFAULTS: Record<
     color: 'black',
     textTransform: 'none',
   },
+  // "Featured Subhead" in Studio; the stored value predates the rename.
   subtitle: {
     tag: 'p', // the only type defaulting to <p>
-    track: 'display', // Space Grotesk
-    size: 'xs',
-    weight: 'medium',
-    color: 'black',
+    track: 'text', // Geist
+    size: '2xl',
+    weight: 'regular', // matches the body default
+    color: 'purpleDark',
     textTransform: 'none',
+    steps: {sm: 'xl', xs: 'lg'},
   },
   overline: {
     tag: 'span',
@@ -104,6 +112,15 @@ const SCALE: Record<CustomTextFontTrack, Record<SizeToken, ScaleCell>> = {
   text: SCALE_TEXT,
   display: SCALE_DISPLAY,
 };
+
+// Same viewport-name-to-media-query mapping as buildTypography /
+// resolveHeadingStyles: `sm` covers tablet and below, `xs` mobile only. The
+// smaller query is emitted second so it wins via source order on overlap.
+const SHARED_BREAKPOINTS = createTheme().breakpoints;
+const STEP_QUERIES = {
+  sm: SHARED_BREAKPOINTS.down('md'),
+  xs: SHARED_BREAKPOINTS.down('sm'),
+} as const;
 
 // Strips the `'default'`/empty sentinels to `undefined` so `?? typeDefault`
 // flows through. `'none'` is a real value and is preserved.
@@ -173,6 +190,29 @@ export const resolveCustomTextStyles = (
     ...(cell.letterSpacing ? {letterSpacing: cell.letterSpacing} : {}),
     ...(textTransform !== 'none' ? {textTransform} : {}),
   };
+
+  // Responsive size ladder from the type default. Skipped as soon as the
+  // author fixes any size dimension (theme size step or numeric overrides) —
+  // an explicit size means "this size everywhere", matching how the Heading
+  // size overrides behave.
+  const sizeOverridden =
+    inherit(args.textSize) !== undefined ||
+    args.fontSize != null ||
+    args.lineHeight != null;
+  if (def.steps && !sizeOverridden) {
+    for (const viewport of ['sm', 'xs'] as const) {
+      const stepSize = def.steps[viewport];
+      if (!stepSize || stepSize === size) continue;
+      const stepCell = SCALE[track][stepSize];
+      sx[STEP_QUERIES[viewport]] = {
+        fontSize: stepCell.fontSize,
+        lineHeight: stepCell.lineHeight,
+        ...(stepCell.letterSpacing
+          ? {letterSpacing: stepCell.letterSpacing}
+          : {}),
+      };
+    }
+  }
 
   const resolvedColor = resolvedCssVarForBrandColor(
     color,

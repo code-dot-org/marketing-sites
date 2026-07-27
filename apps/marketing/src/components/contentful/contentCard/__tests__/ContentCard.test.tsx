@@ -84,7 +84,7 @@ describe('ContentCard component', () => {
       </SectionBackgroundProvider>,
     );
     expect(screen.getByRole('heading', {level: 3})).toHaveStyle({
-      color: 'var(--codeai-gray-8, #292f36)',
+      color: '#000000',
     });
   });
 
@@ -153,7 +153,7 @@ describe('ContentCard component', () => {
   it('renders the title in the default text color, weight, and size', () => {
     render(<ContentCard {...defaultProps} />);
     expect(screen.getByRole('heading', {level: 3})).toHaveStyle({
-      color: 'var(--codeai-gray-8, #292f36)',
+      color: '#000000',
       fontWeight: 500,
       textTransform: 'none',
       fontSize: '1.25rem',

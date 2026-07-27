@@ -72,7 +72,7 @@ export const DividerContentfulComponentDefinition: ComponentDefinition = {
 };
 
 // Code.org-only variant: adds Direction and Width options and defaults the
-// color to Gray 5. CSforAll keeps the base definition above, so these options
+// color to Gray 3. CSforAll keeps the base definition above, so these options
 // never appear there. Same `id` — only one definition is registered per brand.
 export const CodeOrgDividerContentfulComponentDefinition: ComponentDefinition =
   {
@@ -86,10 +86,10 @@ export const CodeOrgDividerContentfulComponentDefinition: ComponentDefinition =
       ...DividerContentfulComponentDefinition.variables,
       color: {
         ...DividerContentfulComponentDefinition.variables.color,
-        defaultValue: 'gray5',
+        defaultValue: 'gray3',
         validations: {
           in: [
-            ...dividerBrandOptions('gray5'),
+            ...dividerBrandOptions('gray3'),
             ...DIVIDER_LEGACY_COLOR_OPTIONS,
           ],
         },

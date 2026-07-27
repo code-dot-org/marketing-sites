@@ -73,10 +73,10 @@ export const CONTAINER_OVERRIDES: Components<Theme>['MuiContainer'] = {
       },
       // Divider styles
       '&.MuiContainer-root.container--divider-primary': {
-        borderBottom: `1px solid var(--background-neutral-quaternary)`,
+        borderBottom: `1px solid var(--codeai-gray-3)`,
       },
       '&.MuiContainer-root.container--divider-strong': {
-        borderBottom: `1px solid var(--background-neutral-senary)`,
+        borderBottom: `1px solid var(--codeai-gray-5)`,
       },
       // Background styles
       '.section-background-primary:has(&.MuiContainer-root)': {

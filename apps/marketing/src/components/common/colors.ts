@@ -252,19 +252,16 @@ export const BRAND_COLORS = [
     family: 'gray',
     shade: 'dark',
   },
-  // Legacy entry — `primary` predates the CodeAI brand palette. Renamed to
-  // "Primary (legacy)" in the Studio dropdown and dropped to the bottom of the
-  // list so it's visually grouped with other legacy options (e.g. Paragraph's
-  // "Secondary (legacy)"). Kept here so existing Contentful entries continue
-  // to validate. Uses the theme-aware `--text-neutral-primary` SCSS variable
-  // so the data-theme='Dark' cascade (legacy `dark`/`patternDark`/
-  // `patternPrimary` Sections) continues to flip it to white. On new CodeAI
-  // brand dark Sections the contrast switch in `resolveTextColorForBackground`
-  // flips this token to white before the cssVar lookup.
+  // Legacy entry — `primary` predates the CodeAI brand palette. No picker
+  // offers it anymore; it's kept so stored Contentful values keep validating,
+  // and it renders as literal Black (same cssVar as the `black` entry). The
+  // contrast switch already treats it as black (family 'black'), flipping it
+  // to white on dark CodeAI brand Sections. Legacy data-theme='Dark' Sections
+  // no longer flip it — those pages are being rebuilt on the new palette.
   {
     value: 'primary',
     displayName: 'Primary (legacy)',
-    cssVar: 'var(--text-neutral-primary)',
+    cssVar: '#000000',
     family: 'black',
     shade: 'n-a',
   },
@@ -292,16 +289,16 @@ export const brandColorOptionsWithDefault = (defaultValue: BrandColor) =>
   }));
 
 // Text-color picker variant. Same set as `brandColorOptionsWithDefault` but:
-//   - `black` is relabeled "Default" so editors gravitate to it (it carries
-//     the contrast switch, flipping to white on dark sections automatically).
-//   - `white` moves to the bottom of the brand block (above legacy entries),
-//     since it's now a deliberate "always #FFFFFF" choice rather than the
-//     pre-populated default.
-//   - Ordering: Default (Black), brand families, White, then `primary` legacy.
+//   - `black` leads the list under its real name — it still carries the
+//     contrast switch, flipping to white on dark sections automatically.
+//   - `white` moves to the bottom of the brand block, since it's a
+//     deliberate "always #FFFFFF" choice.
+//   - Legacy `primary` is excluded from all text pickers: stored values keep
+//     rendering (as Black — see the manifest entry above); authors pick
+//     Black directly.
 export const brandTextColorOptions = (defaultValue: BrandColor) => {
   const blackEntry = BRAND_COLORS.find(c => c.value === 'black');
   const whiteEntry = BRAND_COLORS.find(c => c.value === 'white');
-  const primaryEntry = BRAND_COLORS.find(c => c.value === 'primary');
   const familyEntries = BRAND_COLORS.filter(
     c => c.value !== 'black' && c.value !== 'white' && c.value !== 'primary',
   );
@@ -309,23 +306,18 @@ export const brandTextColorOptions = (defaultValue: BrandColor) => {
     ...(blackEntry ? [blackEntry] : []),
     ...familyEntries,
     ...(whiteEntry ? [whiteEntry] : []),
-    ...(primaryEntry ? [primaryEntry] : []),
   ];
-  return ordered.map(({value, displayName}) => {
-    const label = value === 'black' ? 'Default' : displayName;
-    return {
-      value,
-      displayName:
-        value === defaultValue && label !== 'Default'
-          ? `${label} (default)`
-          : label,
-    };
-  });
+  return ordered.map(({value, displayName}) => ({
+    value,
+    displayName:
+      value === defaultValue ? `${displayName} (default)` : displayName,
+  }));
 };
 
 // Custom Text variant: the chosen type seeds the color, so the picker leads
-// with a true 'default' sentinel ("Default (from type)") and black gets its
-// plain name back — exactly one "Default"-named entry.
+// with a 'default' sentinel ("Default (from type)") and no entry carries a
+// "(default)" suffix (the suffix would wrongly imply a fixed pre-populated
+// color).
 export const brandTextColorOptionsWithTypeDefault = () => [
   {value: 'default', displayName: 'Default (from type)'},
   ...brandTextColorOptions('black').map(({value, displayName}) => ({

@@ -41,6 +41,7 @@ const GRADE_BAND_FILTERS: {
 
 type CourseFields = {
   title?: string;
+  courseDescription?: string;
   // References arrive from the Experiences entity store as unresolved
   // {sys: {type: 'Link'}} stubs — resolved via resolveContentfulLink.
   secondaryLinkRef?: LinkEntry;
@@ -91,13 +92,14 @@ const contentWidth = (theme: Theme) => ({
 });
 
 // Row holding the filter bar (left) with room for future siblings (right).
+// No bottom margin — the first course section's 64px top padding provides
+// the spacing.
 const FilterRow = styled('div')(({theme}) => ({
   ...contentWidth(theme),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: '16px',
-  marginBottom: '32px',
 }));
 
 const FilterBar = styled('div')({
@@ -146,8 +148,8 @@ const FilterPill = styled('button')(({theme}) => ({
 
 const EditorHint = styled('p')(({theme}) => ({
   ...contentWidth(theme),
-  marginTop: '-24px',
-  marginBottom: '32px',
+  marginTop: '8px',
+  marginBottom: 0,
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
   fontSize: '0.75rem',
   lineHeight: '1.125rem',
@@ -156,13 +158,17 @@ const EditorHint = styled('p')(({theme}) => ({
 
 // Flex column so course sections and interstitials interleave via CSS order:
 // courses get (i+1)*10 by filtered index, interstitials position*10+5.
+// Spacing comes from each course section's own vertical padding —
+// interstitials add none and handle their spacing individually.
 const CoursesAndChildren = styled('div')({
   display: 'flex',
   flexDirection: 'column',
-  rowGap: '48px',
 });
 
-const CourseSection = styled('div')(({theme}) => contentWidth(theme));
+const CourseSection = styled('div')(({theme}) => ({
+  ...contentWidth(theme),
+  paddingBlock: '64px',
+}));
 
 const courseMatchesBand = (
   grades: string[] | undefined,
@@ -199,6 +205,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({
           grades: fields.grade,
           carouselProps: {
             title: fields.title,
+            courseDescription: fields.courseDescription,
             courseDetailsLink: resolveContentfulLink<LinkEntry>(
               fields.secondaryLinkRef,
             ),

@@ -38,7 +38,7 @@ describe('resolveCustomTextStyles', () => {
         SCALE_DISPLAY['2xl'].lineHeight,
       );
       expect(resolveCustomTextStyles({type: 'subtitle'}).sx.lineHeight).toBe(
-        SCALE_DISPLAY.xs.lineHeight,
+        SCALE_TEXT['2xl'].lineHeight,
       );
     });
 
@@ -59,11 +59,39 @@ describe('resolveCustomTextStyles', () => {
       });
     });
 
-    it('seeds Featured Subtitle with the display track, XS size and Medium weight', () => {
+    it('seeds Featured Subhead with the text track, 2xl size, Regular weight and Purple Dark', () => {
       const r = resolveCustomTextStyles({type: 'subtitle'});
-      expect(r.sx.fontFamily).toContain('Space Grotesk');
-      expect(r.sx.fontSize).toBe(SCALE_DISPLAY.xs.fontSize);
-      expect(r.sx.fontWeight).toBe(500);
+      expect(r.sx.fontFamily).toContain('Geist');
+      expect(r.sx.fontSize).toBe(SCALE_TEXT['2xl'].fontSize);
+      expect(r.sx.fontWeight).toBe(400);
+      expect(r.resolvedColor).toBe('var(--codeai-purple-dark)');
+    });
+
+    it('Featured Subhead steps down to xl on tablet and lg on mobile', () => {
+      const r = resolveCustomTextStyles({type: 'subtitle'});
+      expect(r.sx['@media (max-width:899.95px)']).toEqual({
+        fontSize: SCALE_TEXT.xl.fontSize,
+        lineHeight: SCALE_TEXT.xl.lineHeight,
+      });
+      expect(r.sx['@media (max-width:599.95px)']).toEqual({
+        fontSize: SCALE_TEXT.lg.fontSize,
+        lineHeight: SCALE_TEXT.lg.lineHeight,
+      });
+    });
+
+    it('Featured Subhead steps are dropped when the author fixes a size', () => {
+      const bySizeStep = resolveCustomTextStyles({
+        type: 'subtitle',
+        textSize: 'md',
+      });
+      const byNumericSize = resolveCustomTextStyles({
+        type: 'subtitle',
+        fontSize: 2,
+      });
+      for (const r of [bySizeStep, byNumericSize]) {
+        expect(r.sx['@media (max-width:899.95px)']).toBeUndefined();
+        expect(r.sx['@media (max-width:599.95px)']).toBeUndefined();
+      }
     });
 
     it('falls back to the custom type for an unknown value', () => {
@@ -79,9 +107,9 @@ describe('resolveCustomTextStyles', () => {
     it('htmlTag override changes only the tag, including overriding Subtitle p', () => {
       const r = resolveCustomTextStyles({type: 'subtitle', htmlTag: 'span'});
       expect(r.tag).toBe('span');
-      // size/weight still from subtitle default (display/xs/medium)
-      expect(r.sx.fontSize).toBe(SCALE_DISPLAY.xs.fontSize);
-      expect(r.sx.fontWeight).toBe(500);
+      // size/weight still from subtitle default (text/2xl/regular)
+      expect(r.sx.fontSize).toBe(SCALE_TEXT['2xl'].fontSize);
+      expect(r.sx.fontWeight).toBe(400);
     });
 
     it('textSize override swaps the size cell on the resolved track only', () => {

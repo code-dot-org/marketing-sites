@@ -88,12 +88,12 @@ const defaultProps: UnitCarouselProps = {
 };
 
 describe('UnitCarousel component', () => {
-  it('renders the course title as a level-2 heading above level-3 card titles', () => {
+  it('renders the course title as a level-3 heading above level-4 card titles', () => {
     render(<UnitCarousel {...defaultProps} />);
     expect(
-      screen.getByRole('heading', {level: 2, name: 'AI Foundations'}),
+      screen.getByRole('heading', {level: 3, name: 'AI Foundations'}),
     ).toBeInTheDocument();
-    expect(screen.getAllByRole('heading', {level: 3})).toHaveLength(3);
+    expect(screen.getAllByRole('heading', {level: 4})).toHaveLength(3);
   });
 
   it('renders the course details link', () => {
@@ -106,6 +106,22 @@ describe('UnitCarousel component', () => {
     render(<UnitCarousel {...defaultProps} courseDetailsLink={undefined} />);
     expect(
       screen.queryByRole('link', {name: 'View course details'}),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders the course description beside the header when bound', () => {
+    const {rerender} = render(
+      <UnitCarousel
+        {...defaultProps}
+        courseDescription="Learn the foundations of AI."
+      />,
+    );
+    expect(
+      screen.getByText('Learn the foundations of AI.'),
+    ).toBeInTheDocument();
+    rerender(<UnitCarousel {...defaultProps} />);
+    expect(
+      screen.queryByText('Learn the foundations of AI.'),
     ).not.toBeInTheDocument();
   });
 
@@ -228,9 +244,9 @@ describe('UnitCarousel component', () => {
       />,
     );
     expect(
-      screen.getByRole('heading', {level: 2, name: 'AI Foundations'}),
+      screen.getByRole('heading', {level: 3, name: 'AI Foundations'}),
     ).toHaveStyle({color: 'var(--codeai-blue-primary)'});
-    for (const cardTitle of screen.getAllByRole('heading', {level: 3})) {
+    for (const cardTitle of screen.getAllByRole('heading', {level: 4})) {
       expect(cardTitle).toHaveStyle({color: 'var(--codeai-green-primary)'});
     }
   });
