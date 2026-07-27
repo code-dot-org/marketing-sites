@@ -112,6 +112,15 @@ html {
   margin: 0 0 0.5em 0;
 }
 
+// Code.org rebrand: only H1/H2-scale headings (xxl, xl) keep Space Grotesk;
+// the smaller heading styles switch to Geist, matching the marketing theme's
+// h3–h6. Brand-scoped so Dashboard/Pegasus consumers are unaffected.
+@mixin code-org-geist-heading {
+  [data-brand='Code.org'] & {
+    font-family: font.$main-font;
+  }
+}
+
 @mixin heading-xxl {
   @include heading-common;
   @include font.space-grotesk-medium;
@@ -130,6 +139,7 @@ html {
 @mixin heading-lg {
   @include heading-common;
   @include font.space-grotesk-medium;
+  @include code-org-geist-heading;
   font-size: 1.75rem;
   line-height: 1.28;
 }
@@ -137,6 +147,7 @@ html {
 @mixin heading-md {
   @include heading-common;
   @include font.space-grotesk-medium;
+  @include code-org-geist-heading;
   font-size: 1.5rem;
   line-height: 1.32;
 }
@@ -144,6 +155,7 @@ html {
 @mixin heading-sm {
   @include heading-common;
   @include font.space-grotesk-medium;
+  @include code-org-geist-heading;
   font-size: 1.25rem;
   line-height: 1.4;
 }
@@ -151,6 +163,7 @@ html {
 @mixin heading-xs {
   @include heading-common;
   @include font.space-grotesk-medium;
+  @include code-org-geist-heading;
   font-size: 1rem;
   line-height: 1.48;
 }
