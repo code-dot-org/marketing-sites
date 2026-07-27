@@ -10,33 +10,25 @@ import {
   CardBadgeColor,
   parseCardBadgeColor,
 } from '@/components/contentful/badge/constants';
+import {
+  cardColorCss,
+  type ContentCardColor,
+} from '@/components/contentful/contentCard/constants';
 import Link from '@/components/contentful/link';
 import NextImage from '@/components/nextImage/NextImage';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {
-  CODE_ORG_DISPLAY_FONT_STACK,
-  CODE_ORG_TEXT_FONT_STACK,
-} from '@/themes/code.org/typography/fontStack';
+import {CODE_ORG_TEXT_FONT_STACK} from '@/themes/code.org/typography/fontStack';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
 import {mergeGradeBands} from './mergeGradeBands';
 
-// Black renders the default gray-8 text; the rest map to the family's
-// primary CSS variable. Shared by the title-color fields on Unit Card,
+// Full brand-color list plus the legacy family values (rendered via the
+// family's primary token). Shared by the title-color fields on Unit Card,
 // Unit Carousel (heading + unit titles), and Course Catalog.
-export type UnitTitleColor =
-  | 'black'
-  | 'purple'
-  | 'blue'
-  | 'green'
-  | 'orange'
-  | 'pink';
+export type UnitTitleColor = ContentCardColor;
 
-export const unitTitleColorCss = (color: UnitTitleColor): string =>
-  color === 'black'
-    ? 'var(--codeai-gray-8, #292f36)'
-    : `var(--codeai-${color}-primary)`;
+export const unitTitleColorCss = cardColorCss;
 
 export interface UnitCardProps {
   /** Unit title */
@@ -107,10 +99,13 @@ const TopicsRow = styled('div')({
   paddingBottom: '12px',
 });
 
-const Title = styled('h3', {
+// Semantically an H4 (one level under the carousel's H3 course heading),
+// but visually card-sized — the theme's h4 scale is too large for the
+// 264px card.
+const Title = styled('h4', {
   shouldForwardProp: prop => prop !== 'titleColor',
 })<{titleColor: UnitTitleColor}>(({titleColor}) => ({
-  fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
+  fontFamily: CODE_ORG_TEXT_FONT_STACK,
   fontSize: '1.25rem',
   lineHeight: '1.5rem',
   fontWeight: 500,
@@ -123,7 +118,8 @@ const Description = styled('p')({
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
   fontSize: '0.875rem',
   lineHeight: '1.25rem',
-  color: 'var(--codeai-gray-6, #5f6872)',
+  // Black matches the site's default body text.
+  color: '#000000',
   margin: 0,
   paddingBottom: '12px',
 });
@@ -140,7 +136,7 @@ const GradeChip = styled('span')({
   lineHeight: '1.125rem',
   fontWeight: 600,
   textAlign: 'center',
-  color: 'var(--codeai-gray-8, #292f36)',
+  color: 'var(--codeai-gray-6, #5f6872)',
   marginBottom: '12px',
 });
 

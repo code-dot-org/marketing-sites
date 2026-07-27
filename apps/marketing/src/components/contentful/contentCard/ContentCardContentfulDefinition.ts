@@ -1,6 +1,7 @@
 // Creates a definition for the Content Card component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {brandTextColorOptions} from '@/components/common/colors';
 import {CARD_BADGE_COLOR_OPTIONS} from '@/components/contentful/badge/constants';
 
 export const ContentCardContentfulComponentDefinition: ComponentDefinition = {
@@ -81,19 +82,12 @@ export const ContentCardContentfulComponentDefinition: ComponentDefinition = {
     },
     titleColor: {
       displayName: 'Title Color',
-      description: "Black follows the card style's default text color.",
+      description: 'Black flips to white over dark card surfaces.',
       type: 'Text',
-      defaultValue: 'black',
+      defaultValue: 'purpleDark',
       group: 'style',
       validations: {
-        in: [
-          {value: 'black', displayName: 'Black'},
-          {value: 'purple', displayName: 'Purple'},
-          {value: 'blue', displayName: 'Blue'},
-          {value: 'green', displayName: 'Green'},
-          {value: 'orange', displayName: 'Orange'},
-          {value: 'pink', displayName: 'Pink'},
-        ],
+        in: brandTextColorOptions('purpleDark'),
       },
     },
     titleCase: {
@@ -149,14 +143,7 @@ export const ContentCardContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'black',
       group: 'style',
       validations: {
-        in: [
-          {value: 'black', displayName: 'Black'},
-          {value: 'purple', displayName: 'Purple'},
-          {value: 'blue', displayName: 'Blue'},
-          {value: 'green', displayName: 'Green'},
-          {value: 'orange', displayName: 'Orange'},
-          {value: 'pink', displayName: 'Pink'},
-        ],
+        in: brandTextColorOptions('black'),
       },
     },
     titleOverlay: {

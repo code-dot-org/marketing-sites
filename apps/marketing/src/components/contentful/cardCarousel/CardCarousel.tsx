@@ -1,14 +1,14 @@
 'use client';
 
 import {styled} from '@mui/material/styles';
-import React, {useId, useMemo, useState} from 'react';
+import React, {useId, useMemo, useRef, useState} from 'react';
 import type {Swiper as SwiperInstance} from 'swiper';
 import {A11y, Navigation} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
 
 import 'swiper/css';
 
-import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
+import NavIconButton from '@code-dot-org/component-library/button';
 
 import {CardBadgeColor} from '@/components/contentful/badge/constants';
 import ContentCard, {
@@ -17,7 +17,6 @@ import ContentCard, {
   ContentCardTitleAppearance,
   ContentCardTitleCase,
 } from '@/components/contentful/contentCard';
-import {codeaiRadius} from '@/themes/code.org/constants/radius';
 
 import {
   CardEntry,
@@ -25,6 +24,7 @@ import {
   FieldMapping,
   mapEntryToCardProps,
 } from './mapEntryToCardProps';
+import {useEqualOverlayPanelHeights} from './useEqualOverlayPanelHeights';
 
 export const CARD_CAROUSEL_CARDS_PER_VIEW = ['3', '4'] as const;
 export type CardCarouselCardsPerView =
@@ -88,46 +88,26 @@ const Root = styled('div', {
   },
 }));
 
+// Nav arrows are design-system icon-only buttons (secondary purple, size l),
+// mirroring the Unit Carousel's. Swiper drives their disabled state through
+// the id selectors.
 const NavButtons = styled('div', {
   shouldForwardProp: (prop: string) => prop !== 'navPosition',
 })<{navPosition: CardCarouselNavPosition}>(({navPosition}) => ({
   display: 'flex',
-  gap: '3px',
+  gap: '6px',
   flexShrink: 0,
   ...(navPosition === 'top'
     ? {justifyContent: 'flex-end', marginBottom: '24px'}
     : {justifyContent: 'flex-start', marginTop: '24px'}),
-}));
-
-const NavButton = styled('button')({
-  width: '56px',
-  height: '56px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  border: '2px solid var(--codeai-purple-primary, #4c42cf)',
-  // sm is the buttons-only radius token.
-  borderRadius: codeaiRadius('sm', '0.5rem'),
-  backgroundColor: '#ffffff',
-  color: 'var(--codeai-purple-primary, #4c42cf)',
-  cursor: 'pointer',
-  fontSize: '20px',
-  '&:hover:not(:disabled)': {
-    backgroundColor: 'var(--codeai-purple-light, #e4e2f8)',
-  },
-  '&:disabled': {
-    cursor: 'not-allowed',
-    borderColor: 'var(--codeai-gray-3, #d1d4d8)',
-    color: 'var(--codeai-gray-4, #afb8c2)',
-  },
   // Swiper's watchOverflow adds this class when every card already fits.
-  '&.swiper-button-lock': {
+  '& .swiper-button-lock': {
     display: 'none',
   },
   'html[dir="rtl"] & svg, html[dir="rtl"] & i': {
     transform: 'scaleX(-1)',
   },
-});
+}));
 
 // Narrow enough that at the exact content width it only covers the peeking
 // sliver and trailing gap, never the last fully visible card.
@@ -207,6 +187,15 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
     maxDescriptionLength,
   ]);
 
+  // Overlay glass panels have content-driven heights; equalize them across
+  // the carousel so every card's panel matches the tallest.
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEqualOverlayPanelHeights(
+    rootRef,
+    cardStyle === 'overlay',
+    mappedCards.length,
+  );
+
   // Show placeholder text until content entries are bound
   if (!mappedCards.length) {
     return (
@@ -233,17 +222,34 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
 
   const navButtons = (
     <NavButtons navPosition={navPosition}>
-      <NavButton id={`${carouselId}-prev`} aria-label="Previous cards">
-        <FontAwesomeV6Icon iconName="chevron-left" iconStyle="solid" />
-      </NavButton>
-      <NavButton id={`${carouselId}-next`} aria-label="Next cards">
-        <FontAwesomeV6Icon iconName="chevron-right" iconStyle="solid" />
-      </NavButton>
+      {/* Swiper binds the real click handlers to these ids; the no-op
+          onClick only satisfies GenericButton's non-link contract. */}
+      <NavIconButton
+        id={`${carouselId}-prev`}
+        type="secondary"
+        color="purple"
+        size="l"
+        isIconOnly
+        icon={{iconName: 'chevron-left', iconStyle: 'solid'}}
+        ariaLabel="Previous cards"
+        onClick={() => undefined}
+      />
+      <NavIconButton
+        id={`${carouselId}-next`}
+        type="secondary"
+        color="purple"
+        size="l"
+        isIconOnly
+        icon={{iconName: 'chevron-right', iconStyle: 'solid'}}
+        ariaLabel="Next cards"
+        onClick={() => undefined}
+      />
     </NavButtons>
   );
 
   return (
     <Root
+      ref={rootRef}
       cardsPerView={cardsPerView}
       data-testid="card-carousel"
       data-cards-per-view={cardsPerView}

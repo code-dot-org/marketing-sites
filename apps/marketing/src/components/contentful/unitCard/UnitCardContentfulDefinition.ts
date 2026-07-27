@@ -1,6 +1,7 @@
 // Creates a definition for the Unit Card component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {brandTextColorOptions} from '@/components/common/colors';
 import {CARD_BADGE_COLOR_OPTIONS} from '@/components/contentful/badge/constants';
 
 export const UnitCardContentfulComponentDefinition: ComponentDefinition = {
@@ -95,17 +96,10 @@ export const UnitCardContentfulComponentDefinition: ComponentDefinition = {
       displayName: 'Unit Title Color',
       description: 'Applied to the unit title.',
       type: 'Text',
-      defaultValue: 'black',
+      defaultValue: 'purpleDark',
       group: 'style',
       validations: {
-        in: [
-          {value: 'black', displayName: 'Black'},
-          {value: 'purple', displayName: 'Purple'},
-          {value: 'blue', displayName: 'Blue'},
-          {value: 'green', displayName: 'Green'},
-          {value: 'orange', displayName: 'Orange'},
-          {value: 'pink', displayName: 'Pink'},
-        ],
+        in: brandTextColorOptions('purpleDark'),
       },
     },
     fullWidth: {

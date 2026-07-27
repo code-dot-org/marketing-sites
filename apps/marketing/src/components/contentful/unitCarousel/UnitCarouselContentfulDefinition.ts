@@ -1,6 +1,7 @@
 // Creates a definition for the Unit Carousel component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {brandTextColorOptions} from '@/components/common/colors';
 import {CARD_BADGE_COLOR_OPTIONS} from '@/components/contentful/badge/constants';
 
 export const UnitCarouselContentfulComponentDefinition: ComponentDefinition = {
@@ -17,6 +18,16 @@ export const UnitCarouselContentfulComponentDefinition: ComponentDefinition = {
   variables: {
     title: {
       displayName: 'Course Title',
+      type: 'Text',
+      group: 'content',
+      validations: {
+        bindingSourceType: ['entry', 'manual'],
+      },
+    },
+    courseDescription: {
+      displayName: 'Course Description',
+      description:
+        'Shown as a paragraph in the header, below the unit count and grade summary.',
       type: 'Text',
       group: 'content',
       validations: {
@@ -88,17 +99,10 @@ export const UnitCarouselContentfulComponentDefinition: ComponentDefinition = {
       displayName: 'Unit Title Color',
       description: 'Applied to the unit title on every card.',
       type: 'Text',
-      defaultValue: 'black',
+      defaultValue: 'purpleDark',
       group: 'style',
       validations: {
-        in: [
-          {value: 'black', displayName: 'Black'},
-          {value: 'purple', displayName: 'Purple'},
-          {value: 'blue', displayName: 'Blue'},
-          {value: 'green', displayName: 'Green'},
-          {value: 'orange', displayName: 'Orange'},
-          {value: 'pink', displayName: 'Pink'},
-        ],
+        in: brandTextColorOptions('purpleDark'),
       },
     },
     headingColor: {
@@ -108,14 +112,7 @@ export const UnitCarouselContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'black',
       group: 'style',
       validations: {
-        in: [
-          {value: 'black', displayName: 'Black'},
-          {value: 'purple', displayName: 'Purple'},
-          {value: 'blue', displayName: 'Blue'},
-          {value: 'green', displayName: 'Green'},
-          {value: 'orange', displayName: 'Orange'},
-          {value: 'pink', displayName: 'Pink'},
-        ],
+        in: brandTextColorOptions('black'),
       },
     },
   },

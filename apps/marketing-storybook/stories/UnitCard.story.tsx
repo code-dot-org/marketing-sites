@@ -34,7 +34,7 @@ export const Default: Story = {
   render: () => <UnitCard {...mockArgs} />,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const heading = canvas.getByRole('heading', {level: 3});
+    const heading = canvas.getByRole('heading', {level: 4});
     await expect(heading.textContent).toBe('Problem Solving with AI');
     const link = canvas.getByRole('link', {name: 'Explore'});
     await expect(link).toHaveAttribute('href', '/curriculum-test');

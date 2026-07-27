@@ -1,6 +1,7 @@
 // Creates a definition for the Course Catalog component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {brandTextColorOptions} from '@/components/common/colors';
 import {CARD_BADGE_COLOR_OPTIONS} from '@/components/contentful/badge/constants';
 
 export const CourseCatalogContentfulComponentDefinition: ComponentDefinition = {
@@ -62,17 +63,10 @@ export const CourseCatalogContentfulComponentDefinition: ComponentDefinition = {
       displayName: 'Unit Title Color',
       description: 'Applied to the unit title on every card.',
       type: 'Text',
-      defaultValue: 'black',
+      defaultValue: 'purpleDark',
       group: 'style',
       validations: {
-        in: [
-          {value: 'black', displayName: 'Black'},
-          {value: 'purple', displayName: 'Purple'},
-          {value: 'blue', displayName: 'Blue'},
-          {value: 'green', displayName: 'Green'},
-          {value: 'orange', displayName: 'Orange'},
-          {value: 'pink', displayName: 'Pink'},
-        ],
+        in: brandTextColorOptions('purpleDark'),
       },
     },
     headingColor: {
@@ -82,14 +76,7 @@ export const CourseCatalogContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'black',
       group: 'style',
       validations: {
-        in: [
-          {value: 'black', displayName: 'Black'},
-          {value: 'purple', displayName: 'Purple'},
-          {value: 'blue', displayName: 'Blue'},
-          {value: 'green', displayName: 'Green'},
-          {value: 'orange', displayName: 'Orange'},
-          {value: 'pink', displayName: 'Pink'},
-        ],
+        in: brandTextColorOptions('black'),
       },
     },
   },

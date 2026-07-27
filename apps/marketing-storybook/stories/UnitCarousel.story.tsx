@@ -37,7 +37,7 @@ export const Default: Story = {
   render: () => <UnitCarousel {...mockArgs} />,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    const heading = canvas.getByRole('heading', {level: 2});
+    const heading = canvas.getByRole('heading', {level: 3});
     await expect(heading.textContent).toBe('AI Foundations');
     const detailsLink = canvas.getByRole('link', {name: 'View course details'});
     await expect(detailsLink).toHaveAttribute('href', '/ai-foundations');

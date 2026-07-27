@@ -15,13 +15,11 @@ import {useSectionBackground} from '@/components/contentful/section/SectionBackg
 import NextImage from '@/components/nextImage/NextImage';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {
-  CODE_ORG_DISPLAY_FONT_STACK,
-  CODE_ORG_TEXT_FONT_STACK,
-} from '@/themes/code.org/typography/fontStack';
+import {CODE_ORG_TEXT_FONT_STACK} from '@/themes/code.org/typography/fontStack';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
 import {
+  cardColorCss,
   ContentCardColor,
   ContentCardStyle,
   ContentCardTitleAppearance,
@@ -151,9 +149,13 @@ const Content = styled(
     position: 'relative',
     flexGrow: 0,
     margin: '16px',
+    // The carousel equalizes panel heights by applying the measured
+    // offsetHeight as min-height — only exact with border-box sizing (no
+    // global border-box rule exists in this app).
+    boxSizing: 'border-box',
     borderRadius: codeaiRadius('md', '0.625rem'),
     // Translucent dark glass keeps white text legible over any image.
-    backgroundColor: 'rgba(41, 47, 54, 0.6)',
+    backgroundColor: 'rgba(41, 47, 54, 0.8)',
     backdropFilter: 'blur(8px)',
     WebkitBackdropFilter: 'blur(8px)',
   }),
@@ -175,17 +177,14 @@ const Title = styled('h3', {
   titleCase: ContentCardTitleCase;
   titleAppearance: ContentCardTitleAppearance;
 }>(({light, bold, titleColor, titleCase, titleAppearance}) => ({
-  fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
+  fontFamily: CODE_ORG_TEXT_FONT_STACK,
   fontSize: '1.25rem',
   lineHeight: '1.5rem',
   fontWeight: bold ? 700 : 500,
   textTransform: titleCase === 'uppercase' ? 'uppercase' : 'none',
-  color:
-    titleColor === 'black'
-      ? light
-        ? '#ffffff'
-        : 'var(--codeai-gray-8, #292f36)'
-      : `var(--codeai-${titleColor}-primary)`,
+  // Black contrast-switches to white over dark card surfaces; explicit color
+  // picks pass through.
+  color: titleColor === 'black' && light ? '#ffffff' : cardColorCss(titleColor),
   margin: 0,
   paddingBottom: '8px',
   ...titleAppearanceSx(titleAppearance),
@@ -198,7 +197,8 @@ const Description = styled(
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
   fontSize: '0.875rem',
   lineHeight: '1.25rem',
-  color: light ? '#ffffff' : 'var(--codeai-gray-6, #5f6872)',
+  // Black matches the site's default body text.
+  color: light ? '#ffffff' : '#000000',
   margin: 0,
   paddingBottom: '12px',
 }));
@@ -223,12 +223,12 @@ const LinkRow = styled('div', {
   // the link, keeping links aligned across cards.
   marginTop: 'auto',
   // The Link component only styles purple/black/white hierarchies, so other
-  // primary colors are applied from here. The attribute selector outweighs
-  // the theme's data-hierarchy rules, including their hover states.
+  // colors are applied from here. The attribute selector outweighs the
+  // theme's data-hierarchy rules, including their hover states.
   ...(linkColor !== 'black' && {
     '& a.MuiLink-root, & a.MuiLink-root[data-hierarchy], & a.MuiLink-root[data-hierarchy]:hover':
       {
-        color: `var(--codeai-${linkColor}-primary)`,
+        color: cardColorCss(linkColor),
       },
   }),
 }));

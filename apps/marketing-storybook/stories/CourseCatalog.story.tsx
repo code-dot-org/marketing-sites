@@ -59,7 +59,7 @@ export const Default: Story = {
       'CS Connections',
     ]) {
       await expect(
-        canvas.getByRole('heading', {level: 2, name: title}),
+        canvas.getByRole('heading', {level: 3, name: title}),
       ).toBeVisible();
     }
 
@@ -148,7 +148,7 @@ export const EditorMode: Story = {
       canvas.getByText('Interstitial — after section 1'),
     ).toBeVisible();
     // All four courses render despite editor mode.
-    await expect(canvas.getAllByRole('heading', {level: 2})).toHaveLength(4);
+    await expect(canvas.getAllByRole('heading', {level: 3})).toHaveLength(4);
   },
 };
 

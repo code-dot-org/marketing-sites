@@ -2,11 +2,16 @@
 // client') so server modules — e.g. the Card Carousel's Contentful
 // definition — import real arrays rather than RSC client-reference proxies.
 
+import {BrandColor, cssVarForBrandColor} from '@/components/common/colors';
+
 export const CONTENT_CARD_STYLES = ['outline', 'flat', 'overlay'] as const;
 export type ContentCardStyle = (typeof CONTENT_CARD_STYLES)[number];
 
-// 'black' is the automatic default (dark text, or white over dark surfaces);
-// the rest map to the codeai primary color ramp.
+// Legacy card color values — family names stored before the pickers moved to
+// the full brand-color list (July 2026). Kept out of the pickers; stored
+// values keep rendering via the family's primary token below. 'black' is
+// also a current BrandColor value: it renders true black and contrast-flips
+// to white over dark card surfaces.
 export const CONTENT_CARD_COLORS = [
   'black',
   'purple',
@@ -15,7 +20,26 @@ export const CONTENT_CARD_COLORS = [
   'orange',
   'pink',
 ] as const;
-export type ContentCardColor = (typeof CONTENT_CARD_COLORS)[number];
+export type LegacyContentCardColor = (typeof CONTENT_CARD_COLORS)[number];
+
+// Card color fields accept the full brand-color list plus the legacy family
+// values. Shared by Content Card, Unit Card, and their carousel/catalog
+// wrappers.
+export type ContentCardColor = LegacyContentCardColor | BrandColor;
+
+const LEGACY_FAMILY_TO_BRAND: Partial<Record<string, BrandColor>> = {
+  purple: 'purplePrimary',
+  blue: 'bluePrimary',
+  green: 'greenPrimary',
+  orange: 'orangePrimary',
+  pink: 'pinkPrimary',
+};
+
+export const cardColorToBrand = (color: ContentCardColor): BrandColor =>
+  LEGACY_FAMILY_TO_BRAND[color] ?? (color as BrandColor);
+
+export const cardColorCss = (color: ContentCardColor): string =>
+  cssVarForBrandColor(cardColorToBrand(color));
 
 export const CONTENT_CARD_TITLE_CASES = ['none', 'uppercase'] as const;
 export type ContentCardTitleCase = (typeof CONTENT_CARD_TITLE_CASES)[number];

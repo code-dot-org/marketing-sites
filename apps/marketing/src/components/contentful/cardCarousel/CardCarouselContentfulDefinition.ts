@@ -4,9 +4,9 @@ import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 // Imported from the server-safe constants module (not the contentCard
 // barrel) — this file evaluates in the RSC layer, where values re-exported
 // through the 'use client' component would arrive as reference proxies.
+import {brandTextColorOptions} from '@/components/common/colors';
 import {CARD_BADGE_COLOR_OPTIONS} from '@/components/contentful/badge/constants';
 import {
-  CONTENT_CARD_COLORS,
   CONTENT_CARD_STYLES,
   CONTENT_CARD_TITLE_APPEARANCES,
   CONTENT_CARD_TITLE_CASES,
@@ -141,12 +141,12 @@ export const CardCarouselContentfulComponentDefinition: ComponentDefinition = {
     },
     titleColor: {
       displayName: 'Title Color',
-      description: "Black follows the card style's default text color.",
+      description: 'Black flips to white over dark card surfaces.',
       type: 'Text',
-      defaultValue: 'black',
+      defaultValue: 'purpleDark',
       group: 'style',
       validations: {
-        in: CONTENT_CARD_COLORS.map(opt),
+        in: brandTextColorOptions('purpleDark'),
       },
     },
     titleCase: {
@@ -189,7 +189,7 @@ export const CardCarouselContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: 'black',
       group: 'style',
       validations: {
-        in: CONTENT_CARD_COLORS.map(opt),
+        in: brandTextColorOptions('black'),
       },
     },
     titleOverlay: {
