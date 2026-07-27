@@ -21,12 +21,11 @@ const TRANSPARENT_BACKGROUND_OPTION = {
 };
 
 // Legacy backgrounds (Corporate Site primitives, patterns, and the `primary`
-// manifest entry) are deliberately absent from the picker: existing entries
-// still render — Section.tsx keeps the value space and the theme keeps their
-// CSS rules — but authors can no longer select them.
+// manifest entry) and the gray ramp are deliberately absent from the picker:
+// existing entries still render — Section.tsx keeps the value space and the
+// theme keeps their CSS rules — but authors can no longer select them.
 //
-// Order: White (default), Gray 1, the color families, the remaining grays,
-// gradients, Black, Transparent.
+// Order: White (default), the color families, gradients, Black, Transparent.
 const SECTION_BACKGROUND_OPTIONS = ((): {
   value: string;
   displayName: string;
@@ -34,9 +33,6 @@ const SECTION_BACKGROUND_OPTIONS = ((): {
   const options = brandColorOptionsWithDefault('white');
   const byValue = new Map(options.map(o => [o.value, o]));
   const familyOf = new Map(BRAND_COLORS.map(c => [c.value, c.family]));
-  const grayValues = BRAND_COLORS.filter(c => c.family === 'gray').map(
-    c => c.value,
-  );
   const colorOptions = options.filter(
     o =>
       o.value !== 'primary' &&
@@ -44,9 +40,7 @@ const SECTION_BACKGROUND_OPTIONS = ((): {
   );
   return [
     byValue.get('white'),
-    byValue.get('gray1'),
     ...colorOptions,
-    ...grayValues.filter(v => v !== 'gray1').map(v => byValue.get(v)),
     ...SECTION_GRADIENT_OPTIONS,
     byValue.get('black'),
     TRANSPARENT_BACKGROUND_OPTION,

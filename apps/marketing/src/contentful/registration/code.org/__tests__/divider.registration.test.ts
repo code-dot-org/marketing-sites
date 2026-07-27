@@ -14,12 +14,12 @@ describe('code.org Divider Contentful component definition', () => {
     expect(CodeOrgDividerContentfulComponentDefinition.name).toBe('Divider');
   });
 
-  it('defaults the color to Gray 5', () => {
+  it('defaults the color to Gray 3', () => {
     const {color} = CodeOrgDividerContentfulComponentDefinition.variables;
-    expect(color.defaultValue).toBe('gray5');
+    expect(color.defaultValue).toBe('gray3');
     expect(color.validations?.in).toEqual(
       expect.arrayContaining([
-        {value: 'gray5', displayName: 'Gray 5 (default)'},
+        {value: 'gray3', displayName: 'Gray 3 (default)'},
         {value: 'strong', displayName: 'Secondary (legacy)'},
       ]),
     );
