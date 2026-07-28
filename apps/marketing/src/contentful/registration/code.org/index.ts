@@ -56,6 +56,9 @@ import Button, {
 } from '@/components/contentful/corporateSite/buttonLegacy';
 import {DoubleTheDonationContentfulComponentDefinition} from '@/components/contentful/corporateSite/doubleTheDonation';
 import DoubleTheDonation from '@/components/contentful/corporateSite/doubleTheDonation/DoubleTheDonation';
+import GoFundMeDonation, {
+  GoFundMeDonationContentfulComponentDefinition,
+} from '@/components/contentful/corporateSite/goFundMeDonation';
 import StateGapMap, {
   StateGapMapContentfulComponentDefinition,
 } from '@/components/contentful/corporateSite/stateGapMap';
@@ -314,6 +317,15 @@ const contentfulRegistration = {
     {
       component: DoubleTheDonation,
       definition: DoubleTheDonationContentfulComponentDefinition,
+    },
+    {
+      component: GoFundMeDonation,
+      definition: GoFundMeDonationContentfulComponentDefinition,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
+      },
     },
     {
       component: StateGapMap,
