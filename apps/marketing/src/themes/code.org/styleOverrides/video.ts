@@ -42,13 +42,12 @@ export const VIDEO_OVERRIDES: Components<Theme>['MuiVideo'] = {
         color: 'var(--text-neutral-primary)',
       },
     }),
-    footer: () => ({
-      'a.video-download-button.MuiButton-root': {
-        lineHeight: 1.57,
-        alignItems: 'center',
-        paddingBlock: 0,
-        margin: 0,
-        borderColor: 'var(--borders-neutral-strong)',
+    footer: ({theme}) => ({
+      // Caption reads as small body text, not the semibold caption role.
+      'figcaption.MuiTypography-caption': {
+        ...theme.typography.body3,
+        color: 'var(--neutral-base-true-black)',
+        marginBottom: 0,
       },
     }),
   },
