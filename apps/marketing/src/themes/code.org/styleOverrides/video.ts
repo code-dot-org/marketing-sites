@@ -27,7 +27,7 @@ export const VIDEO_OVERRIDES: Components<Theme>['MuiVideo'] = {
           0 3px 6px 0 rgb(0 0 0 / 0.2)`,
         svg: {
           fontSize: '52px',
-          color: 'var(--brand-purple-50)',
+          color: 'var(--codeai-purple-primary)',
         },
         '&:hover': {
           opacity: 0.9,
