@@ -35,6 +35,8 @@ export type LinkProps = RemoveMarginBottomProps & {
   size?: ComponentSize;
   /** Whether Link is for internal code.org pages, or external web page. (external links are opened in new tab) */
   isLinkExternal: boolean;
+  /** Open in a new tab without the external-link treatment (keeps `icon`, no external icon). */
+  openInNewTab?: boolean;
   /** Whether to render the link text in bold. Honored on csforall; ignored on code.org (Brand Links always Bold 700). */
   isStrong?: boolean;
   /** FontAwesome icon name (e.g. "arrow-right"). Suppressed when isLinkExternal is true. */
@@ -113,6 +115,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
   color = 'primary',
   size = 'm',
   isLinkExternal,
+  openInNewTab = false,
   isStrong = false,
   icon,
   iconPosition = 'right',
@@ -155,8 +158,8 @@ const Link: React.FunctionComponent<LinkProps> = ({
         data-inline={inline ? 'true' : undefined}
         href={href}
         aria-label={ariaLabel}
-        target={isLinkExternal ? '_blank' : undefined}
-        rel={isLinkExternal ? 'noopener noreferrer' : undefined}
+        target={isLinkExternal || openInNewTab ? '_blank' : undefined}
+        rel={isLinkExternal || openInNewTab ? 'noopener noreferrer' : undefined}
         sx={{
           marginBottom: removeMarginBottom ? 0 : undefined,
           ...styles.container,
@@ -183,8 +186,8 @@ const Link: React.FunctionComponent<LinkProps> = ({
       className={classNames(`link--size-${size}`, className)}
       href={href}
       aria-label={ariaLabel}
-      target={isLinkExternal ? '_blank' : undefined}
-      rel={isLinkExternal ? 'noopener noreferrer' : undefined}
+      target={isLinkExternal || openInNewTab ? '_blank' : undefined}
+      rel={isLinkExternal || openInNewTab ? 'noopener noreferrer' : undefined}
       sx={{
         color: resolveLegacyLinkColor(color, enclosingBackground),
         fontWeight: isStrong ? 600 : 500,

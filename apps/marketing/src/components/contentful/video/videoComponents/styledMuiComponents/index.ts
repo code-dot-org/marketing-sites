@@ -110,7 +110,7 @@ export const MuiVideoFooter = styled('div', {
   alignItems: 'center',
   gap: '1rem',
   marginTop: '6px',
-  'a.video-download-button.MuiButtonBase-root': {
+  'a.video-download-button': {
     '@media (max-width: 640px)': {
       display: 'none',
     },

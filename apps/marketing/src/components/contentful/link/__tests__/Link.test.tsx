@@ -86,6 +86,21 @@ describe('Link Component', () => {
     expect(link.firstElementChild).toBe(icon);
   });
 
+  it('opens in a new tab without external treatment when openInNewTab is set', () => {
+    const {container} = render(
+      <ThemeProvider theme={brandTheme}>
+        <Link {...defaultProps} icon="download" openInNewTab>
+          Click me
+        </Link>
+      </ThemeProvider>,
+    );
+    expect(screen.getByRole('link')).toHaveAttribute('target', '_blank');
+    expect(container.querySelector('i.fa-download')).toBeInTheDocument();
+    expect(
+      container.querySelector('i.fa-up-right-from-square'),
+    ).not.toBeInTheDocument();
+  });
+
   it('suppresses the user icon when the link is external', () => {
     const {container} = render(
       <ThemeProvider theme={brandTheme}>
