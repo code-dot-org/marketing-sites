@@ -1,13 +1,55 @@
 'use client';
 
 import Box from '@mui/material/Box';
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 
-import {
-  FORM_CLASSY_ID_PATTERN,
-  FORM_DIV_ID_PATTERN,
-  GOFUNDME_SDK_SRC,
-} from './constants';
+import {FORM_CLASSY_ID_PATTERN, FORM_DIV_ID_PATTERN} from './constants';
+
+declare global {
+  interface Window {
+    // Public API of the GoFundMe embedded checkout SDK, loaded site-wide by
+    // providers/gofundme/GoFundMeLoader.
+    eg?: {
+      init: () => void;
+      destroy: () => void;
+      isInitialized: () => boolean;
+    };
+  }
+}
+
+const SDK_POLL_INTERVAL_MS = 100;
+const SDK_POLL_TIMEOUT_MS = 15000;
+
+/**
+ * The SDK scans for form divs only when it initializes, so a div mounted
+ * after page load (hydration, soft navigation) needs a destroy/init cycle to
+ * be picked up. Polls because the site-wide script is async and may not have
+ * loaded yet. Returns a cancel function.
+ */
+const reinitGoFundMeSdk = (): (() => void) => {
+  let elapsed = 0;
+  const tryReinit = () => {
+    if (!window.eg) {
+      return false;
+    }
+    if (window.eg.isInitialized()) {
+      window.eg.destroy();
+    }
+    window.eg.init();
+    return true;
+  };
+
+  if (tryReinit()) {
+    return () => {};
+  }
+  const interval = setInterval(() => {
+    elapsed += SDK_POLL_INTERVAL_MS;
+    if (tryReinit() || elapsed >= SDK_POLL_TIMEOUT_MS) {
+      clearInterval(interval);
+    }
+  }, SDK_POLL_INTERVAL_MS);
+  return () => clearInterval(interval);
+};
 
 export interface GoFundMeDonationProps {
   formDivId?: string;
@@ -20,6 +62,8 @@ const GoFundMeDonation: React.FC<GoFundMeDonationProps> = ({
   formClassyId,
   isEditorMode = false,
 }) => {
+  const hostRef = useRef<HTMLDivElement>(null);
+
   const isBound = Boolean(formDivId && formClassyId);
   const isValid =
     isBound &&
@@ -35,24 +79,26 @@ const GoFundMeDonation: React.FC<GoFundMeDonationProps> = ({
       return;
     }
 
-    if (!shouldRenderForm) {
+    const host = hostRef.current;
+    if (!shouldRenderForm || !host) {
       return;
     }
 
-    // The SDK is shared by every form on the page; only inject it once.
-    if (document.querySelector(`script[src="${GOFUNDME_SDK_SRC}"]`)) {
-      return;
-    }
+    // The SDK replaces the target div with its own markup, so React must not
+    // own it: create it imperatively inside a React-owned host and keep it
+    // out of the server render entirely.
+    const target = document.createElement('div');
+    target.id = formDivId as string;
+    target.setAttribute('classy', formClassyId as string);
+    host.appendChild(target);
 
-    const script = document.createElement('script');
-    script.src = GOFUNDME_SDK_SRC;
-    script.async = true;
-    script.onerror = () =>
-      console.warn('GoFundMe Donation: SDK script failed to load.');
-    document.head.appendChild(script);
-    // Intentionally no cleanup: another form on the page may still need the
-    // SDK, and re-appending the script on remount would re-run it.
-  }, [isBound, isValid, shouldRenderForm]);
+    const cancelReinit = reinitGoFundMeSdk();
+
+    return () => {
+      cancelReinit();
+      host.replaceChildren();
+    };
+  }, [isBound, isValid, shouldRenderForm, formDivId, formClassyId]);
 
   // Show placeholder text until a content entry is bound
   if (!isBound) {
@@ -91,10 +137,7 @@ const GoFundMeDonation: React.FC<GoFundMeDonationProps> = ({
     );
   }
 
-  // The GoFundMe SDK finds this div by its id and hydrates the checkout form
-  // into it. `classy` is the vendor's attribute name; the spread keeps TS
-  // happy about a non-standard attribute.
-  return <div id={formDivId} {...{classy: formClassyId}} />;
+  return <div ref={hostRef} />;
 };
 
 export default GoFundMeDonation;
