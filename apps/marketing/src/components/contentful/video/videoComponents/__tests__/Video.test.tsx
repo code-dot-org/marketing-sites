@@ -213,9 +213,7 @@ describe('Video Component', () => {
   it('keeps the maxresdefault thumbnail when it loads at full size', () => {
     render(<Video {...defaultProps} />);
 
-    const poster = screen.getByAltText(
-      `Play video ${defaultProps.videoTitle}`,
-    );
+    const poster = screen.getByAltText(`Play video ${defaultProps.videoTitle}`);
     Object.defineProperty(poster, 'naturalWidth', {value: 1280});
     fireEvent.load(poster);
 
@@ -228,9 +226,7 @@ describe('Video Component', () => {
   it('falls back to the hqdefault thumbnail when YouTube serves its placeholder', () => {
     render(<Video {...defaultProps} />);
 
-    const poster = screen.getByAltText(
-      `Play video ${defaultProps.videoTitle}`,
-    );
+    const poster = screen.getByAltText(`Play video ${defaultProps.videoTitle}`);
     Object.defineProperty(poster, 'naturalWidth', {value: 120});
     fireEvent.load(poster);
 

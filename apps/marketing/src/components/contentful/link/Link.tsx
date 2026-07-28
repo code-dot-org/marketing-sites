@@ -159,9 +159,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
         href={href}
         aria-label={ariaLabel}
         target={isLinkExternal || openInNewTab ? '_blank' : undefined}
-        rel={
-          isLinkExternal || openInNewTab ? 'noopener noreferrer' : undefined
-        }
+        rel={isLinkExternal || openInNewTab ? 'noopener noreferrer' : undefined}
         sx={{
           marginBottom: removeMarginBottom ? 0 : undefined,
           ...styles.container,
