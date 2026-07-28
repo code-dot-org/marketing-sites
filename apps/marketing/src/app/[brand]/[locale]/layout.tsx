@@ -18,7 +18,6 @@ import OrganizationJsonLd from '@/config/jsonLd/OrganizationJsonLd';
 import {SUPPORTED_LOCALES_MAP, SupportedLocale} from '@/config/locale';
 import {getStage} from '@/config/stage';
 import EnvironmentLoader from '@/providers/environment';
-import GoFundMeLoader from '@/providers/gofundme/GoFundMeLoader';
 import LocalizeLoader from '@/providers/localize/LocalizeLoader';
 import OneTrustLoader from '@/providers/onetrust/OneTrustLoader';
 import OneTrustProvider from '@/providers/onetrust/OneTrustProvider';
@@ -69,7 +68,6 @@ export default async function Layout({
             <EnvironmentLoader brand={brand} />
             <SentryLoader />
             <OneTrustLoader brand={brand} />
-            <GoFundMeLoader brand={brand} />
             <LocalizeLoader
               brand={brand}
               locale={locale}

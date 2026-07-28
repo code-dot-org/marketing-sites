@@ -1,9 +1,15 @@
 import {cleanup, render, screen, waitFor} from '@testing-library/react';
 
+import {GOFUNDME_SDK_SRC} from '../constants';
 import GoFundMeDonation from '../GoFundMeDonation';
 
 const VALID_DIV_ID = 'GnpoO1jdMG-VtRU8aHW20';
 const VALID_CLASSY_ID = '739526';
+
+const getSdkScripts = () =>
+  Array.from(document.head.querySelectorAll('script')).filter(
+    script => script.src === GOFUNDME_SDK_SRC,
+  );
 
 const mockSdk = () => {
   const sdk = {
@@ -19,6 +25,7 @@ describe('GoFundMeDonation', () => {
   afterEach(() => {
     cleanup();
     delete window.eg;
+    getSdkScripts().forEach(script => script.remove());
     jest.restoreAllMocks();
   });
 
@@ -27,10 +34,10 @@ describe('GoFundMeDonation', () => {
     expect(
       screen.getByText(/GoFundMe Donation placeholder/),
     ).toBeInTheDocument();
+    expect(getSdkScripts()).toHaveLength(0);
   });
 
-  it('mounts the target div inside the host and reinitializes the SDK', async () => {
-    const sdk = mockSdk();
+  it('mounts the target div and injects the SDK script into the head', async () => {
     const {container} = render(
       <GoFundMeDonation
         formDivId={VALID_DIV_ID}
@@ -42,9 +49,56 @@ describe('GoFundMeDonation', () => {
       const target = container.querySelector(`[id="${VALID_DIV_ID}"]`);
       expect(target).toBeInTheDocument();
       expect(target).toHaveAttribute('classy', VALID_CLASSY_ID);
+      expect(getSdkScripts()).toHaveLength(1);
+    });
+    expect(getSdkScripts()[0].async).toBe(true);
+  });
+
+  it('injects the SDK script only once for multiple forms on a page', async () => {
+    render(
+      <>
+        <GoFundMeDonation
+          formDivId={VALID_DIV_ID}
+          formClassyId={VALID_CLASSY_ID}
+        />
+        <GoFundMeDonation formDivId="another-form" formClassyId="123456" />
+      </>,
+    );
+
+    await waitFor(() => {
+      expect(getSdkScripts()).toHaveLength(1);
+    });
+  });
+
+  it('keeps the SDK script but removes the target div on unmount', async () => {
+    const {container, unmount} = render(
+      <GoFundMeDonation
+        formDivId={VALID_DIV_ID}
+        formClassyId={VALID_CLASSY_ID}
+      />,
+    );
+    await waitFor(() => {
+      expect(container.querySelector(`[id="${VALID_DIV_ID}"]`)).toBeTruthy();
+    });
+    unmount();
+    expect(document.getElementById(VALID_DIV_ID)).toBeNull();
+    expect(getSdkScripts()).toHaveLength(1);
+  });
+
+  it('recycles an already-loaded SDK with destroy + init instead of a new script', async () => {
+    const sdk = mockSdk();
+    render(
+      <GoFundMeDonation
+        formDivId={VALID_DIV_ID}
+        formClassyId={VALID_CLASSY_ID}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(sdk.init).toHaveBeenCalled();
     });
     expect(sdk.destroy).toHaveBeenCalled();
-    expect(sdk.init).toHaveBeenCalled();
+    expect(getSdkScripts()).toHaveLength(0);
   });
 
   it('initializes without destroying when the SDK has not initialized yet', async () => {
@@ -63,46 +117,14 @@ describe('GoFundMeDonation', () => {
     expect(sdk.destroy).not.toHaveBeenCalled();
   });
 
-  it('picks up the SDK when the script loads after mount', async () => {
-    jest.useFakeTimers();
-    const {container} = render(
-      <GoFundMeDonation
-        formDivId={VALID_DIV_ID}
-        formClassyId={VALID_CLASSY_ID}
-      />,
-    );
-    expect(container.querySelector(`[id="${VALID_DIV_ID}"]`)).toBeTruthy();
-
-    const sdk = mockSdk();
-    jest.advanceTimersByTime(300);
-    expect(sdk.init).toHaveBeenCalled();
-    jest.useRealTimers();
-  });
-
-  it('removes the target div on unmount', async () => {
-    mockSdk();
-    const {container, unmount} = render(
-      <GoFundMeDonation
-        formDivId={VALID_DIV_ID}
-        formClassyId={VALID_CLASSY_ID}
-      />,
-    );
-    await waitFor(() => {
-      expect(container.querySelector(`[id="${VALID_DIV_ID}"]`)).toBeTruthy();
-    });
-    unmount();
-    expect(document.getElementById(VALID_DIV_ID)).toBeNull();
-  });
-
   it.each([
     ['script tag in div id', '"><script>alert(1)</script>', VALID_CLASSY_ID],
     ['spaces in div id', 'some id', VALID_CLASSY_ID],
     ['quotes in div id', `${VALID_DIV_ID}"`, VALID_CLASSY_ID],
     ['non-numeric classy id', VALID_DIV_ID, '739526; drop'],
   ])(
-    'renders nothing and skips SDK init for invalid ids (%s)',
+    'renders nothing and skips the SDK for invalid ids (%s)',
     async (_label, formDivId, formClassyId) => {
-      const sdk = mockSdk();
       const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
       const {container} = render(
         <GoFundMeDonation formDivId={formDivId} formClassyId={formClassyId} />,
@@ -112,12 +134,11 @@ describe('GoFundMeDonation', () => {
       await waitFor(() => {
         expect(warn).toHaveBeenCalled();
       });
-      expect(sdk.init).not.toHaveBeenCalled();
+      expect(getSdkScripts()).toHaveLength(0);
     },
   );
 
-  it('renders a static preview without touching the SDK in editor mode', () => {
-    const sdk = mockSdk();
+  it('renders a static preview without the SDK in editor mode', () => {
     render(
       <GoFundMeDonation
         formDivId={VALID_DIV_ID}
@@ -129,7 +150,7 @@ describe('GoFundMeDonation', () => {
     expect(
       screen.getByText(/renders here on the live site/),
     ).toBeInTheDocument();
-    expect(sdk.init).not.toHaveBeenCalled();
+    expect(getSdkScripts()).toHaveLength(0);
   });
 
   it('explains invalid ids in editor mode instead of rendering nothing', () => {

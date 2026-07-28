@@ -3,12 +3,16 @@
 import Box from '@mui/material/Box';
 import React, {useEffect, useRef} from 'react';
 
-import {FORM_CLASSY_ID_PATTERN, FORM_DIV_ID_PATTERN} from './constants';
+import {
+  FORM_CLASSY_ID_PATTERN,
+  FORM_DIV_ID_PATTERN,
+  GOFUNDME_SDK_SRC,
+} from './constants';
 
 declare global {
   interface Window {
-    // Public API of the GoFundMe embedded checkout SDK, loaded site-wide by
-    // providers/gofundme/GoFundMeLoader.
+    // Public API of the GoFundMe embedded checkout SDK; window.eg is set as
+    // soon as the script executes.
     eg?: {
       init: () => void;
       destroy: () => void;
@@ -17,38 +21,35 @@ declare global {
   }
 }
 
-const SDK_POLL_INTERVAL_MS = 100;
-const SDK_POLL_TIMEOUT_MS = 15000;
-
 /**
- * The SDK scans for form divs only when it initializes, so a div mounted
- * after page load (hydration, soft navigation) needs a destroy/init cycle to
- * be picked up. Polls because the site-wide script is async and may not have
- * loaded yet. Returns a cancel function.
+ * Loads the SDK on demand: only pages using this component pay the cost. The
+ * SDK scans for form divs only when it initializes, so when it is already on
+ * the page (soft navigation, another form) it needs a destroy/init cycle to
+ * pick up a freshly mounted div. Call after the target div is in the DOM.
  */
-const reinitGoFundMeSdk = (): (() => void) => {
-  let elapsed = 0;
-  const tryReinit = () => {
-    if (!window.eg) {
-      return false;
-    }
+const ensureGoFundMeSdk = () => {
+  if (window.eg) {
     if (window.eg.isInitialized()) {
       window.eg.destroy();
     }
     window.eg.init();
-    return true;
-  };
-
-  if (tryReinit()) {
-    return () => {};
+    return;
   }
-  const interval = setInterval(() => {
-    elapsed += SDK_POLL_INTERVAL_MS;
-    if (tryReinit() || elapsed >= SDK_POLL_TIMEOUT_MS) {
-      clearInterval(interval);
-    }
-  }, SDK_POLL_INTERVAL_MS);
-  return () => clearInterval(interval);
+
+  // Script tag present but not executed yet (e.g. another form appended it a
+  // moment ago): its auto-init will find this div too — nothing to do.
+  if (document.querySelector(`script[src="${GOFUNDME_SDK_SRC}"]`)) {
+    return;
+  }
+
+  const script = document.createElement('script');
+  script.src = GOFUNDME_SDK_SRC;
+  script.async = true;
+  script.onerror = () =>
+    console.warn('GoFundMe Donation: SDK script failed to load.');
+  document.head.appendChild(script);
+  // Intentionally never removed: other forms may still need the SDK, and
+  // re-running the script on remount would double-initialize it.
 };
 
 export interface GoFundMeDonationProps {
@@ -92,10 +93,9 @@ const GoFundMeDonation: React.FC<GoFundMeDonationProps> = ({
     target.setAttribute('classy', formClassyId as string);
     host.appendChild(target);
 
-    const cancelReinit = reinitGoFundMeSdk();
+    ensureGoFundMeSdk();
 
     return () => {
-      cancelReinit();
       host.replaceChildren();
     };
   }, [isBound, isValid, shouldRenderForm, formDivId, formClassyId]);
