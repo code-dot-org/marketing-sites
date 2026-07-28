@@ -210,6 +210,36 @@ describe('Video Component', () => {
     expect(screen.getByText('Cookie Settings')).toBeInTheDocument();
   });
 
+  it('keeps the maxresdefault thumbnail when it loads at full size', () => {
+    render(<Video {...defaultProps} />);
+
+    const poster = screen.getByAltText(
+      `Play video ${defaultProps.videoTitle}`,
+    );
+    Object.defineProperty(poster, 'naturalWidth', {value: 1280});
+    fireEvent.load(poster);
+
+    expect(poster).toHaveAttribute(
+      'src',
+      `//i.ytimg.com/vi/${defaultProps.youTubeId}/maxresdefault.jpg`,
+    );
+  });
+
+  it('falls back to the hqdefault thumbnail when YouTube serves its placeholder', () => {
+    render(<Video {...defaultProps} />);
+
+    const poster = screen.getByAltText(
+      `Play video ${defaultProps.videoTitle}`,
+    );
+    Object.defineProperty(poster, 'naturalWidth', {value: 120});
+    fireEvent.load(poster);
+
+    expect(poster).toHaveAttribute(
+      'src',
+      `//i.ytimg.com/vi/${defaultProps.youTubeId}/hqdefault.jpg`,
+    );
+  });
+
   it('renders no JSON-LD script by default', () => {
     const {container} = render(<Video {...defaultProps} />);
     const jsonLdScript = container.querySelector(
@@ -242,7 +272,7 @@ describe('Video Component', () => {
         '@type': 'VideoObject',
         name: defaultProps.videoTitle,
         description: videoDesc,
-        thumbnailUrl: `//i.ytimg.com/vi/${youTubeId}/hqdefault.jpg`,
+        thumbnailUrl: `//i.ytimg.com/vi/${youTubeId}/maxresdefault.jpg`,
         uploadDate: uploadDate,
         embedUrl: `https://www.youtube-nocookie.com/watch?v=${youTubeId}`,
         contentUrl: defaultProps.videoFallback,

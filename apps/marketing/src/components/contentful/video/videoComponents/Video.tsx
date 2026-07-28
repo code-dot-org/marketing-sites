@@ -35,7 +35,20 @@ const Video: React.FC<VideoProps> = ({
   const youtubeVideoUrl = `https://www.youtube-nocookie.com/watch?v=${youTubeId}`;
 
   const [renderState, setRenderState] = useState<RenderState>('facade');
-  const posterThumbnail = `//i.ytimg.com/vi/${youTubeId}/hqdefault.jpg`;
+
+  // Prefer the 1280x720 thumbnail; videos uploaded in SD don't have one, and
+  // YouTube then serves a 120x90 placeholder (rendered despite the 404), so
+  // detect it by size and fall back to the always-available 480x360.
+  const [useFallbackThumbnail, setUseFallbackThumbnail] = useState(false);
+  const posterThumbnail = `//i.ytimg.com/vi/${youTubeId}/${
+    useFallbackThumbnail ? 'hqdefault' : 'maxresdefault'
+  }.jpg`;
+
+  const handlePosterLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    if (event.currentTarget.naturalWidth <= 120) {
+      setUseFallbackThumbnail(true);
+    }
+  };
 
   const handleError = (
     error: Error | undefined,
@@ -74,6 +87,7 @@ const Video: React.FC<VideoProps> = ({
             label={`Play video ${videoTitle}`}
             posterThumbnail={posterThumbnail}
             onClick={handleFacadeClick}
+            onPosterLoad={handlePosterLoad}
           />
         );
       case 'youtube':
