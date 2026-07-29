@@ -128,11 +128,11 @@ describe('ContentCard component', () => {
     expect(screen.queryByText('Read post')).not.toBeInTheDocument();
   });
 
-  it('renders the arrow-right link icon by default', () => {
+  it('renders the angle-right link icon by default', () => {
     render(<ContentCard {...defaultProps} />);
     const arrow = screen
       .getAllByTestId('font-awesome-v6-icon')
-      .find(icon => icon.classList.contains('fa-arrow-right'));
+      .find(icon => icon.classList.contains('fa-angle-right'));
     expect(arrow).toBeDefined();
   });
 
@@ -140,7 +140,7 @@ describe('ContentCard component', () => {
     render(<ContentCard {...defaultProps} linkIconOverride="star" />);
     const icons = screen.getAllByTestId('font-awesome-v6-icon');
     expect(icons.some(icon => icon.classList.contains('fa-star'))).toBe(true);
-    expect(icons.some(icon => icon.classList.contains('fa-arrow-right'))).toBe(
+    expect(icons.some(icon => icon.classList.contains('fa-angle-right'))).toBe(
       false,
     );
   });

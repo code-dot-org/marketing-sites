@@ -257,7 +257,7 @@ const UnitCard: React.FC<UnitCardProps> = ({
                     ariaLabel={linkFields.ariaLabel || undefined}
                     color="black"
                     size="s"
-                    icon="arrow-right"
+                    icon="angle-right"
                     removeMarginBottom
                   >
                     {linkFields.label}

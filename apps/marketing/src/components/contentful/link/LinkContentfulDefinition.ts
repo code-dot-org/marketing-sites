@@ -14,7 +14,7 @@ const BASE_VARIABLES: ComponentDefinition['variables'] = {
   icon: {
     displayName: 'Icon',
     description:
-      'FontAwesome icon name (e.g. "arrow-right"). Ignored when "Is this link external?" is on.',
+      'FontAwesome icon name (e.g. "angle-right"). Ignored when "Is this link external?" is on.',
     type: 'Text',
     group: 'style',
     validations: {
@@ -127,6 +127,8 @@ export const BrandLinkContentfulComponentDefinition: ComponentDefinition = {
       },
     },
     ...BASE_VARIABLES,
+    // Brand standard: angle-right unless the author sets (or clears) it.
+    icon: {...BASE_VARIABLES.icon, defaultValue: 'angle-right'},
   },
 };
 
