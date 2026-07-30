@@ -46,7 +46,7 @@ const MainSection = styled('div')(({theme}) => ({
   paddingInline: theme.spacing(4),
   display: 'flex',
   flexWrap: 'wrap',
-  columnGap: theme.spacing(6),
+  columnGap: theme.spacing(12),
   rowGap: theme.spacing(5),
   [theme.breakpoints.down('sm')]: {
     paddingInline: theme.spacing(2),
@@ -54,7 +54,7 @@ const MainSection = styled('div')(({theme}) => ({
 }));
 
 const BrandBlock = styled('div')(({theme}) => ({
-  width: 360,
+  width: 320,
   flexShrink: 0,
   [theme.breakpoints.down(STACK_BREAKPOINT)]: {
     width: '100%',
@@ -62,9 +62,9 @@ const BrandBlock = styled('div')(({theme}) => ({
 }));
 
 const Tagline = styled('p')(({theme}) => ({
-  // Body default (body2), bolded.
+  // Body default (body2) at medium weight.
   ...theme.typography.body2,
-  fontWeight: 700,
+  fontWeight: 500,
   color: theme.palette.text.primary,
   marginBlock: `${theme.spacing(3)} 0`,
 }));
@@ -209,13 +209,6 @@ const LanguageSelectWrapper = styled('div')(({theme}) => ({
   },
 }));
 
-const LanguageLabel = styled('label')(({theme}) => ({
-  fontFamily: theme.typography.fontFamily,
-  fontSize: '0.6875rem',
-  lineHeight: 1.4,
-  color: theme.palette.common.white,
-}));
-
 const LanguageSelect = styled(NativeSelect)(({theme}) => ({
   backgroundColor: theme.palette.common.white,
   borderRadius: codeaiRadius('sm', '5px'),
@@ -353,10 +346,20 @@ const FooterCodeOrgView: React.FC<FooterCodeOrgViewProps> = ({
         <BottomContent>
           <CopyrightText>{content.copyright}</CopyrightText>
           <BottomActions>
+            <AwsLogoLink
+              href="https://aws.amazon.com/what-is-cloud-computing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={awsLogo.src}
+                alt="Powered by AWS Cloud Computing"
+                width={130}
+                height={23}
+                style={{width: '130px', height: 'auto'}}
+              />
+            </AwsLogoLink>
             <LanguageSelectWrapper>
-              <LanguageLabel htmlFor="footer-language-select">
-                Select language
-              </LanguageLabel>
               <FormControl variant="standard">
                 <LanguageSelect
                   className="notranslate"
@@ -364,7 +367,11 @@ const FooterCodeOrgView: React.FC<FooterCodeOrgViewProps> = ({
                   name="language-select"
                   IconComponent={KeyboardArrowDownIcon}
                   value={locale}
-                  inputProps={{id: 'footer-language-select'}}
+                  // No visible label; keep the accessible name on the input.
+                  inputProps={{
+                    id: 'footer-language-select',
+                    'aria-label': 'Select language',
+                  }}
                   onChange={e => handleLanguageChange(e.target.value)}
                 >
                   {SUPPORTED_LOCALES_CONFIG.map(lang => (
@@ -375,19 +382,6 @@ const FooterCodeOrgView: React.FC<FooterCodeOrgViewProps> = ({
                 </LanguageSelect>
               </FormControl>
             </LanguageSelectWrapper>
-            <AwsLogoLink
-              href="https://aws.amazon.com/what-is-cloud-computing"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src={awsLogo.src}
-                alt="Powered by AWS Cloud Computing"
-                width={140}
-                height={25}
-                style={{width: '140px', height: 'auto'}}
-              />
-            </AwsLogoLink>
           </BottomActions>
         </BottomContent>
       </BottomBar>
