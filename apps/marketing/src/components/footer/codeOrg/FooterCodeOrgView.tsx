@@ -10,7 +10,6 @@ import {MouseEvent} from 'react';
 import {SUPPORTED_LOCALES_CONFIG} from '@/config/locale';
 import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {CODE_ORG_DISPLAY_FONT_STACK} from '@/themes/code.org/typography/fontStack';
 import logoImage from '@public/images/codeai-logo-primary.svg';
 import awsLogo from '@public/images/powered-by-aws.webp';
 
@@ -63,19 +62,16 @@ const BrandBlock = styled('div')(({theme}) => ({
 }));
 
 const Tagline = styled('p')(({theme}) => ({
-  fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
-  fontWeight: 500,
-  fontSize: '1rem',
-  lineHeight: 1,
-  letterSpacing: '-0.02em',
+  // Body default (body2), bolded.
+  ...theme.typography.body2,
+  fontWeight: 700,
   color: theme.palette.text.primary,
   marginBlock: `${theme.spacing(3)} 0`,
 }));
 
 const Mission = styled('p')(({theme}) => ({
-  fontFamily: theme.typography.fontFamily,
-  fontSize: '1rem',
-  lineHeight: 1.4,
+  // One step below the body default (body3 / text-sm).
+  ...theme.typography.body3,
   color: theme.palette.text.primary,
   marginBlock: `${theme.spacing(1)} 0`,
 }));
@@ -111,16 +107,12 @@ const LinkColumn = styled('div', {
 
 // Not a heading element: the footer follows arbitrary page content, so any
 // fixed h-level can break axe's heading-order rule (e.g. h1 → h3).
-const ColumnHeading = styled('span')({
-  fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
-  fontWeight: 700,
-  fontSize: '1rem',
-  lineHeight: 0.9,
-  letterSpacing: '-0.02em',
-  textTransform: 'uppercase',
+const ColumnHeading = styled('span')(({theme}) => ({
+  // Overline role settings (Geist semibold, text-xs, uppercase).
+  ...theme.typography.overline,
   color: CODEAI_PURPLE_DARK,
   margin: 0,
-});
+}));
 
 // Continuation lists (heading-less Contentful columns) sit beside the
 // heading's first list, tighter than the gap between headed columns.
@@ -248,16 +240,18 @@ const LanguageSelect = styled(NativeSelect)(({theme}) => ({
   },
 }));
 
+// Lives in the brand block (white background), under the mission text.
 const SocialLinks = styled('div')(({theme}) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(2.25),
+  marginTop: theme.spacing(3),
 }));
 
 // The `as typeof IconButton` cast keeps the polymorphic `component`/`href`
 // prop typings that styled() otherwise drops.
 const SocialIconButton = styled(IconButton)(({theme}) => ({
-  color: theme.palette.common.white,
+  color: CODEAI_PURPLE_DARK,
   padding: 0,
   transition: 'opacity 0.2s ease-in-out',
   '& .MuiIcon-root': {
@@ -269,7 +263,7 @@ const SocialIconButton = styled(IconButton)(({theme}) => ({
     backgroundColor: 'transparent',
   },
   '&:focus-visible': {
-    outline: `1px solid ${theme.palette.common.white}`,
+    outline: `1px solid ${theme.palette.text.primary}`,
     outlineOffset: '2px',
   },
 })) as typeof IconButton;
@@ -292,9 +286,30 @@ const FooterCodeOrgView: React.FC<FooterCodeOrgViewProps> = ({
     <FooterRoot>
       <MainSection>
         <BrandBlock>
-          <img src={logoImage.src} alt="CodeAI" width={173} height={29} />
+          <img
+            src={logoImage.src}
+            alt="CodeAI"
+            width={200}
+            height={34}
+            style={{width: '200px', height: 'auto'}}
+          />
           <Tagline>{content.tagline}</Tagline>
           <Mission>{content.mission}</Mission>
+          <SocialLinks aria-label="Social links">
+            {SOCIAL_LINKS.map(({key, label, icon, href}) => (
+              <SocialIconButton
+                key={key}
+                aria-label={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                size="small"
+                disableRipple
+              >
+                {icon}
+              </SocialIconButton>
+            ))}
+          </SocialLinks>
         </BrandBlock>
         <LinksNav aria-label="Footer">
           {content.linkColumns.map((column, columnIndex) => (
@@ -360,21 +375,6 @@ const FooterCodeOrgView: React.FC<FooterCodeOrgViewProps> = ({
                 </LanguageSelect>
               </FormControl>
             </LanguageSelectWrapper>
-            <SocialLinks aria-label="Social links">
-              {SOCIAL_LINKS.map(({key, label, icon, href}) => (
-                <SocialIconButton
-                  key={key}
-                  aria-label={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  size="small"
-                  disableRipple
-                >
-                  {icon}
-                </SocialIconButton>
-              ))}
-            </SocialLinks>
             <AwsLogoLink
               href="https://aws.amazon.com/what-is-cloud-computing"
               target="_blank"
