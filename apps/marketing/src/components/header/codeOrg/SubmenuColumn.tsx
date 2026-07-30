@@ -3,7 +3,10 @@ import MuiLink from '@mui/material/Link';
 import {styled} from '@mui/material/styles';
 
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {CODE_ORG_DISPLAY_FONT_STACK} from '@/themes/code.org/typography/fontStack';
+import {
+  CODE_ORG_DISPLAY_FONT_STACK,
+  CODE_ORG_TEXT_FONT_STACK,
+} from '@/themes/code.org/typography/fontStack';
 import {SCALE_TEXT, WEIGHTS} from '@/themes/code.org/typography/tokens';
 
 import {HeaderSubmenuColumn, HeaderSubmenuItem} from './types';
@@ -98,18 +101,12 @@ const TitleRow = styled('span')(({theme}) => ({
 }));
 
 const ItemTitle = styled('span')({
-  fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
+  fontFamily: CODE_ORG_TEXT_FONT_STACK,
   fontWeight: WEIGHTS.medium,
   fontSize: SCALE_TEXT.lg.fontSize,
   lineHeight: 1.1,
   letterSpacing: '-0.02em',
   color: CODEAI_PURPLE_PRIMARY,
-});
-
-// Card titles keep the shared item-title size but read as CAPS headings.
-const CardTitle = styled(ItemTitle)({
-  fontWeight: WEIGHTS.bold,
-  textTransform: 'uppercase',
 });
 
 const Chevron = styled(Icon)({
@@ -135,7 +132,6 @@ const SubmenuItemLink = ({
   onNavigate: () => void;
 }) => {
   const isCard = columnType === 'Image List Horizontal';
-  const Title = isCard ? CardTitle : ItemTitle;
 
   return (
     <ItemLink
@@ -155,7 +151,7 @@ const SubmenuItemLink = ({
       )}
       <span>
         <TitleRow>
-          <Title className="SubmenuItemTitle">{item.title}</Title>
+          <ItemTitle className="SubmenuItemTitle">{item.title}</ItemTitle>
           <Chevron baseClassName="fa-solid" className="fa-angle-right" />
         </TitleRow>
         {item.subtitle && <ItemSubtitle>{item.subtitle}</ItemSubtitle>}

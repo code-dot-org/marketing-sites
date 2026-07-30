@@ -5,6 +5,7 @@ import {styled} from '@mui/material/styles';
 
 import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
+import {CODE_ORG_DISPLAY_FONT_STACK} from '@/themes/code.org/typography/fontStack';
 
 import {PROMO_BACKGROUNDS} from './config';
 import SubmenuColumn from './SubmenuColumn';
@@ -49,6 +50,9 @@ const PanelHeader = styled('div')(({theme}) => ({
 // under the boxed arrow icon.
 const PrimaryLink = styled(MuiLink)(({theme}) => ({
   ...theme.typography.h4,
+  // The dropdown is all Geist except this link (h4 is on the Geist text
+  // track since July 2026).
+  fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
   display: 'inline-flex',
   alignItems: 'center',
   gap: theme.spacing(1),
@@ -112,6 +116,8 @@ const PromoText = styled('span')(({theme}) => ({
   gap: theme.spacing(1.5),
 }));
 
+// Like PrimaryLink, the hover underline targets the label span only so it
+// never renders under the arrow icon.
 const PromoLink = styled(MuiLink)(({theme}) => ({
   ...theme.typography.caption,
   display: 'inline-flex',
@@ -121,7 +127,7 @@ const PromoLink = styled(MuiLink)(({theme}) => ({
   whiteSpace: 'nowrap',
   textDecoration: 'none',
   color: theme.palette.text.primary,
-  '&:hover, &:focus-visible': {
+  '&:hover .PromoLinkLabel, &:focus-visible .PromoLinkLabel': {
     textDecoration: 'underline',
   },
 }));
@@ -143,7 +149,7 @@ const SubmenuPanel = ({id, item, onClose}: SubmenuPanelProps) => {
               <PrimaryLinkArrow>
                 <Icon
                   baseClassName="fa-solid"
-                  className="fa-arrow-right"
+                  className="fa-angle-right"
                   sx={{fontSize: '0.75rem', overflow: 'visible'}}
                 />
               </PrimaryLinkArrow>
@@ -191,10 +197,12 @@ const SubmenuPanel = ({id, item, onClose}: SubmenuPanelProps) => {
               onClick={onClose}
               {...getExternalLinkProps(submenu.promo.content.href)}
             >
-              {submenu.promo.content.title}
+              <span className="PromoLinkLabel">
+                {submenu.promo.content.title}
+              </span>
               <Icon
                 baseClassName="fa-solid"
-                className="fa-arrow-right"
+                className="fa-angle-right"
                 fontSize="inherit"
               />
             </PromoLink>
