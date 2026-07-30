@@ -2,22 +2,14 @@ import {Experience} from '@contentful/experiences-sdk-react';
 import {Metadata} from 'next';
 
 import {Brand} from '@/config/brand';
-import {
-  getMetaDescFromExperience,
-  getMetaTitleFromExperience,
-  getNoIndexFromExperience,
-  getOpengraphImageFromExperience,
-} from '@/selectors/contentful/getExperienceEntryFields';
+import {resolveSeoFields, ResolvedSeoFields} from '@/metadata/resolveSeoFields';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 import {getSeoMetadata} from '../seo';
 
-jest.mock('@/selectors/contentful/getExperienceEntryFields', () => ({
-  getMetaTitleFromExperience: jest.fn(),
-  getMetaDescFromExperience: jest.fn(),
-  getOpengraphImageFromExperience: jest.fn(),
-  getNoIndexFromExperience: jest.fn(),
+jest.mock('@/metadata/resolveSeoFields', () => ({
+  resolveSeoFields: jest.fn(),
 }));
 jest.mock('@/selectors/contentful/getImage', () => ({
   getAbsoluteImageUrl: jest.fn(),
@@ -42,32 +34,22 @@ const mockOpengraphImage: ExperienceAsset = {
 
 const mockExperience: Experience = {} as Experience;
 
-function mockSelectors(
-  overrides: Partial<{
-    metaTitle: string | undefined;
-    metaDesc: string | undefined;
-    opengraphImage: ExperienceAsset | undefined;
-    noIndex: boolean | undefined;
-  }> = {},
-) {
-  const defaults = {
-    metaTitle: 'Test Title' as string | undefined,
-    metaDesc: 'Test Description' as string | undefined,
-    opengraphImage: mockOpengraphImage as ExperienceAsset | undefined,
-    noIndex: undefined as boolean | undefined,
+function mockResolvedSeo(overrides: Partial<ResolvedSeoFields> = {}) {
+  const defaults: ResolvedSeoFields = {
+    title: 'Test Title',
+    description: 'Test Description',
+    ogTitle: 'Test Title',
+    ogDescription: 'Test Description',
+    ogImage: mockOpengraphImage,
+    noIndex: false,
+    noFollow: false,
   };
-  const final = {...defaults, ...overrides};
-  (getMetaTitleFromExperience as jest.Mock).mockReturnValue(final.metaTitle);
-  (getMetaDescFromExperience as jest.Mock).mockReturnValue(final.metaDesc);
-  (getOpengraphImageFromExperience as jest.Mock).mockReturnValue(
-    final.opengraphImage,
-  );
-  (getNoIndexFromExperience as jest.Mock).mockReturnValue(final.noIndex);
+  (resolveSeoFields as jest.Mock).mockReturnValue({...defaults, ...overrides});
 }
 
 describe('getSeoMetadata', () => {
   beforeEach(() => {
-    mockSelectors();
+    mockResolvedSeo();
     (getAbsoluteImageUrl as jest.Mock).mockReturnValue(
       'https://example.com/test-image.jpg',
     );
@@ -102,8 +84,8 @@ describe('getSeoMetadata', () => {
     });
   });
 
-  it('omits title when metaTitle is undefined', () => {
-    mockSelectors({metaTitle: undefined});
+  it('omits title when the resolved title is undefined', () => {
+    mockResolvedSeo({title: undefined});
 
     const result = getSeoMetadata(
       mockExperience,
@@ -115,8 +97,34 @@ describe('getSeoMetadata', () => {
     expect(result.title).toBeUndefined();
   });
 
-  it('falls back to brand default OG image when opengraphImage is missing', () => {
-    mockSelectors({opengraphImage: undefined});
+  it('emits keywords when present', () => {
+    mockResolvedSeo({keywords: ['computer science', 'education']});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      'engineering/all-the-things',
+    );
+
+    expect(result.keywords).toEqual(['computer science', 'education']);
+  });
+
+  it('omits keywords when empty', () => {
+    mockResolvedSeo({keywords: []});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      'engineering/all-the-things',
+    );
+
+    expect(result).not.toHaveProperty('keywords');
+  });
+
+  it('falls back to brand default OG image when ogImage is missing', () => {
+    mockResolvedSeo({ogImage: undefined});
 
     const result = getSeoMetadata(
       mockExperience,
@@ -131,7 +139,7 @@ describe('getSeoMetadata', () => {
   });
 
   it('leaves OG image undefined when no brand default exists and no image set', () => {
-    mockSelectors({opengraphImage: undefined});
+    mockResolvedSeo({ogImage: undefined});
 
     const result = getSeoMetadata(
       mockExperience,
@@ -143,21 +151,8 @@ describe('getSeoMetadata', () => {
     expect(result.openGraph?.images).toBeUndefined();
   });
 
-  it('defaults to index+follow when noIndex is undefined', () => {
-    mockSelectors({noIndex: undefined});
-
-    const result = getSeoMetadata(
-      mockExperience,
-      Brand.CODE_DOT_ORG,
-      'en-US',
-      '/engineering/all-the-things',
-    );
-
-    expect(result.robots).toEqual({index: true, follow: true});
-  });
-
-  it('sets noindex+nofollow together when noIndex is true', () => {
-    mockSelectors({noIndex: true});
+  it('sets noindex+nofollow together when both flags are set', () => {
+    mockResolvedSeo({noIndex: true, noFollow: true});
 
     const result = getSeoMetadata(
       mockExperience,
@@ -169,7 +164,21 @@ describe('getSeoMetadata', () => {
     expect(result.robots).toEqual({index: false, follow: false});
   });
 
-  it('calls getAbsoluteImageUrl with fm=webp for opengraphImage', () => {
+  // LEGACY-ENV-COMPAT: the old environment has independent noindex/nofollow flags.
+  it('supports nofollow independently of noindex', () => {
+    mockResolvedSeo({noIndex: false, noFollow: true});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      '/engineering/all-the-things',
+    );
+
+    expect(result.robots).toEqual({index: true, follow: false});
+  });
+
+  it('calls getAbsoluteImageUrl with fm=webp for the OG image', () => {
     getSeoMetadata(
       mockExperience,
       Brand.CODE_DOT_ORG,

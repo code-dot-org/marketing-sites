@@ -34,6 +34,12 @@ const siteFooterResponse = (fields: Record<string, unknown>) => ({
 describe('getFooterContent', () => {
   const mockGetEntries = jest.fn();
 
+  // Unwraps the result for tests that only care about mapped content.
+  const getContentOrNull = async () => {
+    const result = await getFooterContent();
+    return result.status === 'ok' ? result.content : null;
+  };
+
   beforeEach(() => {
     (draftMode as jest.Mock).mockResolvedValue({isEnabled: false});
     (getContentfulClient as jest.Mock).mockReturnValue({
@@ -65,7 +71,7 @@ describe('getFooterContent', () => {
       }),
     );
 
-    const result = await getFooterContent();
+    const result = await getContentOrNull();
 
     expect(mockGetEntries).toHaveBeenCalledWith({
       content_type: 'siteFooter',
@@ -106,7 +112,7 @@ describe('getFooterContent', () => {
       }),
     );
 
-    const result = await getFooterContent();
+    const result = await getContentOrNull();
 
     expect(result?.linkColumns).toEqual([
       {
@@ -130,7 +136,7 @@ describe('getFooterContent', () => {
       }),
     );
 
-    const result = await getFooterContent();
+    const result = await getContentOrNull();
 
     expect(result?.linkColumns).toEqual([
       {
@@ -149,23 +155,38 @@ describe('getFooterContent', () => {
     expect(getContentfulClient).toHaveBeenCalledWith(true);
   });
 
-  it('returns null when the client is not available', async () => {
+  it('returns unavailable when the client is not available', async () => {
     (getContentfulClient as jest.Mock).mockReturnValue(undefined);
 
-    expect(await getFooterContent()).toBeNull();
+    expect(await getFooterContent()).toEqual({status: 'unavailable'});
     expect(mockGetEntries).not.toHaveBeenCalled();
   });
 
-  it('returns null when no siteFooter entry is published', async () => {
+  it('returns unavailable when no siteFooter entry is published', async () => {
     mockGetEntries.mockResolvedValue({items: []});
 
-    expect(await getFooterContent()).toBeNull();
+    expect(await getFooterContent()).toEqual({status: 'unavailable'});
   });
 
-  it('returns null when the fetch throws', async () => {
+  it('returns unavailable when the fetch throws', async () => {
     mockGetEntries.mockRejectedValue(new Error('network down'));
 
-    expect(await getFooterContent()).toBeNull();
+    expect(await getFooterContent()).toEqual({status: 'unavailable'});
+  });
+
+  // LEGACY-ENV-COMPAT: remove with the 'legacy-environment' result arm.
+  it('returns legacy-environment when the siteFooter content type does not exist', async () => {
+    const error = new Error(
+      JSON.stringify({
+        details: {
+          errors: [{name: 'unknownContentType', value: 'DOESNOTEXIST'}],
+        },
+      }),
+    );
+    error.name = 'InvalidQuery';
+    mockGetEntries.mockRejectedValue(error);
+
+    expect(await getFooterContent()).toEqual({status: 'legacy-environment'});
   });
 
   it('skips unresolved and incomplete items and falls back per field', async () => {
@@ -184,7 +205,7 @@ describe('getFooterContent', () => {
       }),
     );
 
-    const result = await getFooterContent();
+    const result = await getContentOrNull();
 
     expect(result).toEqual({
       tagline: DEFAULT_FOOTER_CONTENT.tagline,
@@ -204,7 +225,7 @@ describe('getFooterContent', () => {
       siteFooterResponse({tagline: 'T', mission: 'M', column1ItemList: []}),
     );
 
-    const result = await getFooterContent();
+    const result = await getContentOrNull();
 
     expect(result).toEqual({
       tagline: 'T',

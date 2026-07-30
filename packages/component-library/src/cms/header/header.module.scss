@@ -10,15 +10,16 @@ $box-shadow:
   0px 4px 6px -1px rgb(0 0 0 / 0.1),
   0px 2px 4px -1px rgb(0 0 0 / 0.06);
 
+// LEGACY-ENV-COMPAT: kept at the pre-rebrand (main, teal) values. On Code.org
+// this header only renders as the transition-window fallback and must match
+// current production. Delete with the legacy header after the Contentful
+// environment switch (or re-apply the [data-brand='Code.org'] CodeAI palette
+// overrides if the DSCO header is kept for other consumers).
+
 // Header common styles
 .headerNavigation {
   position: relative;
   background-color: var(--background-brand-teal-primary);
-
-  // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
-  :root[data-brand='Code.org'] & {
-    background-color: var(--codeai-purple-primary);
-  }
   padding: 0.375rem 0.875rem;
   display: flex;
   justify-content: space-between;
@@ -80,11 +81,6 @@ $box-shadow:
       &:hover,
       &:active {
         background-color: var(--background-brand-teal-strong);
-
-        // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
-        :root[data-brand='Code.org'] & {
-          background-color: var(--codeai-purple-dark);
-        }
       }
 
       &:focus-visible {
@@ -104,11 +100,6 @@ header .buttonLinks {
 
   .loading.mainMenu {
     color: var(--text-brand-teal-primary-fixed) !important;
-
-    // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
-    :root[data-brand='Code.org'] & {
-      color: var(--codeai-purple-primary) !important;
-    }
     background-color: var(--background-neutral-white-fixed) !important;
     border-color: var(--background-neutral-white-fixed) !important;
     // Set the width to match sign in buttons to prevent layout shift
@@ -122,11 +113,6 @@ header .buttonLinks {
 
     &:hover {
       background: var(--background-brand-teal-strong);
-
-      // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
-      :root[data-brand='Code.org'] & {
-        background: var(--codeai-purple-dark);
-      }
     }
   }
 
@@ -137,11 +123,6 @@ header .buttonLinks {
   .createAccount.mainMenu,
   .goToDashboard.mainMenu {
     color: var(--text-brand-teal-primary-fixed);
-
-    // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
-    :root[data-brand='Code.org'] & {
-      color: var(--codeai-purple-primary);
-    }
 
     &:hover {
       background: var(--neutral-white-alpha-90);
@@ -219,20 +200,14 @@ header .menu {
     @include mixins.transition-all;
 
     &:hover {
-      border-radius: var(
-        --codeai-radius-md,
-        #{variables.$regular-border-radius}
-      );
+      border-radius: variables.$regular-border-radius;
       background: var(--background-neutral-tertiary);
     }
 
     &:focus-visible {
       @include mixins.focus-styles;
       outline-offset: 0;
-      border-radius: var(
-        --codeai-radius-md,
-        #{variables.$regular-border-radius}
-      );
+      border-radius: variables.$regular-border-radius;
     }
   }
 }
@@ -349,8 +324,7 @@ header .newProjectMenu {
       display: block;
       padding: 0.375rem;
       background: var(--background-neutral-secondary);
-      border-radius: var(--codeai-radius-md, 0.25rem)
-        var(--codeai-radius-md, 0.25rem) 0 0;
+      border-radius: 0.25rem 0.25rem 0 0;
       border-bottom: 0;
     }
 
@@ -367,8 +341,7 @@ header .newProjectMenu {
       position: relative;
       top: unset;
       margin: 0;
-      border-radius: 0 0 var(--codeai-radius-md, 0.25rem)
-        var(--codeai-radius-md, 0.25rem);
+      border-radius: 0 0 0.25rem 0.25rem;
       box-shadow: none;
     }
   }

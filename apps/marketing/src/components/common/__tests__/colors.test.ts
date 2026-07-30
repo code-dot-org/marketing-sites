@@ -3,6 +3,7 @@ import {
   BrandColor,
   backgroundToneFor,
   brandTextColorOptionsWithTypeDefault,
+  cssVarForBrandColor,
   resolveTextColorForBackground,
 } from '../colors';
 
@@ -254,6 +255,21 @@ describe('resolveTextColorForBackground', () => {
         expect(valid.has(result.value as string)).toBe(true);
       }
     }
+  });
+});
+
+// LEGACY-ENV-COMPAT(keep-until-content-rebuilt): `primary` must stay on the
+// theme-aware neutral token so legacy data-theme='Dark' Sections flip it to
+// white; a literal #000000 would render black-on-dark on not-yet-rebuilt pages.
+describe("legacy 'primary' color", () => {
+  it('resolves to the theme-aware neutral token', () => {
+    expect(cssVarForBrandColor('primary')).toBe('var(--text-neutral-primary)');
+  });
+
+  it('still flips to white on dark brand backgrounds via the contrast switch', () => {
+    const result = resolveTextColorForBackground('primary', 'purpleDark');
+    expect(result.value).toBe('white');
+    expect(result.behavior).toBe('dark-text-on-dark-bg-becomes-white');
   });
 });
 

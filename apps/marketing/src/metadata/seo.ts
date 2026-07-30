@@ -4,14 +4,8 @@ import {Metadata} from 'next';
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
 import {BRAND_OPENGRAPH_DEFAULT_IMAGE_URL} from '@/config/metadata/opengraph';
-import {
-  getMetaDescFromExperience,
-  getMetaTitleFromExperience,
-  getNoIndexFromExperience,
-  getOpengraphImageFromExperience,
-} from '@/selectors/contentful/getExperienceEntryFields';
+import {resolveSeoFields, ResolvedSeoFields} from '@/metadata/resolveSeoFields';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
-import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 export function getSeoMetadata(
   experience: Experience | undefined,
@@ -19,44 +13,40 @@ export function getSeoMetadata(
   locale: string,
   slug: string,
 ): Metadata {
-  const metaTitle = getMetaTitleFromExperience(experience);
-  const metaDesc = getMetaDescFromExperience(experience);
-  const opengraphImage = getOpengraphImageFromExperience(experience);
-  const noIndex = getNoIndexFromExperience(experience) ?? false;
+  const seo = resolveSeoFields(experience);
 
   return {
-    ...(metaTitle ? {title: metaTitle} : undefined),
-    description: metaDesc,
+    ...(seo.title ? {title: seo.title} : undefined),
+    description: seo.description,
+    ...(seo.keywords?.length ? {keywords: seo.keywords} : undefined),
     alternates: {
       canonical: `https://${getProductionCanonicalRootDomain(brand)}/${locale}/${slug}`,
     },
-    openGraph: getOpenGraph(metaTitle, metaDesc, opengraphImage, brand, locale),
+    openGraph: getOpenGraph(seo, brand, locale),
     robots: {
-      index: !noIndex,
-      follow: !noIndex,
+      index: !seo.noIndex,
+      follow: !seo.noFollow,
     },
   };
 }
 
 function getOpenGraph(
-  metaTitle: string | undefined,
-  metaDesc: string | undefined,
-  opengraphImage: ExperienceAsset | undefined,
+  seo: ResolvedSeoFields,
   brand: Brand | undefined,
   locale: string,
 ) {
   // As of July 2025, all open graph providers support JPEG & PNG but there is
   // only partial support for AVIF. Use webp for compatibility.
-  const opengraphImageUrl = getAbsoluteImageUrl(opengraphImage, {fm: 'webp'});
+  const opengraphImageUrl = getAbsoluteImageUrl(seo.ogImage, {fm: 'webp'});
 
   return {
     type: 'website',
     locale,
-    title: metaTitle,
-    description: metaDesc,
+    title: seo.ogTitle,
+    description: seo.ogDescription,
     url: './',
     images:
-      opengraphImage && opengraphImageUrl
+      seo.ogImage && opengraphImageUrl
         ? opengraphImageUrl
         : brand
           ? BRAND_OPENGRAPH_DEFAULT_IMAGE_URL[brand]
