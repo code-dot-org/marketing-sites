@@ -7,7 +7,9 @@ import ReactPlayer from 'react-player/file';
 import {JsonLd} from 'react-schemaorg';
 import type {VideoObject} from 'schema-dts';
 
+import {resolvedCssVarForBrandColor} from '@/components/common/colors';
 import TextLink from '@/components/contentful/link/Link';
+import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 
 import Facade from './Facade';
 import NativeVideo from './NativeVideo';
@@ -35,6 +37,7 @@ const Video: React.FC<VideoProps> = ({
 }: VideoProps) => {
   const youtubeVideoUrl = `https://www.youtube-nocookie.com/watch?v=${youTubeId}`;
 
+  const enclosingBackground = useSectionBackground();
   const [renderState, setRenderState] = useState<RenderState>('facade');
 
   // Prefer the 1280x720 thumbnail; videos uploaded in SD don't have one, and
@@ -166,7 +169,20 @@ const Video: React.FC<VideoProps> = ({
       <MuiVideoWrapper>{getVideoPlayer()}</MuiVideoWrapper>
       <MuiVideoFooter>
         {showCaption && (
-          <MuiTypography variant="caption" component="figcaption">
+          <MuiTypography
+            variant="caption"
+            component="figcaption"
+            // Contrast-aware default black: flips to white on dark sections.
+            // Scoped to out-specify the theme's caption color rule.
+            sx={{
+              '&.MuiTypography-caption': {
+                color: resolvedCssVarForBrandColor(
+                  'black',
+                  enclosingBackground,
+                ),
+              },
+            }}
+          >
             {videoTitle}
           </MuiTypography>
         )}

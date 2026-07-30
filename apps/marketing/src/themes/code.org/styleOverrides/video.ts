@@ -6,7 +6,7 @@ export const VIDEO_OVERRIDES: Components<Theme>['MuiVideo'] = {
   styleOverrides: {
     root: () => ({}),
     wrapper: () => ({
-      border: '1px solid var(--background-neutral-tertiary)',
+      border: 'none',
       borderRadius: codeaiRadius('none', '0.25rem'),
     }),
     facade: () => ({
@@ -44,9 +44,9 @@ export const VIDEO_OVERRIDES: Components<Theme>['MuiVideo'] = {
     }),
     footer: ({theme}) => ({
       // Caption reads as small body text, not the semibold caption role.
+      // Color comes from the component (contrast-aware brand black).
       'figcaption.MuiTypography-caption': {
         ...theme.typography.body3,
-        color: 'var(--neutral-base-true-black)',
         marginBottom: 0,
       },
     }),
