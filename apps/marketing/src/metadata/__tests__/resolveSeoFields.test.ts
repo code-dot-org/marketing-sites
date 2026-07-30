@@ -1,6 +1,6 @@
 import {Experience} from '@contentful/experiences-sdk-react';
 
-import {resolveSeoFields} from '../resolveSeoFields';
+import {isLegacyShapeExperience, resolveSeoFields} from '../resolveSeoFields';
 
 function buildExperience(fields: Record<string, unknown>): Experience {
   return {
@@ -142,6 +142,29 @@ describe('resolveSeoFields', () => {
       );
 
       expect(result.title).toBe('Page Heading');
+    });
+  });
+
+  describe('isLegacyShapeExperience', () => {
+    it('is true for the legacy shape', () => {
+      expect(
+        isLegacyShapeExperience(
+          buildExperience({
+            seoMetadata: {sys: {type: 'Entry'}, fields: {seoTitle: 'T'}},
+          }),
+        ),
+      ).toBe(true);
+      expect(
+        isLegacyShapeExperience(buildExperience({pageHeading: 'Heading'})),
+      ).toBe(true);
+    });
+
+    it('is false for the new shape and empty experiences', () => {
+      expect(
+        isLegacyShapeExperience(buildExperience({metaTitle: 'New Title'})),
+      ).toBe(false);
+      expect(isLegacyShapeExperience(buildExperience({}))).toBe(false);
+      expect(isLegacyShapeExperience(undefined)).toBe(false);
     });
   });
 });

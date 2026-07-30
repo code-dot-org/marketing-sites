@@ -32,19 +32,28 @@ export type ResolvedSeoFields = {
  * detection cannot misfire. Remove the legacy branch when the production
  * Contentful environment serves the new content model.
  */
+// LEGACY-ENV-COMPAT: true when the experience entry carries the old
+// production environment's shape (pageHeading + linked seoMetadata entry).
+// Also used by the page to opt legacy content into pre-rebrand layout CSS.
+export function isLegacyShapeExperience(
+  experience: Experience | undefined,
+): boolean {
+  return (
+    getLegacySeoMetadataFromExperience(experience) !== undefined ||
+    getPageHeadingFromExperience(experience) !== undefined ||
+    getExperienceEntryFieldsFromExperience(experience)?.seoMetadata !==
+      undefined
+  );
+}
+
 export function resolveSeoFields(
   experience: Experience | undefined,
 ): ResolvedSeoFields {
   // LEGACY-ENV-COMPAT: start
   const legacySeo = getLegacySeoMetadataFromExperience(experience);
   const pageHeading = getPageHeadingFromExperience(experience);
-  const hasLegacyShape =
-    legacySeo !== undefined ||
-    pageHeading !== undefined ||
-    getExperienceEntryFieldsFromExperience(experience)?.seoMetadata !==
-      undefined;
 
-  if (hasLegacyShape) {
+  if (isLegacyShapeExperience(experience)) {
     return {
       title: legacySeo?.seoTitle ?? pageHeading,
       description: legacySeo?.seoDescription,
