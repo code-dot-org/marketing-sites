@@ -63,7 +63,7 @@ export interface ContentCardProps {
   titleAppearance?: ContentCardTitleAppearance;
   /** Overrides the Link entry's label */
   linkTextOverride?: string;
-  /** FontAwesome icon name for the link; defaults to arrow-right */
+  /** FontAwesome icon name for the link; defaults to angle-right */
   linkIconOverride?: string;
   /** Link color; black follows the card style's default link color */
   linkColor?: ContentCardColor;
@@ -346,7 +346,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
               ariaLabel={linkFields.ariaLabel || undefined}
               color={lightText ? 'white' : 'black'}
               size="s"
-              icon={linkIconOverride || 'arrow-right'}
+              icon={linkIconOverride || 'angle-right'}
               removeMarginBottom
             >
               {linkTextOverride || linkFields.label}

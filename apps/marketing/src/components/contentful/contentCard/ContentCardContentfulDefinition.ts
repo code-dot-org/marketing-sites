@@ -132,7 +132,7 @@ export const ContentCardContentfulComponentDefinition: ComponentDefinition = {
     linkIconOverride: {
       displayName: 'Link Icon Override',
       description:
-        'FontAwesome icon name for the link. Defaults to arrow-right. External links show the external-link treatment instead.',
+        'FontAwesome icon name for the link. Defaults to angle-right. External links show the external-link treatment instead.',
       type: 'Text',
       group: 'style',
     },

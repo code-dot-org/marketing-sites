@@ -101,10 +101,10 @@ export const ButtonLegacyContentfulComponentDefinition: ComponentDefinition = {
     iconRightName: {
       displayName: 'Right Icon Name',
       description:
-        'Optional. Font Awesome icon name to render on the right side of the label.',
+        'Font Awesome icon name to render on the right side of the label. Defaults to angle-right; clear it for no icon. Takes precedence over the external-link icon.',
       type: 'Text',
       group: 'style',
-      defaultValue: '',
+      defaultValue: 'angle-right',
     },
     isIconOnly: {
       displayName: 'Icon Only',
