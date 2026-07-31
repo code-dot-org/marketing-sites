@@ -1,9 +1,11 @@
 import {draftMode} from 'next/headers';
 
+import {SiteChromeContentResult} from '@/components/common/siteChromeContent';
 import {isExternalLink} from '@/components/common/utils';
 import {Brand} from '@/config/brand';
 import {getStage} from '@/config/stage';
 import {getContentfulClient} from '@/contentful/client';
+import {isUnknownContentTypeError} from '@/contentful/errors';
 import logger from '@/logger/contentful';
 
 import {DEFAULT_FOOTER_CONTENT} from './config';
@@ -74,15 +76,19 @@ function mapColumns(fields: SiteFooterFields): FooterLinkColumn[] {
 
 /**
  * Fetches the single `siteFooter` entry (tagline, mission, up to five link
- * columns of `siteFooterItem` entries). Returns null when Contentful is
- * unavailable so callers fall back to DEFAULT_FOOTER_CONTENT; the footer must
- * never throw from the layout.
+ * columns of `siteFooterItem` entries). Returns 'unavailable' when Contentful
+ * is unavailable so callers fall back to DEFAULT_FOOTER_CONTENT; the footer
+ * must never throw from the layout. LEGACY-ENV-COMPAT: returns
+ * 'legacy-environment' when the siteFooter content type doesn't exist (old
+ * production environment) so callers render the legacy corporateSite footer.
  */
-export async function getFooterContent(): Promise<FooterContent | null> {
+export async function getFooterContent(): Promise<
+  SiteChromeContentResult<FooterContent>
+> {
   try {
     const isDraftModeEnabled = (await draftMode()).isEnabled;
     const contentfulClient = getContentfulClient(isDraftModeEnabled);
-    if (!contentfulClient) return null;
+    if (!contentfulClient) return {status: 'unavailable'};
 
     // include: 2 resolves siteFooter → siteFooterItem references in one call.
     // Content is authored in en-US only; translations come from LocalizeJS.
@@ -96,20 +102,29 @@ export async function getFooterContent(): Promise<FooterContent | null> {
     const fields = response.items[0]?.fields;
     if (!fields) {
       logger.warn('No published siteFooter entry found; using footer defaults');
-      return null;
+      return {status: 'unavailable'};
     }
 
     const linkColumns = mapColumns(fields);
     return {
-      tagline: fields.tagline || DEFAULT_FOOTER_CONTENT.tagline,
-      mission: fields.mission || DEFAULT_FOOTER_CONTENT.mission,
-      copyright: fields.copyright || DEFAULT_FOOTER_CONTENT.copyright,
-      linkColumns: linkColumns.length
-        ? linkColumns
-        : DEFAULT_FOOTER_CONTENT.linkColumns,
+      status: 'ok',
+      content: {
+        tagline: fields.tagline || DEFAULT_FOOTER_CONTENT.tagline,
+        mission: fields.mission || DEFAULT_FOOTER_CONTENT.mission,
+        copyright: fields.copyright || DEFAULT_FOOTER_CONTENT.copyright,
+        linkColumns: linkColumns.length
+          ? linkColumns
+          : DEFAULT_FOOTER_CONTENT.linkColumns,
+      },
     };
   } catch (error) {
+    // LEGACY-ENV-COMPAT: a deterministic "content type doesn't exist" error
+    // identifies the old environment; transient errors keep the new-design
+    // defaults so a Contentful blip never resurrects the legacy footer.
+    if (isUnknownContentTypeError(error)) {
+      return {status: 'legacy-environment'};
+    }
     logger.warn(`Failed to fetch siteFooter content: ${error}`);
-    return null;
+    return {status: 'unavailable'};
   }
 }

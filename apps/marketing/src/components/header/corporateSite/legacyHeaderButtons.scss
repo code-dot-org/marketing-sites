@@ -1,0 +1,107 @@
+/*
+ * LEGACY-ENV-COMPAT: pins the legacy header's buttons to the current
+ * production look (values measured on https://code.org/en-US 2026-07-30),
+ * overriding the rebranded component-library button styles. Scoped to the
+ * [data-legacy-chrome] wrapper set by HeaderCorporateSite; nothing else sets
+ * that attribute. Font intentionally stays Geist (Figtree was removed).
+ * Delete this file (and the wrapper) with the legacy chrome after the
+ * Contentful environment switch.
+ *
+ * Selectors match on class substrings because the component-library ships
+ * hashed CSS-module classes that keep their readable prefix
+ * (e.g. genericButton-module__button-secondary___xxxxx).
+ */
+
+[data-legacy-chrome] {
+  /* Shared shape for the text buttons (sign in / create account / projects) */
+  a[class*='button-primary'],
+  a[class*='button-secondary'],
+  button[class*='button-primary']:not([class*='button-iconOnly']),
+  button[class*='button-secondary']:not([class*='button-iconOnly']) {
+    border-radius: 0.25rem !important;
+    border-width: 1px !important;
+    padding: 0.3125rem 1rem !important;
+    gap: 0.5rem !important;
+    min-height: unset !important;
+    min-width: unset !important;
+  }
+
+  a[class*='genericButton'] span,
+  button[class*='genericButton'] span {
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.54 !important;
+    margin: 0 !important;
+  }
+
+  /* Sign in / projects menu (secondary white): transparent on the teal bar */
+  [class*='button-secondary'][class*='button-white'] {
+    background-color: transparent !important;
+    border: 1px solid var(--neutral-base-white, #fff) !important;
+    color: var(--neutral-base-white, #fff) !important;
+  }
+
+  [class*='button-secondary'][class*='button-white']:hover {
+    background-color: var(--background-brand-teal-strong, #007785) !important;
+  }
+
+  /* Create account (primary white): white with teal text */
+  [class*='button-primary'][class*='button-white'] {
+    background-color: var(--background-neutral-white-fixed, #fff) !important;
+    border-color: transparent !important;
+    color: var(--text-brand-teal-primary-fixed, #0093a4) !important;
+  }
+
+  [class*='button-primary'][class*='button-white']:hover {
+    background-color: var(--neutral-white-alpha-90, rgb(255 255 255 / 90%)) !important;
+  }
+
+  /* Hamburger drawer: create account (primary purple) */
+  [class*='button-primary'][class*='button-purple']:not([class*='button-iconOnly']) {
+    background-color: var(--background-brand-purple-primary, #9657c7) !important;
+    border-color: transparent !important;
+    color: var(--text-neutral-white-fixed, #fff) !important;
+  }
+
+  [class*='button-primary'][class*='button-purple']:not([class*='button-iconOnly']):hover {
+    background-color: var(--background-brand-purple-strong, #7d4aa6) !important;
+  }
+
+  /* Hamburger drawer: sign in (secondary gray) */
+  /* The rebranded Button dropped color='gray', so the drawer sign-in renders
+     with no color class — match any secondary button inside the drawer. */
+  [class*='button-secondary'][class*='button-gray'],
+  [class*='hamburgerMenu'] a[class*='button-secondary'] {
+    background-color: var(--background-neutral-primary, #fff) !important;
+    border: 1px solid var(--borders-neutral-strong, #b7c1cb) !important;
+    color: var(--text-neutral-primary, #292f36) !important;
+  }
+
+  [class*='button-secondary'][class*='button-gray']:hover,
+  [class*='hamburgerMenu'] a[class*='button-secondary']:hover {
+    background-color: var(--background-neutral-tertiary) !important;
+  }
+
+  /* Round icon buttons (help / projects / hamburger toggles): transparent */
+  button[class*='button-iconOnly'] {
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    border-radius: 100% !important;
+    padding: 0 !important;
+    min-width: unset !important;
+    min-height: unset !important;
+    color: var(--neutral-base-white, #fff) !important;
+  }
+
+  button[class*='button-iconOnly']:hover {
+    background-color: transparent !important;
+    color: var(--neutral-white-alpha-90, rgb(255 255 255 / 90%)) !important;
+  }
+
+  /* Legacy teal focus ring */
+  a[class*='genericButton']:focus-visible,
+  button[class*='genericButton']:focus-visible {
+    outline: 2px solid var(--borders-brand-teal-primary, #0093a4) !important;
+    outline-offset: 2px !important;
+  }
+}

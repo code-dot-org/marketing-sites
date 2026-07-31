@@ -1,17 +1,15 @@
 import {alpha, Components, Theme} from '@mui/material/styles';
 
-import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
-import {codeaiRadius} from '@/themes/code.org/constants/radius';
-
+// LEGACY-ENV-COMPAT: kept at the pre-rebrand (main) values. MuiFooter only
+// styles the legacy FooterMui, which renders as the transition-window fallback
+// and must match current production. Delete with the legacy footer after the
+// Contentful environment switch.
 export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
   styleOverrides: {
     root: ({theme}) => ({
       backgroundColor: 'var(--background-neutral-primary-inverse)',
       paddingBlock: theme.spacing(5),
       paddingInline: theme.spacing(4),
-      [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
-        paddingInline: theme.spacing(2),
-      },
       // Social icon styles
       '& .MuiStack-root': {
         marginInlineStart: theme.spacing(-0.5),
@@ -47,7 +45,7 @@ export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
         color: theme.palette.common.white,
         fontSize: '0.875rem',
         border: `1px solid ${theme.palette.common.white}`,
-        borderRadius: codeaiRadius('md', '4px'),
+        borderRadius: theme.shape.borderRadius,
         '& .MuiSvgIcon-root': {
           color: theme.palette.common.white,
           right: 'unset',
@@ -57,7 +55,7 @@ export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
       '& .MuiNativeSelect-select': {
         paddingInlineStart: theme.spacing(1.5),
         paddingInlineEnd: theme.spacing(4),
-        borderRadius: codeaiRadius('md', '4px'),
+        borderRadius: theme.shape.borderRadius,
         '& option': {
           background: theme.palette.common.white,
           color: theme.palette.text.primary,
@@ -65,7 +63,7 @@ export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
         '&:focus-visible': {
           outline: `1px solid ${theme.palette.common.white}`,
           outlineOffset: 4,
-          borderRadius: codeaiRadius('md', '4px'),
+          borderRadius: theme.shape.borderRadius,
         },
       },
       // Top section styles
@@ -76,9 +74,7 @@ export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
       },
     }),
     grid: ({theme}) => ({
-      // Match the Section content width: 1280px cap minus the 4rem (spacing(8))
-      // of side gutters supplied by the footer root's paddingInline.
-      maxWidth: `calc(${SECTION_MAX_WIDTH} - ${theme.spacing(8)})`,
+      maxWidth: '960px',
       margin: '0 auto',
       rowGap: theme.spacing(3),
     }),

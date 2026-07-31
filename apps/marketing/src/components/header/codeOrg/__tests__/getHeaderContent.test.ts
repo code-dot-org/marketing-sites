@@ -39,6 +39,12 @@ const siteHeaderResponse = (fields: Record<string, unknown>) => ({
 describe('getHeaderContent', () => {
   const mockGetEntries = jest.fn();
 
+  // Unwraps the result for tests that only care about mapped content.
+  const getContentOrNull = async () => {
+    const result = await getHeaderContent();
+    return result.status === 'ok' ? result.content : null;
+  };
+
   beforeEach(() => {
     (draftMode as jest.Mock).mockResolvedValue({isEnabled: false});
     (getContentfulClient as jest.Mock).mockReturnValue({
@@ -119,7 +125,7 @@ describe('getHeaderContent', () => {
       }),
     );
 
-    const content = await getHeaderContent();
+    const content = await getContentOrNull();
 
     expect(content).toEqual({
       mainMenu: [
@@ -188,7 +194,7 @@ describe('getHeaderContent', () => {
       }),
     );
 
-    const content = await getHeaderContent();
+    const content = await getContentOrNull();
 
     expect(content?.mainMenu).toHaveLength(1);
     expect(content?.mainMenu[0].submenu?.columns).toEqual([
@@ -211,7 +217,7 @@ describe('getHeaderContent', () => {
       }),
     );
 
-    const content = await getHeaderContent();
+    const content = await getContentOrNull();
 
     expect(content?.mainMenu[0].mobileLabel).toBe('Teachers Overview');
   });
@@ -228,7 +234,7 @@ describe('getHeaderContent', () => {
       }),
     );
 
-    const content = await getHeaderContent();
+    const content = await getContentOrNull();
 
     expect(content?.mainMenu[0].submenu).toBeUndefined();
   });
@@ -246,7 +252,7 @@ describe('getHeaderContent', () => {
       }),
     );
 
-    const content = await getHeaderContent();
+    const content = await getContentOrNull();
 
     expect(content?.mainMenu[0].submenu).toBeUndefined();
   });
@@ -264,7 +270,7 @@ describe('getHeaderContent', () => {
       }),
     );
 
-    const content = await getHeaderContent();
+    const content = await getContentOrNull();
 
     expect(content?.mainMenu[0].submenu?.columns[0].type).toBe('Text List');
   });
@@ -283,7 +289,7 @@ describe('getHeaderContent', () => {
       }),
     );
 
-    const content = await getHeaderContent();
+    const content = await getContentOrNull();
 
     expect(content?.mainMenu[0].submenu?.promo).toBeUndefined();
   });
@@ -303,7 +309,7 @@ describe('getHeaderContent', () => {
       }),
     );
 
-    const content = await getHeaderContent();
+    const content = await getContentOrNull();
 
     expect(content?.mainMenu[0].submenu?.promo?.background).toBe('lightBlue');
   });
@@ -316,7 +322,7 @@ describe('getHeaderContent', () => {
       }),
     );
 
-    const content = await getHeaderContent();
+    const content = await getContentOrNull();
 
     expect(content?.mainMenu).toEqual(DEFAULT_HEADER_CONTENT.mainMenu);
     expect(content?.secondaryMenu).toEqual([
@@ -324,21 +330,36 @@ describe('getHeaderContent', () => {
     ]);
   });
 
-  it('returns null when no siteHeader entry is published', async () => {
+  it('returns unavailable when no siteHeader entry is published', async () => {
     mockGetEntries.mockResolvedValue({items: []});
 
-    expect(await getHeaderContent()).toBeNull();
+    expect(await getHeaderContent()).toEqual({status: 'unavailable'});
   });
 
-  it('returns null when the Contentful client is unavailable', async () => {
+  it('returns unavailable when the Contentful client is unavailable', async () => {
     (getContentfulClient as jest.Mock).mockReturnValue(null);
 
-    expect(await getHeaderContent()).toBeNull();
+    expect(await getHeaderContent()).toEqual({status: 'unavailable'});
   });
 
-  it('returns null when the fetch throws', async () => {
+  it('returns unavailable when the fetch throws', async () => {
     mockGetEntries.mockRejectedValue(new Error('network down'));
 
-    expect(await getHeaderContent()).toBeNull();
+    expect(await getHeaderContent()).toEqual({status: 'unavailable'});
+  });
+
+  // LEGACY-ENV-COMPAT: remove with the 'legacy-environment' result arm.
+  it('returns legacy-environment when the siteHeader content type does not exist', async () => {
+    const error = new Error(
+      JSON.stringify({
+        details: {
+          errors: [{name: 'unknownContentType', value: 'DOESNOTEXIST'}],
+        },
+      }),
+    );
+    error.name = 'InvalidQuery';
+    mockGetEntries.mockRejectedValue(error);
+
+    expect(await getHeaderContent()).toEqual({status: 'legacy-environment'});
   });
 });

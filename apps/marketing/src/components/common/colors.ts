@@ -253,15 +253,18 @@ export const BRAND_COLORS = [
     shade: 'dark',
   },
   // Legacy entry — `primary` predates the CodeAI brand palette. No picker
-  // offers it anymore; it's kept so stored Contentful values keep validating,
-  // and it renders as literal Black (same cssVar as the `black` entry). The
-  // contrast switch already treats it as black (family 'black'), flipping it
-  // to white on dark CodeAI brand Sections. Legacy data-theme='Dark' Sections
-  // no longer flip it — those pages are being rebuilt on the new palette.
+  // offers it anymore; it's kept so stored Contentful values keep validating.
+  // The contrast switch treats it as black (family 'black'), flipping it to
+  // white on dark CodeAI brand Sections.
+  // LEGACY-ENV-COMPAT(keep-until-content-rebuilt): the cssVar is the
+  // theme-aware neutral token — identical to Black (#000) on light
+  // backgrounds, but legacy data-theme='Dark' Sections flip it to white, so
+  // not-yet-rebuilt pages keep readable text on dark sections. Keep until no
+  // live content stores `primary`.
   {
     value: 'primary',
     displayName: 'Primary (legacy)',
-    cssVar: '#000000',
+    cssVar: 'var(--text-neutral-primary)',
     family: 'black',
     shade: 'n-a',
   },
