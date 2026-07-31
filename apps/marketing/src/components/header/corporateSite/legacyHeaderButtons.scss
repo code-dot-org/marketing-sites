@@ -77,9 +77,9 @@
     background-color: var(--background-brand-purple-strong, #7d4aa6) !important;
   }
 
-  /* Hamburger drawer: sign in (secondary gray) */
-  /* The rebranded Button dropped color='gray', so the drawer sign-in renders
-     with no color class — match any secondary button inside the drawer. */
+  /* Hamburger drawer: sign in (secondary gray). The rebranded Button dropped
+     color='gray', so the drawer sign-in renders with no color class — match
+     any secondary button inside the drawer. */
   [class*='button-secondary'][class*='button-gray'],
   [class*='hamburgerMenu'] a[class*='button-secondary'] {
     background-color: var(--background-neutral-primary, #fff) !important;
