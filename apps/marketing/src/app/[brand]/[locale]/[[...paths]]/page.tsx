@@ -120,10 +120,13 @@ export default async function ExperiencePage({
   const experienceJSON = experience ? JSON.stringify(experience) : null;
 
   // LEGACY-ENV-COMPAT: legacy-shape pages opt into the pre-rebrand layout
-  // widths (legacyExperienceLayout.scss).
-  const legacyExperienceProps = isLegacyShapeExperience(experience)
-    ? {'data-legacy-experience': true}
-    : undefined;
+  // widths (legacyExperienceLayout.scss). CSforAll is excluded — its theme
+  // never adopted the rebrand widths, so its legacy pages already render at
+  // production geometry (MUI's default 1200px container).
+  const legacyExperienceProps =
+    pageProps.brand !== Brand.CS_FOR_ALL && isLegacyShapeExperience(experience)
+      ? {'data-legacy-experience': true}
+      : undefined;
 
   return (
     <main style={{width: '100%'}} {...legacyExperienceProps}>

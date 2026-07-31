@@ -5,6 +5,8 @@
  * container), which distorts layouts authored against the old width. Applied
  * only when page.tsx detects the legacy experience shape and stamps
  * data-legacy-experience on <main>; new-environment pages are untouched.
+ * CSforAll never gets the attribute — its theme kept the pre-rebrand
+ * geometry, so pinning it here would shrink it below its native 1200px.
  * Values match the pre-rebrand theme (container.ts / Section.tsx) and cms
  * banner styles on main. Delete with the rest of the compat layer after the
  * Contentful environment switch.
