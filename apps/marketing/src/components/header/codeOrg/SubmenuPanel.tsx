@@ -111,6 +111,7 @@ const PromoContent = styled('div')(({theme}) => ({
 
 const PromoText = styled('span')(({theme}) => ({
   ...theme.typography.body3,
+  fontWeight: 600,
   display: 'inline-flex',
   alignItems: 'center',
   gap: theme.spacing(1.5),
@@ -187,7 +188,7 @@ const SubmenuPanel = ({id, item, onClose}: SubmenuPanelProps) => {
                 <Icon
                   baseClassName="fa-solid"
                   className={`fa-${submenu.promo.content.iconName}`}
-                  fontSize="small"
+                  sx={{fontSize: '1.5rem'}}
                 />
               )}
               {submenu.promo.content.subtitle}

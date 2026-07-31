@@ -3,10 +3,7 @@ import MuiLink from '@mui/material/Link';
 import {styled} from '@mui/material/styles';
 
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {
-  CODE_ORG_DISPLAY_FONT_STACK,
-  CODE_ORG_TEXT_FONT_STACK,
-} from '@/themes/code.org/typography/fontStack';
+import {CODE_ORG_TEXT_FONT_STACK} from '@/themes/code.org/typography/fontStack';
 import {SCALE_TEXT, WEIGHTS} from '@/themes/code.org/typography/tokens';
 
 import {HeaderSubmenuColumn, HeaderSubmenuItem} from './types';
@@ -28,19 +25,20 @@ const ColumnRoot = styled('div', {
   flexDirection: 'column',
   gap: theme.spacing(2),
   minWidth: 0,
-  flex: wide ? '1.6 1 0' : '1 1 0',
+  flex: wide ? '1.4 1 0' : '1 1 0',
 }));
 
 // Not a heading element: the panel can appear on any page, so a fixed
 // h-level could break axe's heading-order rule.
-const ColumnHeading = styled('span')(({theme}) => ({
-  fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
-  fontWeight: WEIGHTS.medium,
-  fontSize: SCALE_TEXT.md.fontSize,
-  lineHeight: 1,
-  letterSpacing: '-0.02em',
-  color: theme.palette.text.primary,
-}));
+const ColumnHeading = styled('span')({
+  // Custom Text "Overline" preset (text-sm semibold uppercase gray6).
+  fontFamily: CODE_ORG_TEXT_FONT_STACK,
+  fontWeight: WEIGHTS.semibold,
+  fontSize: SCALE_TEXT.sm.fontSize,
+  lineHeight: SCALE_TEXT.sm.lineHeight,
+  textTransform: 'uppercase',
+  color: 'var(--codeai-gray-6)',
+});
 
 // No list gap: the theme's MuiLink bottom margin spaces the items.
 const ItemList = styled('ul', {
@@ -51,17 +49,20 @@ const ItemList = styled('ul', {
   padding: 0,
   display: 'grid',
   gridTemplateColumns: horizontal ? 'repeat(2, minmax(0, 1fr))' : 'none',
-  columnGap: theme.spacing(2.5),
+  // Only the horizontal image list renders more than one grid column.
+  columnGap: theme.spacing(4),
 }));
 
 // `card` stacks the image above the text (Image List Horizontal); the other
-// variants lay the visual and text out in a row.
+// variants lay the visual and text out in a row. `centered` middle-aligns the
+// text against the thumbnail (Image List Vertical); icon rows stay top-aligned
+// so the icon hugs the first title line.
 const ItemLink = styled(MuiLink, {
-  shouldForwardProp: prop => prop !== 'card',
-})<{card: boolean}>(({theme, card}) => ({
+  shouldForwardProp: prop => prop !== 'card' && prop !== 'centered',
+})<{card: boolean; centered: boolean}>(({theme, card, centered}) => ({
   display: 'flex',
   flexDirection: card ? 'column' : 'row',
-  alignItems: card ? 'stretch' : 'flex-start',
+  alignItems: card ? 'stretch' : centered ? 'center' : 'flex-start',
   gap: theme.spacing(1.5),
   textDecoration: 'none',
   color: theme.palette.text.primary,
@@ -79,8 +80,8 @@ const ItemIcon = styled(Icon)({
 
 // Image List Vertical rows: thumbnail on the left, text on the right.
 const RowImage = styled('img')({
-  width: 96,
-  height: 64,
+  width: 140,
+  aspectRatio: '16 / 9',
   objectFit: 'cover',
   borderRadius: codeaiRadius('md', '10px'),
   flexShrink: 0,
@@ -89,7 +90,7 @@ const RowImage = styled('img')({
 // Image List Horizontal cards: full-width image above the text.
 const CardImage = styled('img')({
   width: '100%',
-  aspectRatio: '296 / 195',
+  aspectRatio: '16 / 9',
   objectFit: 'cover',
   borderRadius: codeaiRadius('md', '10px'),
 });
@@ -97,7 +98,7 @@ const CardImage = styled('img')({
 const TitleRow = styled('span')(({theme}) => ({
   display: 'inline-flex',
   alignItems: 'center',
-  gap: theme.spacing(1),
+  gap: theme.spacing(0.5),
 }));
 
 const ItemTitle = styled('span')({
@@ -136,6 +137,7 @@ const SubmenuItemLink = ({
   return (
     <ItemLink
       card={isCard}
+      centered={columnType === 'Image List Vertical'}
       href={item.href}
       onClick={onNavigate}
       {...getExternalLinkProps(item.href)}
