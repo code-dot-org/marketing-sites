@@ -53,17 +53,27 @@
   }
 
   [class*='button-primary'][class*='button-white']:hover {
-    background-color: var(--neutral-white-alpha-90, rgb(255 255 255 / 90%)) !important;
+    background-color: var(
+      --neutral-white-alpha-90,
+      rgb(255 255 255 / 90%)
+    ) !important;
   }
 
   /* Hamburger drawer: create account (primary purple) */
-  [class*='button-primary'][class*='button-purple']:not([class*='button-iconOnly']) {
-    background-color: var(--background-brand-purple-primary, #9657c7) !important;
+  [class*='button-primary'][class*='button-purple']:not(
+      [class*='button-iconOnly']
+    ) {
+    background-color: var(
+      --background-brand-purple-primary,
+      #9657c7
+    ) !important;
     border-color: transparent !important;
     color: var(--text-neutral-white-fixed, #fff) !important;
   }
 
-  [class*='button-primary'][class*='button-purple']:not([class*='button-iconOnly']):hover {
+  [class*='button-primary'][class*='button-purple']:not(
+      [class*='button-iconOnly']
+    ):hover {
     background-color: var(--background-brand-purple-strong, #7d4aa6) !important;
   }
 
