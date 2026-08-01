@@ -2,8 +2,10 @@ import GoFundMeDonation from '@/components/contentful/corporateSite/goFundMeDona
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import {expect} from 'storybook/test';
 
-// The real GoFundMe SDK has no valid context inside Storybook, so the
-// reviewable artifact is the emitted target div and its attributes.
+// The reviewable artifact is the emitted target div and its attributes. Note
+// the real GoFundMe SDK does execute in Storybook and renders the live
+// checkout into LiveMarkup's div — which is why that story opts out of
+// visual testing below.
 const meta: Meta<typeof GoFundMeDonation> = {
   title: 'Marketing/GoFundMeDonation',
   component: GoFundMeDonation,
@@ -43,6 +45,13 @@ export const LiveMarkup: Story = {
   args: {
     formDivId: 'GnpoO1jdMG-VtRU8aHW20',
     formClassyId: '739526',
+  },
+  parameters: {
+    // The real GoFundMe SDK does run here and renders the live checkout for
+    // this campaign; its server-driven suggested amounts change per request,
+    // so there is no stable visual baseline. The play() assertions below
+    // still validate the emitted markup.
+    eyes: {include: false},
   },
   play: async ({canvasElement}) => {
     const div = canvasElement.querySelector('[id="GnpoO1jdMG-VtRU8aHW20"]');

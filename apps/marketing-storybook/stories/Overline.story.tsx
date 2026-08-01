@@ -5,6 +5,12 @@ const meta: Meta<typeof Overline> = {
   title: 'Marketing/Overline',
   component: Overline,
   tags: ['autodocs', 'marketing'],
+  parameters: {
+    // Layout match: Geist is a variable font and Applitools render nodes
+    // rasterize its interpolated weights slightly differently per run,
+    // which strict matching flags as size wobble.
+    eyes: {matchLevel: 'Layout'},
+  },
 };
 export default meta;
 type Story = StoryObj<typeof Overline>;

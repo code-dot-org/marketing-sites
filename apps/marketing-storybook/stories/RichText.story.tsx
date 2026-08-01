@@ -11,6 +11,11 @@ const meta: Meta<typeof RichText> = {
   title: 'Marketing/RichText',
   component: RichText,
   tags: ['autodocs', 'marketing'],
+  parameters: {
+    // Layout match: variable-font rasterization differs across Applitools
+    // render nodes, shifting line boxes sub-pixel per run (see Overline).
+    eyes: {matchLevel: 'Layout'},
+  },
 };
 export default meta;
 type Story = StoryObj<typeof RichText>;
