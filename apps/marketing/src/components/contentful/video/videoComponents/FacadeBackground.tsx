@@ -22,7 +22,10 @@ const FacadeBackground = ({
       <MuiVideoPosterImage
         onClick={onClick}
         src={posterThumbnail}
-        loading="lazy"
+        // Eager: the poster is the facade's primary visual (an LCP candidate
+        // when above the fold), and lazy-loading it made visual snapshots
+        // capture the pre-load state nondeterministically.
+        loading="eager"
         alt={alt}
         aria-hidden="true"
         onLoad={onLoad}
