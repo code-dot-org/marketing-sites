@@ -1,8 +1,7 @@
 import {Components, Theme} from '@mui/material/styles';
 
 import {createFontStack} from '@/themes/common/constants';
-import {NOTO_FONT} from '@/themes/constants/fonts';
-import {ROBOTO_MONO_FONT} from '@/themes/csforall/constants/fonts';
+import {GEIST_FONT, ROBOTO_MONO_FONT} from '@/themes/csforall/constants/fonts';
 
 export const LIST_OVERRIDES: Components<Theme>['MuiList'] = {
   styleOverrides: {
@@ -28,13 +27,13 @@ export const LIST_ITEM_OVERRIDES: Components<Theme>['MuiListItem'] = {
       padding: 0,
       gap: theme.spacing(1),
       color: theme.palette.text.primary,
-      fontFamily: createFontStack(ROBOTO_MONO_FONT, NOTO_FONT),
+      fontFamily: createFontStack(ROBOTO_MONO_FONT),
       fontWeight: 400,
       fontStyle: 'normal',
 
       '&::marker': {
         color: theme.palette.text.primary,
-        fontFamily: NOTO_FONT,
+        fontFamily: GEIST_FONT,
       },
     }),
   },

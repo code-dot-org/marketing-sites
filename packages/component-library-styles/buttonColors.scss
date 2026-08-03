@@ -1,0 +1,16 @@
+/* Brand Button + Brand Text Link tokens. Source: specs/008-brand-buttons/figma-tokens.md. */
+:root {
+  --button-color-purple-primary: #4c42cf;
+  --button-color-purple-hover: #382ea5;
+  --button-color-purple-dark: #1f1976;
+  --button-color-purple-light: #e4e2f8;
+  --button-color-purple-tint: #f8f6ff;
+  --button-color-black: #000000;
+  --button-color-white: #ffffff;
+  --button-color-white-alpha-20: rgba(255, 255, 255, 0.2);
+  --button-color-disabled-dark: #afb8c2;
+  --button-color-link-disabled: #d1d4d8;
+  --button-color-disabled-light: #e4e6e9;
+  --button-color-disabled-bg: #f2f2f2;
+  --button-focus-ring: #0a84ff;
+}

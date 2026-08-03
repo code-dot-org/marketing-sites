@@ -5,7 +5,7 @@ export const ActionBlockCarouselContentfulComponentDefinition: ComponentDefiniti
   {
     id: 'carousel-action-block',
     name: 'Action Block Carousel',
-    category: '05: Carousels',
+    category: '10: Deprecated',
     thumbnailUrl:
       'https://contentful-images.code.org/90t6bu6vlf76/2FJZgRPkYkJIKwr46SLPX0/02afd1439ea6f0f4cb8f48a27afb231b/component_carousel_action_block_thumbnail.png',
     tooltip: {

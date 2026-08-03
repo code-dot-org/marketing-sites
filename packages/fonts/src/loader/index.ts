@@ -13,19 +13,21 @@ export function injectFont(locale: InternationalFontLocale) {
   });
 }
 
-export function injectFontAwesome() {
-  const stylesheets = [
-    'https://dsco.code.org/assets/font-awesome-pro/1764885473/css/fontawesome.min.css',
-    'https://dsco.code.org/assets/font-awesome-pro/1764885473/css/brands.min.css',
-    'https://dsco.code.org/assets/font-awesome-pro/1764885473/css/solid.min.css',
-    'https://dsco.code.org/assets/font-awesome-pro/1764885473/css/regular.min.css',
-    'https://dsco.code.org/assets/font-awesome-pro/1764885473/css/v4-font-face.min.css',
-    'https://dsco.code.org/assets/font-awesome-pro/1764885473/css/v4-shims.min.css',
-    'https://dsco.code.org/assets/font-awesome-pro/1764885473/css/duotone.min.css',
-    'https://dsco.code.org/assets/font-awesome-pro/1764885473/css/custom-icons.min.css',
-  ];
+export const FONT_AWESOME_ORIGIN = 'https://dsco.code.org';
 
-  stylesheets.forEach(stylesheetHref => {
+export const FONT_AWESOME_STYLESHEETS = [
+  `${FONT_AWESOME_ORIGIN}/assets/font-awesome-pro/1764885473/css/fontawesome.min.css`,
+  `${FONT_AWESOME_ORIGIN}/assets/font-awesome-pro/1764885473/css/brands.min.css`,
+  `${FONT_AWESOME_ORIGIN}/assets/font-awesome-pro/1764885473/css/solid.min.css`,
+  `${FONT_AWESOME_ORIGIN}/assets/font-awesome-pro/1764885473/css/regular.min.css`,
+  `${FONT_AWESOME_ORIGIN}/assets/font-awesome-pro/1764885473/css/v4-font-face.min.css`,
+  `${FONT_AWESOME_ORIGIN}/assets/font-awesome-pro/1764885473/css/v4-shims.min.css`,
+  `${FONT_AWESOME_ORIGIN}/assets/font-awesome-pro/1764885473/css/duotone.min.css`,
+  `${FONT_AWESOME_ORIGIN}/assets/font-awesome-pro/1764885473/css/custom-icons.min.css`,
+];
+
+export function injectFontAwesome() {
+  FONT_AWESOME_STYLESHEETS.forEach(stylesheetHref => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = stylesheetHref;

@@ -4,67 +4,52 @@ import {Metadata} from 'next';
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
 import {BRAND_OPENGRAPH_DEFAULT_IMAGE_URL} from '@/config/metadata/opengraph';
-import {getSeoMetadataFromExperience} from '@/selectors/contentful/getExperienceEntryFields';
+import {resolveSeoFields, ResolvedSeoFields} from '@/metadata/resolveSeoFields';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
-import {SeoMetadata} from '@/types/contentful/entries/SeoMetadata';
 
 export function getSeoMetadata(
   experience: Experience | undefined,
   brand: Brand | undefined,
   locale: string,
   slug: string,
-): Metadata | undefined {
-  const seoMetadata = getSeoMetadataFromExperience(experience);
-
-  if (seoMetadata === undefined) {
-    return undefined;
-  }
+): Metadata {
+  const seo = resolveSeoFields(experience);
 
   return {
-    ...(seoMetadata.seoTitle ? {title: seoMetadata.seoTitle} : undefined),
-    description: seoMetadata.seoDescription,
-    keywords: seoMetadata.keywords,
+    ...(seo.title ? {title: seo.title} : undefined),
+    description: seo.description,
+    ...(seo.keywords?.length ? {keywords: seo.keywords} : undefined),
     alternates: {
       canonical: `https://${getProductionCanonicalRootDomain(brand)}/${locale}/${slug}`,
     },
-    openGraph: getOpenGraph(seoMetadata, brand, locale),
-    robots: getRobots(seoMetadata),
+    openGraph: getOpenGraph(seo, brand, locale),
+    robots: {
+      index: !seo.noIndex,
+      follow: !seo.noFollow,
+    },
   };
 }
 
 function getOpenGraph(
-  seoMetadata: SeoMetadata,
+  seo: ResolvedSeoFields,
   brand: Brand | undefined,
   locale: string,
 ) {
-  const openGraphImage = seoMetadata.openGraphImage;
-  // As of July 2025, all open graph providers support JPEG & PNG but there is only partial support for AVIF.
-  // Use webp for compatibility.
-  const openGraphImageUrl = getAbsoluteImageUrl(openGraphImage, {fm: 'webp'});
+  // As of July 2025, all open graph providers support JPEG & PNG but there is
+  // only partial support for AVIF. Use webp for compatibility.
+  const opengraphImageUrl = getAbsoluteImageUrl(seo.ogImage, {fm: 'webp'});
 
   return {
     type: 'website',
-    locale: locale,
-    title: seoMetadata.openGraphTitle,
-    description: seoMetadata.openGraphDescription,
+    locale,
+    title: seo.ogTitle,
+    description: seo.ogDescription,
     url: './',
     images:
-      openGraphImage && openGraphImageUrl
-        ? openGraphImageUrl
+      seo.ogImage && opengraphImageUrl
+        ? opengraphImageUrl
         : brand
           ? BRAND_OPENGRAPH_DEFAULT_IMAGE_URL[brand]
           : undefined,
-  };
-}
-
-function getRobots(seoMetadata: SeoMetadata) {
-  const hideFromSearchEngines =
-    seoMetadata.hidePageFromSearchEnginesNoindex ?? false;
-  const hideLinksFromSearchEngines =
-    seoMetadata.hideLinksFromSearchEnginesNofollow ?? false;
-
-  return {
-    index: !hideFromSearchEngines,
-    follow: !hideLinksFromSearchEngines,
   };
 }

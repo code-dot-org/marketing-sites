@@ -5,6 +5,7 @@ import {cache} from 'react';
 import {getLogger} from '@/logger';
 import tracer from '@/otel/tracer';
 
+import {addLeafReferencesToExperience} from './addLeafReferencesToExperience';
 import {getContentfulClient} from './client';
 
 const logger = getLogger('contentful');
@@ -95,6 +96,20 @@ const getExperienceFromContentful = async (
     });
   } catch (error) {
     return {experience, error: error as Error};
+  }
+
+  if (experience) {
+    // The SDK only fetches bound entities two levels deep; pull in the
+    // deeper leaf references components resolve at render time (e.g.
+    // Course Catalog → course → unit → unit link/image).
+    try {
+      await addLeafReferencesToExperience(experience, client, localeCode);
+    } catch (error) {
+      logger.warn(
+        {operation: 'addLeafReferencesToExperience', slug, error},
+        `Failed to resolve leaf references for SLUG=${slug}`,
+      );
+    }
   }
 
   return {experience, error: undefined};

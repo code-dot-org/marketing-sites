@@ -1,0 +1,109 @@
+import Box from '@mui/material/Box';
+import classNames from 'classnames';
+import React from 'react';
+
+import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
+
+import {
+  BrandColor,
+  cssVarForBrandColor,
+  resolvedCssVarForBrandColor,
+} from '@/components/common/colors';
+import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
+import {RemoveMarginBottomProps} from '@/components/common/types';
+import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
+
+export type IconBackgroundFill = 'none' | 'filled' | 'outline';
+
+// Bottom-margin rhythm shared with Heading/Paragraph. Toggleable off via the
+// Design-tab checkbox (removeMarginBottom).
+const MARGIN_BOTTOM = 'calc(2 * var(--mui-spacing))';
+
+export type IconProps = Partial<RemoveMarginBottomProps> & {
+  iconName: string;
+  color?: BrandColor;
+  backgroundFill?: IconBackgroundFill;
+  backgroundColor?: BrandColor;
+  iconSize?: number;
+  className?: string;
+};
+
+// Shape outer dimension is 1.75 × the icon size — gives the icon comfortable
+// padding without dwarfing it. Filled/outline backgrounds are always the
+// rounded square (the circle option was retired), cornered with the CodeAI
+// md radius token; fallback covers brands without the token scope.
+const SHAPE_RATIO = 1.75;
+const SQUARE_RADIUS = 'var(--codeai-radius-md, 0.625rem)';
+const OUTLINE_WIDTH = 3;
+
+const Icon: React.FC<IconProps> = ({
+  iconName,
+  color = 'purplePrimary',
+  backgroundFill = 'none',
+  backgroundColor = 'gray1',
+  iconSize = 24,
+  removeMarginBottom = false,
+  className,
+}) => {
+  const marginBottom = removeMarginBottom ? undefined : MARGIN_BOTTOM;
+  const enclosingBackground = useSectionBackground();
+  // Contrast switch is skipped only for 'filled': there the glyph sits on the
+  // author-controlled fill, so the chosen color passes through. 'none' and
+  // 'outline' both show the Section background behind the glyph (an outline
+  // is just a ring), so the glyph color must adapt to it.
+  const glyphColor =
+    backgroundFill === 'filled'
+      ? cssVarForBrandColor(color)
+      : resolvedCssVarForBrandColor(color, enclosingBackground);
+
+  const iconFamily = fontAwesomeV6BrandIconsMap.has(iconName)
+    ? 'brands'
+    : undefined;
+
+  const glyph = (
+    <FontAwesomeV6Icon
+      iconName={iconName}
+      iconStyle="solid"
+      iconFamily={iconFamily}
+      style={{fontSize: `${iconSize}px`, color: glyphColor}}
+    />
+  );
+
+  if (backgroundFill === 'none') {
+    return (
+      <span
+        className={className}
+        style={{display: 'inline-block', marginBottom}}
+      >
+        {glyph}
+      </span>
+    );
+  }
+
+  const outerSize = iconSize * SHAPE_RATIO;
+  const bg = cssVarForBrandColor(backgroundColor);
+
+  return (
+    <Box
+      className={classNames(className)}
+      sx={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom,
+        width: `${outerSize}px`,
+        height: `${outerSize}px`,
+        borderRadius: SQUARE_RADIUS,
+        backgroundColor: backgroundFill === 'filled' ? bg : 'transparent',
+        border:
+          backgroundFill === 'outline'
+            ? `${OUTLINE_WIDTH}px solid ${bg}`
+            : 'none',
+      }}
+    >
+      {glyph}
+    </Box>
+  );
+};
+
+export default Icon;

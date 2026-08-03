@@ -1,6 +1,7 @@
 // Creates a definition for the Typography component to be used in Contentful Studio
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import {brandTextColorOptions} from '@/components/common/colors';
 import {removeMarginBottomDefinition} from '@/components/common/definitions';
 
 export const HeadingContentfulComponentDefinition: ComponentDefinition = {
@@ -15,10 +16,10 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
     imageUrl:
       'https://contentful-images.code.org/90t6bu6vlf76/3kSwyMuHssbpZtr0hUAKyf/1f4d22b8e8bf3037bda3ff58d03ce293/component_heading_tooltip.png',
   },
-  builtInStyles: ['cfTextAlign'],
+  builtInStyles: ['cfTextAlign', 'cfMaxWidth'],
   variables: {
     visualAppearance: {
-      displayName: 'Visual Appearance',
+      displayName: 'Heading Level',
       type: 'Text',
       defaultValue: 'heading-xl',
       group: 'style',
@@ -36,68 +37,50 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
     color: {
       displayName: 'Color',
       type: 'Text',
-      defaultValue: 'primary',
+      defaultValue: 'purpleDark',
+      group: 'style',
+      validations: {
+        in: brandTextColorOptions('purpleDark'),
+      },
+    },
+    textTransform: {
+      displayName: 'Transform Case',
+      type: 'Text',
+      defaultValue: 'none',
       group: 'style',
       validations: {
         in: [
-          {value: 'primary', displayName: 'Primary'},
-          {value: 'white', displayName: 'White'},
+          {value: 'none', displayName: 'None'},
+          {value: 'uppercase', displayName: 'Uppercase'},
+          {value: 'lowercase', displayName: 'Lowercase'},
+          {value: 'capitalize', displayName: 'Capitalize'},
         ],
       },
     },
-    useAltFont: {
-      displayName: 'Use alternate font (Space Grotesk)',
-      type: 'Boolean',
-      defaultValue: false,
-      group: 'style',
-      description:
-        'Switch this heading to the Space Grotesk style. Leaves other headings unchanged.',
-    },
-    fontSize: {
-      displayName: 'Font size (rem)',
-      type: 'Number',
-      group: 'style',
-      description:
-        'Override the font size in rem. Only applies when the alternate font is on. Leave blank for the responsive default.',
-    },
-    lineHeight: {
-      displayName: 'Line height',
-      type: 'Number',
-      group: 'style',
-      description:
-        'Unitless line-height override. Only applies when the alternate font is on. Default is 1.0.',
-    },
-    fontWeight: {
-      displayName: 'Font weight',
+    // Spec 009 US3 + amendment-4 — orthogonal to "Heading Level" above.
+    // SIZE-only override: the chosen Display cell changes size + line-height
+    // + letter-spacing while the semantic <h*> tag, font-family, and weight
+    // come from Heading Level. To match the H1 visual treatment on a
+    // different heading level, pair this with the Font weight override
+    // (Semibold to match H1; Medium otherwise).
+    appearance: {
+      displayName: 'Visual Appearance',
       type: 'Text',
+      defaultValue: 'default',
       group: 'style',
       description:
-        'Only applies when the alternate font is on. Default is Bold.',
+        'Override the size only while keeping the chosen Heading Level\'s semantic tag (<h1>..<h6>) and weight. "Default" inherits the canonical size for the chosen Heading Level.',
       validations: {
         in: [
-          {value: '500', displayName: 'Medium'},
-          {value: '700', displayName: 'Bold'},
-        ],
-      },
-    },
-    colorOverride: {
-      displayName: 'Color override (hex)',
-      type: 'Text',
-      group: 'style',
-      description:
-        'Hex color (e.g. #1F1976). Only applies when the alternate font is on. Default is #1F1976.',
-    },
-    fontKerning: {
-      displayName: 'Font kerning',
-      type: 'Text',
-      group: 'style',
-      description:
-        'Only applies when the alternate font is on. Default is Auto.',
-      validations: {
-        in: [
-          {value: 'auto', displayName: 'Auto'},
-          {value: 'normal', displayName: 'Normal (always on)'},
-          {value: 'none', displayName: 'None (off)'},
+          {value: 'default', displayName: 'Default (from level)'},
+          {value: 'display-4xl', displayName: 'Display 4xl'},
+          {value: 'display-3xl', displayName: 'Display 3xl'},
+          {value: 'display-2xl', displayName: 'Display 2xl'},
+          {value: 'display-xl', displayName: 'Display xl'},
+          {value: 'display-lg', displayName: 'Display lg'},
+          {value: 'display-md', displayName: 'Display md'},
+          {value: 'display-sm', displayName: 'Display sm'},
+          {value: 'display-xs', displayName: 'Display xs'},
         ],
       },
     },
@@ -110,6 +93,64 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
       validations: {
         bindingSourceType: ['entry', 'manual'],
       },
+    },
+    fontSize: {
+      displayName: 'Override · Font size (rem)',
+      type: 'Number',
+      group: 'style',
+      description:
+        'Override the font size in rem. Leave blank for the responsive default.',
+    },
+    lineHeight: {
+      displayName: 'Override · Line height',
+      type: 'Number',
+      group: 'style',
+      description: 'Unitless line-height override. Default is 1.0.',
+    },
+    fontWeight: {
+      displayName: 'Override · Font weight',
+      type: 'Text',
+      defaultValue: 'default',
+      group: 'style',
+      description:
+        '"Default (from level)" inherits the Heading Level\'s canonical weight (Heading 1 = Semibold; Heading 2–6 = Medium). Pick a specific weight to override.',
+      validations: {
+        in: [
+          {value: 'default', displayName: 'Default (from level)'},
+          {value: '400', displayName: 'Regular'},
+          {value: '500', displayName: 'Medium'},
+          {value: '600', displayName: 'Semibold'},
+          {value: '700', displayName: 'Bold'},
+        ],
+      },
+    },
+    colorOverride: {
+      displayName: 'Override · Color (hex)',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Hex color (e.g. #1F1976). Overrides the Color selection above.',
+    },
+    fontKerning: {
+      displayName: 'Override · Font kerning',
+      type: 'Text',
+      defaultValue: 'normal',
+      group: 'style',
+      description: 'Default is Normal.',
+      validations: {
+        in: [
+          {value: 'normal', displayName: 'Normal'},
+          {value: 'auto', displayName: 'Auto'},
+          {value: 'none', displayName: 'None (off)'},
+        ],
+      },
+    },
+    zIndex: {
+      displayName: 'Z-index',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Stacking order. Leave blank for default. Set an integer (e.g. 10 or -1) to layer above or below sibling elements.',
     },
   },
 };

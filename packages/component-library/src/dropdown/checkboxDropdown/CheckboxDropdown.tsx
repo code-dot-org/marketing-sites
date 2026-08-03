@@ -154,14 +154,14 @@ const CheckboxDropdown: React.FunctionComponent<CheckboxDropdownProps> = ({
             color={buttonColors.black}
             text={rest.selectAllText}
             onClick={rest.onSelectAll}
-            size={size}
+            size={size === 'xs' ? 's' : size}
           />
           <Button
             type="tertiary"
             color={buttonColors.black}
             text={rest.clearAllText}
             onClick={rest.onClearAll}
-            size={size}
+            size={size === 'xs' ? 's' : size}
           />
         </div>
       )}

@@ -2,80 +2,78 @@ import {Experience} from '@contentful/experiences-sdk-react';
 import {Metadata} from 'next';
 
 import {Brand} from '@/config/brand';
-import {getSeoMetadataFromExperience} from '@/selectors/contentful/getExperienceEntryFields';
+import {resolveSeoFields, ResolvedSeoFields} from '@/metadata/resolveSeoFields';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
-import {SeoMetadata} from '@/types/contentful/entries/SeoMetadata';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 import {getSeoMetadata} from '../seo';
 
-jest.mock('@/selectors/contentful/getExperienceEntryFields', () => ({
-  getSeoMetadataFromExperience: jest.fn(),
+jest.mock('@/metadata/resolveSeoFields', () => ({
+  resolveSeoFields: jest.fn(),
 }));
 jest.mock('@/selectors/contentful/getImage', () => ({
   getAbsoluteImageUrl: jest.fn(),
 }));
 
-const mockSeoMetadata: SeoMetadata = {
-  seoTitle: 'Test Title',
-  seoDescription: 'Test Description',
-  keywords: ['test', 'seo'],
-  canonicalUrl: 'https://example.com',
-  openGraphTitle: 'OG Title',
-  openGraphDescription: 'OG Description',
-  openGraphImage: {
-    fields: {
-      file: {
-        contentType: 'image/jpeg',
-        fileName: 'test-image.jpg',
-        url: '/test-image.jpg',
-        details: {
-          size: 0,
-          image: {
-            width: 1200,
-            height: 630,
-          },
+const mockOpengraphImage: ExperienceAsset = {
+  fields: {
+    file: {
+      contentType: 'image/jpeg',
+      fileName: 'test-image.jpg',
+      url: '/test-image.jpg',
+      details: {
+        size: 0,
+        image: {
+          width: 1200,
+          height: 630,
         },
       },
     },
-  } as ExperienceAsset,
-  hidePageFromSearchEnginesNoindex: false,
-  hideLinksFromSearchEnginesNofollow: false,
-};
+  },
+} as ExperienceAsset;
 
 const mockExperience: Experience = {} as Experience;
 
+function mockResolvedSeo(overrides: Partial<ResolvedSeoFields> = {}) {
+  const defaults: ResolvedSeoFields = {
+    title: 'Test Title',
+    description: 'Test Description',
+    ogTitle: 'Test Title',
+    ogDescription: 'Test Description',
+    ogImage: mockOpengraphImage,
+    noIndex: false,
+    noFollow: false,
+  };
+  (resolveSeoFields as jest.Mock).mockReturnValue({...defaults, ...overrides});
+}
+
 describe('getSeoMetadata', () => {
   beforeEach(() => {
-    (getSeoMetadataFromExperience as jest.Mock).mockReturnValue(
-      mockSeoMetadata,
-    );
+    mockResolvedSeo();
     (getAbsoluteImageUrl as jest.Mock).mockReturnValue(
       'https://example.com/test-image.jpg',
     );
   });
 
-  it('should return metadata when seoMetadata is defined', () => {
-    const locale = 'en-US';
+  it('returns full metadata when experience fields are populated', () => {
     const result = getSeoMetadata(
       mockExperience,
       Brand.CODE_DOT_ORG,
-      locale,
+      'en-US',
       'engineering/all-the-things',
     );
 
     expect(result).toEqual<Metadata>({
       title: 'Test Title',
       description: 'Test Description',
-      keywords: ['test', 'seo'],
       alternates: {
         canonical: 'https://code.org/en-US/engineering/all-the-things',
       },
       openGraph: {
         type: 'website',
         locale: 'en-US',
-        title: 'OG Title',
-        description: 'OG Description',
+        title: 'Test Title',
+        description: 'Test Description',
         url: './',
         images: 'https://example.com/test-image.jpg',
       },
@@ -86,8 +84,47 @@ describe('getSeoMetadata', () => {
     });
   });
 
-  it('should return undefined when seoMetadata is undefined', () => {
-    (getSeoMetadataFromExperience as jest.Mock).mockReturnValue(undefined);
+  it('omits title when the resolved title is undefined', () => {
+    mockResolvedSeo({title: undefined});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      'engineering/all-the-things',
+    );
+
+    expect(result.title).toBeUndefined();
+  });
+
+  it('emits keywords when present', () => {
+    mockResolvedSeo({keywords: ['computer science', 'education']});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      'engineering/all-the-things',
+    );
+
+    expect(result.keywords).toEqual(['computer science', 'education']);
+  });
+
+  it('omits keywords when empty', () => {
+    mockResolvedSeo({keywords: []});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      'engineering/all-the-things',
+    );
+
+    expect(result).not.toHaveProperty('keywords');
+  });
+
+  it('falls back to brand default OG image when ogImage is missing', () => {
+    mockResolvedSeo({ogImage: undefined});
 
     const result = getSeoMetadata(
       mockExperience,
@@ -96,60 +133,26 @@ describe('getSeoMetadata', () => {
       '/engineering/all-the-things',
     );
 
-    expect(result).toBeUndefined();
-  });
-
-  it('should handle missing openGraphImage gracefully', () => {
-    const locale = 'en-US';
-    const seoMetadataWithoutImage = {
-      ...mockSeoMetadata,
-      openGraphImage: undefined,
-    };
-    (getSeoMetadataFromExperience as jest.Mock).mockReturnValue(
-      seoMetadataWithoutImage,
-    );
-
-    const result = getSeoMetadata(
-      mockExperience,
-      Brand.CODE_DOT_ORG,
-      locale,
-      '/engineering/all-the-things',
-    );
-
-    expect(result?.openGraph?.images).toBe(
-      'https://contentful-images.code.org/90t6bu6vlf76/6QAykNTAjFdgHya4lBchyF/539e119f045b74395ec9aca97bacf6ed/opengraph-default.png',
+    expect(result.openGraph?.images).toBe(
+      'https://contentful-images.code.org/90t6bu6vlf76/6QAykNTAjFdgHya4lBchyF/f2afa0254f89188206e45c223910b412/codeai_default_opengraph.png',
     );
   });
 
-  it('should handle missing openGraphImage default image gracefully', () => {
-    const locale = 'en-US';
-    const seoMetadataWithoutImage = {
-      ...mockSeoMetadata,
-      openGraphImage: undefined,
-    };
-    (getSeoMetadataFromExperience as jest.Mock).mockReturnValue(
-      seoMetadataWithoutImage,
-    );
+  it('leaves OG image undefined when no brand default exists and no image set', () => {
+    mockResolvedSeo({ogImage: undefined});
 
     const result = getSeoMetadata(
       mockExperience,
       'incorrect brand' as Brand,
-      locale,
+      'en-US',
       '/engineering/all-the-things',
     );
 
-    expect(result?.openGraph?.images).toBeUndefined();
+    expect(result.openGraph?.images).toBeUndefined();
   });
 
-  it('should handle missing robots metadata gracefully', () => {
-    const seoMetadataWithoutRobots = {
-      ...mockSeoMetadata,
-      hidePageFromSearchEnginesNoindex: undefined,
-      hideLinksFromSearchEnginesNofollow: undefined,
-    };
-    (getSeoMetadataFromExperience as jest.Mock).mockReturnValue(
-      seoMetadataWithoutRobots,
-    );
+  it('sets noindex+nofollow together when both flags are set', () => {
+    mockResolvedSeo({noIndex: true, noFollow: true});
 
     const result = getSeoMetadata(
       mockExperience,
@@ -158,29 +161,32 @@ describe('getSeoMetadata', () => {
       '/engineering/all-the-things',
     );
 
-    expect(result?.robots).toEqual({
-      index: true,
-      follow: true,
-    });
+    expect(result.robots).toEqual({index: false, follow: false});
   });
 
-  it('should call getAbsoluteImageUrl with fm=png for openGraphImage', () => {
-    (getSeoMetadataFromExperience as jest.Mock).mockReturnValue(
-      mockSeoMetadata,
+  // LEGACY-ENV-COMPAT: the old environment has independent noindex/nofollow flags.
+  it('supports nofollow independently of noindex', () => {
+    mockResolvedSeo({noIndex: false, noFollow: true});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      '/engineering/all-the-things',
     );
-    (getAbsoluteImageUrl as jest.Mock).mockReturnValue(
-      'https://example.com/test-image.png',
-    );
-    const locale = 'en-US';
+
+    expect(result.robots).toEqual({index: true, follow: false});
+  });
+
+  it('calls getAbsoluteImageUrl with fm=webp for the OG image', () => {
     getSeoMetadata(
       mockExperience,
       Brand.CODE_DOT_ORG,
-      locale,
+      'en-US',
       '/engineering/all-the-things',
     );
-    expect(getAbsoluteImageUrl).toHaveBeenCalledWith(
-      mockSeoMetadata.openGraphImage,
-      {fm: 'webp'},
-    );
+    expect(getAbsoluteImageUrl).toHaveBeenCalledWith(mockOpengraphImage, {
+      fm: 'webp',
+    });
   });
 });

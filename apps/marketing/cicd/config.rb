@@ -84,7 +84,7 @@ module MarketingSites
           # Environment Variables to pass to the Next.js web application server.
           environment_variables: {
             CONTENTFUL_SPACE_ID: '90t6bu6vlf76',
-            CONTENTFUL_ENV_ID: 'master'
+            CONTENTFUL_ENV_ID: 'sandbox'
           },
         }.freeze
       }.freeze,

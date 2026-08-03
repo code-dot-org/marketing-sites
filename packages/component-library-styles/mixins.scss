@@ -154,8 +154,10 @@
 }
 
 // Focus styles
+// --focus-ring-color is set under [data-brand='Code.org'] (see colors.scss);
+// CSForAll/HOC fall back to the legacy teal.
 @mixin focus-styles {
-  outline: var(--borders-brand-teal-primary) solid 2px;
+  outline: var(--focus-ring-color, var(--borders-brand-teal-primary)) solid 2px;
   outline-offset: 0.125rem;
 }
 
@@ -176,7 +178,7 @@
   $border-color: var(--borders-neutral-primary),
   $border-width: 1px,
   $border-style: solid,
-  $border-radius: variables.$regular-border-radius
+  $border-radius: var(--codeai-radius-md, #{variables.$regular-border-radius})
 ) {
   border: $border-width $border-style $border-color;
   border-radius: $border-radius;

@@ -4,8 +4,10 @@ export const CONTAINER_OVERRIDES: Components<Theme>['MuiContainer'] = {
   styleOverrides: {
     root: ({theme}) => ({
       '&.MuiContainer-root': {
-        paddingLeft: theme.spacing(0),
-        paddingRight: theme.spacing(0),
+        // Gutters moved here from the Section's (removed) inline padding so
+        // csforall renders identically; no max-width, so this matches before.
+        paddingLeft: '1.5rem',
+        paddingRight: '1.5rem',
         zIndex: 2,
       },
       // Spacing styles

@@ -1,0 +1,277 @@
+{
+  "title": "AI Foundations",
+  "courseDetailsLink": {
+    "contentTypeId": "link",
+    "metadata": {
+      "tags": [],
+      "concepts": []
+    },
+    "sys": {
+      "space": {
+        "sys": {
+          "type": "Link",
+          "linkType": "Space",
+          "id": "90t6bu6vlf76"
+        }
+      },
+      "id": "unitCarouselCourseLink1",
+      "type": "Entry",
+      "createdAt": "2026-07-09T00:00:00.000Z",
+      "updatedAt": "2026-07-09T00:00:00.000Z",
+      "environment": {
+        "sys": {
+          "id": "master",
+          "type": "Link",
+          "linkType": "Environment"
+        }
+      },
+      "publishedVersion": 1,
+      "revision": 1,
+      "contentType": {
+        "sys": {
+          "type": "Link",
+          "linkType": "ContentType",
+          "id": "link"
+        }
+      },
+      "locale": "en-US"
+    },
+    "fields": {
+      "linkName": "❌ [ENG] Course details link",
+      "label": "View course details",
+      "primaryTarget": "/ai-foundations",
+      "isThisAnExternalLink": false
+    }
+  },
+  "gradeBands": ["9-10", "11-12"],
+  "units": [
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "3CqSD4orrZzEoAvyXEFS7x",
+        "type": "Entry",
+        "createdAt": "2025-05-16T16:28:37.637Z",
+        "updatedAt": "2025-07-23T18:10:12.331Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 65,
+        "revision": 14,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "curriculum"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "Problem Solving with AI",
+        "shortDescription": "Introduce students to AI as a collaborator, learning where AI succeeds and fails, and how human oversight improves problem solving.",
+        "grade": ["9-10"],
+        "duration": ["1 hour"],
+        "topics": ["Special Topic"],
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "1HWV07i9omvarlmtVr4orB",
+        "type": "Entry",
+        "createdAt": "2025-05-16T16:28:44.850Z",
+        "updatedAt": "2025-07-23T18:10:14.286Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 55,
+        "revision": 14,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "curriculum"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "Foundations of AI Programming",
+        "shortDescription": "This unit introduces students to programming and ethical computing, exploring how Python programs are designed and debugged.",
+        "duration": ["15 Hours"],
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        },
+        "grade": ["9-10"],
+        "topics": ["Special Topic", "Programming"]
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "6Jgr1x1twPWiSMQpCUmrUt",
+        "type": "Entry",
+        "createdAt": "2025-05-16T16:28:52.056Z",
+        "updatedAt": "2025-07-23T18:10:14.255Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 55,
+        "revision": 14,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "curriculum"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "AI and the Systems that Power It",
+        "shortDescription": "Intro students to AI and computing systems and explore how they process information, interact with hardware and software, and more.",
+        "duration": ["15 Hours"],
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        },
+        "grade": ["9-12"],
+        "topics": ["Special Topic"]
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "1HIaZBetOiLXTpTaomepyu",
+        "type": "Entry",
+        "createdAt": "2025-05-16T16:28:58.578Z",
+        "updatedAt": "2025-07-23T18:10:14.222Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 43,
+        "revision": 14,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "curriculum"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "The Fabric of the Internet and AI",
+        "shortDescription": "Students examine data transmission, IP addressing, DNS resolution, network security, and AI's role in cybersecurity.",
+        "duration": ["15 Hours"],
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        },
+        "grade": ["11-12"],
+        "topics": ["Cybersecurity"]
+      }
+    }
+  ]
+}

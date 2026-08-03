@@ -13,6 +13,10 @@ $mobileBreakpoint: 970px;
   background-size: cover;
   padding: 4rem 2rem;
 
+  @media (max-width: 600px) {
+    padding-inline: 1rem;
+  }
+
   &.heroBanner-withWideText {
     .heroBannerTextContainer {
       flex: 2;
@@ -44,7 +48,8 @@ div.heroBannerAnnouncementBanner {
 
 .heroBannerContainer {
   display: flex;
-  max-width: 60rem;
+  // 1216px — matches Section content (1280px cap − 2rem gutters)
+  max-width: calc(1280px - 4rem);
   margin: 0 auto;
   align-items: center;
   gap: 4.375rem;
@@ -75,11 +80,9 @@ div.heroBannerAnnouncementBanner {
     }
   }
 
-  // Adding negative margin to the h1 element to align this
-  // optically in the center of the banner. The line height here
-  // is adding extra whitespace above the h1 element.
+  // Bottom margin keeps a gap below the heading content.
   h1 {
-    margin-block: -0.75rem 1.5rem;
+    margin-block: 0 1.5rem;
   }
 }
 
@@ -97,7 +100,7 @@ div.heroBannerAnnouncementBanner {
   figure {
     max-height: 28.125rem;
     flex: 1;
-    border-radius: variables.$regular-border-radius;
+    border-radius: var(--codeai-radius-md, #{variables.$regular-border-radius});
   }
 
   .heroBannerMediaImage img {

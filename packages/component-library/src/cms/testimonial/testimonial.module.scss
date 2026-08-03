@@ -5,12 +5,17 @@
   display: block;
   box-sizing: border-box;
   width: 100%;
-  padding: 4rem 1.5rem;
+  padding: 4rem 2rem;
   margin: 0;
+
+  @media (max-width: 600px) {
+    padding-inline: 1rem;
+  }
 
   > * {
     width: 100%;
-    max-width: 960px;
+    // 1216px — matches Section content (1280px cap − 2rem gutters)
+    max-width: calc(1280px - 4rem);
     margin: 0 auto;
   }
 
@@ -43,11 +48,22 @@
 
     .testimonialQuoteIcon {
       color: var(--text-brand-teal-primary-fixed);
+
+      // CodeAI rebrand; mid purple keeps contrast on the dark background.
+      // CSForAll/HOC keep the legacy teal.
+      :root[data-brand='Code.org'] & {
+        color: var(--codeai-purple-mid);
+      }
     }
   }
 
   &-primary {
     background-color: var(--brand-teal-50);
+
+    // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
+    :root[data-brand='Code.org'] & {
+      background-color: var(--codeai-purple-primary);
+    }
   }
 }
 

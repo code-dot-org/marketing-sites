@@ -1,65 +1,99 @@
-import {alpha, Components, Theme} from '@mui/material/styles';
+import {Components, Theme} from '@mui/material/styles';
 
-import {createFontStack} from '@/themes/common/constants';
-import {NOTO_FONT} from '@/themes/constants/fonts';
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
+import {CODE_ORG_TEXT_FONT_STACK} from '@/themes/code.org/typography/fontStack';
 
-import {FIGTREE_FONT} from '../constants/fonts';
-
+// Brand Text Link — see specs/008-brand-buttons/research.md R12.
 export const LINK_OVERRIDES: Components<Theme>['MuiLink'] = {
   styleOverrides: {
     root: ({theme}) => ({
-      fontFamily: createFontStack(FIGTREE_FONT, NOTO_FONT),
-      fontWeight: 500,
-      lineHeight: 1.4,
+      fontFamily: CODE_ORG_TEXT_FONT_STACK,
+      fontWeight: 700,
+      padding: 0,
       marginBottom: theme.spacing(2),
-      textDecoration: 'underline',
+      textTransform: 'none',
+      // The underline lives on the label span (Link.tsx wraps its text in a
+      // <span>) so sibling icons never render underlined. Scoped to
+      // [data-hierarchy] (always set by Link.tsx) so raw MuiLink usages —
+      // e.g. header submenu items — don't inherit it.
+      textDecoration: 'none',
+      '&[data-hierarchy] > span': {
+        textDecoration: 'underline',
+        textDecorationStyle: 'solid',
+        textDecorationThickness: 'from-font',
+      },
       transition: 'color 0.2s ease-in-out',
+
+      // Defeat the global MuiSvgIcon color override.
       '& svg': {
-        transition: 'color 0.2s ease-in-out',
+        color: 'inherit',
       },
+
+      '&[data-hierarchy="color"]': {
+        color: 'var(--button-color-purple-primary)',
+        '&:hover': {
+          color: 'var(--button-color-purple-hover)',
+        },
+        '&[data-loading="true"]': {
+          color: 'var(--button-color-purple-hover)',
+        },
+        '&[aria-disabled="true"]': {
+          color: 'var(--button-color-link-disabled)',
+        },
+      },
+      '&[data-hierarchy="black"]': {
+        color: 'var(--button-color-black)',
+        '&[data-loading="true"]': {
+          color: 'var(--button-color-black)',
+        },
+        '&[aria-disabled="true"]': {
+          color: 'var(--button-color-link-disabled)',
+        },
+      },
+      '&[data-hierarchy="white"]': {
+        color: 'var(--button-color-white)',
+        '&[data-loading="true"]': {
+          color: 'var(--button-color-white)',
+        },
+        '&[aria-disabled="true"]': {
+          color: 'var(--button-color-disabled-light)',
+        },
+      },
+
+      '&[data-disable-underline="true"] > span': {
+        textDecoration: 'none',
+      },
+
+      '&[data-inline="true"]': {
+        fontFamily: 'inherit',
+        fontSize: 'inherit',
+        lineHeight: 'inherit',
+        letterSpacing: 'inherit',
+        marginBottom: 0,
+      },
+
       '&:focus-visible': {
-        outline: '2px solid var(--text-brand-teal-primary)',
-        outlineOffset: '2px',
-        borderRadius: theme.spacing(0.5),
+        outline: '2px solid var(--button-focus-ring)',
+        outlineOffset: '4px',
+        borderRadius: codeaiRadius('sm', '10px'), // matches button radius
       },
-      '&.MuiLink-root.link--color-primary': {
-        color: 'var(--text-brand-purple-primary)',
-        '&:hover': {
-          color: 'var(--text-brand-purple-secondary)',
-          '& svg': {
-            color: 'var(--text-brand-purple-secondary)',
-          },
-        },
-        '& svg': {
-          color: 'var(--text-brand-purple-primary)',
-        },
-      },
-      '&.MuiLink-root.link--color-white': {
-        color: theme.palette.common.white,
-        '&:hover': {
-          color: alpha(theme.palette.common.white, 0.8),
-          '& svg': {
-            color: alpha(theme.palette.common.white, 0.8),
-          },
-        },
-        '&:focus-visible': {
-          outlineColor: alpha(theme.palette.common.white, 0.8),
-        },
-        '& svg': {
-          color: theme.palette.common.white,
-        },
-      },
-      '&.MuiLink-root.link--size-l': {
-        fontSize: '1.25rem', // 20px
+
+      // One step below M so the sizes stay distinct now that every size
+      // shares the body font with no casing difference.
+      '&.MuiLink-root.link--size-s': {
+        fontSize: '0.75rem', // 12px
+        lineHeight: '1.125rem', // 18px
+        gap: '4px',
       },
       '&.MuiLink-root.link--size-m': {
-        fontSize: '1rem', // 16px
-      },
-      '&.MuiLink-root.link--size-s': {
         fontSize: '0.875rem', // 14px
+        lineHeight: '21.7px',
+        gap: '4px',
       },
-      '&.MuiLink-root.link--size-xs': {
-        fontSize: '0.75rem', // 12px
+      '&.MuiLink-root.link--size-l': {
+        fontSize: '1rem', // 16px
+        lineHeight: '24px',
+        gap: '6px',
       },
     }),
   },

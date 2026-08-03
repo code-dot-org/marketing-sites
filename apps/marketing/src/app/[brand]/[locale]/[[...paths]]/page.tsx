@@ -3,7 +3,6 @@ import {Metadata} from 'next';
 import {draftMode} from 'next/headers';
 import {notFound} from 'next/navigation';
 
-import Bootstrap from '@/bootstrap';
 import ContentEditorHelper from '@/components/contentEditorHelper';
 import {Brand} from '@/config/brand';
 import {getIcons} from '@/config/metadata/icons';
@@ -12,8 +11,12 @@ import ExperiencePageLoader from '@/contentful/components/ExperiencePageLoader';
 import {getExperience} from '@/contentful/get-experience';
 import {registerContentfulComponents} from '@/contentful/registration';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
+import {isLegacyShapeExperience} from '@/metadata/resolveSeoFields';
 import {getSeoMetadata} from '@/metadata/seo';
-import {getPageHeading} from '@/selectors/contentful/getExperienceEntryFields';
+
+// LEGACY-ENV-COMPAT: pre-rebrand content widths for old-environment pages,
+// applied via the data-legacy-experience attribute below. Remove together.
+import './legacyExperienceLayout.scss';
 
 /**
  * This sets the time for which a page is considered "fresh" to the upstream requester.
@@ -79,7 +82,6 @@ export async function generateMetadata({
   const experience = pageProps.experienceResult.experience;
 
   return {
-    title: getPageHeading(experience),
     icons: getIcons(pageProps.brand),
     ...getSeoMetadata(
       experience,
@@ -117,9 +119,17 @@ export default async function ExperiencePage({
   // experience currently needs to be stringified manually to be passed to the component
   const experienceJSON = experience ? JSON.stringify(experience) : null;
 
+  // LEGACY-ENV-COMPAT: legacy-shape pages opt into the pre-rebrand layout
+  // widths (legacyExperienceLayout.scss). CSforAll is excluded — its theme
+  // never adopted the rebrand widths, so its legacy pages already render at
+  // production geometry (MUI's default 1200px container).
+  const legacyExperienceProps =
+    pageProps.brand !== Brand.CS_FOR_ALL && isLegacyShapeExperience(experience)
+      ? {'data-legacy-experience': true}
+      : undefined;
+
   return (
-    <main style={{width: '100%'}}>
-      <Bootstrap locale={pageProps.locale} />
+    <main style={{width: '100%'}} {...legacyExperienceProps}>
       <ContentEditorHelper isDraftModeEnabled={isDraftModeEnabled} />
       {stylesheet && <style>{stylesheet}</style>}
       <ExperiencePageLoader

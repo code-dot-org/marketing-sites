@@ -26,6 +26,11 @@
       color: var(--text-neutral-primary);
       outline: 0.375rem solid var(--background-brand-teal-light);
       margin: 0.375rem;
+
+      // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
+      :root[data-brand='Code.org'] & {
+        outline-color: var(--codeai-purple-light);
+      }
       width: 3.5rem;
       height: 3.5rem;
       overflow: hidden;

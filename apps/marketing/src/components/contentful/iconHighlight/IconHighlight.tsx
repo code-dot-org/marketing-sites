@@ -6,6 +6,7 @@ import IconHighlight, {
 } from '@code-dot-org/component-library/cms/iconHighlight';
 
 import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
+import {BrandLinkAdapter} from '@/components/contentful/link';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
 export interface IconHighlightContentfulProps {
@@ -36,6 +37,7 @@ const IconHighlightContentful: React.FunctionComponent<
       heading={heading}
       text={text}
       links={links}
+      LinkComponent={BrandLinkAdapter}
       icon={{
         iconName,
         iconStyle: 'solid',

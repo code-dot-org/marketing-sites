@@ -1,120 +1,107 @@
 import Typography from '@mui/material/Typography';
 import {ReactNode} from 'react';
 
+import {
+  BrandColor,
+  resolvedCssVarForBrandColor,
+} from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
-import {SPACE_GROTESK_FONT} from '@/themes/code.org/constants/fonts';
+import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 
-type HeadingSemanticTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+import {
+  resolveHeadingStyles,
+  type HeadingAppearanceValue,
+  type HeadingLevelValue,
+} from './resolveHeadingStyles';
 
-// Existing Contentful Heading visualAppearance values that
-// were set before using the MUI Typography component.
-type HeadingVisualAppearance =
-  | 'heading-xxl'
-  | 'heading-xl'
-  | 'heading-lg'
-  | 'heading-md'
-  | 'heading-sm'
-  | 'heading-xs';
+type HeadingTextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 
 export type HeadingProps = RemoveMarginBottomProps & {
   /** Heading content */
   children: ReactNode;
-  /** Heading visual appearance */
-  visualAppearance: HeadingVisualAppearance;
+  /**
+   * "Heading Level" — selects the rendered <h*> semantic tag and seeds the
+   * canonical role token (size, weight, line-height, letter-spacing,
+   * per-breakpoint steps). Field name kept as `visualAppearance` for
+   * Contentful back-compat with existing entries.
+   */
+  visualAppearance: HeadingLevelValue;
+  /**
+   * "Visual Appearance" (spec 009 US3) — orthogonal to the semantic tag.
+   * `default` inherits the Heading Level's canonical role; `display-*` cells
+   * override the size/weight/line-height/letter-spacing/per-breakpoint table
+   * while preserving the chosen <h*> tag.
+   */
+  appearance?: HeadingAppearanceValue;
   /** Heading color */
-  color?: 'primary' | 'white';
+  color?: BrandColor;
   /** ClassName passed by Contentful to apply styles
    * that are set through Contentful native editor */
   className?: string;
-  /** Opt this heading into the Space Grotesk alt style. */
-  useAltFont?: boolean;
-  /** rem override; only used when useAltFont is true. */
+  /** rem override */
   fontSize?: number;
-  /** Unitless line-height override; only used when useAltFont is true. */
+  /** Unitless line-height override */
   lineHeight?: number;
-  /** Weight override; only used when useAltFont is true. */
-  fontWeight?: '500' | '700';
-  /** Hex color override; only used when useAltFont is true. */
+  /**
+   * Weight override. `'default'` sentinel (or omitted) inherits the
+   * Heading Level's canonical weight; numeric values override.
+   */
+  fontWeight?: 'default' | '400' | '500' | '600' | '700';
+  /** Hex color override */
   colorOverride?: string;
-  /** Font kerning override; only used when useAltFont is true. */
+  /** Font kerning override */
   fontKerning?: 'auto' | 'normal' | 'none';
+  /** Text-case transform; 'none' is treated as unset */
+  textTransform?: HeadingTextTransform;
+  /** Stacking order. Applies with position: relative so the value is honored. */
+  zIndex?: string;
 };
-
-// Maps Contentful Heading visualAppearance values with
-// MUI Typography `component` and `variant` prop values.
-const visualAppearanceToSemanticTagMap: Record<
-  HeadingVisualAppearance,
-  HeadingSemanticTag
-> = {
-  'heading-xxl': 'h1',
-  'heading-xl': 'h2',
-  'heading-lg': 'h3',
-  'heading-md': 'h4',
-  'heading-sm': 'h5',
-  'heading-xs': 'h6',
-};
-
-// Per-level fluid default applied only when the alt font is on and
-// no explicit fontSize is given. Scales from mobile min to desktop max.
-const ALT_FONT_RESPONSIVE_SIZE: Record<HeadingVisualAppearance, string> = {
-  'heading-xxl': 'clamp(2.5rem, 5vw + 1rem, 4rem)',
-  'heading-xl': 'clamp(2rem, 4vw + 0.5rem, 3rem)',
-  'heading-lg': 'clamp(1.5rem, 3vw + 0.25rem, 2rem)',
-  'heading-md': 'clamp(1.25rem, 2vw + 0.25rem, 1.75rem)',
-  'heading-sm': 'clamp(1.125rem, 1.5vw + 0.5rem, 1.5rem)',
-  'heading-xs': 'clamp(1rem, 1vw + 0.5rem, 1.25rem)',
-};
-
-const ALT_FONT_DEFAULT_COLOR = '#1F1976';
 
 const Heading: React.FunctionComponent<HeadingProps> = ({
   children,
   visualAppearance,
-  color,
+  appearance = 'default',
+  color = 'black',
   removeMarginBottom,
   className,
-  useAltFont,
   fontSize,
   lineHeight,
   fontWeight,
   colorOverride,
   fontKerning,
+  textTransform = 'none',
+  zIndex,
 }) => {
-  const tag = visualAppearanceToSemanticTagMap[visualAppearance];
+  const enclosingBackground = useSectionBackground();
+  const {
+    semanticTag,
+    variantTag,
+    sx: resolvedSx,
+  } = resolveHeadingStyles({
+    visualAppearance,
+    appearance,
+    fontSize,
+    lineHeight,
+    fontWeight,
+    fontKerning,
+    textTransform,
+  });
 
-  if (useAltFont) {
-    const altSx = {
-      fontFamily: `${SPACE_GROTESK_FONT}, sans-serif`,
-      fontSize:
-        fontSize !== undefined
-          ? `${fontSize}rem`
-          : ALT_FONT_RESPONSIVE_SIZE[visualAppearance],
-      lineHeight: lineHeight ?? 1,
-      fontWeight: fontWeight ? Number(fontWeight) : 700,
-      color: colorOverride || ALT_FONT_DEFAULT_COLOR,
-      fontKerning: fontKerning ?? 'auto',
-    };
-
-    return (
-      <Typography
-        className={className}
-        component={tag}
-        variant={tag}
-        gutterBottom={!removeMarginBottom}
-        sx={altSx}
-      >
-        {children}
-      </Typography>
-    );
-  }
+  const sx = {
+    ...resolvedSx,
+    // colorOverride wins over the contrast switch (spec 006 FR-014).
+    color:
+      colorOverride || resolvedCssVarForBrandColor(color, enclosingBackground),
+    ...(zIndex && {position: 'relative', zIndex}),
+  };
 
   return (
     <Typography
       className={className}
-      color={color}
-      component={tag}
-      variant={tag}
+      component={semanticTag}
+      variant={variantTag}
       gutterBottom={!removeMarginBottom}
+      sx={sx}
     >
       {children}
     </Typography>

@@ -6,6 +6,20 @@ import {FontAwesomeV6IconProps} from '@/fontAwesomeV6Icon';
 export type ComponentSizeXSToL = 'xs' | 's' | 'm' | 'l';
 
 /**
+ * Text-scale size token used by SimpleList (per spec 009 amendment-5).
+ * Aligns with the Paragraph Text scale (`text-xs` through `text-4xl`).
+ */
+export type TextScaleSize =
+  | 'text-xs'
+  | 'text-sm'
+  | 'text-md'
+  | 'text-lg'
+  | 'text-xl'
+  | 'text-2xl'
+  | 'text-3xl'
+  | 'text-4xl';
+
+/**
  * Possible options for spacing related props in Design System components
  */
 export type SpacingNoneToS = 'none' | 'xs' | 's';

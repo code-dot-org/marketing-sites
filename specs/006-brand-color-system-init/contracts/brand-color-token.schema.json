@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://code.org/marketing-sites/specs/006-brand-color-system-init/contracts/brand-color-token.schema.json",
+  "title": "BrandColorToken",
+  "description": "The shape of an entry in the BRAND_COLORS manifest at apps/marketing/src/components/common/colors.ts after this feature lands. New entries MUST conform to this schema; pre-existing legacy entries (purple, darkPurple1, darkPurple2, lightGreen3) MAY omit the family/shade fields temporarily and are not invalidated by this contract.",
+  "type": "object",
+  "required": ["value", "displayName", "cssVar", "family", "shade"],
+  "additionalProperties": false,
+  "properties": {
+    "value": {
+      "type": "string",
+      "description": "Stable kebab- or camelCase key. Used as the Contentful dropdown value and the TypeScript prop value. Naming convention for new tokens: '{family}{Shade}' for family tokens (e.g. purpleDark, blueMid), plain 'black' or 'white' for the standalone tokens.",
+      "pattern": "^[a-z][a-zA-Z0-9]*$"
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Author-facing label rendered in the Contentful dropdown.",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "cssVar": {
+      "type": "string",
+      "description": "Either a `var(--codeai-...)` reference into the SCSS primitives layer, or a literal value where no CSS variable indirection is needed (e.g. 'white', '#000000'). The referenced CSS variable MUST be defined in the primitive-colors SCSS layer.",
+      "minLength": 1
+    },
+    "family": {
+      "type": "string",
+      "description": "The color family. Used by the contrast switch to shift within a hue. Black and White are their own families and never shift to a different family.",
+      "enum": ["purple", "blue", "green", "orange", "pink", "black", "white"]
+    },
+    "shade": {
+      "type": "string",
+      "description": "The position within the family ladder. 'n-a' is reserved for Black and White, which have no shade ladder.",
+      "enum": ["dark", "primary", "mid", "light", "n-a"]
+    }
+  },
+  "examples": [
+    {
+      "value": "purpleDark",
+      "displayName": "Purple Dark",
+      "cssVar": "var(--codeai-purple-dark)",
+      "family": "purple",
+      "shade": "dark"
+    },
+    {
+      "value": "blueMid",
+      "displayName": "Blue Mid",
+      "cssVar": "var(--codeai-blue-mid)",
+      "family": "blue",
+      "shade": "mid"
+    },
+    {
+      "value": "black",
+      "displayName": "Black",
+      "cssVar": "#000000",
+      "family": "black",
+      "shade": "n-a"
+    },
+    {
+      "value": "white",
+      "displayName": "White",
+      "cssVar": "white",
+      "family": "white",
+      "shade": "n-a"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import {HTMLAttributes, ReactNode} from 'react';
+import {ComponentType, HTMLAttributes, ReactNode} from 'react';
 
 import FontAwesomeV6Icon, {FontAwesomeV6IconProps} from '@/fontAwesomeV6Icon';
 import Image, {ImageProps} from '@/image';
@@ -22,6 +22,8 @@ export interface EditorialCardProps extends HTMLAttributes<HTMLElement> {
   text: string | ReactNode;
   /** EditorialCard link */
   link?: LinkProps;
+  /** Optional override for the link renderer. See specs/008-brand-buttons/research.md R12. */
+  LinkComponent?: ComponentType<LinkProps>;
   /** EditorialCard layout */
   layout?: EDITORIAL_CARD_LAYOUTS;
   /** EditorialCard class */
@@ -46,6 +48,7 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
   heading,
   text,
   link,
+  LinkComponent = Link,
   className,
   layout = EDITORIAL_CARD_LAYOUTS.HORIZONTAL,
   ...HTMLAttributes
@@ -93,7 +96,7 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
       </BodyThreeText>
 
       {link && (
-        <Link
+        <LinkComponent
           {
             // Omits text from link props
             ...(({text, ...rest}) => rest || {text})(link)
@@ -102,7 +105,7 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
           size="s"
         >
           {link.text}
-        </Link>
+        </LinkComponent>
       )}
     </div>
   </div>

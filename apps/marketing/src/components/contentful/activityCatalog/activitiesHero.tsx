@@ -26,8 +26,11 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
       <Typography
         component="h1"
         sx={{
-          fontSize: {xs: 36, md: 50},
-          fontWeight: 800,
+          // Spec 009 — px literals replaced with rem; weight 800 (Extra Bold)
+          // is not in the 4-weight ladder, dropped to 700 (Bold). Deprecated
+          // component, minimal fix per [[feedback_match_architecture_to_code_lifespan]].
+          fontSize: {xs: '2.25rem', md: '3.125rem'},
+          fontWeight: 700,
           letterSpacing: 0.2,
           mb: 1.5,
         }}

@@ -6,7 +6,7 @@ import {TESTIMONIAL_CONTENTFUL_BACKGROUNDS} from './Testimonial';
 export const TestimonialContentfulComponentDefinition: ComponentDefinition = {
   id: 'testimonial',
   name: 'Testimonial',
-  category: '01: Page Sections',
+  category: '10: Deprecated',
   thumbnailUrl:
     'https://contentful-images.code.org/90t6bu6vlf76/9eiEP6drbPBTvowkDxVjw/5fafd6193287e86b7175df7139e3987e/component_testimonial_thumbnail.png',
   tooltip: {

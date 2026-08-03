@@ -2,9 +2,50 @@
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {
+  BRAND_COLORS,
+  brandColorOptionsWithDefault,
+} from '@/components/common/colors';
+import {
   sectionIdDefinition,
   sectionPaddingDefinition,
 } from '@/components/common/definitions';
+import {SECTION_GRADIENT_OPTIONS} from '@/components/common/gradients';
+
+// Transparent is a first-class section background: the Section renders with
+// no background color so authors can wrap it in a Contentful-native parent or
+// supply a background image. Descendants opt out of contrast switching (see
+// Section.tsx + SectionBackgroundContext.tsx).
+const TRANSPARENT_BACKGROUND_OPTION = {
+  value: 'transparent',
+  displayName: 'Transparent',
+};
+
+// Legacy backgrounds (Corporate Site primitives, patterns, and the `primary`
+// manifest entry) and the gray ramp are deliberately absent from the picker:
+// existing entries still render — Section.tsx keeps the value space and the
+// theme keeps their CSS rules — but authors can no longer select them.
+//
+// Order: White (default), the color families, gradients, Black, Transparent.
+const SECTION_BACKGROUND_OPTIONS = ((): {
+  value: string;
+  displayName: string;
+}[] => {
+  const options = brandColorOptionsWithDefault('white');
+  const byValue = new Map(options.map(o => [o.value, o]));
+  const familyOf = new Map(BRAND_COLORS.map(c => [c.value, c.family]));
+  const colorOptions = options.filter(
+    o =>
+      o.value !== 'primary' &&
+      !['black', 'white', 'gray'].includes(familyOf.get(o.value) ?? ''),
+  );
+  return [
+    byValue.get('white'),
+    ...colorOptions,
+    ...SECTION_GRADIENT_OPTIONS,
+    byValue.get('black'),
+    TRANSPARENT_BACKGROUND_OPTION,
+  ].filter((o): o is {value: string; displayName: string} => o !== undefined);
+})();
 
 export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinition =
   {
@@ -28,33 +69,9 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
         type: 'Text',
         group: 'style',
         description: 'The background color of the section.',
-        defaultValue: 'primary',
+        defaultValue: 'white',
         validations: {
-          in: [
-            {value: 'primary', displayName: 'Primary (white)'},
-            {value: 'secondary', displayName: 'Secondary (light gray)'},
-            {value: 'dark', displayName: 'Dark gray'},
-            {
-              value: 'brandLightPrimary',
-              displayName: 'Light teal',
-            },
-            {
-              value: 'brandLightSecondary',
-              displayName: 'Light purple',
-            },
-            {
-              value: 'patternDark',
-              displayName: 'Pattern dark',
-            },
-            {
-              value: 'patternPrimary',
-              displayName: 'Pattern teal',
-            },
-            {
-              value: 'transparent',
-              displayName: 'Transparent',
-            },
-          ],
+          in: SECTION_BACKGROUND_OPTIONS,
         },
       },
       ...sectionPaddingDefinition,
@@ -70,6 +87,90 @@ export const SectionCorporateSiteContentfulComponentDefinition: ComponentDefinit
             {value: 'primary', displayName: 'Primary'},
             {value: 'strong', displayName: 'Strong'},
           ],
+        },
+      },
+      gap: {
+        displayName: 'Vertical gap (rem)',
+        type: 'Number',
+        group: 'style',
+        description:
+          'Vertical gap (in rem) between direct children. Leave blank for no gap; 3 is a good starting value when stacking multiple containers.',
+      },
+      // Background-image auxiliary settings live in the Design tab; the Media
+      // asset selector itself lives in the Content tab below (Studio only
+      // renders Media inputs under `group: 'content'`).
+      backgroundImageScaling: {
+        displayName: 'BG img scaling',
+        type: 'Text',
+        group: 'style',
+        defaultValue: 'cover',
+        validations: {
+          in: [
+            {value: 'cover', displayName: 'Cover'},
+            {value: 'contain', displayName: 'Contain'},
+            {value: 'auto', displayName: 'Auto (original size)'},
+            {value: 'manual', displayName: 'Manual (use Height %)'},
+          ],
+        },
+      },
+      backgroundImageHeight: {
+        displayName: 'BG img height (%)',
+        type: 'Number',
+        group: 'style',
+        description:
+          'Used only when Scaling = Manual. 100 = full section height; width scales proportionally.',
+        defaultValue: 100,
+      },
+      backgroundImagePositionX: {
+        displayName: 'BG img horizontal align (%)',
+        type: 'Number',
+        group: 'style',
+        description:
+          '0 = left, 50 = center, 100 = right. Values outside 0–100 push the image past the edge.',
+        defaultValue: 50,
+      },
+      backgroundImagePositionY: {
+        displayName: 'BG img vertical align (%)',
+        type: 'Number',
+        group: 'style',
+        description: '0 = top, 50 = middle, 100 = bottom.',
+        defaultValue: 50,
+      },
+      backgroundImageRepeat: {
+        displayName: 'BG img repeat',
+        type: 'Text',
+        group: 'style',
+        defaultValue: 'no-repeat',
+        validations: {
+          in: [
+            {value: 'no-repeat', displayName: 'No repeat'},
+            {value: 'repeat', displayName: 'Tile'},
+            {value: 'repeat-x', displayName: 'Tile horizontally'},
+            {value: 'repeat-y', displayName: 'Tile vertically'},
+          ],
+        },
+      },
+      backgroundImageUnset: {
+        displayName: 'BG image unset',
+        type: 'Boolean',
+        group: 'style',
+        description: 'Check to hide the background image at this viewport.',
+      },
+      disableContentPadding: {
+        displayName: 'Disable content padding',
+        type: 'Boolean',
+        group: 'style',
+        defaultValue: false,
+        description:
+          'Let content span the full width by removing the inner side padding. Standard side padding still applies as the screen narrows.',
+      },
+      backgroundImage: {
+        displayName: 'Background image',
+        type: 'Media',
+        group: 'content',
+        description: 'Optional image rendered on top of the background color.',
+        validations: {
+          bindingSourceType: ['asset'],
         },
       },
       ...sectionIdDefinition,

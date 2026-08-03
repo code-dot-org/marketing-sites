@@ -13,6 +13,10 @@ $mobileBreakpoint: 970px;
   background-size: cover;
   padding: 4rem 2rem;
 
+  @media (max-width: 600px) {
+    padding-inline: 1rem;
+  }
+
   &.heroBanner-withWideText {
     .heroBannerTextContainer {
       flex: 2;
@@ -44,7 +48,8 @@ div.heroBannerAnnouncementBanner {
 
 .heroBannerContainer {
   display: flex;
-  max-width: 60rem;
+  // 1216px — matches Section content (1280px cap − 2rem gutters)
+  max-width: calc(1280px - 4rem);
   margin: 0 auto;
   align-items: center;
   gap: 4.375rem;

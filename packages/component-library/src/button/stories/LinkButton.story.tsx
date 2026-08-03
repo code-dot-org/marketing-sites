@@ -126,7 +126,7 @@ GroupOfColorsOfLinkButtons.args = {
     },
     {
       text: 'Button Secondary Gray',
-      color: buttonColors.gray,
+      color: buttonColors.black,
       type: 'secondary',
       size: 'm',
       href: 'https://www.google.com',
@@ -221,7 +221,7 @@ GroupOfColorsOfLinkButtons.args = {
     {
       icon: {iconName: 'smile', iconStyle: 'solid'},
       ariaLabel: 'Gray secondary icon link button',
-      color: buttonColors.gray,
+      color: buttonColors.black,
       type: 'secondary',
       isIconOnly: true,
       size: 'm',
@@ -275,7 +275,7 @@ GroupOfColorsOfLinkButtons.args = {
     {
       icon: {iconName: 'smile', iconStyle: 'solid'},
       ariaLabel: 'Gray tertiary icon link button',
-      color: buttonColors.gray,
+      color: buttonColors.black,
       type: 'tertiary',
       isIconOnly: true,
       size: 'm',
@@ -298,7 +298,7 @@ GroupOfSizesOfLinkButtons.args = {
   components: [
     {
       text: 'Button xs',
-      size: 'xs',
+      size: 's',
       href: 'https://www.google.com',
     },
     {
@@ -318,7 +318,7 @@ GroupOfSizesOfLinkButtons.args = {
     },
     {
       isIconOnly: true,
-      size: 'xs',
+      size: 's',
       icon: {iconName: 'smile', iconStyle: 'solid'},
       href: 'https://www.google.com',
       'aria-label': 'Icon only xs',

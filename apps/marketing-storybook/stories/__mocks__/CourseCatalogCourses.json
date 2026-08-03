@@ -1,0 +1,535 @@
+{
+  "seedEntities": [
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "catalogUnit1",
+        "type": "Entry",
+        "createdAt": "2026-07-09T00:00:00.000Z",
+        "updatedAt": "2026-07-09T00:00:00.000Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "curriculum"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "Problem Solving with AI",
+        "shortDescription": "Introduce students to AI as a collaborator, learning where AI succeeds and fails.",
+        "grade": ["K-5"],
+        "duration": ["1 hour"],
+        "topics": ["Special Topic"],
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "catalogUnit2",
+        "type": "Entry",
+        "createdAt": "2026-07-09T00:00:00.000Z",
+        "updatedAt": "2026-07-09T00:00:00.000Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "curriculum"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "Foundations of AI Programming",
+        "shortDescription": "This unit introduces students to programming and ethical computing.",
+        "grade": ["6-8"],
+        "duration": ["15 Hours"],
+        "topics": ["Programming"],
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "catalogUnit3",
+        "type": "Entry",
+        "createdAt": "2026-07-09T00:00:00.000Z",
+        "updatedAt": "2026-07-09T00:00:00.000Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "curriculum"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "AI and the Systems that Power It",
+        "shortDescription": "Intro students to AI and computing systems and how they process information.",
+        "grade": ["9-12"],
+        "duration": ["15 Hours"],
+        "topics": ["Special Topic"],
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "catalogUnit4",
+        "type": "Entry",
+        "createdAt": "2026-07-09T00:00:00.000Z",
+        "updatedAt": "2026-07-09T00:00:00.000Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "curriculum"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "Web Development",
+        "shortDescription": "Students are put in the shoes of a web developer to design and create a web page.",
+        "grade": ["6-8"],
+        "duration": ["School Year"],
+        "topics": ["Web Design"],
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "catalogCourseLink1",
+        "type": "Entry",
+        "createdAt": "2026-07-09T00:00:00.000Z",
+        "updatedAt": "2026-07-09T00:00:00.000Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "link"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "linkName": "❌ [ENG] Course details link",
+        "label": "View course details",
+        "primaryTarget": "/course-details-test",
+        "isThisAnExternalLink": false
+      }
+    }
+  ],
+  "courses": [
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "catalogCourse1",
+        "type": "Entry",
+        "createdAt": "2026-07-09T00:00:00.000Z",
+        "updatedAt": "2026-07-09T00:00:00.000Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "course"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "CS Fundamentals",
+        "grade": ["K-5"],
+        "secondaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "catalogCourseLink1"
+          }
+        },
+        "courseUnits": [
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "catalogUnit1"
+            }
+          },
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "catalogUnit2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "catalogCourse2",
+        "type": "Entry",
+        "createdAt": "2026-07-09T00:00:00.000Z",
+        "updatedAt": "2026-07-09T00:00:00.000Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "course"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "CS Discoveries",
+        "grade": ["6-8"],
+        "secondaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "catalogCourseLink1"
+          }
+        },
+        "courseUnits": [
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "catalogUnit2"
+            }
+          },
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "catalogUnit4"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "catalogCourse3",
+        "type": "Entry",
+        "createdAt": "2026-07-09T00:00:00.000Z",
+        "updatedAt": "2026-07-09T00:00:00.000Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "course"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "AI Foundations",
+        "grade": ["9-10", "11-12"],
+        "secondaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "catalogCourseLink1"
+          }
+        },
+        "courseUnits": [
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "catalogUnit3"
+            }
+          },
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "catalogUnit1"
+            }
+          },
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "catalogUnit2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "tags": [],
+        "concepts": []
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "90t6bu6vlf76"
+          }
+        },
+        "id": "catalogCourse4",
+        "type": "Entry",
+        "createdAt": "2026-07-09T00:00:00.000Z",
+        "updatedAt": "2026-07-09T00:00:00.000Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "course"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "CS Connections",
+        "grade": ["3-5", "6-8"],
+        "secondaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "catalogCourseLink1"
+          }
+        },
+        "courseUnits": [
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "catalogUnit4"
+            }
+          },
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "catalogUnit1"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

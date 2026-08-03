@@ -22,13 +22,13 @@
     color: var(--text-neutral-primary);
 
     &:first-child {
-      border-start-start-radius: 4px;
-      border-end-start-radius: 4px;
+      border-start-start-radius: var(--codeai-radius-sm, 4px);
+      border-end-start-radius: var(--codeai-radius-sm, 4px);
     }
 
     &:last-child {
-      border-start-end-radius: 4px;
-      border-end-end-radius: 4px;
+      border-start-end-radius: var(--codeai-radius-sm, 4px);
+      border-end-end-radius: var(--codeai-radius-sm, 4px);
     }
 
     &:not(:last-child) {

@@ -1,0 +1,6 @@
+@use '@fontsource-variable/geist/scss/mixins' as Geist;
+
+/**
+ * Body font. Variable font; consumers pick weight via `font-weight`.
+ */
+@include Geist.faces($family: 'Geist');

@@ -14,7 +14,7 @@
       'liga' off,
       'clig' off;
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: var(--codeai-radius-md, 4px);
 
     // Current location styles
     &:last-child {

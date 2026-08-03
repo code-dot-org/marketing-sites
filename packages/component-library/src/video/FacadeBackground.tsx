@@ -5,11 +5,18 @@ export interface FacadeProps {
   posterThumbnail?: string;
   /** Facade onClick */
   onClick?: () => void;
+  /** Facade poster image onLoad */
+  onLoad?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
   /** Facade alt text */
   alt: string;
 }
 
-const FacadeBackground = ({posterThumbnail, alt, onClick}: FacadeProps) => {
+const FacadeBackground = ({
+  posterThumbnail,
+  alt,
+  onClick,
+  onLoad,
+}: FacadeProps) => {
   return (
     posterThumbnail && (
       <img
@@ -19,6 +26,7 @@ const FacadeBackground = ({posterThumbnail, alt, onClick}: FacadeProps) => {
         loading={'lazy'}
         alt={alt}
         aria-hidden="true"
+        onLoad={onLoad}
       />
     )
   );

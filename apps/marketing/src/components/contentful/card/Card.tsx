@@ -117,7 +117,7 @@ const Card: React.FC<CardProps> = ({
       sx={{
         border: `1px solid ${theme.palette.common.black}`,
         boxShadow: 'none',
-        borderRadius: '12px',
+        borderRadius: 'var(--codeai-radius-md, 12px)',
         minWidth: 275,
       }}
     >
@@ -152,7 +152,9 @@ const Card: React.FC<CardProps> = ({
             variant="subtitle1"
             component="h4"
             gutterBottom
-            fontWeight="bolder"
+            // Spec 009 — "bolder" is browser-relative and inconsistent;
+            // pinned to numeric 600 (Semibold) on the canonical weight ladder.
+            fontWeight={600}
           >
             {subtitle}
           </Typography>

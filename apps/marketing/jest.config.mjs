@@ -13,6 +13,8 @@ const config = {
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   testPathIgnorePatterns: ['<rootDir>/tests'], // Playwright tests
   moduleNameMapper: {
+    // `swiper/css` has no .css suffix, so next/jest's CSS mock misses it
+    '^swiper/css(/.*)?$': '<rootDir>/src/__mocks__/styleMock.js',
     '@/(.*)': '<rootDir>/src/$1',
   },
 };

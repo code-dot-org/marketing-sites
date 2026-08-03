@@ -16,7 +16,7 @@
     width: 100%;
     overflow: hidden;
 
-    border-radius: variables.$regular-border-radius;
+    border-radius: var(--codeai-radius-md, #{variables.$regular-border-radius});
     border: 1px solid var(--borders-neutral-primary);
     background: var(--background-neutral-secondary);
 

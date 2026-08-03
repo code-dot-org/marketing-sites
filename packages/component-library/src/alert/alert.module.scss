@@ -6,7 +6,7 @@ $alert-span-vertical-top-spacing: 2px;
 .alert {
   display: flex;
   align-items: center;
-  border-radius: 0.25rem;
+  border-radius: var(--codeai-radius-md, 0.25rem);
   gap: 1rem;
 
   .alertContentContainer {

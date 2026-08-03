@@ -1,4 +1,4 @@
-import {render, screen, within} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 
 import EditorialCard, {
   EditorialCardContentfulProps,
@@ -86,9 +86,9 @@ describe('EditorialCard component', () => {
     );
     expect(externalLink).toHaveAttribute('target', '_blank');
     expect(externalLink).toHaveAttribute('rel', 'noopener noreferrer');
-    expect(
-      within(externalLink).getByTestId('font-awesome-v6-icon'),
-    ).toBeInTheDocument();
+    // Brand Text Link renders the MUI OpenInNew SVG for external links
+    // (replaces the legacy FontAwesome external-link icon).
+    expect(externalLink.querySelector('svg')).toBeInTheDocument();
   });
 
   it('renders empty card placeholder when no media provided', () => {

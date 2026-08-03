@@ -607,7 +607,7 @@ const fontLoader = async () => {
   };
 };
 
-export const decorators = [SectionDecorator, MuiDecorator];
+export const decorators = [SectionDecorator, ...MuiDecorator];
 
 const preview = {
   parameters: {

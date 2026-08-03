@@ -1,5 +1,6 @@
+import Typography from '@mui/material/Typography';
 import classNames from 'classnames';
-import {ReactNode, HTMLAttributes, JSX} from 'react';
+import {ComponentType, ReactNode, HTMLAttributes, JSX} from 'react';
 
 import Alert from '@/alert';
 import {LinkButton, LinkButtonProps} from '@/button';
@@ -7,7 +8,7 @@ import {Theme} from '@/common/contexts';
 import {FontAwesomeV6IconProps} from '@/fontAwesomeV6Icon';
 import Image, {ImageProps} from '@/image';
 import {LinkProps} from '@/link';
-import {Heading1, BodyOneText, BodyTwoText} from '@/typography';
+import {BodyOneText, BodyTwoText} from '@/typography';
 import Video, {VideoProps} from '@/video';
 
 import moduleStyles from './heroBanner.module.scss';
@@ -43,6 +44,8 @@ export interface HeroBannerProps extends HTMLAttributes<HTMLElement> {
   buttonProps?: LinkButtonProps;
   /** HeroBanner announcementBanner */
   announcementBannerProps?: AnnouncementBannerProps;
+  /** Optional override for the announcement-banner link renderer (forwarded to Alert). */
+  LinkComponent?: ComponentType<LinkProps>;
   /** HeroBanner custom background color.
    *  backgroundImageUrl is higher priority then backgroundColor. */
   backgroundColor?: string;
@@ -86,6 +89,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
   videoProps,
   buttonProps,
   announcementBannerProps,
+  LinkComponent,
   backgroundColor,
   backgroundImageUrl,
   withWideText = false,
@@ -104,6 +108,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
         text={announcementBannerProps.text}
         icon={announcementBannerProps.icon}
         link={announcementBannerProps.link}
+        LinkComponent={LinkComponent}
         type="gray"
       />
     )}
@@ -124,7 +129,9 @@ const HeroBanner: React.FC<HeroBannerProps> = ({
       <div className={classNames(moduleStyles.heroBannerContainer)}>
         <div className={moduleStyles.heroBannerTextContainer}>
           <div>
-            <Heading1>{heading}</Heading1>
+            <Typography component="h1" variant="h1">
+              {heading}
+            </Typography>
 
             {subHeading && <BodyOneText>{subHeading}</BodyOneText>}
 

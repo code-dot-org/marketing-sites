@@ -4,6 +4,8 @@ import {Box, Stack, Typography} from '@mui/material';
 import {useTheme} from '@mui/material/styles';
 import {useEffect, useRef, useState} from 'react';
 
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
+
 import {stateGapMapData} from './data';
 import StateGapMapLegend from './StateGapMapLegend';
 import StateGapMapPanel from './StateGapMapPanel';
@@ -54,7 +56,7 @@ export default function StateGapMap({
         position: 'relative',
         width: '100%',
         minWidth: 0,
-        borderRadius: 4,
+        borderRadius: codeaiRadius('md', '16px'),
         p: {xs: 2, md: 3},
         backgroundColor: 'transparent',
       }}
@@ -115,7 +117,7 @@ export default function StateGapMap({
               sx={{
                 width: '100%',
                 minWidth: 0,
-                borderRadius: 4,
+                borderRadius: codeaiRadius('md', '16px'),
                 border: `1px solid ${textColors.divider}`,
                 backgroundColor:
                   inheritedMode === 'dark'

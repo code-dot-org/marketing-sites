@@ -10,7 +10,7 @@ export const ActionBlockCollectionContentfulComponentDefinition: ComponentDefini
   {
     id: 'collection-action-block',
     name: 'Action Block Collection',
-    category: '06: Dynamic Displays',
+    category: '10: Deprecated',
     thumbnailUrl:
       'https://contentful-images.code.org/90t6bu6vlf76/38MZh5NgUDLrLFpMO4Pkxj/62c65a6f691ca2705f90dc7134f3ae4d/component_actionblock_collection_icon.png',
     tooltip: {

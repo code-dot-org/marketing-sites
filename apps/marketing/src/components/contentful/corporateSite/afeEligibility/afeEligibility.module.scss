@@ -23,7 +23,7 @@
 
       legend {
         @include font.main-font-semi-bold;
-        font-size: 1rem;
+        font-size: var(--font-size-text-md); // spec 009 — was 1rem literal
         line-height: 1.48;
       }
 
@@ -96,7 +96,7 @@
       max-width: 50rem;
       padding: 2.25rem 3.5rem 2.5rem 3.5rem;
       gap: 2rem;
-      border-radius: 0.5rem;
+      border-radius: var(--codeai-radius-md, 0.5rem);
       box-shadow: 0 6px 18px 0 rgb(0 0 0 / 0.3);
 
       .afeEligibilityNoticeLink {
@@ -116,7 +116,7 @@
   }
 
   .afeEligibilityBrandText {
-    color: var(--text-brand-teal-primary);
+    color: var(--codeai-purple-primary);
   }
 
   .afeEligibilityInfoText {
@@ -145,7 +145,10 @@
       border-radius: 50%;
       border: 1px solid var(--borders-neutral-primary);
       font-weight: 500;
-      font-size: 0.625rem;
+      // Spec 009 — was 0.625rem (10px), below the Text scale floor of
+      // text-xs (0.75rem / 12px). Clamped up to text-xs per the spec's
+      // "sub-scale → smallest cell ≥ floor" rule. Intentional small growth.
+      font-size: var(--font-size-text-xs);
       margin: 0 0.25rem;
       padding: 0.25rem 0.3rem;
     }

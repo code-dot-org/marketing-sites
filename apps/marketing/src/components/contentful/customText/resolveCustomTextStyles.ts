@@ -1,0 +1,229 @@
+// Custom Text style resolution (spec 010).
+//
+// Precedence, mirroring resolveHeadingStyles:
+//   1. Type default — the chosen Custom Text type seeds tag, font track,
+//      size, weight, color, and text-transform.
+//   2. Individual override fields — each set field overrides ONLY its own
+//      dimension. A `'default'` sentinel (or `undefined`/'') inherits the
+//      type default.
+//   3. Contrast rule — the text color contrast-switches against the
+//      enclosing Section background.
+//
+// Line-height comes from the resolved size cell unless the numeric line-height
+// override is set, so the type/size pairing renders with the scale's leading.
+
+import {createTheme} from '@mui/material/styles';
+
+import {
+  BrandColor,
+  EnclosingBackground,
+  resolvedCssVarForBrandColor,
+} from '@/components/common/colors';
+import {
+  CODE_ORG_DISPLAY_FONT_STACK,
+  CODE_ORG_TEXT_FONT_STACK,
+} from '@/themes/code.org/typography/fontStack';
+import {
+  SCALE_DISPLAY,
+  SCALE_TEXT,
+  WEIGHTS,
+  type ScaleCell,
+  type SizeToken,
+  type TypographicTrack,
+  type WeightToken,
+} from '@/themes/code.org/typography/tokens';
+
+export type CustomTextType = 'custom' | 'subtitle' | 'overline' | 'statistic';
+
+// Only <span> and <p> are supported. <span> is the default for every type
+// except Featured Subhead (`subtitle`), which uses <p>.
+export type CustomTextTag = 'span' | 'p';
+export type CustomTextFontTrack = TypographicTrack; // 'text' | 'display'
+export type CustomTextTransform =
+  | 'none'
+  | 'uppercase'
+  | 'lowercase'
+  | 'capitalize';
+export type CustomTextWeight = '400' | '500' | '600' | '700';
+
+// `'default'` is the Studio sentinel meaning "inherit the type default".
+type Sentinel = 'default' | '';
+
+interface CustomTextDefault {
+  tag: CustomTextTag;
+  track: CustomTextFontTrack;
+  size: SizeToken;
+  weight: WeightToken;
+  color: BrandColor;
+  textTransform: CustomTextTransform;
+  /** Responsive size ladder, keyed by viewport like RoleToken.steps
+   * (`sm` = tablet, `xs` = mobile). Applied only while the author leaves
+   * size and line-height on the type default. */
+  steps?: Partial<Record<'sm' | 'xs', SizeToken>>;
+}
+
+// Per-type default style sets.
+export const CUSTOM_TEXT_TYPE_DEFAULTS: Record<
+  CustomTextType,
+  CustomTextDefault
+> = {
+  custom: {
+    tag: 'span',
+    track: 'text',
+    size: 'md',
+    weight: 'regular',
+    color: 'black',
+    textTransform: 'none',
+  },
+  // "Featured Subhead" in Studio; the stored value predates the rename.
+  subtitle: {
+    tag: 'p', // the only type defaulting to <p>
+    track: 'text', // Geist
+    size: '2xl',
+    weight: 'regular', // matches the body default
+    color: 'purpleDark',
+    textTransform: 'none',
+    steps: {sm: 'xl', xs: 'lg'},
+  },
+  overline: {
+    tag: 'span',
+    track: 'text',
+    size: 'sm',
+    weight: 'semibold',
+    color: 'gray6',
+    textTransform: 'uppercase',
+  },
+  statistic: {
+    tag: 'span',
+    track: 'display',
+    size: '2xl',
+    weight: 'bold',
+    color: 'purplePrimary',
+    textTransform: 'none',
+  },
+};
+
+const FONT_STACK: Record<CustomTextFontTrack, string> = {
+  text: CODE_ORG_TEXT_FONT_STACK,
+  display: CODE_ORG_DISPLAY_FONT_STACK,
+};
+
+const SCALE: Record<CustomTextFontTrack, Record<SizeToken, ScaleCell>> = {
+  text: SCALE_TEXT,
+  display: SCALE_DISPLAY,
+};
+
+// Same viewport-name-to-media-query mapping as buildTypography /
+// resolveHeadingStyles: `sm` covers tablet and below, `xs` mobile only. The
+// smaller query is emitted second so it wins via source order on overlap.
+const SHARED_BREAKPOINTS = createTheme().breakpoints;
+const STEP_QUERIES = {
+  sm: SHARED_BREAKPOINTS.down('md'),
+  xs: SHARED_BREAKPOINTS.down('sm'),
+} as const;
+
+// Strips the `'default'`/empty sentinels to `undefined` so `?? typeDefault`
+// flows through. `'none'` is a real value and is preserved.
+const inherit = <T extends string>(
+  value: T | Sentinel | undefined,
+): T | undefined =>
+  value === undefined || value === '' || value === 'default'
+    ? undefined
+    : (value as T);
+
+export interface ResolveCustomTextArgs {
+  type: CustomTextType;
+  htmlTag?: CustomTextTag | Sentinel;
+  color?: BrandColor | Sentinel;
+  textSize?: SizeToken | Sentinel;
+  /** Numeric font-size override in rem. Wins over the resolved size cell. */
+  fontSize?: number;
+  /** Unitless line-height override. Wins over the resolved size cell. */
+  lineHeight?: number;
+  font?: CustomTextFontTrack | Sentinel;
+  fontWeight?: CustomTextWeight | Sentinel;
+  textTransform?: CustomTextTransform | Sentinel;
+  iconNameLeft?: string;
+  iconNameRight?: string;
+  enclosingBackground?: EnclosingBackground;
+}
+
+export interface ResolveCustomTextResult {
+  tag: CustomTextTag;
+  sx: Record<string, unknown>;
+  resolvedColor: string;
+  icon: {name: string; side: 'left' | 'right'} | null;
+}
+
+export const resolveCustomTextStyles = (
+  args: ResolveCustomTextArgs,
+): ResolveCustomTextResult => {
+  const def =
+    CUSTOM_TEXT_TYPE_DEFAULTS[args.type] ?? CUSTOM_TEXT_TYPE_DEFAULTS.custom;
+
+  const tag = (inherit(args.htmlTag) as CustomTextTag) ?? def.tag;
+  const track = (inherit(args.font) as CustomTextFontTrack) ?? def.track;
+  const size = (inherit(args.textSize) as SizeToken) ?? def.size;
+  const color = (inherit(args.color) as BrandColor) ?? def.color;
+  const textTransform =
+    (inherit(args.textTransform) as CustomTextTransform) ?? def.textTransform;
+
+  const weightOverride = inherit(args.fontWeight) as
+    | CustomTextWeight
+    | undefined;
+  const fontWeight = weightOverride
+    ? Number(weightOverride)
+    : WEIGHTS[def.weight];
+
+  const cell = SCALE[track][size];
+  // Numeric overrides win over the size cell. Text size (rem) and line-height
+  // (unitless) are independent so authors can tune each on its own.
+  const fontSize =
+    args.fontSize != null ? `${args.fontSize}rem` : cell.fontSize;
+  const lineHeight =
+    args.lineHeight != null ? args.lineHeight : cell.lineHeight;
+  const sx: Record<string, unknown> = {
+    fontFamily: FONT_STACK[track],
+    fontSize,
+    lineHeight,
+    fontWeight,
+    ...(cell.letterSpacing ? {letterSpacing: cell.letterSpacing} : {}),
+    ...(textTransform !== 'none' ? {textTransform} : {}),
+  };
+
+  // Responsive size ladder from the type default. Skipped as soon as the
+  // author fixes any size dimension (theme size step or numeric overrides) —
+  // an explicit size means "this size everywhere", matching how the Heading
+  // size overrides behave.
+  const sizeOverridden =
+    inherit(args.textSize) !== undefined ||
+    args.fontSize != null ||
+    args.lineHeight != null;
+  if (def.steps && !sizeOverridden) {
+    for (const viewport of ['sm', 'xs'] as const) {
+      const stepSize = def.steps[viewport];
+      if (!stepSize || stepSize === size) continue;
+      const stepCell = SCALE[track][stepSize];
+      sx[STEP_QUERIES[viewport]] = {
+        fontSize: stepCell.fontSize,
+        lineHeight: stepCell.lineHeight,
+        ...(stepCell.letterSpacing
+          ? {letterSpacing: stepCell.letterSpacing}
+          : {}),
+      };
+    }
+  }
+
+  const resolvedColor = resolvedCssVarForBrandColor(
+    color,
+    args.enclosingBackground,
+  );
+
+  const icon = args.iconNameLeft
+    ? {name: args.iconNameLeft, side: 'left' as const}
+    : args.iconNameRight
+      ? {name: args.iconNameRight, side: 'right' as const}
+      : null;
+
+  return {tag, sx, resolvedColor, icon};
+};

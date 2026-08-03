@@ -14,6 +14,37 @@ describe('Divider Component', () => {
     expect(separator).toHaveClass('divider--margin-l');
   });
 
+  it('renders horizontally with no vertical class or border width by default', () => {
+    render(<Divider />);
+    const separator = screen.getByRole('separator');
+    expect(separator.tagName).toBe('HR');
+    expect(separator).not.toHaveClass('divider--vertical');
+    expect(separator).not.toHaveAttribute('aria-orientation', 'vertical');
+    expect(separator.style.borderBottomWidth).toBe('');
+    expect(separator.style.borderRightWidth).toBe('');
+  });
+
+  it('renders a vertical divider when direction is vertical', () => {
+    render(<Divider direction="vertical" />);
+    const separator = screen.getByRole('separator');
+    expect(separator).toHaveClass('divider--vertical');
+    expect(separator).toHaveAttribute('aria-orientation', 'vertical');
+  });
+
+  it('applies a 2px bottom border for medium width horizontal dividers', () => {
+    render(<Divider width="medium" />);
+    expect(screen.getByRole('separator')).toHaveStyle({
+      borderBottomWidth: '2px',
+    });
+  });
+
+  it('applies a 2px right border for medium width vertical dividers', () => {
+    render(<Divider direction="vertical" width="medium" />);
+    expect(screen.getByRole('separator')).toHaveStyle({
+      borderRightWidth: '2px',
+    });
+  });
+
   describe('renders color based on color prop', () => {
     const colorTestCases: {color: DividerProps['color']; expected: string}[] = [
       {

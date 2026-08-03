@@ -1,6 +1,6 @@
 import {Components, Theme} from '@mui/material/styles';
 
-import {FIGTREE_FONT} from '@/themes/code.org/constants/fonts';
+import {GEIST_FONT} from '@/themes/csforall/constants/fonts';
 
 export const ACCORDION_OVERRIDES: Components<Theme>['MuiAccordion'] = {
   styleOverrides: {
@@ -56,7 +56,7 @@ export const ACCORDION_SUMMARY_OVERRIDES: Components<Theme>['MuiAccordionSummary
           backgroundColor: 'inherit',
         },
         '.MuiAccordionSummary-content': {
-          fontFamily: FIGTREE_FONT,
+          fontFamily: GEIST_FONT,
           fontStyle: 'normal',
           fontWeight: 800,
           fontSize: '2rem', // 32px

@@ -1,11 +1,13 @@
 import {Components, Theme} from '@mui/material/styles';
 
+import {codeaiRadius} from '@/themes/code.org/constants/radius';
+
 export const VIDEO_OVERRIDES: Components<Theme>['MuiVideo'] = {
   styleOverrides: {
     root: () => ({}),
     wrapper: () => ({
-      border: '1px solid var(--background-neutral-tertiary)',
-      borderRadius: '0.25rem',
+      border: 'none',
+      borderRadius: codeaiRadius('none', '0.25rem'),
     }),
     facade: () => ({
       '.video-play-button': {
@@ -25,7 +27,7 @@ export const VIDEO_OVERRIDES: Components<Theme>['MuiVideo'] = {
           0 3px 6px 0 rgb(0 0 0 / 0.2)`,
         svg: {
           fontSize: '52px',
-          color: 'var(--brand-purple-50)',
+          color: 'var(--codeai-purple-primary)',
         },
         '&:hover': {
           opacity: 0.9,
@@ -40,13 +42,12 @@ export const VIDEO_OVERRIDES: Components<Theme>['MuiVideo'] = {
         color: 'var(--text-neutral-primary)',
       },
     }),
-    footer: () => ({
-      'a.video-download-button.MuiButton-root': {
-        lineHeight: 1.57,
-        alignItems: 'center',
-        paddingBlock: 0,
-        margin: 0,
-        borderColor: 'var(--borders-neutral-strong)',
+    footer: ({theme}) => ({
+      // Caption reads as small body text, not the semibold caption role.
+      // Color comes from the component (contrast-aware brand black).
+      'figcaption.MuiTypography-caption': {
+        ...theme.typography.body3,
+        marginBottom: 0,
       },
     }),
   },

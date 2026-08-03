@@ -44,4 +44,35 @@ describe('Design System - SimpleList', () => {
 
     expect(list).toHaveStyle(classStyle);
   });
+
+  it.each(['primary', 'secondary', 'brand'] as const)(
+    'applies the icon type class for %s',
+    type => {
+      renderListContainer({type});
+      expect(getList().className).toContain(`simpleList-type-${type}`);
+    },
+  );
+
+  it('applies iconColor inline style to each icon', () => {
+    renderListContainer({iconColor: 'var(--codeai-purple-primary)'});
+    screen.getAllByTestId('font-awesome-v6-icon').forEach(icon => {
+      expect(icon).toHaveStyle('color: var(--codeai-purple-primary)');
+    });
+  });
+
+  it('leaves the label inline style untouched when textColor is unset', () => {
+    renderListContainer({});
+    items.forEach(({label}) => {
+      expect(screen.getByText(label)).not.toHaveAttribute('style');
+    });
+  });
+
+  it('applies textColor inline style to each label', () => {
+    renderListContainer({textColor: 'var(--codeai-purple-primary)'});
+    items.forEach(({label}) => {
+      expect(screen.getByText(label)).toHaveStyle(
+        'color: var(--codeai-purple-primary)',
+      );
+    });
+  });
 });

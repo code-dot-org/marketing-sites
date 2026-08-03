@@ -1,0 +1,149 @@
+{
+  "cards": [
+    {
+      "sys": {
+        "id": "card-carousel-c1",
+        "type": "Entry",
+        "contentType": {
+          "sys": {"type": "Link", "linkType": "ContentType", "id": "curriculum"}
+        }
+      },
+      "fields": {
+        "title": "Problem Solving with AI",
+        "shortDescription": "Introduce students to AI as a collaborator, learning where AI succeeds and fails.",
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "card-carousel-r1",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "resourcesAndTools"
+          }
+        }
+      },
+      "fields": {
+        "title": "AI Teaching Assistant",
+        "shortDescription": "Your classroom co-pilot. The AI TA helps you differentiate instruction and surface student progress.",
+        "actionBlockOverline": "Tools",
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "card-carousel-r2",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "resourcesAndTools"
+          }
+        }
+      },
+      "fields": {
+        "title": "Course Tools",
+        "shortDescription": "Lesson plans, instructional videos, progress tracking, and standards alignment.",
+        "actionBlockOverline": "Tools",
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "card-carousel-p1",
+        "type": "Entry",
+        "contentType": {
+          "sys": {"type": "Link", "linkType": "ContentType", "id": "person"}
+        }
+      },
+      "fields": {
+        "name": "Karim Meghji",
+        "bio": "Looking ahead, he shares his vision for AI education for every student.",
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "personalLink": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "card-carousel-c2",
+        "type": "Entry",
+        "contentType": {
+          "sys": {"type": "Link", "linkType": "ContentType", "id": "curriculum"}
+        }
+      },
+      "fields": {
+        "title": "AI and the Systems that Power It",
+        "shortDescription": "Explore how AI systems are built, trained, and deployed in the real world.",
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "46WnKBOGVA8e4bFtBSRPuE"
+          }
+        },
+        "primaryLinkRef": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "79dI2fR2dzbb0IN3dFQJ3t"
+          }
+        }
+      }
+    }
+  ]
+}

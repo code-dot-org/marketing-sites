@@ -1,4 +1,3 @@
-import DownloadIcon from '@mui/icons-material/Download';
 import ErrorIcon from '@mui/icons-material/Error';
 import MuiButton from '@mui/material/Button';
 import MuiTypography from '@mui/material/Typography';
@@ -7,6 +6,10 @@ import {useState} from 'react';
 import ReactPlayer from 'react-player/file';
 import {JsonLd} from 'react-schemaorg';
 import type {VideoObject} from 'schema-dts';
+
+import {resolvedCssVarForBrandColor} from '@/components/common/colors';
+import TextLink from '@/components/contentful/link/Link';
+import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 
 import Facade from './Facade';
 import NativeVideo from './NativeVideo';
@@ -34,8 +37,22 @@ const Video: React.FC<VideoProps> = ({
 }: VideoProps) => {
   const youtubeVideoUrl = `https://www.youtube-nocookie.com/watch?v=${youTubeId}`;
 
+  const enclosingBackground = useSectionBackground();
   const [renderState, setRenderState] = useState<RenderState>('facade');
-  const posterThumbnail = `//i.ytimg.com/vi/${youTubeId}/hqdefault.jpg`;
+
+  // Prefer the 1280x720 thumbnail; videos uploaded in SD don't have one, and
+  // YouTube then serves a 120x90 placeholder (rendered despite the 404), so
+  // detect it by size and fall back to the always-available 480x360.
+  const [useFallbackThumbnail, setUseFallbackThumbnail] = useState(false);
+  const posterThumbnail = `//i.ytimg.com/vi/${youTubeId}/${
+    useFallbackThumbnail ? 'hqdefault' : 'maxresdefault'
+  }.jpg`;
+
+  const handlePosterLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    if (event.currentTarget.naturalWidth <= 120) {
+      setUseFallbackThumbnail(true);
+    }
+  };
 
   const handleError = (
     error: Error | undefined,
@@ -74,6 +91,7 @@ const Video: React.FC<VideoProps> = ({
             label={`Play video ${videoTitle}`}
             posterThumbnail={posterThumbnail}
             onClick={handleFacadeClick}
+            onPosterLoad={handlePosterLoad}
           />
         );
       case 'youtube':
@@ -151,27 +169,37 @@ const Video: React.FC<VideoProps> = ({
       <MuiVideoWrapper>{getVideoPlayer()}</MuiVideoWrapper>
       <MuiVideoFooter>
         {showCaption && (
-          <MuiTypography variant="caption" component="figcaption">
+          <MuiTypography
+            variant="caption"
+            component="figcaption"
+            // Contrast-aware default black: flips to white on dark sections.
+            // Scoped to out-specify the theme's caption color rule.
+            sx={{
+              '&.MuiTypography-caption': {
+                color: resolvedCssVarForBrandColor(
+                  'black',
+                  enclosingBackground,
+                ),
+              },
+            }}
+          >
             {videoTitle}
           </MuiTypography>
         )}
         {videoFallback && (
-          <MuiButton
-            className={classNames(
-              'button--color-secondary',
-              'video-download-button',
-            )}
-            size="small"
-            variant="outlined"
+          <TextLink
+            className="video-download-button"
             href={videoFallback}
-            target="_blank"
-            rel="noopener noreferrer"
-            disableElevation
-            disableRipple
+            isLinkExternal={false}
+            openInNewTab
+            color="black"
+            size="s"
+            icon="download"
+            iconPosition="right"
+            removeMarginBottom
           >
-            <DownloadIcon fontSize="small" />
             {downloadLabel || 'Download'}
-          </MuiButton>
+          </TextLink>
         )}
       </MuiVideoFooter>
 

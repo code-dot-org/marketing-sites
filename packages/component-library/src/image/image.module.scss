@@ -30,5 +30,5 @@
 
 // Image rounded corners styles
 .figure-hasRoundedCorners {
-  border-radius: variables.$regular-border-radius;
+  border-radius: var(--codeai-radius-lg, #{variables.$regular-border-radius});
 }

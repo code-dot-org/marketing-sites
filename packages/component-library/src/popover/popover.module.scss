@@ -61,7 +61,7 @@ $m-tail-length: 12px;
 // Popover styles
 .popover {
   position: fixed;
-  border-radius: 8px;
+  border-radius: var(--codeai-radius-md, 8px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

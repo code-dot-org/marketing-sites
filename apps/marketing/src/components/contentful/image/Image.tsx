@@ -20,6 +20,8 @@ export interface ImageProps
   decoration?: 'none' | 'border' | 'shadow';
   /** Image has rounded corners */
   hasRoundedCorners?: boolean;
+  /** Stacking order. ImageRoot already sets position: relative. */
+  zIndex?: string;
   /** Custom className */
   className?: string;
 }
@@ -65,6 +67,7 @@ const Image: React.FC<ImageProps> = ({
   altText,
   decoration,
   hasRoundedCorners,
+  zIndex,
   className,
 }) => {
   // Get the image source URL from Contentful
@@ -94,6 +97,7 @@ const Image: React.FC<ImageProps> = ({
         hasRoundedCorners && `image--hasRoundedCorners`,
         className,
       )}
+      style={zIndex ? {zIndex} : undefined}
     >
       {/* Use Next.js Image component if we have image dimensions to prevent layout shift */}
       {imageHeight && imageWidth ? (

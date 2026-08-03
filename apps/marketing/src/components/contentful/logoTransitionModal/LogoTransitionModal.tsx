@@ -3,7 +3,7 @@
 import LogoTransitionOverlay from '@code-dot-org/component-library/logoTransitionOverlay';
 
 import {getAssetPublicPath} from '@/config/assets';
-// Must match the logo HeaderCorporateSite.tsx renders, so the animation -> SVG
+// Must match the logo HeaderCodeOrgView.tsx renders, so the animation -> SVG
 // hand-off lands on that asset.
 import headerLogo from '@public/images/codeai-logo-inverse.svg';
 

@@ -1,3 +1,4 @@
+import {BRAND_COLORS} from '@/components/common/colors';
 import Link from '@/components/contentful/link';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import {expect} from 'storybook/test';
@@ -11,7 +12,9 @@ export default meta;
 type Story = StoryObj<typeof Link>;
 
 const sizes = ['xs', 's', 'm', 'l'] as const;
-const colors = ['primary', 'white'] as const;
+// Playground exposes the full brand palette. The matrix-test stories below
+// continue to exercise only `primary` and `white` to keep snapshot scope bounded.
+const colors = BRAND_COLORS.map(c => c.value);
 const isLinkExternals = [false, true] as const;
 const removeMarginBottoms = [false, true] as const;
 
@@ -49,11 +52,15 @@ async function testLinkMatrix(canvas: any, size: string, color: string) {
       if (isLinkExternal) {
         await expect(link).toHaveAttribute('target', '_blank');
         await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-        await expect(link.querySelector('svg')).toBeInTheDocument();
+        await expect(
+          link.querySelector('i.fa-up-right-from-square'),
+        ).toBeInTheDocument();
       } else {
         await expect(link).not.toHaveAttribute('target');
         await expect(link).not.toHaveAttribute('rel');
-        await expect(link.querySelector('svg')).not.toBeInTheDocument();
+        await expect(
+          link.querySelector('i.fa-up-right-from-square'),
+        ).not.toBeInTheDocument();
       }
     }
   }

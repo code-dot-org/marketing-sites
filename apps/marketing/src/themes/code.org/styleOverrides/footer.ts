@@ -1,5 +1,9 @@
 import {alpha, Components, Theme} from '@mui/material/styles';
 
+// LEGACY-ENV-COMPAT: kept at the pre-rebrand (main) values. MuiFooter only
+// styles the legacy FooterMui, which renders as the transition-window fallback
+// and must match current production. Delete with the legacy footer after the
+// Contentful environment switch.
 export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
   styleOverrides: {
     root: ({theme}) => ({

@@ -28,6 +28,11 @@ $mobileBreakpoint: 1024px;
   // For Accordion View - Highlight open tabs/items
   details[open] summary {
     border-bottom: 4px solid var(--borders-brand-teal-primary);
+
+    // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
+    :root[data-brand='Code.org'] & {
+      border-bottom-color: var(--codeai-purple-primary);
+    }
   }
 }
 
@@ -38,8 +43,9 @@ $mobileBreakpoint: 1024px;
   align-items: center;
   gap: 1.875rem;
   align-self: stretch;
-  border-radius: 0 0 variables.$regular-border-radius
-    variables.$regular-border-radius;
+  border-radius: 0 0
+    var(--codeai-radius-md, #{variables.$regular-border-radius})
+    var(--codeai-radius-md, #{variables.$regular-border-radius});
   border: 1px solid var(--borders-neutral-primary);
   border-top: 0;
   background: var(--background-neutral-primary);

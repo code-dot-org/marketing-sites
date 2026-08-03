@@ -3,7 +3,11 @@ import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {SIMPLE_LIST_DEFAULT_ICON} from '@code-dot-org/component-library/list';
 
-import {componentSizeXSToLDefinition} from '@/components/common/definitions';
+import {
+  brandColorOptionsWithDefault,
+  brandTextColorOptions,
+  LEGACY_ICON_COLOR_OPTIONS,
+} from '@/components/common/colors';
 
 export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
   id: 'simpleList',
@@ -21,18 +25,46 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
   builtInStyles: [],
   children: false,
   variables: {
+    manualList: {
+      displayName: 'Manual List',
+      type: 'Text',
+      group: 'content',
+      description: 'Separate list items with a line break.',
+      validations: {
+        bindingSourceType: ['manual'],
+      },
+    },
     items: {
       displayName: 'List Items',
       type: 'Array',
       group: 'content',
       description:
-        'Accepts only the "List" content type entry that contain "List Item" entries',
+        'Bind a "List" content type entry that contains "List Item" entries. Ignored when Manual List has content.',
       validations: {
-        required: true,
         bindingSourceType: ['entry'],
       },
     },
-    size: componentSizeXSToLDefinition,
+    // Spec 009 amendment-5 — Text scale alignment with Paragraph.
+    // Legacy stored values (`xs`/`s`/`m`/`l`) continue to render via the
+    // wrapper's auto-map; they're not exposed in Studio.
+    size: {
+      displayName: 'Size',
+      type: 'Text',
+      defaultValue: 'text-md',
+      group: 'style',
+      validations: {
+        in: [
+          {value: 'text-md', displayName: 'Text md (default)'},
+          {value: 'text-4xl', displayName: 'Text 4xl'},
+          {value: 'text-3xl', displayName: 'Text 3xl'},
+          {value: 'text-2xl', displayName: 'Text 2xl'},
+          {value: 'text-xl', displayName: 'Text xl'},
+          {value: 'text-lg', displayName: 'Text lg'},
+          {value: 'text-sm', displayName: 'Text sm'},
+          {value: 'text-xs', displayName: 'Text xs'},
+        ],
+      },
+    },
     weight: {
       displayName: 'Text weight',
       type: 'Text',
@@ -54,16 +86,27 @@ export const SimpleListContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: SIMPLE_LIST_DEFAULT_ICON,
     },
     type: {
-      displayName: 'Icon type',
+      displayName: 'Icon color',
       type: 'Text',
       group: 'style',
-      defaultValue: 'primary',
+      defaultValue: 'purplePrimary',
       validations: {
         in: [
-          {value: 'primary', displayName: 'Primary'},
-          {value: 'secondary', displayName: 'Secondary'},
-          {value: 'brand', displayName: 'Brand'},
+          ...brandColorOptionsWithDefault('purplePrimary').filter(
+            ({value}) => value !== 'primary',
+          ),
+          ...LEGACY_ICON_COLOR_OPTIONS,
         ],
+      },
+    },
+    textColor: {
+      displayName: 'Text color',
+      type: 'Text',
+      group: 'style',
+      defaultValue: 'black',
+      description: 'Override the default text color for the list item labels.',
+      validations: {
+        in: brandTextColorOptions('black'),
       },
     },
   },

@@ -159,12 +159,12 @@ test.describe(`[${getSiteType()}] All the things`, () => {
     expect(await allTheThingsPage.description).toBe('SEO Description');
     expect(await allTheThingsPage.robots).toBe('noindex, nofollow');
 
-    // OpenGraph tests
+    // OpenGraph title and description mirror metaTitle/metaDesc
     expect(await allTheThingsPage.getOpenGraph('title')).toBe(
-      'OpenGraph Title',
+      '❌ [ENGINEERING ONLY] UI Integration Testing - SEO',
     );
     expect(await allTheThingsPage.getOpenGraph('description')).toBe(
-      'OpenGraph Description',
+      'SEO Description',
     );
     expect(await allTheThingsPage.getOpenGraph('image')).toMatch(
       /https:\/\/contentful-images\.code\.org\/(.*)\/4hXiOPiRlCXpmtypRNOZqc\/(.*)\/engineering-only-opengraph-default\.png\?fm=webp/,
