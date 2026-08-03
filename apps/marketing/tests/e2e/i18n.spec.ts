@@ -13,7 +13,12 @@ test.describe('i18n', () => {
     // Wait until window.Localize is available and truthy
     await page.waitForFunction(() => !!window.Localize);
 
-    const languageDropdown = page.getByLabel('Select language');
+    // The redesigned Code.org footer labels the dropdown 'Select language';
+    // the MUI footer (csforall, and corporate on the legacy environment)
+    // labels it 'Language selection dropdown'.
+    const languageDropdown = page.getByLabel(
+      /^(Select language|Language selection dropdown)$/,
+    );
     await expect(languageDropdown).toBeVisible();
 
     await languageDropdown.selectOption('ar');
