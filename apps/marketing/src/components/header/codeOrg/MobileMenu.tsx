@@ -141,16 +141,22 @@ const MobileMenu = ({open, onClose, content}: MobileMenuProps) => {
                     timeout="auto"
                     sx={{backgroundColor: 'var(--codeai-gray-1, #f2f2f2)'}}
                   >
-                    <ListItemButton
-                      disableRipple
-                      component="a"
-                      href={item.href}
-                      sx={nestedItemStyles}
-                      onClick={onClose}
-                      {...getExternalLinkProps(item.href)}
-                    >
-                      <ListItemText primary={item.mobileLabel ?? item.label} />
-                    </ListItemButton>
+                    {/* The primary-target link is opt-in per item: it renders
+                        only when mobileMenuPrimaryLinkLabel is authored, so
+                        submenus that list the target themselves don't get a
+                        duplicate auto-added link. */}
+                    {item.mobileLabel && (
+                      <ListItemButton
+                        disableRipple
+                        component="a"
+                        href={item.href}
+                        sx={nestedItemStyles}
+                        onClick={onClose}
+                        {...getExternalLinkProps(item.href)}
+                      >
+                        <ListItemText primary={item.mobileLabel} />
+                      </ListItemButton>
+                    )}
                     {/* Image List columns are desktop-only content. */}
                     {item.submenu.columns
                       .filter(column => !column.type.startsWith('Image List'))
