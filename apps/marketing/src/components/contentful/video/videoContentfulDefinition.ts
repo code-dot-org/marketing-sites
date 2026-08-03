@@ -64,6 +64,16 @@ export const VideoContentfulComponentDefinition: ComponentDefinition = {
         bindingSourceType: ['entry', 'manual'],
       },
     },
+    posterImage: {
+      displayName: 'Screenshot image',
+      type: 'Media',
+      group: 'content',
+      description:
+        'Optional. Shown before the video plays instead of the YouTube thumbnail. Use when YouTube has no HD thumbnail for this video.',
+      validations: {
+        bindingSourceType: ['entry', 'asset', 'manual'],
+      },
+    },
     showCaption: {
       displayName: 'Show video caption',
       type: 'Boolean',
