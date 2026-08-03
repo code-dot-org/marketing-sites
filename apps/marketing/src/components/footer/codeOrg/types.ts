@@ -16,8 +16,10 @@ export type FooterLinkColumn = {
 };
 
 export type FooterContent = {
-  tagline: string;
-  mission: string;
+  // Absent when the authored siteFooter entry leaves the field empty; the
+  // view then omits the element entirely.
+  tagline?: string;
+  mission?: string;
   copyright: string;
   linkColumns: FooterLinkColumn[];
 };

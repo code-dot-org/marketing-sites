@@ -208,8 +208,10 @@ describe('getFooterContent', () => {
     const result = await getContentOrNull();
 
     expect(result).toEqual({
-      tagline: DEFAULT_FOOTER_CONTENT.tagline,
-      mission: DEFAULT_FOOTER_CONTENT.mission,
+      // Empty tagline/mission stay absent — an authored choice, not a
+      // fallback case.
+      tagline: undefined,
+      mission: undefined,
       copyright: DEFAULT_FOOTER_CONTENT.copyright,
       linkColumns: [
         {

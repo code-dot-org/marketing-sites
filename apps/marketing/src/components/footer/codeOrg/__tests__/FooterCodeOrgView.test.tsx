@@ -25,12 +25,34 @@ describe('FooterCodeOrgView', () => {
       <FooterCodeOrgView locale="en-US" content={DEFAULT_FOOTER_CONTENT} />,
     );
 
-  it('renders the CodeAI logo, tagline, and mission', () => {
+  it('renders the CodeAI logo as a home link, with tagline and mission', () => {
     renderFooter();
 
-    expect(screen.getByAltText('CodeAI')).toBeVisible();
+    const logoLink = screen.getByRole('link', {name: 'CodeAI home'});
+    expect(logoLink).toHaveAttribute('href', '/');
+    expect(logoLink.querySelector('img')).not.toBeNull();
     expect(screen.getByText(DEFAULT_FOOTER_CONTENT.tagline)).toBeVisible();
     expect(screen.getByText(DEFAULT_FOOTER_CONTENT.mission)).toBeVisible();
+  });
+
+  it('omits tagline and mission elements when the content has none', () => {
+    const {container} = render(
+      <FooterCodeOrgView
+        locale="en-US"
+        content={{
+          ...DEFAULT_FOOTER_CONTENT,
+          tagline: undefined,
+          mission: undefined,
+        }}
+      />,
+    );
+
+    expect(screen.queryByText(DEFAULT_FOOTER_CONTENT.tagline)).toBeNull();
+    expect(screen.queryByText(DEFAULT_FOOTER_CONTENT.mission)).toBeNull();
+    // No empty <p> placeholders remain in the brand block.
+    expect(
+      container.querySelectorAll('footer > div:first-of-type > div p'),
+    ).toHaveLength(0);
   });
 
   it('renders every link column with heading and links', () => {
