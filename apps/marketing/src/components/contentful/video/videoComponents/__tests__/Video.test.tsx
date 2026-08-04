@@ -236,6 +236,39 @@ describe('Video Component', () => {
     );
   });
 
+  it('uses the authored poster image instead of the YouTube thumbnail', () => {
+    render(
+      <Video
+        {...defaultProps}
+        posterImage="//images.ctfassets.net/space/poster.jpg"
+      />,
+    );
+
+    const poster = screen.getByAltText(`Play video ${defaultProps.videoTitle}`);
+    expect(poster).toHaveAttribute(
+      'src',
+      'https://images.ctfassets.net/space/poster.jpg?fm=avif',
+    );
+  });
+
+  it('keeps the authored poster even when it loads small', () => {
+    render(
+      <Video
+        {...defaultProps}
+        posterImage="//images.ctfassets.net/space/poster.jpg"
+      />,
+    );
+
+    const poster = screen.getByAltText(`Play video ${defaultProps.videoTitle}`);
+    Object.defineProperty(poster, 'naturalWidth', {value: 120});
+    fireEvent.load(poster);
+
+    expect(poster).toHaveAttribute(
+      'src',
+      'https://images.ctfassets.net/space/poster.jpg?fm=avif',
+    );
+  });
+
   it('renders no JSON-LD script by default', () => {
     const {container} = render(<Video {...defaultProps} />);
     const jsonLdScript = container.querySelector(

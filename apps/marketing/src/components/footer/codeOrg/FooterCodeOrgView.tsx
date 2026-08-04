@@ -62,6 +62,15 @@ const BrandBlock = styled('div')(({theme}) => ({
   },
 }));
 
+const LogoLink = styled('a')(({theme}) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  '&:focus-visible': {
+    outline: `1px solid ${theme.palette.text.primary}`,
+    outlineOffset: '2px',
+  },
+}));
+
 const Tagline = styled('p')(({theme}) => ({
   // Body default (body2) at medium weight.
   ...theme.typography.body2,
@@ -285,15 +294,17 @@ const FooterCodeOrgView: React.FC<FooterCodeOrgViewProps> = ({
     <FooterRoot>
       <MainSection>
         <BrandBlock>
-          <img
-            src={logoImage.src}
-            alt="CodeAI"
-            width={200}
-            height={34}
-            style={{width: '200px', height: 'auto'}}
-          />
-          <Tagline>{content.tagline}</Tagline>
-          <Mission>{content.mission}</Mission>
+          <LogoLink href="/" aria-label="CodeAI home">
+            <img
+              src={logoImage.src}
+              alt=""
+              width={200}
+              height={34}
+              style={{width: '200px', height: 'auto'}}
+            />
+          </LogoLink>
+          {content.tagline && <Tagline>{content.tagline}</Tagline>}
+          {content.mission && <Mission>{content.mission}</Mission>}
           <SocialLinks aria-label="Social links">
             {SOCIAL_LINKS.map(({key, label, icon, href}) => (
               <SocialIconButton

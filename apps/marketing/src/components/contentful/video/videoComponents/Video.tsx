@@ -10,6 +10,7 @@ import type {VideoObject} from 'schema-dts';
 import {resolvedCssVarForBrandColor} from '@/components/common/colors';
 import TextLink from '@/components/contentful/link/Link';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
+import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 
 import Facade from './Facade';
 import NativeVideo from './NativeVideo';
@@ -27,6 +28,7 @@ const Video: React.FC<VideoProps> = ({
   videoTitle,
   videoDesc,
   videoFallback,
+  posterImage,
   showCaption,
   downloadLabel,
   uploadDate,
@@ -40,16 +42,22 @@ const Video: React.FC<VideoProps> = ({
   const enclosingBackground = useSectionBackground();
   const [renderState, setRenderState] = useState<RenderState>('facade');
 
+  // An authored poster bypasses the YouTube thumbnail (and its placeholder
+  // detection below) entirely.
+  const authoredPoster = getAbsoluteImageUrl(posterImage);
+
   // Prefer the 1280x720 thumbnail; videos uploaded in SD don't have one, and
   // YouTube then serves a 120x90 placeholder (rendered despite the 404), so
   // detect it by size and fall back to the always-available 480x360.
   const [useFallbackThumbnail, setUseFallbackThumbnail] = useState(false);
-  const posterThumbnail = `//i.ytimg.com/vi/${youTubeId}/${
-    useFallbackThumbnail ? 'hqdefault' : 'maxresdefault'
-  }.jpg`;
+  const posterThumbnail =
+    authoredPoster ??
+    `//i.ytimg.com/vi/${youTubeId}/${
+      useFallbackThumbnail ? 'hqdefault' : 'maxresdefault'
+    }.jpg`;
 
   const handlePosterLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
-    if (event.currentTarget.naturalWidth <= 120) {
+    if (!authoredPoster && event.currentTarget.naturalWidth <= 120) {
       setUseFallbackThumbnail(true);
     }
   };

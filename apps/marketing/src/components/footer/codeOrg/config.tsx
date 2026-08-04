@@ -15,7 +15,9 @@ export const FOOTER_MISSION =
 
 // Fallback content, rendered when the `siteFooter` Contentful entry is
 // unavailable. Link targets are best guesses until final URLs are confirmed.
-export const DEFAULT_FOOTER_CONTENT: FooterContent = {
+// `satisfies` keeps tagline/mission non-optional on the constant even though
+// FooterContent allows them to be absent.
+export const DEFAULT_FOOTER_CONTENT = {
   tagline: FOOTER_TAGLINE,
   mission: FOOTER_MISSION,
   copyright: COPYRIGHT_TEXT,
@@ -84,7 +86,7 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
       ],
     },
   ],
-};
+} satisfies FooterContent;
 
 export type SocialLink = {
   key: string;
