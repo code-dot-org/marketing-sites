@@ -22,6 +22,7 @@ options = {
   subdomain_name: 'code',
   production_domain_name: nil,
   production_hosted_zone_id: nil,
+  disable_production_domain: false,
   # TODO: populate Account ID dynamically.
   # role_arn: "arn:aws:iam::${account_id}:role/admin/CloudFormationMarketingSitesDevelopmentRole"
   role_arn: nil,
@@ -109,6 +110,16 @@ opt_parser = OptionParser.new do |opts|
     "Required when production_domain_name is specified"
   ) do |id|
     options[:production_hosted_zone_id] = (id.nil? || id.empty?) ? nil : id
+  end
+
+  # optional
+  # Temporary for transition period to switchover from daisy chain to non-daisy chain deployment
+  # Only used for the corporate site in production environment
+  opts.on(
+    '--disable_production_domain',
+    "Disable the use of the production domain even if production_domain_name and production_hosted_zone_id are specified"
+  ) do
+    options[:disable_production_domain] = true
   end
 
   opts.on(
