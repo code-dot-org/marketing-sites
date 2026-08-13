@@ -1,3 +1,5 @@
+import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
+
 export type RenderState =
   | 'facade'
   | 'youtube'
@@ -14,6 +16,8 @@ export interface VideoProps {
   youTubeId?: string;
   /** Video fallback */
   videoFallback?: string;
+  /** Authored poster image; overrides the YouTube thumbnail when set */
+  posterImage?: ExperienceAsset | string;
   /** Show caption */
   showCaption?: boolean;
   /** Label for Download button */

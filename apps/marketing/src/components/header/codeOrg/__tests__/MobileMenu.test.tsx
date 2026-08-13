@@ -71,11 +71,8 @@ describe('MobileMenu', () => {
     await userEvent.click(teachersToggle);
 
     expect(teachersToggle).toHaveAttribute('aria-expanded', 'true');
-    // Primary link first, then each column's heading and items.
-    expect(screen.getByRole('link', {name: 'Teachers'})).toHaveAttribute(
-      'href',
-      '/teach',
-    );
+    // No mobile label authored → no auto-added primary-target link.
+    expect(screen.queryByRole('link', {name: 'Teachers'})).toBeNull();
     // Column headings render as plain non-interactive text.
     expect(screen.getByText('Curriculum')).toBeInTheDocument();
     expect(
@@ -100,7 +97,7 @@ describe('MobileMenu', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('uses the mobile-specific label for the primary link when authored', async () => {
+  it('renders the primary-target link when the mobile label is authored', async () => {
     const withMobileLabel: HeaderContent = {
       ...content,
       mainMenu: [

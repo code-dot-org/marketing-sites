@@ -213,6 +213,7 @@ describe('GET /sitemap.xml', () => {
         'test-content-type-id',
         {
           'fields.slug[exists]': 'true',
+          'fields.componentSettings[exists]': 'false',
           include: 1,
           select: 'fields.slug,fields.seoMetadata,sys.updatedAt',
         },

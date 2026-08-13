@@ -11,6 +11,12 @@ const meta: Meta<UnitCardProps> = {
   title: 'Marketing/UnitCard',
   component: UnitCard,
   tags: ['autodocs'],
+  parameters: {
+    // Layout match: Geist is a variable font and Applitools render nodes
+    // rasterize its interpolated weights slightly differently per run,
+    // which strict matching flags as size wobble.
+    eyes: {matchLevel: 'Layout'},
+  },
   argTypes: {
     topicBadgeColor: {
       control: 'select',

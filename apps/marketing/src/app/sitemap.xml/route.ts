@@ -39,6 +39,9 @@ async function getSitemapEntries(
       contentType,
       {
         'fields.slug[exists]': 'true',
+        // Patterns share the experience content type (and have slugs);
+        // only real pages belong in the sitemap.
+        'fields.componentSettings[exists]': 'false',
         // contentful has a very strict type, so we need to cast this to any
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         select: 'fields.slug,fields.noIndex,sys.updatedAt' as any,
@@ -60,6 +63,7 @@ async function getSitemapEntries(
       contentType,
       {
         'fields.slug[exists]': 'true',
+        'fields.componentSettings[exists]': 'false',
         // Only include deep links one level deep (specifically the SEO Metadata)
         include: 1,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

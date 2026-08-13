@@ -109,8 +109,10 @@ export async function getFooterContent(): Promise<
     return {
       status: 'ok',
       content: {
-        tagline: fields.tagline || DEFAULT_FOOTER_CONTENT.tagline,
-        mission: fields.mission || DEFAULT_FOOTER_CONTENT.mission,
+        // Empty tagline/mission are authored choices — omit the element
+        // rather than resurrecting default copy.
+        tagline: fields.tagline || undefined,
+        mission: fields.mission || undefined,
         copyright: fields.copyright || DEFAULT_FOOTER_CONTENT.copyright,
         linkColumns: linkColumns.length
           ? linkColumns
