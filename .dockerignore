@@ -1,0 +1,14 @@
+.git
+
+# Local env files must never enter the build context (the image is configured
+# at runtime via ECS task-definition env vars and Secrets Manager).
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local build output and dependencies — the builder stage installs and builds
+# from source, so these only bloat the context.
+**/.next
+**/node_modules
+**/test-results
+**/playwright-report
