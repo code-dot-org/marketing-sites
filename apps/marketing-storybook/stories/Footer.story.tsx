@@ -1,5 +1,4 @@
 import {GlobalFooterProps} from '@/components/footer/common/types';
-import FooterCorporateSite from '@/components/footer/corporateSite';
 import FooterCSforAll from '@/components/footer/csForAll'; // Adjust import path as needed
 import {SupportedLocale} from '@/config/locale';
 import {Meta, StoryObj} from '@storybook/react';
@@ -23,18 +22,6 @@ export default meta;
 
 const defaultArgs: Partial<GlobalFooterProps> = {
   locale: SupportedLocale['en-US'],
-};
-
-export const CorporateSite: StoryObj<typeof FooterCorporateSite> = {
-  render: args => <FooterCorporateSite {...args} />,
-  args: {
-    ...defaultArgs,
-  },
-  parameters: {
-    eyes: {
-      themes: ['code.org'],
-    },
-  },
 };
 
 export const CSForAll: StoryObj<typeof FooterCSforAll> = {
