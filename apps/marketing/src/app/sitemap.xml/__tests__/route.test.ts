@@ -172,78 +172,16 @@ describe('GET /sitemap.xml', () => {
     );
   });
 
-  // LEGACY-ENV-COMPAT: remove with the legacy seoMetadata fallback in route.ts.
-  describe('legacy environment fallback', () => {
-    const unknownFieldError = () => {
-      const error = new Error(
-        JSON.stringify({message: 'No field with id "noIndex" found.'}),
-      );
-      error.name = 'UnknownField';
-      return error;
-    };
+  it('returns an uncached 503 when the entries query fails', async () => {
+    (getContentfulClient as jest.Mock).mockReturnValue({});
+    (getAllEntriesForContentType as jest.Mock).mockRejectedValue(
+      new Error('network down'),
+    );
 
-    it('falls back to the legacy seoMetadata query when noIndex is unknown', async () => {
-      (getContentfulClient as jest.Mock).mockReturnValue({});
-      (getAllEntriesForContentType as jest.Mock)
-        .mockRejectedValueOnce(unknownFieldError())
-        .mockResolvedValueOnce([
-          {
-            fields: {slug: '/visible'},
-            sys: {updatedAt: '2024-01-01T00:00:00Z'},
-          },
-          {
-            fields: {
-              slug: '/legacy-hidden',
-              seoMetadata: {
-                fields: {hidePageFromSearchEnginesNoindex: true},
-              },
-            },
-            sys: {updatedAt: '2024-01-01T00:00:00Z'},
-          },
-        ]);
+    const response = await GET(mockRequest());
 
-      const response = await GET(mockRequest());
-      const body = await response.text();
-
-      expect(body).toContain('/visible');
-      expect(body).not.toContain('/legacy-hidden');
-      expect(getAllEntriesForContentType).toHaveBeenCalledTimes(2);
-      expect(getAllEntriesForContentType).toHaveBeenLastCalledWith(
-        expect.anything(),
-        'test-content-type-id',
-        {
-          'fields.slug[exists]': 'true',
-          'fields.componentSettings[exists]': 'false',
-          include: 1,
-          select: 'fields.slug,fields.seoMetadata,sys.updatedAt',
-        },
-      );
-    });
-
-    it('does not fall back on non-UnknownField errors', async () => {
-      (getContentfulClient as jest.Mock).mockReturnValue({});
-      (getAllEntriesForContentType as jest.Mock).mockRejectedValue(
-        new Error('network down'),
-      );
-
-      const response = await GET(mockRequest());
-
-      expect(response.status).toBe(503);
-      expect(response.headers.get('Cache-Control')).toBe('no-store');
-      expect(getAllEntriesForContentType).toHaveBeenCalledTimes(1);
-    });
-
-    it('returns an uncached 503 when both queries fail', async () => {
-      (getContentfulClient as jest.Mock).mockReturnValue({});
-      (getAllEntriesForContentType as jest.Mock)
-        .mockRejectedValueOnce(unknownFieldError())
-        .mockRejectedValueOnce(new Error('network down'));
-
-      const response = await GET(mockRequest());
-
-      expect(response.status).toBe(503);
-      expect(response.headers.get('Cache-Control')).toBe('no-store');
-    });
+    expect(response.status).toBe(503);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
   });
 
   it('includes hour of ai activities on CSForAll', async () => {

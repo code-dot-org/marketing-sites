@@ -174,21 +174,6 @@ describe('getFooterContent', () => {
     expect(await getFooterContent()).toEqual({status: 'unavailable'});
   });
 
-  // LEGACY-ENV-COMPAT: remove with the 'legacy-environment' result arm.
-  it('returns legacy-environment when the siteFooter content type does not exist', async () => {
-    const error = new Error(
-      JSON.stringify({
-        details: {
-          errors: [{name: 'unknownContentType', value: 'DOESNOTEXIST'}],
-        },
-      }),
-    );
-    error.name = 'InvalidQuery';
-    mockGetEntries.mockRejectedValue(error);
-
-    expect(await getFooterContent()).toEqual({status: 'legacy-environment'});
-  });
-
   it('skips unresolved and incomplete items and falls back per field', async () => {
     mockGetEntries.mockResolvedValue(
       siteFooterResponse({

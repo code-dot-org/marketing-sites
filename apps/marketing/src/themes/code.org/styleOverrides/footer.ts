@@ -1,9 +1,9 @@
 import {alpha, Components, Theme} from '@mui/material/styles';
 
-// LEGACY-ENV-COMPAT: kept at the pre-rebrand (main) values. MuiFooter only
-// styles the legacy FooterMui, which renders as the transition-window fallback
-// and must match current production. Delete with the legacy footer after the
-// Contentful environment switch.
+// The app never renders FooterMui under the code.org theme, but the storybook
+// eyes variation matrix renders every story under every theme — including the
+// CSforAll footer under code.org — so these overrides must stay to keep that
+// baseline stable. Kept at the pre-rebrand values.
 export const FOOTER_OVERRIDES: Components<Theme>['MuiFooter'] = {
   styleOverrides: {
     root: ({theme}) => ({
