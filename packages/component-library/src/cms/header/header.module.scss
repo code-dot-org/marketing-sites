@@ -10,11 +10,10 @@ $box-shadow:
   0px 4px 6px -1px rgb(0 0 0 / 0.1),
   0px 2px 4px -1px rgb(0 0 0 / 0.06);
 
-// LEGACY-ENV-COMPAT: kept at the pre-rebrand (main, teal) values. On Code.org
-// this header only renders as the transition-window fallback and must match
-// current production. Delete with the legacy header after the Contentful
-// environment switch (or re-apply the [data-brand='Code.org'] CodeAI palette
-// overrides if the DSCO header is kept for other consumers).
+// Kept at the pre-rebrand (teal) values. The marketing app no longer renders
+// this header (its transition-window fallback was removed); re-apply the
+// [data-brand='Code.org'] CodeAI palette overrides if a Code.org consumer
+// adopts it, or delete the component if none does.
 
 // Header common styles
 .headerNavigation {

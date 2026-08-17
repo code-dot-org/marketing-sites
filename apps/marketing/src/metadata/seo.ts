@@ -18,7 +18,6 @@ export function getSeoMetadata(
   return {
     ...(seo.title ? {title: seo.title} : undefined),
     description: seo.description,
-    ...(seo.keywords?.length ? {keywords: seo.keywords} : undefined),
     alternates: {
       canonical: `https://${getProductionCanonicalRootDomain(brand)}/${locale}/${slug}`,
     },

@@ -2,7 +2,6 @@ import {draftMode} from 'next/headers';
 
 import {SiteChromeContentResult} from '@/components/common/siteChromeContent';
 import {getContentfulClient} from '@/contentful/client';
-import {isUnknownContentTypeError} from '@/contentful/errors';
 import logger from '@/logger/contentful';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
@@ -142,9 +141,7 @@ function mapMenuItems(list: unknown[] | undefined): HeaderMenuItem[] {
  * `siteHeaderItem` entries with up to three `siteHeaderSubmenuItem` columns
  * plus an optional promo banner). Returns 'unavailable' when Contentful is
  * unavailable so callers fall back to DEFAULT_HEADER_CONTENT; the header must
- * never throw from the layout. LEGACY-ENV-COMPAT: returns 'legacy-environment'
- * when the siteHeader content type doesn't exist (old production environment)
- * so callers render the legacy corporateSite header instead.
+ * never throw from the layout.
  */
 export async function getHeaderContent(): Promise<
   SiteChromeContentResult<HeaderContent>
@@ -180,12 +177,6 @@ export async function getHeaderContent(): Promise<
       },
     };
   } catch (error) {
-    // LEGACY-ENV-COMPAT: a deterministic "content type doesn't exist" error
-    // identifies the old environment; transient errors keep the new-design
-    // defaults so a Contentful blip never resurrects the legacy header.
-    if (isUnknownContentTypeError(error)) {
-      return {status: 'legacy-environment'};
-    }
     logger.warn(`Failed to fetch siteHeader content: ${error}`);
     return {status: 'unavailable'};
   }

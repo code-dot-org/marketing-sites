@@ -347,19 +347,4 @@ describe('getHeaderContent', () => {
 
     expect(await getHeaderContent()).toEqual({status: 'unavailable'});
   });
-
-  // LEGACY-ENV-COMPAT: remove with the 'legacy-environment' result arm.
-  it('returns legacy-environment when the siteHeader content type does not exist', async () => {
-    const error = new Error(
-      JSON.stringify({
-        details: {
-          errors: [{name: 'unknownContentType', value: 'DOESNOTEXIST'}],
-        },
-      }),
-    );
-    error.name = 'InvalidQuery';
-    mockGetEntries.mockRejectedValue(error);
-
-    expect(await getHeaderContent()).toEqual({status: 'legacy-environment'});
-  });
 });

@@ -159,23 +159,13 @@ test.describe(`[${getSiteType()}] All the things`, () => {
     expect(await allTheThingsPage.description).toBe('SEO Description');
     expect(await allTheThingsPage.robots).toBe('noindex, nofollow');
 
-    // LEGACY-ENV-COMPAT: the old production environment authors OpenGraph
-    // fields on a linked SEO Meta Data entry; the new model mirrors
-    // metaTitle/metaDesc. Remove the legacy arm once test/production serve
-    // the new content model.
-    const ogTitle = await allTheThingsPage.getOpenGraph('title');
-    if (ogTitle === 'OpenGraph Title') {
-      expect(await allTheThingsPage.getOpenGraph('description')).toBe(
-        'OpenGraph Description',
-      );
-    } else {
-      expect(ogTitle).toBe(
-        '❌ [ENGINEERING ONLY] UI Integration Testing - SEO',
-      );
-      expect(await allTheThingsPage.getOpenGraph('description')).toBe(
-        'SEO Description',
-      );
-    }
+    // OpenGraph title/description mirror metaTitle/metaDesc.
+    expect(await allTheThingsPage.getOpenGraph('title')).toBe(
+      '❌ [ENGINEERING ONLY] UI Integration Testing - SEO',
+    );
+    expect(await allTheThingsPage.getOpenGraph('description')).toBe(
+      'SEO Description',
+    );
     expect(await allTheThingsPage.getOpenGraph('image')).toMatch(
       /https:\/\/contentful-images\.code\.org\/(.*)\/4hXiOPiRlCXpmtypRNOZqc\/(.*)\/engineering-only-opengraph-default\.png\?fm=webp/,
     );
