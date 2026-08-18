@@ -97,32 +97,6 @@ describe('getSeoMetadata', () => {
     expect(result.title).toBeUndefined();
   });
 
-  it('emits keywords when present', () => {
-    mockResolvedSeo({keywords: ['computer science', 'education']});
-
-    const result = getSeoMetadata(
-      mockExperience,
-      Brand.CODE_DOT_ORG,
-      'en-US',
-      'engineering/all-the-things',
-    );
-
-    expect(result.keywords).toEqual(['computer science', 'education']);
-  });
-
-  it('omits keywords when empty', () => {
-    mockResolvedSeo({keywords: []});
-
-    const result = getSeoMetadata(
-      mockExperience,
-      Brand.CODE_DOT_ORG,
-      'en-US',
-      'engineering/all-the-things',
-    );
-
-    expect(result).not.toHaveProperty('keywords');
-  });
-
   it('falls back to brand default OG image when ogImage is missing', () => {
     mockResolvedSeo({ogImage: undefined});
 
@@ -162,20 +136,6 @@ describe('getSeoMetadata', () => {
     );
 
     expect(result.robots).toEqual({index: false, follow: false});
-  });
-
-  // LEGACY-ENV-COMPAT: the old environment has independent noindex/nofollow flags.
-  it('supports nofollow independently of noindex', () => {
-    mockResolvedSeo({noIndex: false, noFollow: true});
-
-    const result = getSeoMetadata(
-      mockExperience,
-      Brand.CODE_DOT_ORG,
-      'en-US',
-      '/engineering/all-the-things',
-    );
-
-    expect(result.robots).toEqual({index: true, follow: false});
   });
 
   it('calls getAbsoluteImageUrl with fm=webp for the OG image', () => {

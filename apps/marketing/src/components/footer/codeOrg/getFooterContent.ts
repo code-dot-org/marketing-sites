@@ -5,7 +5,6 @@ import {isExternalLink} from '@/components/common/utils';
 import {Brand} from '@/config/brand';
 import {getStage} from '@/config/stage';
 import {getContentfulClient} from '@/contentful/client';
-import {isUnknownContentTypeError} from '@/contentful/errors';
 import logger from '@/logger/contentful';
 
 import {DEFAULT_FOOTER_CONTENT} from './config';
@@ -78,9 +77,7 @@ function mapColumns(fields: SiteFooterFields): FooterLinkColumn[] {
  * Fetches the single `siteFooter` entry (tagline, mission, up to five link
  * columns of `siteFooterItem` entries). Returns 'unavailable' when Contentful
  * is unavailable so callers fall back to DEFAULT_FOOTER_CONTENT; the footer
- * must never throw from the layout. LEGACY-ENV-COMPAT: returns
- * 'legacy-environment' when the siteFooter content type doesn't exist (old
- * production environment) so callers render the legacy corporateSite footer.
+ * must never throw from the layout.
  */
 export async function getFooterContent(): Promise<
   SiteChromeContentResult<FooterContent>
@@ -120,12 +117,6 @@ export async function getFooterContent(): Promise<
       },
     };
   } catch (error) {
-    // LEGACY-ENV-COMPAT: a deterministic "content type doesn't exist" error
-    // identifies the old environment; transient errors keep the new-design
-    // defaults so a Contentful blip never resurrects the legacy footer.
-    if (isUnknownContentTypeError(error)) {
-      return {status: 'legacy-environment'};
-    }
     logger.warn(`Failed to fetch siteFooter content: ${error}`);
     return {status: 'unavailable'};
   }
