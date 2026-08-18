@@ -1,6 +1,7 @@
 import {ExperienceFields} from '@contentful/experiences-core/types';
 import {Experience} from '@contentful/experiences-sdk-react';
 
+import {SeoMetadataEntry} from '@/types/contentful/entries/SeoMetadata';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
 // The SDK's ExperienceFields type only covers system fields. Our Contentful
@@ -12,6 +13,10 @@ type ExperienceFieldsWithCustomEntries = ExperienceFields & {
   metaDesc?: string;
   opengraphImage?: ExperienceAsset;
   noIndex?: boolean;
+  // CSFORALL-COMPAT: fields of the old content model's experience type, still
+  // used by the CSforAll space. Remove when csforall is retired.
+  pageHeading?: string;
+  seoMetadata?: SeoMetadataEntry;
 };
 
 export function getExperienceEntryFieldsFromExperience(
@@ -38,4 +43,24 @@ export function getOpengraphImageFromExperience(
 
 export function getNoIndexFromExperience(experience: Experience | undefined) {
   return getExperienceEntryFieldsFromExperience(experience)?.noIndex;
+}
+
+// CSFORALL-COMPAT: selectors for the old content model's SEO shape, still used
+// by the CSforAll space. Remove when csforall is retired.
+
+export function getPageHeadingFromExperience(
+  experience: Experience | undefined,
+) {
+  return getExperienceEntryFieldsFromExperience(experience)?.pageHeading;
+}
+
+export function getLegacySeoMetadataFromExperience(
+  experience: Experience | undefined,
+) {
+  const seoMetadata =
+    getExperienceEntryFieldsFromExperience(experience)?.seoMetadata;
+
+  // An unpublished/unresolved link arrives as a {sys: {type: 'Link'}} stub
+  // with no fields.
+  return seoMetadata?.fields;
 }

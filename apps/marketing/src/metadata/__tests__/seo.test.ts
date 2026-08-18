@@ -97,6 +97,47 @@ describe('getSeoMetadata', () => {
     expect(result.title).toBeUndefined();
   });
 
+  // CSFORALL-COMPAT: the old content model has independent noindex/nofollow
+  // flags and a keywords list. Remove when csforall is retired.
+  it('supports nofollow independently of noindex', () => {
+    mockResolvedSeo({noIndex: false, noFollow: true});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      '/engineering/all-the-things',
+    );
+
+    expect(result.robots).toEqual({index: true, follow: false});
+  });
+
+  it('emits keywords when present', () => {
+    mockResolvedSeo({keywords: ['computer science', 'education']});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      'engineering/all-the-things',
+    );
+
+    expect(result.keywords).toEqual(['computer science', 'education']);
+  });
+
+  it('omits keywords when empty', () => {
+    mockResolvedSeo({keywords: []});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'en-US',
+      'engineering/all-the-things',
+    );
+
+    expect(result).not.toHaveProperty('keywords');
+  });
+
   it('falls back to brand default OG image when ogImage is missing', () => {
     mockResolvedSeo({ogImage: undefined});
 
