@@ -105,7 +105,7 @@
 - [ ] T026 [P] Marketing-storybook CI path green (catalog components changed only in `activitiesFooter`; no new stories needed — components are pre-existing and visually unchanged; state this in the PR if no story is added)
 - [x] T027 Run `yarn prettier` on all touched packages before every commit (husky pre-commit hook is non-executable in this repo)
 - [x] T028 Update research.md with the final MCP/CDA-confirmed sandbox state (type, tags, entry counts) and mark which items moved from code-inferred to confirmed; include a one-line confirmation that no Contentful Experience entry exists for the catalog routes (SC-005)
-- [ ] T029 Final quickstart.md walkthrough end-to-end on local; then, **with Dee's explicit OK**, open a PR to the `sandbox` branch (summary bullets only, no test-plan section, no AI attribution); Dee handles review/merge/deploy and the aiday.org checklist
+- [x] T029 Final quickstart.md walkthrough end-to-end on local; then, **with Dee's explicit OK**, open a PR to the `sandbox` branch (summary bullets only, no test-plan section, no AI attribution); Dee handles review/merge/deploy and the aiday.org checklist
 
 **Deferred (recorded, not tasked here)**: relocating `ActivityCollection` out of `components/csforall/` (research.md D7); `carousel.slides` validation addition for activity carousels; all `master`-environment/production work (research.md D8).
 
