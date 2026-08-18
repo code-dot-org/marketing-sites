@@ -2,10 +2,12 @@ import {Experience} from '@contentful/experiences-sdk-react';
 
 import {
   getExperienceEntryFieldsFromExperience,
+  getLegacySeoMetadataFromExperience,
   getMetaTitleFromExperience,
   getMetaDescFromExperience,
   getOpengraphImageFromExperience,
   getNoIndexFromExperience,
+  getPageHeadingFromExperience,
 } from '../getExperienceEntryFields';
 
 const mockExperience: Experience = {
@@ -88,5 +90,46 @@ describe('getNoIndexFromExperience', () => {
 
   it('returns undefined when missing (callers should treat as indexable)', () => {
     expect(getNoIndexFromExperience(buildExperience({}))).toBeUndefined();
+  });
+});
+
+// CSFORALL-COMPAT: remove with the legacy selectors when csforall is retired.
+describe('getPageHeadingFromExperience', () => {
+  it('returns pageHeading when set', () => {
+    expect(
+      getPageHeadingFromExperience(buildExperience({pageHeading: 'Heading'})),
+    ).toBe('Heading');
+  });
+
+  it('returns undefined when missing', () => {
+    expect(getPageHeadingFromExperience(buildExperience({}))).toBeUndefined();
+  });
+});
+
+// CSFORALL-COMPAT: remove with the legacy selectors when csforall is retired.
+describe('getLegacySeoMetadataFromExperience', () => {
+  it('returns the fields of a resolved seoMetadata entry', () => {
+    const experience = buildExperience({
+      seoMetadata: {
+        sys: {type: 'Entry'},
+        fields: {seoTitle: 'Legacy Title'},
+      },
+    });
+    expect(getLegacySeoMetadataFromExperience(experience)).toEqual({
+      seoTitle: 'Legacy Title',
+    });
+  });
+
+  it('returns undefined for an unresolved link stub', () => {
+    const experience = buildExperience({
+      seoMetadata: {sys: {type: 'Link', linkType: 'Entry', id: 'abc'}},
+    });
+    expect(getLegacySeoMetadataFromExperience(experience)).toBeUndefined();
+  });
+
+  it('returns undefined when missing', () => {
+    expect(
+      getLegacySeoMetadataFromExperience(buildExperience({})),
+    ).toBeUndefined();
   });
 });
