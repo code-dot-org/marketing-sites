@@ -115,9 +115,12 @@ describe('GET /sitemap.xml', () => {
       },
     ]);
 
-    const response = await GET(mockRequest());
-    const body = await response.text();
-    expect(body).not.toContain('<url>');
+    // Hour of Code host: no coded catalog routes, so a slugless experience
+    // entry must leave the sitemap completely empty.
+    const response = await GET(
+      mockRequest('hourofcode.marketing-sites.localhost'),
+    );
+    expect(response.status).toBe(404);
   });
 
   it('handles root slug "/" correctly', async () => {
@@ -267,5 +270,51 @@ describe('GET /sitemap.xml', () => {
     expect(body).toContain('/en-US/activities/hour-of-ai');
 
     expect(body).toContain('/fr/activities/hour-of-ai');
+
+    // The Code.org URL structure does not exist on CSforAll
+    expect(body).not.toContain('/en-US/hour-of-ai/activities');
+  });
+
+  it('includes activity catalog routes on Code.org at the new paths', async () => {
+    jest.resetAllMocks();
+    (getContentfulClient as jest.Mock).mockReturnValue({});
+    (getAllEntriesForContentType as jest.Mock).mockResolvedValue([
+      {
+        fields: {
+          slug: '/',
+        },
+        sys: {updatedAt: '2024-01-01T00:00:00Z'},
+      },
+    ]);
+
+    const response = await GET(mockRequest('code.marketing-sites.code.org'));
+    const body = await response.text();
+
+    expect(body).toContain('/en-US/hour-of-ai/activities');
+    expect(body).toContain('/fr/hour-of-ai/activities');
+    expect(body).toContain('/en-US/hour-of-code/activities');
+    // The legacy URL structure is CSforAll-only
+    expect(body).not.toContain('/en-US/activities/hour-of-ai');
+  });
+
+  it('does not include activity catalog routes on Hour of Code', async () => {
+    jest.resetAllMocks();
+    (getContentfulClient as jest.Mock).mockReturnValue({});
+    (getAllEntriesForContentType as jest.Mock).mockResolvedValue([
+      {
+        fields: {
+          slug: '/',
+        },
+        sys: {updatedAt: '2024-01-01T00:00:00Z'},
+      },
+    ]);
+
+    const response = await GET(
+      mockRequest('hourofcode.marketing-sites.code.org'),
+    );
+    const body = await response.text();
+
+    expect(body).not.toContain('/en-US/hour-of-ai/activities');
+    expect(body).not.toContain('/en-US/activities/hour-of-ai');
   });
 });

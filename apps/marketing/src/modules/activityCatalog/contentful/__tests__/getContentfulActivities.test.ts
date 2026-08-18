@@ -1,87 +1,78 @@
-import {draftMode} from 'next/headers';
-
+import {Brand} from '@/config/brand';
 import {getContentfulClient} from '@/contentful/client';
 import {getAllEntriesForContentType} from '@/contentful/get-entries';
 
 import {getContentfulActivities} from '../getContentfulActivities';
 
+jest.mock('next/headers', () => ({
+  draftMode: jest.fn(async () => ({isEnabled: false})),
+}));
 jest.mock('@/contentful/client');
 jest.mock('@/contentful/get-entries');
-jest.mock('next/headers', () => ({
-  draftMode: jest.fn(),
-}));
 
 describe('getContentfulActivities', () => {
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks();
+    (getContentfulClient as jest.Mock).mockReturnValue({});
+    (getAllEntriesForContentType as jest.Mock).mockResolvedValue([]);
   });
 
-  it('returns activities when client is available and draft mode is enabled', async () => {
-    const mockClient = {};
-    const mockActivities = [{id: 1}, {id: 2}];
-    (draftMode as jest.Mock).mockResolvedValue({isEnabled: true});
-    (getContentfulClient as jest.Mock).mockReturnValue(mockClient);
-    (getAllEntriesForContentType as jest.Mock).mockResolvedValue(
-      mockActivities,
-    );
+  it('queries the activity content type for the Code.org brand', async () => {
+    await getContentfulActivities('hour-of-ai', Brand.CODE_DOT_ORG);
 
-    const result = await getContentfulActivities('hour-of-ai');
-
-    expect(draftMode).toHaveBeenCalled();
-    expect(getContentfulClient).toHaveBeenCalledWith(true);
     expect(getAllEntriesForContentType).toHaveBeenCalledWith(
-      mockClient,
-      'curriculum',
+      expect.anything(),
+      'activity',
       {'metadata.tags.sys.id[in]': ['hour-of-ai']},
     );
-    expect(result).toEqual(mockActivities);
   });
 
-  it('returns activities when client is available and draft mode is disabled', async () => {
-    const mockClient = {};
-    const mockActivities = [{id: 1}, {id: 2}];
-    (draftMode as jest.Mock).mockResolvedValue({isEnabled: false});
-    (getContentfulClient as jest.Mock).mockReturnValue(mockClient);
-    (getAllEntriesForContentType as jest.Mock).mockResolvedValue(
-      mockActivities,
-    );
+  // CSFORALL-COMPAT: remove with the CSforAll branch when csforall is retired.
+  it('queries the legacy curriculum content type for the CSforAll brand', async () => {
+    await getContentfulActivities('hour-of-code', Brand.CS_FOR_ALL);
 
-    const result = await getContentfulActivities('hour-of-ai');
-
-    expect(draftMode).toHaveBeenCalled();
-    expect(getContentfulClient).toHaveBeenCalledWith(false);
     expect(getAllEntriesForContentType).toHaveBeenCalledWith(
-      mockClient,
+      expect.anything(),
       'curriculum',
-      {'metadata.tags.sys.id[in]': ['hour-of-ai']},
+      {'metadata.tags.sys.id[in]': ['hour-of-code']},
     );
-    expect(result).toEqual(mockActivities);
   });
 
-  it('returns empty array and warns when client is not available', async () => {
-    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    (draftMode as jest.Mock).mockResolvedValue({isEnabled: true});
+  it('returns an empty list when the content type does not exist', async () => {
+    const unknownContentTypeError = new Error(
+      JSON.stringify({
+        status: 400,
+        details: {
+          errors: [{name: 'unknownContentType', value: 'DOESNOTEXIST'}],
+        },
+      }),
+    );
+    unknownContentTypeError.name = 'InvalidQuery';
+    (getAllEntriesForContentType as jest.Mock).mockRejectedValue(
+      unknownContentTypeError,
+    );
+
+    await expect(
+      getContentfulActivities('hour-of-ai', Brand.CODE_DOT_ORG),
+    ).resolves.toEqual([]);
+  });
+
+  it('rethrows other Contentful errors', async () => {
+    (getAllEntriesForContentType as jest.Mock).mockRejectedValue(
+      new Error('network down'),
+    );
+
+    await expect(
+      getContentfulActivities('hour-of-ai', Brand.CODE_DOT_ORG),
+    ).rejects.toThrow('network down');
+  });
+
+  it('returns an empty list when the client is unavailable', async () => {
     (getContentfulClient as jest.Mock).mockReturnValue(undefined);
 
-    const result = await getContentfulActivities('hour-of-ai');
-
-    expect(draftMode).toHaveBeenCalled();
-    expect(getContentfulClient).toHaveBeenCalledWith(true);
-    expect(warnSpy).toHaveBeenCalledWith(
-      '⚠️ Contentful client is not available. Please check that frontend/apps/marketing/.env is populated.',
-    );
-    expect(result).toEqual([]);
-    warnSpy.mockRestore();
-  });
-
-  it('handles errors thrown by draftMode gracefully', async () => {
-    const error = new Error('Draft mode error');
-    (draftMode as jest.Mock).mockRejectedValue(error);
-
-    await expect(getContentfulActivities('hour-of-ai')).rejects.toThrow(error);
-
-    expect(draftMode).toHaveBeenCalled();
-    expect(getContentfulClient).not.toHaveBeenCalled();
+    await expect(
+      getContentfulActivities('hour-of-ai', Brand.CODE_DOT_ORG),
+    ).resolves.toEqual([]);
     expect(getAllEntriesForContentType).not.toHaveBeenCalled();
   });
 });

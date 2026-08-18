@@ -11,6 +11,7 @@ import {getContentfulClient} from '@/contentful/client';
 import {isUnknownFieldError} from '@/contentful/errors';
 import {getAllEntriesForContentType} from '@/contentful/get-entries';
 import logger from '@/logger/contentful';
+import {getActivityCatalogPath} from '@/modules/activityCatalog/paths';
 import {ActivityType} from '@/modules/activityCatalog/types/Activity';
 import {SeoMetadataEntry} from '@/types/contentful/entries/SeoMetadata';
 import {Entry} from '@/types/contentful/Entry';
@@ -162,10 +163,13 @@ export async function GET(request: Request) {
     writeSitemapEntry(sitemapStream, slug, {lastmod: entry?.sys?.updatedAt});
   }
 
-  // CSForAll Activity catalog
-  if (brand === Brand.CS_FOR_ALL) {
+  // Activity catalog (coded routes; the URL structure differs per brand)
+  if (brand === Brand.CS_FOR_ALL || brand === Brand.CODE_DOT_ORG) {
     Object.values(ActivityType).forEach(activityType => {
-      writeSitemapEntry(sitemapStream, `/activities/${activityType}`);
+      writeSitemapEntry(
+        sitemapStream,
+        getActivityCatalogPath(brand, activityType),
+      );
     });
   }
 

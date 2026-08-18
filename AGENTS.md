@@ -181,6 +181,9 @@ See [docs/ui-convention.md](docs/ui-convention.md).
 
 ## Active Technologies
 
+- TypeScript (repo-standard), React 19 / Next.js App Router in `apps/marketing`, Turborepo-managed + Next.js (SSR + ISR `revalidate = 3600`), MUI, `@orama/orama` (in-memory faceted search), `contentful` delivery/preview SDK (011-activity-catalog-codeorg-migration)
+- Contentful — Code.org space `90t6bu6vlf76`, env `sandbox` (aiday phase); CSforAll space (separate, old content model) keeps serving csforall.org via its own deployment env vars. Space selection is **per deployment** (`CONTENTFUL_SPACE_ID`/`CONTENTFUL_ENV_ID`), not per request. (011-activity-catalog-codeorg-migration)
+
 - TypeScript 5.x / React 18 (Next.js App Router) + `@mui/material` (Typography, Box), `@contentful/experiences-sdk-react` (ComponentDefinition), `@code-dot-org/component-library/fontAwesomeV6Icon`; internal `@/components/common/colors`, `@/themes/code.org/typography/tokens`, `@/themes/code.org/typography/fontStack`, `@/components/contentful/section/SectionBackgroundContext` (010-custom-text)
 - N/A (presentational; content authored in Contentful) (010-custom-text)
 
