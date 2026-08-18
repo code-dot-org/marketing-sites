@@ -4,12 +4,16 @@
 # The name does not use spaces due to https://github.com/integrations/slack/issues/1790
 name: Marketing-App-Deploy
 
-# Configures this workflow to run every time a change is pushed to `frontend`
+# SANDBOX-BRANCH DIVERGENCE: on this branch the workflow triggers on pushes to
+# `sandbox` and deploys the aiday site (the aiday GitHub environments only
+# allow the sandbox branch). On `main` it triggers on `main` and deploys
+# corporate + csforall. When merging main into sandbox, keep this branch's
+# trigger and SITE_TYPE matrix.
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - sandbox
     paths:
       - '**'
 
