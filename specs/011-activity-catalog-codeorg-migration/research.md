@@ -81,3 +81,15 @@
 | Exact CSforAll source schema                           | Code-inferred only; Dee cross-checks in the CSforAll space before schema creation and porting (D6).                                          |
 | Sitemap/SEO handling for a coded route on Code.org     | Extend existing coded-route emission + brand-aware canonical/icons (D3, D4).                                                                 |
 | URL structure on Code.org                              | Clarified 2026-08-18: `/{locale}/hour-of-ai/activities` and `/{locale}/hour-of-code/activities`; CSforAll keeps old URLs; no redirects (D2). |
+
+## As applied (2026-08-18, CMA work delegated by Dee)
+
+Dee granted the CMA token (reads CSforAll `27jkibac934d`, writes Code.org `sandbox`) and delegated schema, tags, and export/import. Scripts preserved in `scripts/` for the production-phase rerun.
+
+- **Schema**: `activity` type created in Code.org `sandbox` from the live CSforAll `curriculum` definition (not the code-inferred contract) — 19 fields, byte-identical validations. Corrections vs the drafted contract: `languagesText` is `Text` (not Symbol); required set is `title`, `primaryLinkRef`, `tutorialID` (source also required `supportedLanguages`, see below); `image`/`shortDescription` are optional. `publishedDate` intentionally omitted (unused by the catalog).
+- **supportedLanguages relaxed to optional**: 95 of 250 source activities were published before the source made the field required (grandfathered) and carry no value; keeping it required blocked publishing. Deliberate deviation from source-type parity, recorded here.
+- **defaultValue gotcha**: the `length` field carries `defaultValue: ["One hour"]`; the CMA applies defaults on entry creation, so 9 activities whose source had no `length` got the default injected. Detected by the byte-exact verification pass; the 9 drafts were corrected before publish.
+- **Tags**: `hour-of-ai`, `hour-of-code` created (public).
+- **Content**: 250 activities + 425 link entries + 246 assets ported with source IDs preserved (no collisions), single `en-US` locale, byte-exact verified against source (`ALL EXACT`, 921/921). 6 unpublished source entries intentionally skipped.
+- **Published** (per Dee's instruction): 246/246 assets, 421/425 links, 250/250 activities. CDA-confirmed: 142 hour-of-ai + 108 hour-of-code published activities; both local pages render real cards and facets.
+- **4 link entries remain drafts** — blocked by the Code.org space's `link.primaryTarget` `prohibitRegexp` (absolute `https://code.org/...` URLs are prohibited; authoring rule wants path-only). Not rewritten (standing rule: never touch URLs). Affected: `3lgjAQKQeNDnK6B8D7FwEp` (Hello World → primary "Start"), `4bqfAhnFm5M0MFQf3CnDzP` (Star Wars → primary "Start"), `3NRXUTKocARVRqY6XtpXbN` + `5rrZ4S1yd3187pbmN5NEnl` (Minecraft teacher notes → secondary). Note: path-only URLs would break on aiday.org (they'd resolve against the aiday host), so this needs Dee's call — see open questions in the final report.

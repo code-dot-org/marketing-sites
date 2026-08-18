@@ -33,7 +33,7 @@
 - [x] T006 Add brand parameter to `getContentfulActivities` in `apps/marketing/src/modules/activityCatalog/contentful/getContentfulActivities.ts`: `CS_FOR_ALL → 'curriculum'` (CSFORALL-COMPAT comment), otherwise `'activity'`; tag filter unchanged
 - [x] T007 [P] Jest: extraction is behavior-preserving — CSforAll route still renders, 404s on invalid activityType, queries `curriculum`, keeps csforall.org canonical; new/updated tests in `apps/marketing/src/modules/activityCatalog/contentful/__tests__/getContentfulActivities.test.ts` and a route test alongside the page
 - [x] T008 Present the Contentful proposal to Dee exactly as written in `contracts/contentful-activity-content-type.md` §1–2 (new `activity` type + `hour-of-ai`/`hour-of-code` tags in Code.org `sandbox`), including the pre-check of field types/validations against the CSforAll space's `curriculum` type (source is code-inferred). **Dee applies; no agent schema writes**
-- [ ] T009 After Dee applies, re-read `sandbox` via CDA/MCP and diff the `activity` type + tags against the contract (§4 verification queries); record confirmed state in research.md
+- [x] T009 After Dee applies, re-read `sandbox` via CDA/MCP and diff the `activity` type + tags against the contract (§4 verification queries); record confirmed state in research.md
 
 **Checkpoint**: Shared implementation proven behavior-preserving; `activity` model + tags exist in sandbox
 
@@ -56,8 +56,8 @@
 - [x] T013 [P] [US1] Create `apps/marketing/src/app/[brand]/[locale]/hour-of-code/activities/page.tsx` — same as T012 with `activityType = 'hour-of-code'`
 - [x] T014 [US1] Brand-aware metadata in the shared implementation: `getIcons(brand)`, canonical = brand's production root domain + brand's path shape (Code.org: `/{locale}/{activityType}/activities`); title/description/keywords/OG unchanged
 - [x] T015 [US1] Make `ActivitiesFooter` cross-catalog links brand-aware in `apps/marketing/src/components/contentful/activityCatalog/activitiesFooter.tsx` (`/{activityType}/activities` on Code.org, `/activities/{activityType}` on CSforAll); extend `apps/marketing/src/components/contentful/activityCatalog/__tests__/activitiesFooter.test.tsx`. Links only — leave styling untouched; the catalog's documented exemption from the `codeai-` radius token scheme stands (spec FR-003)
-- [ ] T016 [US1] Pilot content: propose 1 pilot `activity` entry (+ its `link` entries and image asset) ported from the CSforAll source per `contracts/contentful-activity-content-type.md` §3; Dee approves; write as draft; re-read and machine-verify field-by-field (watch U+00A0)
-- [ ] T017 [US1] Manual verification per quickstart.md: both new local URLs render with Code.org header/footer/theme; empty state correct before pilot publish, card correct after; also verify one non-default locale (e.g. `/es-ES/hour-of-ai/activities`) renders and its canonical carries the locale; CSforAll compat verified by T007 suite staying green
+- [x] T016 [US1] Pilot content: propose 1 pilot `activity` entry (+ its `link` entries and image asset) ported from the CSforAll source per `contracts/contentful-activity-content-type.md` §3; Dee approves; write as draft; re-read and machine-verify field-by-field (watch U+00A0)
+- [x] T017 [US1] Manual verification per quickstart.md: both new local URLs render with Code.org header/footer/theme; empty state correct before pilot publish, card correct after; also verify one non-default locale (e.g. `/es-ES/hour-of-ai/activities`) renders and its canonical carries the locale; CSforAll compat verified by T007 suite staying green
 
 **Checkpoint**: MVP — catalog browsable on the Code.org brand with pilot content; CSforAll untouched
 
@@ -71,8 +71,8 @@
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Full content batch: enumerate all published CSforAll activities (both tags) from the CSforAll source Dee provides (export or read credentials), build the source→sandbox mapping incl. `link` entries/assets and tag assignments, and present the batch summary (counts per tag, asset list) for Dee's approval
-- [ ] T019 [US2] Execute the approved batch into Code.org `sandbox` as drafts; remap all cross-references to new sandbox ids; machine-verify every entry by re-read diff against the mapping; report count + diff results; Dee reviews/publishes
+- [x] T018 [US2] Full content batch: enumerate all published CSforAll activities (both tags) from the CSforAll source Dee provides (export or read credentials), build the source→sandbox mapping incl. `link` entries/assets and tag assignments, and present the batch summary (counts per tag, asset list) for Dee's approval
+- [x] T019 [US2] Execute the approved batch into Code.org `sandbox` as drafts; remap all cross-references to new sandbox ids; machine-verify every entry by re-read diff against the mapping; report count + diff results; Dee reviews/publishes
 - [x] T020 [P] [US2] Jest: facet/search behavior with `activity`-shaped entries (facet extraction, empty-state, URL serialization round-trip) — extend `apps/marketing/src/components/contentful/activityCatalog/__tests__/activityCatalog.test.tsx` and `.../facetBar/__tests__/facetBar.test.tsx` fixtures if any fixture assumes CSforAll-space shapes (synthetic data only)
 - [ ] T021 [US2] Manual verification: every facet in `FACET_CONFIG` populates and filters on the Code.org brand; spot-check result sets against the live CSforAll catalog for equivalent content; verify zero-match empty state and clear-filters recovery
 
@@ -93,7 +93,7 @@
 ### Implementation for User Story 3
 
 - [x] T023 [US3] Extend `apps/marketing/src/app/sitemap.xml/route.ts`: emit `/hour-of-ai/activities` + `/hour-of-code/activities` for `Brand.CODE_DOT_ORG`; leave the CSforAll `/activities/{activityType}` emission and response headers untouched
-- [ ] T024 [US3] Manual SEO/cache verification per quickstart.md: sitemap entries, canonical, favicon set, and OG tags on both new local URLs; compare response `Cache-Control`/freshness headers of a new catalog route against an existing public Code.org route (must match the SWR/SIE pattern — SC-004); confirm draft/preview flow stays non-cacheable (no public `Cache-Control` in draft mode)
+- [x] T024 [US3] Manual SEO/cache verification per quickstart.md: sitemap entries, canonical, favicon set, and OG tags on both new local URLs; compare response `Cache-Control`/freshness headers of a new catalog route against an existing public Code.org route (must match the SWR/SIE pattern — SC-004); confirm draft/preview flow stays non-cacheable (no public `Cache-Control` in draft mode)
 
 **Checkpoint**: All user stories independently functional
 
@@ -104,7 +104,7 @@
 - [x] T025 [P] Full regression: `yarn test` for `apps/marketing` (at minimum all activityCatalog, activities routes, and sitemap suites), typecheck, and lint
 - [ ] T026 [P] Marketing-storybook CI path green (catalog components changed only in `activitiesFooter`; no new stories needed — components are pre-existing and visually unchanged; state this in the PR if no story is added)
 - [x] T027 Run `yarn prettier` on all touched packages before every commit (husky pre-commit hook is non-executable in this repo)
-- [ ] T028 Update research.md with the final MCP/CDA-confirmed sandbox state (type, tags, entry counts) and mark which items moved from code-inferred to confirmed; include a one-line confirmation that no Contentful Experience entry exists for the catalog routes (SC-005)
+- [x] T028 Update research.md with the final MCP/CDA-confirmed sandbox state (type, tags, entry counts) and mark which items moved from code-inferred to confirmed; include a one-line confirmation that no Contentful Experience entry exists for the catalog routes (SC-005)
 - [ ] T029 Final quickstart.md walkthrough end-to-end on local; then, **with Dee's explicit OK**, open a PR to the `sandbox` branch (summary bullets only, no test-plan section, no AI attribution); Dee handles review/merge/deploy and the aiday.org checklist
 
 **Deferred (recorded, not tasked here)**: relocating `ActivityCollection` out of `components/csforall/` (research.md D7); `carousel.slides` validation addition for activity carousels; all `master`-environment/production work (research.md D8).
