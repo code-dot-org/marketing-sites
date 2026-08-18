@@ -1,0 +1,20 @@
+// CSFORALL-COMPAT: the CSforAll Contentful space still uses the old content
+// model, which attaches SEO metadata to experiences via a linked `seoMetadata`
+// entry. Remove when csforall is retired.
+import {Entry} from '@/types/contentful/Entry';
+import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
+
+// All fields optional: the CDA omits empty fields from responses.
+export type SeoMetadata = {
+  seoTitle?: string;
+  seoDescription?: string;
+  hidePageFromSearchEnginesNoindex?: boolean;
+  hideLinksFromSearchEnginesNofollow?: boolean;
+  keywords?: string[];
+  canonicalUrl?: string;
+  openGraphTitle?: string;
+  openGraphDescription?: string;
+  openGraphImage?: ExperienceAsset;
+};
+
+export type SeoMetadataEntry = Entry<SeoMetadata>;
