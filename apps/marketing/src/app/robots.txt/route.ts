@@ -10,8 +10,17 @@ const DISALLOW_ALL_RULE = `User-Agent: *
 Disallow: /`;
 
 /**
+ * `isIndexableHost` has already checked the host against the production
+ * canonical allowlist, so the request host is the right sitemap origin.
+ */
+function getSitemapDirective(host: string | null) {
+  return `Sitemap: https://${host}/sitemap.xml`;
+}
+
+/**
  * GET /robots.txt
- * Returns a robots.txt file that disallows all crawling in non-production environments
+ * Returns a robots.txt file that disallows all crawling in non-production
+ * environments, and advertises the sitemap everywhere else.
  */
 export async function GET(request: Request) {
   if (!isIndexableHost(request.headers.get('host'))) {
@@ -25,12 +34,14 @@ export async function GET(request: Request) {
     });
   }
 
-  return new Response('', {
+  const sitemapDirective = getSitemapDirective(request.headers.get('host'));
+
+  return new Response(sitemapDirective, {
     status: 200,
     headers: {
       'Content-Type': 'text/plain',
       'Cache-Control': STALE_WHILE_REVALIDATE_ONE_DAY,
-      ETag: eTag(''),
+      ETag: eTag(sitemapDirective),
     },
   });
 }
