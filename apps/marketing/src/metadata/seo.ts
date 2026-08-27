@@ -20,7 +20,7 @@ export function getSeoMetadata(
     description: seo.description,
     ...(seo.keywords?.length ? {keywords: seo.keywords} : undefined),
     alternates: {
-      canonical: `https://${getProductionCanonicalRootDomain(brand)}/${locale}/${slug}`,
+      canonical: getCanonicalUrl(brand, locale, slug),
     },
     openGraph: getOpenGraph(seo, brand, locale),
     robots: {
@@ -28,6 +28,18 @@ export function getSeoMetadata(
       follow: !seo.noFollow,
     },
   };
+}
+
+// The site serves paths without a trailing slash, so the home page canonical
+// must be `/{locale}`, not `/{locale}/`.
+function getCanonicalUrl(
+  brand: Brand | undefined,
+  locale: string,
+  slug: string,
+) {
+  const path = [locale, ...slug.split('/').filter(Boolean)].join('/');
+
+  return `https://${getProductionCanonicalRootDomain(brand)}/${path}`;
 }
 
 function getOpenGraph(
