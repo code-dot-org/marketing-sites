@@ -42,12 +42,26 @@ describe('robots.txt GET', () => {
     expect(res.status).toBe(200);
   });
 
-  it('returns empty response in production with allowed canonical hostname', async () => {
+  it('advertises the sitemap in production with allowed canonical hostname', async () => {
     getStageMock.mockReturnValue('production');
     const req = makeRequest('code.org');
     const res = await GET(req);
-    expect(await res.text()).toBe('');
+    expect(await res.text()).toBe('Sitemap: https://code.org/sitemap.xml');
     expect(res.status).toBe(200);
     expect(res.headers.get('Content-Type')).toEqual('text/plain');
+  });
+
+  it.each(['csforall.org', 'hourofcode.com'])(
+    'advertises the %s sitemap on its own host',
+    async host => {
+      getStageMock.mockReturnValue('production');
+      const res = await GET(makeRequest(host));
+      expect(await res.text()).toBe(`Sitemap: https://${host}/sitemap.xml`);
+    },
+  );
+
+  it('never advertises a sitemap on a blocked host', async () => {
+    const res = await GET(makeRequest('preview-code.marketing-sites.code.org'));
+    expect(await res.text()).not.toContain('Sitemap');
   });
 });
