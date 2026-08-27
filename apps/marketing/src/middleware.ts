@@ -2,6 +2,7 @@ import {chainMiddleware} from '@/middleware/chainMiddleware';
 import {withBrand} from '@/middleware/withBrand';
 import {withLocale} from '@/middleware/withLocale';
 import {withRedirects} from '@/middleware/withRedirects';
+import {withRobotsTag} from '@/middleware/withRobotsTag';
 
 export const config = {
   matcher: [
@@ -18,4 +19,11 @@ export const config = {
   ],
 };
 
-export default chainMiddleware([withRedirects, withLocale, withBrand]);
+// withRobotsTag is outermost so it stamps every response the chain produces,
+// including the redirects the inner layers return early.
+export default chainMiddleware([
+  withRobotsTag,
+  withRedirects,
+  withLocale,
+  withBrand,
+]);

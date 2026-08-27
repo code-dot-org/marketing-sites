@@ -84,6 +84,30 @@ describe('getSeoMetadata', () => {
     });
   });
 
+  it('omits the trailing slash on the home page canonical', () => {
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'es-MX',
+      '',
+    );
+
+    expect(result.alternates?.canonical).toBe('https://code.org/es-MX');
+  });
+
+  it('normalizes a slug that already has slashes around it', () => {
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CODE_DOT_ORG,
+      'es-MX',
+      '/engineering/all-the-things/',
+    );
+
+    expect(result.alternates?.canonical).toBe(
+      'https://code.org/es-MX/engineering/all-the-things',
+    );
+  });
+
   it('omits title when the resolved title is undefined', () => {
     mockResolvedSeo({title: undefined});
 
