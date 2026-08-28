@@ -139,7 +139,7 @@ describe('FooterCodeOrgView', () => {
     expect(mockPush).toHaveBeenCalledWith('/es/some-page');
   });
 
-  it('opens the OneTrust cookie dialog for the Cookies link', () => {
+  it('opens the OneTrust cookie dialog for the Manage Cookies link', () => {
     window.OneTrust = {
       ToggleInfoDisplay: jest.fn(),
       OnConsentChanged: jest.fn(),
@@ -148,7 +148,7 @@ describe('FooterCodeOrgView', () => {
 
     renderFooter();
 
-    fireEvent.click(screen.getByRole('link', {name: 'Cookies'}));
+    fireEvent.click(screen.getByRole('link', {name: 'Manage Cookies'}));
 
     expect(window.OneTrust.ToggleInfoDisplay).toHaveBeenCalled();
   });

@@ -14,7 +14,8 @@ export const FOOTER_MISSION =
   'CodeAI is an education innovation nonprofit dedicated to the vision that every student in every school has the opportunity to learn about artificial intelligence (AI) and computer science (CS) as part of their core K-12 education.';
 
 // Fallback content, rendered when the `siteFooter` Contentful entry is
-// unavailable. Link targets are best guesses until final URLs are confirmed.
+// unavailable. Mirrors the authored siteFooter entry; every target here was
+// checked against the live site, so keep them in step when the entry changes.
 // `satisfies` keeps tagline/mission non-optional on the constant even though
 // FooterContent allows them to be absent.
 export const DEFAULT_FOOTER_CONTENT = {
@@ -26,7 +27,7 @@ export const DEFAULT_FOOTER_CONTENT = {
       heading: 'Who We Serve',
       lists: [
         [
-          {label: 'Teachers', href: '/teach'},
+          {label: 'Teachers', href: '/teachers'},
           {label: 'Districts', href: '/administrators'},
           {label: 'Advocates & Policy Makers', href: '/advocacy'},
           {label: 'Donors', href: '/donate'},
@@ -39,27 +40,32 @@ export const DEFAULT_FOOTER_CONTENT = {
       heading: 'Organization',
       lists: [
         [
-          {label: 'Our History', href: '/about'},
-          {label: 'Our Approach', href: '/about/approach'},
-          {label: 'Our People', href: '/about/leadership'},
-          {label: 'Insights', href: '/insights'},
-          {label: 'News & Events', href: '/news'},
-          {label: 'Press & Media', href: '/press'},
+          {label: 'Our History', href: '/about#history'},
+          {label: 'Our Approach', href: '/about#approach'},
+          {label: 'Our People', href: '/about/team'},
+          {label: 'Insights', href: '/promote-computer-science'},
+          {label: 'News & Events', href: '/about/news'},
+          {label: 'Press & Media', href: '/codeai#toolkit'},
           {label: 'Careers', href: '/about/careers'},
-          {label: 'Contact', href: '/contact'},
         ],
       ],
     },
     {
-      heading: 'Ways to Support',
+      heading: 'Ways To Support',
       lists: [
         [
-          {label: 'One-time donation', href: '/donate'},
-          {label: 'Monthly giving', href: '/donate/monthly'},
-          {label: 'Corporate Partnership', href: '/partners'},
-          {label: 'Fundraise for CodeAI', href: '/fundraise'},
-          {label: 'Advocate for CodeAI', href: '/advocacy'},
-          {label: 'Get CodeAI in your school', href: '/yourschool'},
+          {label: 'One-time Donation', href: '/donate'},
+          {
+            label: 'Monthly Giving',
+            href: 'https://donate.code.org/campaign/778430/donate?c_src=code-website',
+          },
+          {label: 'Corporate Partnership', href: '/about/partners'},
+          {
+            label: 'Fundraise For CodeAI',
+            href: 'https://donate.code.org/campaign/codeai/c142257',
+          },
+          {label: 'Advocate For CodeAI', href: '/advocacy'},
+          {label: 'Get CodeAI In Your School', href: '/districts'},
         ],
       ],
     },
@@ -67,21 +73,12 @@ export const DEFAULT_FOOTER_CONTENT = {
       heading: 'Privacy & Safety',
       lists: [
         [
-          {label: 'Accessibility', href: '/accessibility'},
-          {label: 'IT Requirements', href: '/it-requirements'},
+          {label: 'Privacy Policy', href: '/privacy'},
+          {label: 'Accessibility', href: '/about/accessibility'},
+          {label: 'IT Requirements', href: '/about/it-requirements'},
           {label: 'Security', href: '/security'},
-          {label: 'DPA Illinois', href: '/dpa/illinois'},
-          {label: 'DPA Montana', href: '/dpa/montana'},
-          {label: 'DPA New York', href: '/dpa/new-york'},
-        ],
-      ],
-    },
-    {
-      heading: 'Legal',
-      lists: [
-        [
-          {label: 'Terms', href: '/tos'},
-          {label: 'Cookies', href: '/cookies'},
+          {label: 'Terms Of Service', href: '/terms-of-service'},
+          {label: 'Manage Cookies', href: '/cookies'},
         ],
       ],
     },
