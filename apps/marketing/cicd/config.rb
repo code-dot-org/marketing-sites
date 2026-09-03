@@ -89,11 +89,8 @@ module MarketingSites
         }.freeze,
         hourofai: {
           # Environment Variables to pass to the Next.js web application server.
-          # TODO(hourofai): replace CONTENTFUL_SPACE_ID with the dedicated Hour
-          # of AI space id once the space is created. Deploys will serve empty
-          # pages until then.
           environment_variables: {
-            CONTENTFUL_SPACE_ID: 'REPLACE_WITH_HOUR_OF_AI_SPACE_ID',
+            CONTENTFUL_SPACE_ID: 'hwu8vzk5v0g2',
             CONTENTFUL_ENV_ID: 'master'
           },
         }.freeze
