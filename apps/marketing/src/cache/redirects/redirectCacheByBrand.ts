@@ -19,6 +19,7 @@ async function getRedirectCacheByBrand(): Promise<RedirectCacheByBrand> {
     [Brand.CODE_DOT_ORG]: {},
     [Brand.HOUR_OF_CODE]: {},
     [Brand.CS_FOR_ALL]: {},
+    [Brand.HOUR_OF_AI]: {},
   };
 
   const deliveryClient = getContentfulClient();

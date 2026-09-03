@@ -7,6 +7,7 @@ import {Brand} from '@/config/brand';
 
 import CDOContentfulRegistration from '../code.org';
 import CSForAllContentfulRegistration from '../csforall';
+import HourOfAiContentfulRegistration from '../hourofai';
 import {registerContentfulComponents} from '../index';
 
 jest.mock('@contentful/experiences-sdk-react', () => ({
@@ -29,6 +30,14 @@ jest.mock('../csforall', () => ({
   default: {
     componentRegistrations: ['csforall-component'],
     options: {baz: 'qux'},
+  },
+}));
+
+jest.mock('../hourofai', () => ({
+  __esModule: true,
+  default: {
+    componentRegistrations: ['hourofai-component'],
+    options: {quux: 'corge'},
   },
 }));
 
@@ -60,6 +69,14 @@ describe('registerContentfulComponents', () => {
     );
     // csforall has no breakpoints — the guard should skip the call
     expect(defineBreakpoints).not.toHaveBeenCalled();
+  });
+
+  it('registers components for Brand.HOUR_OF_AI', () => {
+    registerContentfulComponents(Brand.HOUR_OF_AI);
+    expect(defineComponents).toHaveBeenCalledWith(
+      HourOfAiContentfulRegistration.componentRegistrations,
+      HourOfAiContentfulRegistration.options,
+    );
   });
 
   it('does not register components for unknown brand', () => {

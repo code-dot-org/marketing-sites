@@ -3,6 +3,7 @@ import {SupportedLocale} from '@/config/locale';
 
 import FooterCodeOrg from './codeOrg';
 import FooterCSforAll from './csForAll';
+import FooterHourOfAi from './hourOfAi';
 
 export const getFooter = async (brand: Brand, locale: SupportedLocale) => {
   switch (brand) {
@@ -10,5 +11,7 @@ export const getFooter = async (brand: Brand, locale: SupportedLocale) => {
       return <FooterCSforAll locale={locale} />;
     case Brand.CODE_DOT_ORG:
       return <FooterCodeOrg locale={locale} />;
+    case Brand.HOUR_OF_AI:
+      return <FooterHourOfAi locale={locale} />;
   }
 };

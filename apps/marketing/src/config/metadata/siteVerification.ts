@@ -14,6 +14,7 @@ export function getSiteVerification(
       };
     case Brand.HOUR_OF_CODE:
     case Brand.CS_FOR_ALL:
+    case Brand.HOUR_OF_AI:
       return undefined;
   }
 }

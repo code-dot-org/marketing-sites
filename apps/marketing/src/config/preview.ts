@@ -14,4 +14,9 @@ export const PREVIEW_HOSTNAMES = new Set<string | null>([
   'preview-aiday.marketing-sites.dev-code.org',
   'preview-aiday.marketing-sites.test-code.org',
   'preview-aiday.marketing-sites.localhost:3001',
+  // Hour of AI
+  'preview-hourofai.marketing-sites.code.org',
+  'preview-hourofai.marketing-sites.dev-code.org',
+  'preview-hourofai.marketing-sites.test-code.org',
+  'preview-hourofai.marketing-sites.localhost:3001',
 ]);
