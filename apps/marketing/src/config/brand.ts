@@ -7,6 +7,7 @@ export enum Brand {
   CODE_DOT_ORG = 'Code.org', // Not a URL
   HOUR_OF_CODE = 'HOC',
   CS_FOR_ALL = 'CSForAll',
+  HOUR_OF_AI = 'HourOfAI',
 }
 
 /**
@@ -40,6 +41,9 @@ function getBrandFromTopLevelSubdomain(
     case 'preview-hourofcode':
     case 'hourofcode':
       return Brand.HOUR_OF_CODE;
+    case 'preview-hourofai':
+    case 'hourofai':
+      return Brand.HOUR_OF_AI;
     default:
       return undefined;
   }
@@ -56,6 +60,8 @@ function getBrandFromExactHostname(hostname: string | null): Brand | undefined {
       return Brand.HOUR_OF_CODE;
     case 'csforall.org':
       return Brand.CS_FOR_ALL;
+    case 'hourofai.org':
+      return Brand.HOUR_OF_AI;
     default:
       return undefined;
   }
@@ -87,5 +93,7 @@ export function getBrandFromString(brand: string): Brand {
       return Brand.HOUR_OF_CODE;
     case Brand.CS_FOR_ALL:
       return Brand.CS_FOR_ALL;
+    case Brand.HOUR_OF_AI:
+      return Brand.HOUR_OF_AI;
   }
 }

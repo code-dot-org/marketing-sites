@@ -8,4 +8,7 @@ export const BRAND_OPENGRAPH_DEFAULT_IMAGE_URL: {
   [Brand.HOUR_OF_CODE]: undefined,
   [Brand.CS_FOR_ALL]:
     'https://contentful-images.code.org/27jkibac934d/7q8KX08NZDetFqLFrvlA46/e79393e0815aee7be0ac056b21c6a197/CSForAll_logo_opengraph.jpg?fm=webp',
+  // TODO(hourofai): upload a default OG image to the Hour of AI space and set
+  // its URL here. Pages with their own opengraphImage are unaffected.
+  [Brand.HOUR_OF_AI]: undefined,
 };

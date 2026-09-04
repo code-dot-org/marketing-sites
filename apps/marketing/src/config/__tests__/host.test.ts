@@ -81,6 +81,16 @@ describe('getCanonicalHostname', () => {
         production: 'csforall.org',
       },
     },
+    {
+      brand: Brand.HOUR_OF_AI,
+      name: 'HOUR_OF_AI',
+      expected: {
+        development: 'hourofai.marketing-sites.localhost',
+        pr: 'hourofai.marketing-sites.localhost',
+        test: 'hourofai.marketing-sites.test-code.org',
+        production: 'hourofai.org',
+      },
+    },
   ];
 
   const stages: Array<'development' | 'pr' | 'test' | 'production'> = [

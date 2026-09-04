@@ -18,5 +18,9 @@ export function getIcons(brand: Brand): Array<Icon> {
       return [{url: HOCFavIcon.src}];
     case Brand.CS_FOR_ALL:
       return [{url: CSForAllFavIcon.src}];
+    case Brand.HOUR_OF_AI:
+      // TODO(hourofai): add favicons/hourofai.ico (or .svg) and return it here.
+      // Empty means the browser default is used.
+      return [];
   }
 }

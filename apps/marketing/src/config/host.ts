@@ -6,6 +6,7 @@ const ALLOWED_PRODUCTION_CANONICAL_HOSTNAMES: {[brand in Brand]: Set<string>} =
     [Brand.CODE_DOT_ORG]: new Set(['code.org']),
     [Brand.CS_FOR_ALL]: new Set(['csforall.org']),
     [Brand.HOUR_OF_CODE]: new Set(['hourofcode.com']),
+    [Brand.HOUR_OF_AI]: new Set(['hourofai.org']),
   };
 
 /**
@@ -29,6 +30,8 @@ export function getProductionCanonicalRootDomain(brand: Brand | undefined) {
       return `csforall.org`;
     case Brand.HOUR_OF_CODE:
       return `hourofcode.com`;
+    case Brand.HOUR_OF_AI:
+      return `hourofai.org`;
     case Brand.CODE_DOT_ORG:
     default:
       return `code.org`;
@@ -41,6 +44,8 @@ function getPreproductionTopLevelSubdomain(brand: Brand) {
       return `csforall`;
     case Brand.HOUR_OF_CODE:
       return `hourofcode`;
+    case Brand.HOUR_OF_AI:
+      return `hourofai`;
     default:
     case Brand.CODE_DOT_ORG:
       return `code`;

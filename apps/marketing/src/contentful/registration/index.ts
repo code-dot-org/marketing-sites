@@ -13,6 +13,7 @@ import {Brand} from '@/config/brand';
 
 import CDOContentfulRegistration from './code.org';
 import CSForAllContentfulRegistration from './csforall';
+import HourOfAiContentfulRegistration from './hourofai';
 
 function getContentfulRegistration(brand: Brand) {
   switch (brand) {
@@ -20,6 +21,8 @@ function getContentfulRegistration(brand: Brand) {
       return CDOContentfulRegistration;
     case Brand.CS_FOR_ALL:
       return CSForAllContentfulRegistration;
+    case Brand.HOUR_OF_AI:
+      return HourOfAiContentfulRegistration;
   }
 }
 

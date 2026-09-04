@@ -25,6 +25,16 @@ describe('Brand Unit Tests', () => {
       ).toBe(Brand.CS_FOR_ALL);
     });
 
+    it('should return Hour of AI', () => {
+      expect(getBrandFromHostname('hourofai.org')).toBe(Brand.HOUR_OF_AI);
+      expect(
+        getBrandFromHostname('preview-hourofai.marketing-sites.dev-code.org'),
+      ).toBe(Brand.HOUR_OF_AI);
+      expect(
+        getBrandFromHostname('hourofai.marketing-sites.dev-code.org'),
+      ).toBe(Brand.HOUR_OF_AI);
+    });
+
     it('should return Code.org', () => {
       expect(getBrandFromHostname('code.marketing-sites.localhost:3001')).toBe(
         Brand.CODE_DOT_ORG,

@@ -183,7 +183,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        SITE_TYPE: [corporate, csforall]
+        # A SITE_TYPE here needs its GitHub environment
+        # (marketing-sites-<environment type>-<site type>) and Secrets Manager
+        # entry to exist, or the job fails. hourofai is test-only until its
+        # production environment and Contentful space are provisioned.
+        SITE_TYPE: [corporate, csforall, hourofai]
 
   # Deploy production environments in parallel, after test environments completes successfully
   deploy-production:

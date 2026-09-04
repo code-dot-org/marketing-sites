@@ -48,8 +48,8 @@ opt_parser = OptionParser.new do |opts|
 
   opts.on(
     '--site_type SITE_TYPE',
-    %w[corporate csforall aiday],
-    "Code identifying the site type (corporate csforall aiday)",
+    %w[corporate csforall aiday hourofai],
+    "Code identifying the site type (corporate csforall aiday hourofai)",
     ) do |site_type|
     options[:site_type] = site_type
   end

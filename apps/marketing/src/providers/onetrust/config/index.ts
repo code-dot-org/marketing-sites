@@ -13,6 +13,10 @@ function getOneTrustDomainIdByBrand(brand: Brand) {
       return '7c79c547-a2fc-4998-9b21-0c7a5e67e345';
     case Brand.CS_FOR_ALL:
       return '01988b25-e2ce-7cd6-89f3-e806bc7be5e5';
+    case Brand.HOUR_OF_AI:
+      // TODO(hourofai): register a OneTrust domain and add its id here. Until
+      // then the consent banner does not load for this brand.
+      return undefined;
     default:
       return undefined;
   }
@@ -40,6 +44,13 @@ function getOneTrustAssetBasePath() {
 export function getOneTrustDomainId(brand: Brand) {
   const stage = getStage();
   const onetrustDomainId = getOneTrustDomainIdByBrand(brand);
+
+  // A brand with no registered OneTrust domain must stay undefined rather than
+  // becoming the literal string "undefined-test", which would request a
+  // non-existent consent bundle.
+  if (!onetrustDomainId) {
+    return undefined;
+  }
 
   switch (stage) {
     case 'production':
