@@ -231,11 +231,13 @@ describe('withRedirects middleware', () => {
         },
       }),
     });
-    // This path would normally trigger a brand redirect, but cache wins
+    // This path would normally trigger a brand redirect, but cache wins.
+    // The destination picks up the `es` locale from the request path, since
+    // Contentful destinations are authored without one.
     const req = makeRequest('/es/engineering/all-the-things');
     const response = await withRedirects(next)(req, event);
     expect(response).toEqual(
-      NextResponse.redirect('http://localhost:3000/bar', {
+      NextResponse.redirect('http://localhost:3000/es/bar', {
         status: 307,
         headers: {
           'Cache-Control': STALE_WHILE_REVALIDATE_ONE_HOUR,
@@ -258,5 +260,121 @@ describe('withRedirects middleware', () => {
     expect(response?.headers.get('Location')).toBe(
       'http://localhost:3000/zh-Hant/engineering/all-the-things',
     );
+  });
+
+  describe('locale-prefixed paths', () => {
+    const mockRedirect = (
+      destination: string,
+      source = '/administrators',
+      permanent = true,
+    ) =>
+      (fetch as jest.Mock).mockResolvedValue({
+        status: 200,
+        headers: {get: (header: string) => MOCK_RESPONSE_HEADERS[header]},
+        json: async () => ({
+          redirectEntry: {source, destination, permanent},
+        }),
+      });
+
+    it('still looks the redirect up by the full request path', async () => {
+      mockRedirect('/districts');
+
+      await withRedirects(next)(makeRequest('/es/administrators'), event);
+
+      expect(fetch).toHaveBeenCalledWith(
+        new URL(
+          `http://localhost:3000/api/private/redirects/${encodeURIComponent(
+            Brand.CODE_DOT_ORG,
+          )}/${encodeURIComponent('/es/administrators')}`,
+        ),
+        {method: 'GET'},
+      );
+    });
+
+    it.each(['en-US', 'es', 'hi', 'pt-BR'])(
+      'sends /%s/administrators to the same locale of the destination',
+      async locale => {
+        mockRedirect('/districts');
+
+        const response = await withRedirects(next)(
+          makeRequest(`/${locale}/administrators`),
+          event,
+        );
+
+        expect(response.status).toBe(308);
+        expect(response.headers.get('location')).toBe(
+          `http://localhost:3000/${locale}/districts`,
+        );
+      },
+    );
+
+    it('leaves an unlocalized request unlocalized', async () => {
+      mockRedirect('/districts');
+
+      const response = await withRedirects(next)(
+        makeRequest('/administrators'),
+        event,
+      );
+
+      expect(response.headers.get('location')).toBe(
+        'http://localhost:3000/districts',
+      );
+    });
+
+    it('uses the destination verbatim when the entry matched the path exactly', async () => {
+      // An author who wrote the locale into the source meant that exact path.
+      mockRedirect('/about/impact', '/en-US/about/annual-report');
+
+      const response = await withRedirects(next)(
+        makeRequest('/en-US/about/annual-report'),
+        event,
+      );
+
+      expect(response.headers.get('location')).toBe(
+        'http://localhost:3000/about/impact',
+      );
+    });
+
+    it('does not localize an absolute destination', async () => {
+      mockRedirect('https://curriculum.code.org/static/js/jquery.min.js');
+
+      const response = await withRedirects(next)(
+        makeRequest('/es/js/jquery.min.js'),
+        event,
+      );
+
+      expect(response.headers.get('location')).toBe(
+        'https://curriculum.code.org/static/js/jquery.min.js',
+      );
+    });
+
+    it.each(['/assets/images/slide.png', '/static/js/jquery.min.js', '/files/guide.pdf'])(
+      'does not localize the file destination %s',
+      async destination => {
+        mockRedirect(destination);
+
+        const response = await withRedirects(next)(
+          makeRequest('/es/images/slide.png'),
+          event,
+        );
+
+        expect(response.headers.get('location')).toBe(
+          `http://localhost:3000${destination}`,
+        );
+      },
+    );
+
+    it('does not double-prefix a destination that already has a locale', async () => {
+      mockRedirect('/fr/districts');
+
+      const response = await withRedirects(next)(
+        makeRequest('/es/administrators'),
+        event,
+      );
+
+      expect(response.headers.get('location')).toBe(
+        'http://localhost:3000/fr/districts',
+      );
+    });
   });
 });

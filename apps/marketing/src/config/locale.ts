@@ -184,3 +184,31 @@ export function getSupportedLocaleFromDashboardLocale(
 
   return DASHBOARD_LOCALE_TO_SUPPORTED_LOCALE_MAP[dashboardLocale];
 }
+
+/**
+ * Splits a leading supported locale segment off a pathname.
+ *
+ * `/es/districts` -> `{locale: 'es', pathnameWithoutLocale: '/districts'}`
+ * `/districts`    -> `{locale: undefined, pathnameWithoutLocale: '/districts'}`
+ * `/es`           -> `{locale: 'es', pathnameWithoutLocale: '/'}`
+ *
+ * The first segment is only treated as a locale when it is one we actually
+ * support, so a page whose slug happens to look like a language code is left
+ * alone.
+ */
+export function splitLocaleFromPathname(pathname: string): {
+  locale: SupportedLocale | undefined;
+  pathnameWithoutLocale: string;
+} {
+  const segments = pathname.split('/').filter(Boolean);
+  const maybeLocale = segments[0] as SupportedLocale;
+
+  if (!SUPPORTED_LOCALES_SET.has(maybeLocale)) {
+    return {locale: undefined, pathnameWithoutLocale: pathname};
+  }
+
+  return {
+    locale: maybeLocale,
+    pathnameWithoutLocale: `/${segments.slice(1).join('/')}`,
+  };
+}
