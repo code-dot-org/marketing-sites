@@ -14,9 +14,7 @@ function getOneTrustDomainIdByBrand(brand: Brand) {
     case Brand.CS_FOR_ALL:
       return '01988b25-e2ce-7cd6-89f3-e806bc7be5e5';
     case Brand.HOUR_OF_AI:
-      // TODO(hourofai): register a OneTrust domain and add its id here. Until
-      // then the consent banner does not load for this brand.
-      return undefined;
+      return '01a082c7-1c78-73c4-bdc9-221c0bb63435';
     default:
       return undefined;
   }

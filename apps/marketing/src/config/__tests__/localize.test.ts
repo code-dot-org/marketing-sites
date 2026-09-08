@@ -20,4 +20,9 @@ describe('getProjectId', () => {
     const projectId = getProjectId(Brand.CODE_DOT_ORG);
     expect(projectId).toBe('ttv8iUlCkVIPo');
   });
+
+  it('should return the Code.org project ID for Brand.HOUR_OF_AI', () => {
+    const projectId = getProjectId(Brand.HOUR_OF_AI);
+    expect(projectId).toBe('ttv8iUlCkVIPo');
+  });
 });

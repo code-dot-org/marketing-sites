@@ -27,6 +27,18 @@ describe('OneTrust Config Functions', () => {
       expect(result).toBe('7c79c547-a2fc-4998-9b21-0c7a5e67e345-test');
     });
 
+    it('should return the production domain id for Hour of AI', () => {
+      getStageMock.mockReturnValue('production');
+      const result = getOneTrustDomainId(Brand.HOUR_OF_AI);
+      expect(result).toBe('01a082c7-1c78-73c4-bdc9-221c0bb63435');
+    });
+
+    it('should return the test domain id for Hour of AI on non-production stage', () => {
+      getStageMock.mockReturnValue('staging');
+      const result = getOneTrustDomainId(Brand.HOUR_OF_AI);
+      expect(result).toBe('01a082c7-1c78-73c4-bdc9-221c0bb63435-test');
+    });
+
     it('should return undefined for unknown brand', () => {
       getStageMock.mockReturnValue('production');
       const result = getOneTrustDomainId('UNKNOWN_BRAND' as Brand);
