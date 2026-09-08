@@ -34,7 +34,7 @@ export function getProjectId(brand: Brand): string {
       // When hourofcode is to be translated, add the project ID here
       return '';
     case Brand.HOUR_OF_AI:
-      return 'ttv8iUlCkVIPo';
+      return 'oYxcqdBRv0Lqd';
     default:
       return '';
   }

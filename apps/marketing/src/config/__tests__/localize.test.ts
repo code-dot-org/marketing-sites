@@ -21,8 +21,8 @@ describe('getProjectId', () => {
     expect(projectId).toBe('ttv8iUlCkVIPo');
   });
 
-  it('should return the Code.org project ID for Brand.HOUR_OF_AI', () => {
+  it('should return the CSForAll project ID for Brand.HOUR_OF_AI', () => {
     const projectId = getProjectId(Brand.HOUR_OF_AI);
-    expect(projectId).toBe('ttv8iUlCkVIPo');
+    expect(projectId).toBe('oYxcqdBRv0Lqd');
   });
 });
