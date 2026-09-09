@@ -175,8 +175,9 @@ test.describe(`[${getSiteType()}] All the things`, () => {
         'SEO Description',
       );
     }
+    // TODO(hourofai): re-enable once contentful-images.code.org proxies the hourofai space
     expect(await allTheThingsPage.getOpenGraph('image')).toMatch(
-      /https:\/\/contentful-images\.code\.org\/(.*)\/4hXiOPiRlCXpmtypRNOZqc\/(.*)\/engineering-only-opengraph-default\.png\?fm=webp/,
+      /https:\/\/(contentful-images\.code\.org|images\.ctfassets\.net)\/(.*)\/4hXiOPiRlCXpmtypRNOZqc\/(.*)\/engineering-only-opengraph-default\.png\?fm=webp/,
     );
     expect(await allTheThingsPage.getOpenGraph('type')).toBe('website');
   });
