@@ -175,10 +175,16 @@ test.describe(`[${getSiteType()}] All the things`, () => {
         'SEO Description',
       );
     }
+    expect(await allTheThingsPage.getOpenGraph('type')).toBe('website');
+
+    // TODO(hourofai): remove skip once contentful-images.code.org proxies the hourofai space
+    test.skip(
+      getSiteType() === 'hourofai',
+      'OG image uses raw ctfassets.net until the CDN proxy covers the hourofai space',
+    );
     expect(await allTheThingsPage.getOpenGraph('image')).toMatch(
       /https:\/\/contentful-images\.code\.org\/(.*)\/4hXiOPiRlCXpmtypRNOZqc\/(.*)\/engineering-only-opengraph-default\.png\?fm=webp/,
     );
-    expect(await allTheThingsPage.getOpenGraph('type')).toBe('website');
   });
 
   Object.entries(EXPECTED_LOCALIZATION_STRINGS).forEach(([locale, entry]) => {
