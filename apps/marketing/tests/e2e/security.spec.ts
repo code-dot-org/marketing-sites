@@ -2,6 +2,7 @@ import {expect} from '@playwright/test';
 
 import {test} from './fixtures/base';
 import {AllTheThingsPage} from './pom/all-the-things';
+import {getSiteType} from './utils/getSiteType';
 import {isDeployedStage} from './utils/stage';
 
 test.describe('Security Tests', () => {
@@ -27,6 +28,14 @@ test.describe('Security Tests', () => {
       .replace('https', 'http');
 
     await page.goto(plainTextPath);
+
+    // TODO(hourofai): hourofai.org redirects to csforall.org/en-US/hour-of-ai
+    // while the site is a placeholder. Update this assertion when the site goes live.
+    if (getSiteType() === 'hourofai') {
+      expect(page.url()).toBe('https://csforall.org/en-US/hour-of-ai');
+      return;
+    }
+
     expect(page.url()).toBe(allTheThingsPage.getBasePath());
   });
 });
