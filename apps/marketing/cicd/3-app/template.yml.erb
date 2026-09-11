@@ -6,7 +6,7 @@ selected_azs = region_config[:selected_availability_zones]
 is_production = options[:environment_type] == 'production'
 has_production_domain = options[:production_domain_name] && !options[:production_domain_name].empty?
 has_production_hosted_zone = options[:production_hosted_zone_id] && !options[:production_hosted_zone_id].empty?
-enable_production_domain = is_production && has_production_domain && has_production_hosted_zone
+enable_production_domain = is_production && has_production_domain && has_production_hosted_zone && !options[:disable_production_domain]
 
 base_domain_url = "https://#{options[:subdomain_name]}.#{options[:base_domain_name]}"
 domain_display = enable_production_domain ?
