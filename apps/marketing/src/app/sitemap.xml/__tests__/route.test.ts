@@ -268,4 +268,29 @@ describe('GET /sitemap.xml', () => {
 
     expect(body).toContain('/fr/activities/hour-of-ai');
   });
+
+  it('includes the Hour of AI catalog routes on Hour of AI', async () => {
+    jest.resetAllMocks();
+    (getContentfulClient as jest.Mock).mockReturnValue({});
+    (getAllEntriesForContentType as jest.Mock).mockResolvedValue([
+      {
+        fields: {
+          slug: '/',
+        },
+        sys: {updatedAt: '2024-01-01T00:00:00Z'},
+      },
+    ]);
+
+    const response = await GET(
+      mockRequest('hourofai.marketing-sites.code.org'),
+    );
+    const body = await response.text();
+
+    expect(body).toContain('/en-US/activities</loc>');
+    expect(body).toContain('/en-US/hour-of-code/activities</loc>');
+    // The Hour of AI catalog has no prefix of its own, and the CSforAll URL
+    // structure stays CSforAll-only.
+    expect(body).not.toContain('/en-US/hour-of-ai/activities');
+    expect(body).not.toContain('/en-US/activities/hour-of-ai');
+  });
 });
