@@ -275,7 +275,7 @@ describe('GET /sitemap.xml', () => {
     expect(body).not.toContain('/en-US/hour-of-ai/activities');
   });
 
-  it('includes activity catalog routes on Code.org at the new paths', async () => {
+  it('does not include activity catalog routes on Code.org', async () => {
     jest.resetAllMocks();
     (getContentfulClient as jest.Mock).mockReturnValue({});
     (getAllEntriesForContentType as jest.Mock).mockResolvedValue([
@@ -290,10 +290,8 @@ describe('GET /sitemap.xml', () => {
     const response = await GET(mockRequest('code.marketing-sites.code.org'));
     const body = await response.text();
 
-    expect(body).toContain('/en-US/hour-of-ai/activities');
-    expect(body).toContain('/fr/hour-of-ai/activities');
-    expect(body).toContain('/en-US/hour-of-code/activities');
-    // The legacy URL structure is CSforAll-only
+    expect(body).not.toContain('/en-US/hour-of-ai/activities');
+    expect(body).not.toContain('/en-US/hour-of-code/activities');
     expect(body).not.toContain('/en-US/activities/hour-of-ai');
   });
 

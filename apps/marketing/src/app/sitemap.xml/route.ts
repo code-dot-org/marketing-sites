@@ -163,8 +163,8 @@ export async function GET(request: Request) {
     writeSitemapEntry(sitemapStream, slug, {lastmod: entry?.sys?.updatedAt});
   }
 
-  // Activity catalog (coded routes; the URL structure differs per brand)
-  if (brand === Brand.CS_FOR_ALL || brand === Brand.CODE_DOT_ORG) {
+  // CSForAll Activity catalog
+  if (brand === Brand.CS_FOR_ALL) {
     Object.values(ActivityType).forEach(activityType => {
       writeSitemapEntry(
         sitemapStream,
