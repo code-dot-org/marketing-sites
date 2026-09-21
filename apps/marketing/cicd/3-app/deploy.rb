@@ -387,6 +387,8 @@ begin
       region: 'us-east-1',
       role_arn: options[:role_arn],
       tags: {
+        'owner' => 'site@code.org',
+        'application' => 'marketing-sites',
         'environment-type' => options[:environment_type],
         'site-type' => options[:site_type]
       }
@@ -430,6 +432,8 @@ begin
       region: options[:region],
       role_arn: options[:role_arn],
       tags: {
+        'owner' => 'site@code.org',
+        'application' => 'marketing-sites',
         'environment-type' => options[:environment_type],
         'site-type' => options[:site_type]
       },
@@ -467,6 +471,8 @@ begin
       region: 'us-east-1',
       role_arn: options[:role_arn],
       tags: {
+        'owner' => 'site@code.org',
+        'application' => 'marketing-sites',
         'environment-type' => options[:environment_type],
         'site-type' => options[:site_type]
       }

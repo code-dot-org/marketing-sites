@@ -346,6 +346,11 @@ def deploy_account_resources(options)
     parameters: {},
     region: 'us-east-1',
     cloudformation_role_arn: options[:cloudformation_role_arn],
+    tags: {
+      "owner" => "site@code.org",
+      "application" => "marketing-sites",
+      "environment-type" => "shared"
+    },
     capabilities: ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND"],
     template_s3_bucket: options[:template_s3_bucket],
     clients: clients
@@ -390,6 +395,11 @@ def deploy_region_resources(options)
     parameters: parameters,
     region: options[:region],
     cloudformation_role_arn: options[:cloudformation_role_arn],
+    tags: {
+      "owner" => "site@code.org",
+      "application" => "marketing-sites",
+      "environment-type" => "shared"
+    },
     template_s3_bucket: options[:template_s3_bucket],
     clients: clients
   )
