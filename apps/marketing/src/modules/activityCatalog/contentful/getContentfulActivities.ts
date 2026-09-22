@@ -8,9 +8,15 @@ import {Entry} from '@/types/contentful/Entry';
 /**
  * Retrieves all activities from Contentful.
  * @param activityType The type of activities to retrieve (e.g., 'hour-of-ai', 'hour-of-code').
+ * @param contentTypeId The content type holding the activities. CSFORALL-COMPAT:
+ * the CSforAll space models them on its old-model 'curriculum' type; the Hour of
+ * AI space uses the dedicated 'activity' type.
  * @returns A promise that resolves to an array of activity entries.
  */
-export async function getContentfulActivities(activityType: string) {
+export async function getContentfulActivities(
+  activityType: string,
+  contentTypeId = 'curriculum',
+) {
   const isDraftModeEnabled = (await draftMode()).isEnabled;
   const contentfulClient = getContentfulClient(isDraftModeEnabled);
 
@@ -23,7 +29,7 @@ export async function getContentfulActivities(activityType: string) {
   console.log('Fetching activities for activityType:', activityType);
   return getAllEntriesForContentType<Entry<Activity>>(
     contentfulClient,
-    'curriculum',
+    contentTypeId,
     {'metadata.tags.sys.id[in]': [activityType]},
   );
 }

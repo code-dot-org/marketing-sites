@@ -11,6 +11,7 @@ import {getContentfulClient} from '@/contentful/client';
 import {isUnknownFieldError} from '@/contentful/errors';
 import {getAllEntriesForContentType} from '@/contentful/get-entries';
 import logger from '@/logger/contentful';
+import {getCatalogPath} from '@/modules/activityCatalog/hourOfAi/paths';
 import {ActivityType} from '@/modules/activityCatalog/types/Activity';
 import {SeoMetadataEntry} from '@/types/contentful/entries/SeoMetadata';
 import {Entry} from '@/types/contentful/Entry';
@@ -166,6 +167,13 @@ export async function GET(request: Request) {
   if (brand === Brand.CS_FOR_ALL) {
     Object.values(ActivityType).forEach(activityType => {
       writeSitemapEntry(sitemapStream, `/activities/${activityType}`);
+    });
+  }
+
+  // Hour of AI activity catalogs
+  if (brand === Brand.HOUR_OF_AI) {
+    Object.values(ActivityType).forEach(activityType => {
+      writeSitemapEntry(sitemapStream, getCatalogPath(activityType));
     });
   }
 
