@@ -35,8 +35,11 @@ describe('Hour of AI theme colors', () => {
   });
 
   it('paints Section backgrounds, keeping legacy `primary` white', () => {
-    const root = HourOfAiTheme.components?.MuiContainer?.styleOverrides
-      ?.root as Record<string, {background: string}>;
+    const root = (
+      HourOfAiTheme.components?.MuiContainer?.styleOverrides?.root as (arg: {
+        theme: typeof HourOfAiTheme;
+      }) => Record<string, {background: string}>
+    )({theme: HourOfAiTheme});
     const rule = (value: string) =>
       root[`.section-background-${value}:has(&.MuiContainer-root)`]?.background;
     expect(rule('purpleDark')).toBe('var(--palette-dark-purple)');

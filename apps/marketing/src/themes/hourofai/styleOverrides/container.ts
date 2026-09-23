@@ -5,6 +5,11 @@ import {
   HOUR_OF_AI_COLORS,
   hourOfAiColor,
 } from '../colors/palette';
+import {
+  SECTION_MAX_WIDTH,
+  SECTION_PADDING_INLINE,
+  SECTION_PADDING_INLINE_MOBILE,
+} from '../constants/layout';
 
 // Section backgrounds (`section-background-*` on the Section root). Aliased
 // values get a rule too, so off-palette stored backgrounds render closest.
@@ -25,6 +30,48 @@ const sectionBackgroundRules = Object.fromEntries([
 
 export const CONTAINER_OVERRIDES: Components<Theme>['MuiContainer'] = {
   styleOverrides: {
-    root: sectionBackgroundRules,
+    root: ({theme}) => ({
+      '&.MuiContainer-root': {
+        maxWidth: SECTION_MAX_WIDTH,
+        // Longhands, not paddingInline, so they beat MUI's Container gutters.
+        paddingLeft: SECTION_PADDING_INLINE,
+        paddingRight: SECTION_PADDING_INLINE,
+        zIndex: 2,
+        [theme.breakpoints.down('sm')]: {
+          paddingLeft: SECTION_PADDING_INLINE_MOBILE,
+          paddingRight: SECTION_PADDING_INLINE_MOBILE,
+        },
+      },
+      // "Disable content padding": the gutter moves to the outer section.
+      '&.MuiContainer-root.container--full-width': {
+        paddingLeft: 0,
+        paddingRight: 0,
+      },
+      '.section-root:has(&.MuiContainer-root.container--full-width)': {
+        paddingInline: SECTION_PADDING_INLINE,
+        [theme.breakpoints.down('sm')]: {
+          paddingInline: SECTION_PADDING_INLINE_MOBILE,
+        },
+      },
+      '&.MuiContainer-root.container--spacing-l': {
+        paddingTop: theme.spacing(8),
+        paddingBottom: theme.spacing(8),
+      },
+      '&.MuiContainer-root.container--spacing-m': {
+        paddingTop: theme.spacing(5),
+        paddingBottom: theme.spacing(5),
+      },
+      '&.MuiContainer-root.container--spacing-none': {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+      '&.MuiContainer-root.container--divider-primary': {
+        borderBottom: '1px solid var(--codeai-gray-3)',
+      },
+      '&.MuiContainer-root.container--divider-strong': {
+        borderBottom: '1px solid var(--codeai-gray-5)',
+      },
+      ...sectionBackgroundRules,
+    }),
   },
 };

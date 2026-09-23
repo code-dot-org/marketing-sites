@@ -56,6 +56,7 @@ import Video, {
 } from '@/components/contentful/video';
 import {SECTION_MAX_WIDTH} from '@/themes/hourofai/constants/layout';
 
+import {hourOfAiBreakpoints} from './breakpoints';
 import {
   HourOfAiBadgeDefinition,
   HourOfAiBrandLinkDefinition,
@@ -274,6 +275,7 @@ const contentfulRegistration = {
     __unsafe__enableBuiltInStructureOverwrites: true,
   },
   designTokens: hourOfAiDesignTokens,
+  breakpoints: hourOfAiBreakpoints,
 };
 
 export default contentfulRegistration;
