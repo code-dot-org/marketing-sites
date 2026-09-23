@@ -71,10 +71,13 @@ import Video, {
 } from '@/components/contentful/video';
 import {SECTION_MAX_WIDTH} from '@/themes/hourofai/constants/layout';
 
+import {hourOfAiDesignTokens} from './designTokens';
+
 // Native structure components, re-registered so they carry our categories and
 // container defaults. Mirrors the Code.org setup: the SDK React components and
 // full variable schemas are untouched, so only the defaults for new instances
 // change. Requires __unsafe__enableBuiltInStructureOverwrites below.
+
 const containerDefinitionWithOverrides: ComponentDefinition = {
   ...containerDefinition,
   category: '02: Page Structure',
@@ -270,6 +273,7 @@ const contentfulRegistration = {
     // Required to re-register the reserved structure component ids above.
     __unsafe__enableBuiltInStructureOverwrites: true,
   },
+  designTokens: hourOfAiDesignTokens,
 };
 
 export default contentfulRegistration;
