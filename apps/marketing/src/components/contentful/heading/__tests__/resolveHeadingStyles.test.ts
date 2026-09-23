@@ -1,5 +1,7 @@
 import {createTheme} from '@mui/material/styles';
 
+import {CODE_ORG_TYPOGRAPHY_TOKENS} from '@/themes/code.org/typography/typographyTokens';
+
 import {resolveHeadingStyles} from '../resolveHeadingStyles';
 
 const {breakpoints} = createTheme();
@@ -232,5 +234,27 @@ describe('resolveHeadingStyles', () => {
       expect(result.sx.fontSize).toBe('3.75rem'); // step 2 cell size
       expect(result.sx.fontWeight).toBe(600); // step 3 individual override
     });
+  });
+});
+
+describe('resolveHeadingStyles with brand tokens', () => {
+  it('resolves appearance cells from the tokens passed in', () => {
+    const tokens = {
+      ...CODE_ORG_TYPOGRAPHY_TOKENS,
+      scales: {
+        ...CODE_ORG_TYPOGRAPHY_TOKENS.scales,
+        display: {
+          ...CODE_ORG_TYPOGRAPHY_TOKENS.scales.display,
+          '2xl': {fontSize: '5rem', lineHeight: '5.5rem'},
+        },
+      },
+    };
+    const {sx} = resolveHeadingStyles(
+      {visualAppearance: 'heading-md', appearance: 'display-2xl'},
+      tokens,
+    );
+    expect(sx.fontSize).toBe('5rem');
+    expect(sx.lineHeight).toBe('5.5rem');
+    expect(sx).not.toHaveProperty('letterSpacing');
   });
 });

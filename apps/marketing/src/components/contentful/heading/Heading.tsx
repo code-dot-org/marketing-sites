@@ -7,6 +7,7 @@ import {
 } from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
+import {useTypographyTokens} from '@/themes/common/typography/typographyTokens';
 
 import {
   resolveHeadingStyles,
@@ -73,19 +74,23 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
   zIndex,
 }) => {
   const enclosingBackground = useSectionBackground();
+  const typographyTokens = useTypographyTokens();
   const {
     semanticTag,
     variantTag,
     sx: resolvedSx,
-  } = resolveHeadingStyles({
-    visualAppearance,
-    appearance,
-    fontSize,
-    lineHeight,
-    fontWeight,
-    fontKerning,
-    textTransform,
-  });
+  } = resolveHeadingStyles(
+    {
+      visualAppearance,
+      appearance,
+      fontSize,
+      lineHeight,
+      fontWeight,
+      fontKerning,
+      textTransform,
+    },
+    typographyTokens,
+  );
 
   const sx = {
     ...resolvedSx,

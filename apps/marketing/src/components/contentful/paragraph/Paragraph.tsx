@@ -10,6 +10,7 @@ import {
 } from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
+import {useTypographyTokens} from '@/themes/common/typography/typographyTokens';
 
 import {
   resolveParagraphStyles,
@@ -64,6 +65,7 @@ const Paragraph: React.FunctionComponent<ParagraphProps> = ({
 }) => {
   const legacy = isLegacyParagraphColor(color);
   const enclosingBackground = useSectionBackground();
+  const typographyTokens = useTypographyTokens();
   // colorOverride wins over the contrast switch (spec 006 FR-014).
   const inlineColor =
     colorOverride ||
@@ -73,11 +75,10 @@ const Paragraph: React.FunctionComponent<ParagraphProps> = ({
   const legacyClassName =
     legacy && !colorOverride ? `paragraph--color-${color}` : undefined;
 
-  const {variantTag, sx: resolvedSx} = resolveParagraphStyles({
-    visualAppearance,
-    isStrong,
-    isItalic,
-  });
+  const {variantTag, sx: resolvedSx} = resolveParagraphStyles(
+    {visualAppearance, isStrong, isItalic},
+    typographyTokens,
+  );
 
   return (
     <Typography

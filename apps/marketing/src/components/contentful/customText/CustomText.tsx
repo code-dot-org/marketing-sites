@@ -8,7 +8,8 @@ import {BrandColor} from '@/components/common/colors';
 import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
-import type {SizeToken} from '@/themes/code.org/typography/tokens';
+import type {SizeToken} from '@/themes/common/typography/types';
+import {useTypographyTokens} from '@/themes/common/typography/typographyTokens';
 
 import {
   resolveCustomTextStyles,
@@ -71,20 +72,24 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
   className,
 }) => {
   const enclosingBackground = useSectionBackground();
-  const {tag, sx, resolvedColor, icon} = resolveCustomTextStyles({
-    type,
-    htmlTag,
-    color,
-    textSize,
-    fontSize,
-    lineHeight,
-    font,
-    fontWeight,
-    textTransform,
-    iconNameLeft,
-    iconNameRight,
-    enclosingBackground,
-  });
+  const typographyTokens = useTypographyTokens();
+  const {tag, sx, resolvedColor, icon} = resolveCustomTextStyles(
+    {
+      type,
+      htmlTag,
+      color,
+      textSize,
+      fontSize,
+      lineHeight,
+      font,
+      fontWeight,
+      textTransform,
+      iconNameLeft,
+      iconNameRight,
+      enclosingBackground,
+    },
+    typographyTokens,
+  );
 
   const glyph = icon ? (
     <FontAwesomeV6Icon

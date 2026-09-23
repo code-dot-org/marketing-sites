@@ -1,30 +1,14 @@
-// Typography role tokens for the code.org tenant.
-// Values come from the Figma file Aw6YXqpx6QFlNMXqCKk60e (Space Grotesk node 36:874,
-// Geist node 36:975), read from the visible sample labels embedded in each cell
-// (the variable names in that file are mislabeled).
-// See specs/009-typography-system/contracts/{role-tokens,scale-tokens}.md.
+// All literals (no aliases) so any single value can change on its own.
 
 import type {
-  Breakpoint,
   DisplayAppearanceValue,
   RoleToken,
+  RoleTokenName,
   ScaleCell,
   SizeToken,
   TextAppearanceValue,
-  TypographicTrack,
   WeightToken,
 } from '@/themes/common/typography/types';
-
-export type {
-  Breakpoint,
-  DisplayAppearanceValue,
-  RoleToken,
-  ScaleCell,
-  SizeToken,
-  TextAppearanceValue,
-  TypographicTrack,
-  WeightToken,
-};
 
 export const WEIGHTS: Record<WeightToken, number> = {
   regular: 400,
@@ -33,8 +17,7 @@ export const WEIGHTS: Record<WeightToken, number> = {
   bold: 700,
 };
 
-// Display line-heights are font-size + 0.25rem (tightened July 2026 from the
-// original Figma values, anchored on lg 3.25rem and md 2.5rem).
+// Display track (Space Grotesk).
 export const SCALE_DISPLAY: Record<SizeToken, ScaleCell> = {
   xs: {fontSize: '1.5rem', lineHeight: '1.75rem'},
   sm: {fontSize: '1.875rem', lineHeight: '2.125rem'},
@@ -58,10 +41,11 @@ export const SCALE_DISPLAY: Record<SizeToken, ScaleCell> = {
   },
 };
 
+// Text track (Geist).
 export const SCALE_TEXT: Record<SizeToken, ScaleCell> = {
   xs: {fontSize: '0.75rem', lineHeight: '1.125rem'},
   sm: {fontSize: '0.875rem', lineHeight: '1.25rem'},
-  md: {fontSize: '1rem', lineHeight: '1.5rem'}, // LOCKED body default
+  md: {fontSize: '1rem', lineHeight: '1.5rem'},
   lg: {fontSize: '1.125rem', lineHeight: '1.75rem'},
   xl: {fontSize: '1.25rem', lineHeight: '1.875rem'},
   '2xl': {fontSize: '1.5rem', lineHeight: '2rem'},
@@ -73,9 +57,8 @@ export const SCALE_TEXT: Record<SizeToken, ScaleCell> = {
   },
 };
 
-// Canonical per-semantic-role bindings. Editing one entry here changes the
-// rendered default across every default Heading / Paragraph entry on code.org.
-export const ROLE_TOKENS = {
+// `steps` keys are viewports: sm = tablet, xs = mobile.
+export const ROLE_TOKENS: Record<RoleTokenName, RoleToken> = {
   h1: {
     track: 'display',
     size: 'xl',
@@ -88,9 +71,6 @@ export const ROLE_TOKENS = {
     weight: 'medium',
     steps: {md: 'lg', sm: 'md', xs: 'sm'},
   },
-  // h3–h6 moved to the text track (Geist) July 2026 — only H1/H2 keep Space
-  // Grotesk. The text cells match the old display cells' font-sizes exactly
-  // (4xl=md, 3xl=sm, 2xl=xs); line-heights are the text track's own.
   h3: {
     track: 'text',
     size: '4xl',
@@ -107,20 +87,15 @@ export const ROLE_TOKENS = {
   h6: {track: 'text', size: '2xl', weight: 'medium'},
 
   body1: {track: 'text', size: 'lg', weight: 'regular'},
-  body2: {track: 'text', size: 'md', weight: 'regular'}, // LOCKED default — Regular
+  body2: {track: 'text', size: 'md', weight: 'regular'},
   body3: {track: 'text', size: 'sm', weight: 'regular'},
   body4: {track: 'text', size: 'xs', weight: 'regular'},
 
   overline: {track: 'text', size: 'xs', weight: 'semibold'},
   caption: {track: 'text', size: 'sm', weight: 'semibold'},
-} as const satisfies Record<string, RoleToken>;
+};
 
-// Display cell-as-role tokens used by the new Heading `appearance` field
-// (Visual Appearance override). Per amendment-4, Visual Appearance is a
-// SIZE-only override — the weight + font-family come from the chosen
-// Heading Level. These role tokens therefore carry only size + lineHeight
-// + letterSpacing + responsive step table; the `weight` field is unused
-// by the resolver and kept here for completeness.
+// Heading "Visual Appearance" cells (size-only override).
 export const DISPLAY_APPEARANCE_ROLES: Record<
   DisplayAppearanceValue,
   RoleToken
@@ -143,12 +118,18 @@ export const DISPLAY_APPEARANCE_ROLES: Record<
     weight: 'semibold',
     steps: {md: '2xl', sm: 'xl', xs: 'lg'},
   },
-  'display-xl': ROLE_TOKENS.h1, // canonical match for H1 (xl Semibold)
-  'display-lg': ROLE_TOKENS.h2, // canonical match for H2 (lg Medium)
-  // md/sm/xs are no longer aliases of h3–h5: those roles moved to the text
-  // track (Geist), while `display-*` appearance values must keep resolving
-  // against the Display scale. These literals preserve the pre-move h3–h5
-  // display cells and step tables.
+  'display-xl': {
+    track: 'display',
+    size: 'xl',
+    weight: 'semibold',
+    steps: {md: 'xl', sm: 'lg', xs: 'md'},
+  },
+  'display-lg': {
+    track: 'display',
+    size: 'lg',
+    weight: 'medium',
+    steps: {md: 'lg', sm: 'md', xs: 'sm'},
+  },
   'display-md': {
     track: 'display',
     size: 'md',
@@ -164,9 +145,7 @@ export const DISPLAY_APPEARANCE_ROLES: Record<
   'display-xs': {track: 'display', size: 'xs', weight: 'medium'},
 };
 
-// Text cell-as-role tokens used by the widened Paragraph `visualAppearance`
-// enum (new `text-*` values). Four cells equal the canonical body1–body4
-// role tokens exactly; the four larger cells extend the Text scale upward.
+// Paragraph "Visual Appearance" cells.
 export const PARAGRAPH_APPEARANCE_ROLES: Record<
   TextAppearanceValue,
   RoleToken
@@ -175,10 +154,8 @@ export const PARAGRAPH_APPEARANCE_ROLES: Record<
   'text-3xl': {track: 'text', size: '3xl', weight: 'regular'},
   'text-2xl': {track: 'text', size: '2xl', weight: 'regular'},
   'text-xl': {track: 'text', size: 'xl', weight: 'regular'},
-  'text-lg': ROLE_TOKENS.body1,
-  'text-md': ROLE_TOKENS.body2,
-  'text-sm': ROLE_TOKENS.body3,
-  'text-xs': ROLE_TOKENS.body4,
+  'text-lg': {track: 'text', size: 'lg', weight: 'regular'},
+  'text-md': {track: 'text', size: 'md', weight: 'regular'},
+  'text-sm': {track: 'text', size: 'sm', weight: 'regular'},
+  'text-xs': {track: 'text', size: 'xs', weight: 'regular'},
 };
-
-export type RoleTokenName = keyof typeof ROLE_TOKENS;

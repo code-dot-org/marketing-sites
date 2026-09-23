@@ -6,9 +6,14 @@ import {ActivityType} from '@/modules/activityCatalog/types/Activity';
 
 interface ActivitiesHeroProps {
   activityType: ActivityType;
+  /** Use the theme's h1 instead of the legacy fixed sizes. */
+  useThemeHeading?: boolean;
 }
 
-export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
+export default function ActivitiesHero({
+  activityType,
+  useThemeHeading = false,
+}: ActivitiesHeroProps) {
   const activityName =
     activityType === ActivityType.HOUR_OF_CODE ? 'Hour of Code' : 'Hour of AI';
 
@@ -25,15 +30,21 @@ export default function ActivitiesHero({activityType}: ActivitiesHeroProps) {
     >
       <Typography
         component="h1"
-        sx={{
-          // Spec 009 — px literals replaced with rem; weight 800 (Extra Bold)
-          // is not in the 4-weight ladder, dropped to 700 (Bold). Deprecated
-          // component, minimal fix per [[feedback_match_architecture_to_code_lifespan]].
-          fontSize: {xs: '2.25rem', md: '3.125rem'},
-          fontWeight: 700,
-          letterSpacing: 0.2,
-          mb: 1.5,
-        }}
+        variant={useThemeHeading ? 'h1' : undefined}
+        sx={
+          useThemeHeading
+            ? {mb: 1.5}
+            : {
+                // Spec 009 — px literals replaced with rem; weight 800 (Extra
+                // Bold) is not in the 4-weight ladder, dropped to 700 (Bold).
+                // Deprecated component, minimal fix per
+                // [[feedback_match_architecture_to_code_lifespan]].
+                fontSize: {xs: '2.25rem', md: '3.125rem'},
+                fontWeight: 700,
+                letterSpacing: 0.2,
+                mb: 1.5,
+              }
+        }
       >
         Explore {activityName} Activities
       </Typography>

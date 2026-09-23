@@ -19,19 +19,13 @@ import {
   EnclosingBackground,
   resolvedCssVarForBrandColor,
 } from '@/components/common/colors';
-import {
-  CODE_ORG_DISPLAY_FONT_STACK,
-  CODE_ORG_TEXT_FONT_STACK,
-} from '@/themes/code.org/typography/fontStack';
-import {
-  SCALE_DISPLAY,
-  SCALE_TEXT,
-  WEIGHTS,
-  type ScaleCell,
-  type SizeToken,
-  type TypographicTrack,
-  type WeightToken,
-} from '@/themes/code.org/typography/tokens';
+import {CODE_ORG_TYPOGRAPHY_TOKENS} from '@/themes/code.org/typography/typographyTokens';
+import type {
+  BrandTypographyTokens,
+  SizeToken,
+  TypographicTrack,
+  WeightToken,
+} from '@/themes/common/typography/types';
 
 export type CustomTextType = 'custom' | 'subtitle' | 'overline' | 'statistic';
 
@@ -103,16 +97,6 @@ export const CUSTOM_TEXT_TYPE_DEFAULTS: Record<
   },
 };
 
-const FONT_STACK: Record<CustomTextFontTrack, string> = {
-  text: CODE_ORG_TEXT_FONT_STACK,
-  display: CODE_ORG_DISPLAY_FONT_STACK,
-};
-
-const SCALE: Record<CustomTextFontTrack, Record<SizeToken, ScaleCell>> = {
-  text: SCALE_TEXT,
-  display: SCALE_DISPLAY,
-};
-
 // Same viewport-name-to-media-query mapping as buildTypography /
 // resolveHeadingStyles: `sm` covers tablet and below, `xs` mobile only. The
 // smaller query is emitted second so it wins via source order on overlap.
@@ -157,6 +141,7 @@ export interface ResolveCustomTextResult {
 
 export const resolveCustomTextStyles = (
   args: ResolveCustomTextArgs,
+  tokens: BrandTypographyTokens = CODE_ORG_TYPOGRAPHY_TOKENS,
 ): ResolveCustomTextResult => {
   const def =
     CUSTOM_TEXT_TYPE_DEFAULTS[args.type] ?? CUSTOM_TEXT_TYPE_DEFAULTS.custom;
@@ -173,9 +158,9 @@ export const resolveCustomTextStyles = (
     | undefined;
   const fontWeight = weightOverride
     ? Number(weightOverride)
-    : WEIGHTS[def.weight];
+    : tokens.weights[def.weight];
 
-  const cell = SCALE[track][size];
+  const cell = tokens.scales[track][size];
   // Numeric overrides win over the size cell. Text size (rem) and line-height
   // (unitless) are independent so authors can tune each on its own.
   const fontSize =
@@ -183,7 +168,7 @@ export const resolveCustomTextStyles = (
   const lineHeight =
     args.lineHeight != null ? args.lineHeight : cell.lineHeight;
   const sx: Record<string, unknown> = {
-    fontFamily: FONT_STACK[track],
+    fontFamily: tokens.fontStacks[track],
     fontSize,
     lineHeight,
     fontWeight,
@@ -203,7 +188,7 @@ export const resolveCustomTextStyles = (
     for (const viewport of ['sm', 'xs'] as const) {
       const stepSize = def.steps[viewport];
       if (!stepSize || stepSize === size) continue;
-      const stepCell = SCALE[track][stepSize];
+      const stepCell = tokens.scales[track][stepSize];
       sx[STEP_QUERIES[viewport]] = {
         fontSize: stepCell.fontSize,
         lineHeight: stepCell.lineHeight,

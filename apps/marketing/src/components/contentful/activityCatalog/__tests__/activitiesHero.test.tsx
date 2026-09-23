@@ -31,4 +31,20 @@ describe('ActivitiesHero', () => {
       screen.getByText(/Explore Hour of AI Activities/i),
     ).toBeInTheDocument();
   });
+
+  it('uses the legacy fixed title styles by default', () => {
+    render(<ActivitiesHero activityType={ActivityType.HOUR_OF_AI} />);
+    expect(screen.getByRole('heading', {level: 1})).not.toHaveClass(
+      'MuiTypography-h1',
+    );
+  });
+
+  it('uses the theme h1 variant when useThemeHeading is set', () => {
+    render(
+      <ActivitiesHero activityType={ActivityType.HOUR_OF_AI} useThemeHeading />,
+    );
+    expect(screen.getByRole('heading', {level: 1})).toHaveClass(
+      'MuiTypography-h1',
+    );
+  });
 });

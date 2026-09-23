@@ -1,4 +1,5 @@
 import {SCALE_DISPLAY, SCALE_TEXT} from '@/themes/code.org/typography/tokens';
+import {CODE_ORG_TYPOGRAPHY_TOKENS} from '@/themes/code.org/typography/typographyTokens';
 
 import {
   CUSTOM_TEXT_TYPE_DEFAULTS,
@@ -209,5 +210,27 @@ describe('resolveCustomTextStyles', () => {
     it('is null when neither is set', () => {
       expect(resolveCustomTextStyles({type: 'custom'}).icon).toBeNull();
     });
+  });
+});
+
+describe('resolveCustomTextStyles with brand tokens', () => {
+  it('resolves family, size, and weight from the tokens passed in', () => {
+    const tokens = {
+      ...CODE_ORG_TYPOGRAPHY_TOKENS,
+      fontStacks: {text: 'TextFont', display: 'DisplayFont'},
+      weights: {...CODE_ORG_TYPOGRAPHY_TOKENS.weights, bold: 750},
+      scales: {
+        ...CODE_ORG_TYPOGRAPHY_TOKENS.scales,
+        display: {
+          ...CODE_ORG_TYPOGRAPHY_TOKENS.scales.display,
+          '2xl': {fontSize: '5rem', lineHeight: '5.5rem'},
+        },
+      },
+    };
+    const {sx} = resolveCustomTextStyles({type: 'statistic'}, tokens);
+    expect(sx.fontFamily).toBe('DisplayFont');
+    expect(sx.fontSize).toBe('5rem');
+    expect(sx.lineHeight).toBe('5.5rem');
+    expect(sx.fontWeight).toBe(750);
   });
 });

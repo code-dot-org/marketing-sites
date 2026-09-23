@@ -1,10 +1,10 @@
 'use client';
 import {createTheme} from '@mui/material';
 
-import {createFontStack} from '../common/constants';
+import {buildTypography} from '../common/typography/buildTypography';
 
 import {COLORS} from './constants/colors';
-import {GEIST_FONT} from './constants/fonts';
+import {HOUR_OF_AI_TYPOGRAPHY_TOKENS} from './typography/typographyTokens';
 
 /**
  * Hour of AI theme — scaffolding.
@@ -42,9 +42,8 @@ const theme = createTheme({
       200: COLORS.grey200,
     },
   },
-  typography: {
-    fontFamily: createFontStack(GEIST_FONT),
-  },
+  typography: buildTypography(HOUR_OF_AI_TYPOGRAPHY_TOKENS),
+  typographyTokens: HOUR_OF_AI_TYPOGRAPHY_TOKENS,
 });
 
 export default theme;

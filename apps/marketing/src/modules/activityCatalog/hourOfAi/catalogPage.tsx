@@ -57,7 +57,7 @@ export async function HourOfAiCatalogPage({
 
   return (
     <main>
-      <ActivitiesHero activityType={activityType} />
+      <ActivitiesHero activityType={activityType} useThemeHeading />
       <Suspense>
         <ActivityCatalog
           contentfulActivities={contentfulActivities}

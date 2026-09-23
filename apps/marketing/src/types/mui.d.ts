@@ -5,10 +5,20 @@ import {
 } from '@mui/material/styles';
 
 import {ImageProps} from '@/components/contentful/image';
+import type {BrandTypographyTokens} from '@/themes/common/typography/types';
 
 type Theme = Omit<MuiTheme, 'components'>;
 
 declare module '@mui/material/styles' {
+  // Key must start with "typography" or cssVariables mode emits a var per token.
+  interface Theme {
+    typographyTokens?: BrandTypographyTokens;
+  }
+
+  interface ThemeOptions {
+    typographyTokens?: BrandTypographyTokens;
+  }
+
   // Custom Palette definitions
   interface Palette {
     tertiary: Palette['primary'];
