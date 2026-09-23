@@ -9,6 +9,9 @@ import {
 } from '@contentful/experiences-components-react';
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import Badge, {
+  BadgeContentfulComponentDefinition,
+} from '@/components/contentful/badge';
 import ButtonMui, {
   ButtonMuiContentfulComponentDefinition,
 } from '@/components/contentful/button';
@@ -39,6 +42,9 @@ import FAQAccordion, {
 import Heading, {
   HeadingContentfulComponentDefinition,
 } from '@/components/contentful/heading';
+import Icon, {
+  IconContentfulComponentDefinition,
+} from '@/components/contentful/icon';
 import Iframe, {
   IframeContentfulComponentDefinition,
 } from '@/components/contentful/iframe';
@@ -136,6 +142,10 @@ const singleColumnDefinitionWithOverrides: ComponentDefinition = {
 const contentfulRegistration = {
   componentRegistrations: [
     {
+      component: Badge,
+      definition: BadgeContentfulComponentDefinition,
+    },
+    {
       component: ButtonMui,
       definition: ButtonMuiContentfulComponentDefinition,
     },
@@ -165,6 +175,10 @@ const contentfulRegistration = {
     {
       component: Heading,
       definition: HeadingContentfulComponentDefinition,
+    },
+    {
+      component: Icon,
+      definition: IconContentfulComponentDefinition,
     },
     {
       component: Iframe,
