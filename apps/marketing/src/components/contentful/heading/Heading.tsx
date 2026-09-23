@@ -1,12 +1,13 @@
 import Typography from '@mui/material/Typography';
 import {ReactNode} from 'react';
 
-import {
-  BrandColor,
-  resolvedCssVarForBrandColor,
-} from '@/components/common/colors';
+import {BrandColor} from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
+import {
+  resolvedTextCssVar,
+  useBrandColors,
+} from '@/themes/common/colors/brandColors';
 import {useTypographyTokens} from '@/themes/common/typography/typographyTokens';
 
 import {
@@ -74,6 +75,7 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
   zIndex,
 }) => {
   const enclosingBackground = useSectionBackground();
+  const brandColors = useBrandColors();
   const typographyTokens = useTypographyTokens();
   const {
     semanticTag,
@@ -96,7 +98,8 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
     ...resolvedSx,
     // colorOverride wins over the contrast switch (spec 006 FR-014).
     color:
-      colorOverride || resolvedCssVarForBrandColor(color, enclosingBackground),
+      colorOverride ||
+      resolvedTextCssVar(brandColors, color, enclosingBackground),
     ...(zIndex && {position: 'relative', zIndex}),
   };
 

@@ -7,10 +7,13 @@ import ReactPlayer from 'react-player/file';
 import {JsonLd} from 'react-schemaorg';
 import type {VideoObject} from 'schema-dts';
 
-import {resolvedCssVarForBrandColor} from '@/components/common/colors';
 import TextLink from '@/components/contentful/link/Link';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
+import {
+  resolvedTextCssVar,
+  useBrandColors,
+} from '@/themes/common/colors/brandColors';
 
 import Facade from './Facade';
 import NativeVideo from './NativeVideo';
@@ -40,6 +43,7 @@ const Video: React.FC<VideoProps> = ({
   const youtubeVideoUrl = `https://www.youtube-nocookie.com/watch?v=${youTubeId}`;
 
   const enclosingBackground = useSectionBackground();
+  const brandColors = useBrandColors();
   const [renderState, setRenderState] = useState<RenderState>('facade');
 
   // An authored poster bypasses the YouTube thumbnail (and its placeholder
@@ -184,7 +188,8 @@ const Video: React.FC<VideoProps> = ({
             // Scoped to out-specify the theme's caption color rule.
             sx={{
               '&.MuiTypography-caption': {
-                color: resolvedCssVarForBrandColor(
+                color: resolvedTextCssVar(
+                  brandColors,
                   'black',
                   enclosingBackground,
                 ),

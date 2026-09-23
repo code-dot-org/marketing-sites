@@ -1,0 +1,59 @@
+// Per-brand color blocks. `:root` plus the attribute (0,2,0) outranks the
+// global `:root` primitives, so each block only affects its own brand.
+
+// Hour of AI palette; keep in step with
+// apps/marketing/src/themes/hourofai/colors/palette.ts.
+:root[data-brand='HourOfAI'] {
+  --palette-black: #212121;
+  --palette-dark-purple: #1f1976;
+  --palette-pink: #e11970;
+  --palette-light-pink: #fbdae8;
+  --palette-blue: #0099f3;
+  --palette-light-blue: #d5efff;
+  --palette-white: #fff;
+
+  // Shared CodeAI tokens folded onto the closest palette color.
+  --codeai-blue-dark: var(--palette-dark-purple);
+  --codeai-blue-light: var(--palette-light-blue);
+  --codeai-blue-mid: var(--palette-blue);
+  --codeai-blue-primary: var(--palette-blue);
+  --codeai-gray-1: var(--palette-light-blue);
+  --codeai-gray-2: var(--palette-light-blue);
+  --codeai-gray-3: var(--palette-light-blue);
+  --codeai-gray-4: var(--palette-light-blue);
+  --codeai-gray-5: var(--palette-light-blue);
+  --codeai-gray-6: var(--palette-pink);
+  --codeai-gray-7: var(--palette-black);
+  --codeai-gray-8: var(--palette-black);
+  --codeai-gray-9: var(--palette-black);
+  --codeai-green-dark: var(--palette-dark-purple);
+  --codeai-green-light: var(--palette-light-blue);
+  --codeai-green-mid: var(--palette-blue);
+  --codeai-green-primary: var(--palette-blue);
+  --codeai-orange-dark: var(--palette-dark-purple);
+  --codeai-orange-light: var(--palette-light-pink);
+  --codeai-orange-mid: var(--palette-pink);
+  --codeai-orange-primary: var(--palette-pink);
+  --codeai-pink-dark: var(--palette-dark-purple);
+  --codeai-pink-light: var(--palette-light-pink);
+  --codeai-pink-mid: var(--palette-pink);
+  --codeai-pink-primary: var(--palette-pink);
+  --codeai-purple-dark: var(--palette-dark-purple);
+  --codeai-purple-light: var(--palette-light-blue);
+  --codeai-purple-mid: var(--palette-pink);
+  --codeai-purple-primary: var(--palette-dark-purple);
+
+  // Brand buttons and text links (buttonColors.scss).
+  --button-color-purple-primary: var(--palette-dark-purple);
+  --button-color-purple-hover: var(--palette-pink);
+  --button-color-purple-dark: var(--palette-dark-purple);
+  --button-color-purple-light: var(--palette-light-blue);
+  --button-color-purple-tint: var(--palette-light-blue);
+  --button-color-black: var(--palette-black);
+  --button-focus-ring: var(--palette-dark-purple);
+  --focus-ring-color: var(--palette-dark-purple);
+
+  [data-bg-tone='light'] {
+    color: var(--palette-black);
+  }
+}

@@ -8,6 +8,7 @@ import {BrandColor} from '@/components/common/colors';
 import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
+import {useBrandColors} from '@/themes/common/colors/brandColors';
 import type {SizeToken} from '@/themes/common/typography/types';
 import {useTypographyTokens} from '@/themes/common/typography/typographyTokens';
 
@@ -73,6 +74,7 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
 }) => {
   const enclosingBackground = useSectionBackground();
   const typographyTokens = useTypographyTokens();
+  const brandColors = useBrandColors();
   const {tag, sx, resolvedColor, icon} = resolveCustomTextStyles(
     {
       type,
@@ -89,6 +91,7 @@ const CustomText: React.FunctionComponent<CustomTextProps> = ({
       enclosingBackground,
     },
     typographyTokens,
+    brandColors,
   );
 
   const glyph = icon ? (

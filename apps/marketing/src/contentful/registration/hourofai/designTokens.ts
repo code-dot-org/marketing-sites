@@ -3,6 +3,19 @@
 import {DesignTokensDefinition} from '@contentful/experiences-core/types';
 
 import {brandRadius} from '@/themes/common/radius';
+import {HOUR_OF_AI_COLORS} from '@/themes/hourofai/colors/palette';
+
+const brandColor = Object.fromEntries(
+  HOUR_OF_AI_COLORS.map(({value, cssVar}) => [value, cssVar]),
+);
+
+// 2px solid preset per palette color.
+const brandBorderPreset = Object.fromEntries(
+  HOUR_OF_AI_COLORS.map(({value, cssVar}) => [
+    value,
+    {width: '2px', style: 'solid' as const, color: cssVar},
+  ]),
+);
 
 const brandBorderRadius = {
   none: brandRadius('none'),
@@ -12,5 +25,7 @@ const brandBorderRadius = {
 };
 
 export const hourOfAiDesignTokens: DesignTokensDefinition = {
+  color: brandColor,
+  border: brandBorderPreset,
   borderRadius: brandBorderRadius,
 };

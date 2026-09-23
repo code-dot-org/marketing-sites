@@ -14,12 +14,11 @@
 
 import {createTheme} from '@mui/material/styles';
 
-import {
-  BrandColor,
-  EnclosingBackground,
-  resolvedCssVarForBrandColor,
-} from '@/components/common/colors';
+import {BrandColor, EnclosingBackground} from '@/components/common/colors';
+import {CODE_ORG_BRAND_COLORS} from '@/themes/code.org/colors/brandColors';
 import {CODE_ORG_TYPOGRAPHY_TOKENS} from '@/themes/code.org/typography/typographyTokens';
+import {resolvedTextCssVar} from '@/themes/common/colors/brandColors';
+import type {BrandColorTokens} from '@/themes/common/colors/types';
 import type {
   BrandTypographyTokens,
   SizeToken,
@@ -142,6 +141,7 @@ export interface ResolveCustomTextResult {
 export const resolveCustomTextStyles = (
   args: ResolveCustomTextArgs,
   tokens: BrandTypographyTokens = CODE_ORG_TYPOGRAPHY_TOKENS,
+  colors: BrandColorTokens = CODE_ORG_BRAND_COLORS,
 ): ResolveCustomTextResult => {
   const def =
     CUSTOM_TEXT_TYPE_DEFAULTS[args.type] ?? CUSTOM_TEXT_TYPE_DEFAULTS.custom;
@@ -199,7 +199,8 @@ export const resolveCustomTextStyles = (
     }
   }
 
-  const resolvedColor = resolvedCssVarForBrandColor(
+  const resolvedColor = resolvedTextCssVar(
+    colors,
     color,
     args.enclosingBackground,
   );
