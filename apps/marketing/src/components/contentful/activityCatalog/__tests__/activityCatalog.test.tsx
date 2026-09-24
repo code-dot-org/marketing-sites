@@ -28,6 +28,15 @@ jest.mock(
   ),
 );
 
+jest.mock(
+  '@/modules/activityCatalog/hourOfAi/ActivityCardCollection',
+  () => (props: any) => (
+    <div data-testid="ActivityCardCollection">
+      {JSON.stringify(props.activities)}
+    </div>
+  ),
+);
+
 // Mock Orama and plugin-data-persistence
 jest.mock('@orama/orama', () => ({
   create: jest.fn().mockReturnValue({}),
@@ -158,6 +167,58 @@ describe('ActivityCatalog', () => {
     expect(screen.getByTestId('FacetDrawer')).toBeInTheDocument();
     expect(screen.getByTestId('FacetBar')).toBeInTheDocument();
     expect(screen.getByTestId('ActivityCollection')).toBeInTheDocument();
+  });
+
+  it('renders the CSforAll cards by default and Activity Cards when asked', () => {
+    const {rerender} = render(
+      <ActivityCatalog
+        contentfulActivities={mockContentfulActivities}
+        activities={mockActivities}
+        facets={mockFacets}
+      />,
+    );
+    expect(screen.getByTestId('ActivityCollection')).toBeInTheDocument();
+    expect(screen.queryByTestId('ActivityCardCollection')).toBeNull();
+
+    rerender(
+      <ActivityCatalog
+        contentfulActivities={mockContentfulActivities}
+        activities={mockActivities}
+        facets={mockFacets}
+        hourOfAi
+      />,
+    );
+    expect(screen.getByTestId('ActivityCardCollection')).toBeInTheDocument();
+    expect(screen.queryByTestId('ActivityCollection')).toBeNull();
+  });
+
+  it('adds the Hour of AI Filters column only when asked', () => {
+    const {rerender} = render(
+      <ActivityCatalog
+        contentfulActivities={mockContentfulActivities}
+        activities={mockActivities}
+        facets={mockFacets}
+      />,
+    );
+    expect(screen.queryByRole('heading', {name: 'Filters'})).toBeNull();
+    expect(screen.getByTestId('FacetBar').textContent).toContain(
+      '"hourOfAi":false',
+    );
+
+    rerender(
+      <ActivityCatalog
+        contentfulActivities={mockContentfulActivities}
+        activities={mockActivities}
+        facets={mockFacets}
+        hourOfAi
+      />,
+    );
+    expect(
+      screen.getByRole('heading', {level: 2, name: 'Filters'}),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId('FacetBar').textContent).toContain(
+      '"hourOfAi":true',
+    );
   });
 
   it('updates searchTerm when typing in search box', async () => {

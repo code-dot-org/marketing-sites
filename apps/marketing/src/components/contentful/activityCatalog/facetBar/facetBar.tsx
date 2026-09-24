@@ -13,12 +13,17 @@ import {
   TextField,
 } from '@mui/material';
 import {FacetResult} from '@orama/orama';
-import {ChangeEvent} from 'react';
+import {ChangeEvent, useState} from 'react';
 
 import {FACET_CONFIG} from '@/components/contentful/activityCatalog/config/facets';
+import HourOfAiSearchField from '@/components/contentful/activityCatalog/hourOfAiSearchField';
 
 interface FacetPanelProps {
   isInDrawer?: boolean;
+  /** Hour of AI catalog: search as the first item (outside the drawer),
+   * theme accordion spacing, facets collapsed unless they have an active
+   * filter */
+  hourOfAi?: boolean;
   facets: FacetResult | undefined;
   selectedFacets: Record<string, Set<string>>;
   searchTerm: string | undefined;
@@ -26,7 +31,19 @@ interface FacetPanelProps {
   onSearchTermChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onClearAll: () => void;
 }
-const FacetBar = ({facets, selectedFacets, onFacetChange}: FacetPanelProps) => {
+const FacetBar = ({
+  facets,
+  selectedFacets,
+  searchTerm,
+  onFacetChange,
+  onSearchTermChange,
+  isInDrawer = false,
+  hourOfAi = false,
+}: FacetPanelProps) => {
+  // Hour of AI: facets the visitor has opened or closed. The rest follow
+  // their active filters, which load from the URL after the first render.
+  const [toggled, setToggled] = useState<Record<string, boolean>>({});
+
   if (!facets) {
     return null;
   }
@@ -112,22 +129,56 @@ const FacetBar = ({facets, selectedFacets, onFacetChange}: FacetPanelProps) => {
 
       return (
         <Accordion
-          defaultExpanded={!facetConfig?.collapsedByDefault}
+          {...(hourOfAi
+            ? {
+                expanded:
+                  toggled[facet] ?? (selectedFacets[facet]?.size ?? 0) > 0,
+                onChange: (_: unknown, isExpanded: boolean) =>
+                  setToggled(prev => ({...prev, [facet]: isExpanded})),
+              }
+            : {defaultExpanded: !facetConfig?.collapsedByDefault})}
           sx={{
             bgcolor: 'card.main',
             color: 'card.contrastText',
             width: '100%',
+            ...(hourOfAi && {
+              borderColor: 'var(--palette-light-pink)',
+              // The same top margin expanded or collapsed; the second
+              // selector out-specifies MUI's expanded margin.
+              '&:not(:first-of-type), &.Mui-expanded:not(:first-of-type)': {
+                marginTop: 'var(--mui-spacing)',
+              },
+            }),
           }}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon sx={{color: 'foreground.main'}} />}
-            sx={{padding: 1}}
+            sx={
+              hourOfAi
+                ? // The theme's accordion title spacing.
+                  {
+                    px: 2.5,
+                    py: 1.5,
+                    '& .MuiTypography-root': {
+                      fontSize: '0.875rem',
+                      fontWeight: 500,
+                      lineHeight: '148%',
+                    },
+                  }
+                : {padding: 1}
+            }
           >
             <Typography variant="subtitle1" sx={{fontWeight: 600}}>
               {facetConfig?.label || facet}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails
+            sx={
+              hourOfAi
+                ? {borderTopColor: 'var(--palette-light-pink)'}
+                : undefined
+            }
+          >
             {getFacetComponent(facet, facetValues)}
           </AccordionDetails>
         </Accordion>
@@ -141,8 +192,13 @@ const FacetBar = ({facets, selectedFacets, onFacetChange}: FacetPanelProps) => {
         display: 'flex',
         flexDirection: 'column',
         padding: 2,
+        // The search field lines up with the top of the column.
+        ...(hourOfAi && !isInDrawer && {pt: 0}),
       }}
     >
+      {hourOfAi && !isInDrawer && (
+        <HourOfAiSearchField value={searchTerm} onChange={onSearchTermChange} />
+      )}
       {getDropdowns()}
     </Box>
   );

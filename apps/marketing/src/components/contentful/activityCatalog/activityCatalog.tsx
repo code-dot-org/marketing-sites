@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import {FacetResult, InternalTypedDocument, search} from '@orama/orama';
 import {useSearchParams} from 'next/navigation';
 import {ChangeEvent, ComponentProps, useEffect, useState} from 'react';
@@ -13,6 +14,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import FacetBar from '@/components/contentful/activityCatalog/facetBar/facetBar';
 import FacetDrawer from '@/components/contentful/activityCatalog/facetDrawer/facetDrawer';
 import ActivityCollection from '@/components/csforall/activityCollection/ActivityCollection';
+import ActivityCardCollection from '@/modules/activityCatalog/hourOfAi/ActivityCardCollection';
 import {createDatabase} from '@/modules/activityCatalog/orama/createDatabase';
 import {
   Activity,
@@ -21,17 +23,25 @@ import {
 import {Entry} from '@/types/contentful/Entry';
 
 import {FACET_CONFIG} from './config/facets';
+import HourOfAiSearchField from './hourOfAiSearchField';
 
 interface ActivityCatalogProps {
   contentfulActivities: Entry<Activity>[];
   activities: InternalTypedDocument<OramaActivity>[];
   facets: FacetResult | undefined;
+  /**
+   * Hour of AI layout: Activity Cards, a "Filters" column with search as its
+   * first item, styled like the facets, and every facet collapsed. Off for
+   * CSforAll.
+   */
+  hourOfAi?: boolean;
 }
 
 const ActivityCatalog = ({
   contentfulActivities,
   activities,
   facets,
+  hourOfAi = false,
 }: ActivityCatalogProps) => {
   const allowedFacetSet = new Set(facets ? Object.keys(facets) : []);
   // Add 'excludedOrganizations' to the allowed facet set because it is used as a post-filter
@@ -307,6 +317,7 @@ const ActivityCatalog = ({
     onFacetChange: handleFacetChange,
     onClearAll: handleClearAll,
     onSearchTermChange: handleSearchTermChange,
+    hourOfAi,
   };
 
   return (
@@ -326,23 +337,58 @@ const ActivityCatalog = ({
             flexBasis: 275,
           }}
         >
+          {hourOfAi && (
+            <Box sx={{px: 2}}>
+              <Typography
+                component="h2"
+                variant="h6"
+                sx={{fontWeight: 700, mb: 2}}
+              >
+                Filters
+              </Typography>
+            </Box>
+          )}
           <FacetBar {...facetBarProps} />
         </Grid>
-        <Grid size={9}>
-          <Box sx={{display: 'flex', mb: 2, gap: 2}}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              size="small"
-              placeholder="Search..."
-              aria-label="Search activities"
-              value={searchTerm}
-              onChange={handleSearchTermChange}
-              sx={{
-                backgroundColor: 'background.paper',
-                borderRadius: 2,
-              }}
-            />
+        <Grid
+          size={9}
+          // Hour of AI: 32px between the facets and the cards, like the
+          // gaps between facets.
+          sx={hourOfAi ? {pl: {md: 2}, pt: 'var(--mui-spacing)'} : undefined}
+        >
+          <Box
+            sx={{
+              // Hour of AI desktop has nothing left in this row.
+              display: hourOfAi ? {xs: 'flex', md: 'none'} : 'flex',
+              mb: 2,
+              gap: 2,
+            }}
+          >
+            {hourOfAi ? (
+              // Desktop search sits in the Filters column; phones keep it
+              // here beside the Filters button.
+              <Box sx={{flexGrow: 1}}>
+                <HourOfAiSearchField
+                  value={searchTerm}
+                  onChange={handleSearchTermChange}
+                  noMargin
+                />
+              </Box>
+            ) : (
+              <TextField
+                fullWidth
+                variant="outlined"
+                size="small"
+                placeholder="Search..."
+                aria-label="Search activities"
+                value={searchTerm}
+                onChange={handleSearchTermChange}
+                sx={{
+                  backgroundColor: 'background.paper',
+                  borderRadius: 2,
+                }}
+              />
+            )}
             <Button
               onClick={() => toggleFacetDrawer(true)}
               color={'secondary'}
@@ -356,7 +402,11 @@ const ActivityCatalog = ({
               <FilterAltOutlinedIcon /> Filters
             </Button>
           </Box>
-          <ActivityCollection activities={results} />
+          {hourOfAi ? (
+            <ActivityCardCollection activities={results} />
+          ) : (
+            <ActivityCollection activities={results} />
+          )}
           {isClientLoading && (
             <Alert severity="info" sx={{justifyContent: 'center', mt: 2}}>
               Loading more activities...
