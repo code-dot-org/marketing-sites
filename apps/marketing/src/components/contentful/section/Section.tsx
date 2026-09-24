@@ -3,11 +3,7 @@ import Container from '@mui/material/Container';
 import classNames from 'classnames';
 import {ReactNode} from 'react';
 
-import {
-  BRAND_COLORS,
-  BrandColor,
-  backgroundToneFor,
-} from '@/components/common/colors';
+import {BRAND_COLORS, BrandColor} from '@/components/common/colors';
 import {
   BrandGradient,
   gradientFamilyFor,
@@ -16,6 +12,7 @@ import {
 import type {SpacingProps} from '@/components/common/types';
 import {SectionBackgroundProvider} from '@/components/contentful/section/SectionBackgroundContext';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
+import {useBrandColors} from '@/themes/common/colors/brandColors';
 import bgPatternImage from '@public/images/bg-pattern-lines.webp';
 
 // Legacy backgrounds — Corporate Site theme primitives + CS for All brand
@@ -172,6 +169,7 @@ const Section: React.FC<SectionProps> = ({
   children,
   ...experienceProps
 }: SectionProps) => {
+  const brandColors = useBrandColors();
   // This is used for the Corporate Site only to determine
   // if the section has a hardcoded pattern.
   const hasPatternBackground =
@@ -202,7 +200,7 @@ const Section: React.FC<SectionProps> = ({
     : undefined;
 
   const dataBgTone = isBrandBackground
-    ? backgroundToneFor(brandBackgroundValue)
+    ? brandColors.backgroundTone(brandBackgroundValue)
     : gradientBackgroundValue
       ? 'dark'
       : undefined;

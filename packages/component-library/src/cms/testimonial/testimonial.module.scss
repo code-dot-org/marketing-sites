@@ -54,6 +54,14 @@
       :root[data-brand='Code.org'] & {
         color: var(--codeai-purple-mid);
       }
+
+      :root[data-brand='HourOfAI'] & {
+        color: var(--palette-light-pink);
+      }
+    }
+
+    :root[data-brand='HourOfAI'] & {
+      background-color: var(--palette-dark-purple);
     }
   }
 
@@ -63,6 +71,10 @@
     // CodeAI rebrand; CSForAll/HOC keep the legacy teal.
     :root[data-brand='Code.org'] & {
       background-color: var(--codeai-purple-primary);
+    }
+
+    :root[data-brand='HourOfAI'] & {
+      background-color: var(--palette-dark-purple);
     }
   }
 }

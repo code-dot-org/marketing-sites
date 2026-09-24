@@ -4,34 +4,27 @@
 // (the variable names in that file are mislabeled).
 // See specs/009-typography-system/contracts/{role-tokens,scale-tokens}.md.
 
-export type TypographicTrack = 'display' | 'text';
+import type {
+  Breakpoint,
+  DisplayAppearanceValue,
+  RoleToken,
+  ScaleCell,
+  SizeToken,
+  TextAppearanceValue,
+  TypographicTrack,
+  WeightToken,
+} from '@/themes/common/typography/types';
 
-export type SizeToken =
-  | 'xs'
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | '2xl'
-  | '3xl'
-  | '4xl';
-
-export type WeightToken = 'regular' | 'medium' | 'semibold' | 'bold';
-
-export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
-export interface ScaleCell {
-  fontSize: string;
-  lineHeight: string;
-  letterSpacing?: string;
-}
-
-export interface RoleToken {
-  track: TypographicTrack;
-  size: SizeToken;
-  weight: WeightToken;
-  steps?: Partial<Record<Breakpoint, SizeToken>>;
-}
+export type {
+  Breakpoint,
+  DisplayAppearanceValue,
+  RoleToken,
+  ScaleCell,
+  SizeToken,
+  TextAppearanceValue,
+  TypographicTrack,
+  WeightToken,
+};
 
 export const WEIGHTS: Record<WeightToken, number> = {
   regular: 400,
@@ -128,16 +121,6 @@ export const ROLE_TOKENS = {
 // Heading Level. These role tokens therefore carry only size + lineHeight
 // + letterSpacing + responsive step table; the `weight` field is unused
 // by the resolver and kept here for completeness.
-export type DisplayAppearanceValue =
-  | 'display-xs'
-  | 'display-sm'
-  | 'display-md'
-  | 'display-lg'
-  | 'display-xl'
-  | 'display-2xl'
-  | 'display-3xl'
-  | 'display-4xl';
-
 export const DISPLAY_APPEARANCE_ROLES: Record<
   DisplayAppearanceValue,
   RoleToken
@@ -184,16 +167,6 @@ export const DISPLAY_APPEARANCE_ROLES: Record<
 // Text cell-as-role tokens used by the widened Paragraph `visualAppearance`
 // enum (new `text-*` values). Four cells equal the canonical body1–body4
 // role tokens exactly; the four larger cells extend the Text scale upward.
-export type TextAppearanceValue =
-  | 'text-xs'
-  | 'text-sm'
-  | 'text-md'
-  | 'text-lg'
-  | 'text-xl'
-  | 'text-2xl'
-  | 'text-3xl'
-  | 'text-4xl';
-
 export const PARAGRAPH_APPEARANCE_ROLES: Record<
   TextAppearanceValue,
   RoleToken

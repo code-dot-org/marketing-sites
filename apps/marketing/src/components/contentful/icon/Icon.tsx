@@ -4,14 +4,14 @@ import React from 'react';
 
 import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
 
-import {
-  BrandColor,
-  cssVarForBrandColor,
-  resolvedCssVarForBrandColor,
-} from '@/components/common/colors';
+import {BrandColor} from '@/components/common/colors';
 import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
 import {RemoveMarginBottomProps} from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
+import {
+  resolvedTextCssVar,
+  useBrandColors,
+} from '@/themes/common/colors/brandColors';
 
 export type IconBackgroundFill = 'none' | 'filled' | 'outline';
 
@@ -47,14 +47,15 @@ const Icon: React.FC<IconProps> = ({
 }) => {
   const marginBottom = removeMarginBottom ? undefined : MARGIN_BOTTOM;
   const enclosingBackground = useSectionBackground();
+  const brandColors = useBrandColors();
   // Contrast switch is skipped only for 'filled': there the glyph sits on the
   // author-controlled fill, so the chosen color passes through. 'none' and
   // 'outline' both show the Section background behind the glyph (an outline
   // is just a ring), so the glyph color must adapt to it.
   const glyphColor =
     backgroundFill === 'filled'
-      ? cssVarForBrandColor(color)
-      : resolvedCssVarForBrandColor(color, enclosingBackground);
+      ? brandColors.cssVar(color)
+      : resolvedTextCssVar(brandColors, color, enclosingBackground);
 
   const iconFamily = fontAwesomeV6BrandIconsMap.has(iconName)
     ? 'brands'
@@ -81,7 +82,7 @@ const Icon: React.FC<IconProps> = ({
   }
 
   const outerSize = iconSize * SHAPE_RATIO;
-  const bg = cssVarForBrandColor(backgroundColor);
+  const bg = brandColors.cssVar(backgroundColor);
 
   return (
     <Box

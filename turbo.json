@@ -39,10 +39,10 @@
       "dependsOn": ["^stylelint:fix"]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "dependsOn": ["^typecheck", "^build"]
     },
     "test": {
-      "dependsOn": ["^test"]
+      "dependsOn": ["^test", "^build"]
     },
     "test:ui:ci": {
       "cache": false,

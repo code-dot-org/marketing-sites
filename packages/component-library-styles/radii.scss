@@ -7,3 +7,10 @@
   --codeai-radius-md: 0.625rem; /* cards, UI chrome */
   --codeai-radius-lg: 1.25rem; /* images */
 }
+
+[data-brand='HourOfAI'] {
+  --codeai-radius-none: 0rem;
+  --codeai-radius-sm: 0.75rem;
+  --codeai-radius-md: 1rem;
+  --codeai-radius-lg: 1.5rem;
+}

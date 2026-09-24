@@ -18,13 +18,12 @@
 //     font-family and emit the cell's size + line-height + letter-spacing
 //     inline.
 
-import {
-  ROLE_TOKENS,
-  SCALE_TEXT,
-  WEIGHTS,
-  type SizeToken,
-  type TextAppearanceValue,
-} from '@/themes/code.org/typography/tokens';
+import {CODE_ORG_TYPOGRAPHY_TOKENS} from '@/themes/code.org/typography/typographyTokens';
+import type {
+  BrandTypographyTokens,
+  SizeToken,
+  TextAppearanceValue,
+} from '@/themes/common/typography/types';
 
 export type LegacyParagraphAppearance =
   | 'body-one'
@@ -93,13 +92,15 @@ const isLegacy = (
 // mapped variant's canonical role token. When true, no inline sx is needed.
 const textAppearanceMatchesVariant = (
   appearance: TextAppearanceValue,
+  tokens: BrandTypographyTokens,
 ): boolean => {
   const variant = TEXT_APPEARANCE_TO_VARIANT[appearance];
-  return ROLE_TOKENS[variant].size === TEXT_APPEARANCE_TO_CELL[appearance];
+  return tokens.roles[variant].size === TEXT_APPEARANCE_TO_CELL[appearance];
 };
 
 export const resolveParagraphStyles = (
   args: ResolveParagraphArgs,
+  tokens: BrandTypographyTokens = CODE_ORG_TYPOGRAPHY_TOKENS,
 ): ResolveParagraphResult => {
   const {visualAppearance, isStrong = false, isItalic = false} = args;
   const sx: Record<string, unknown> = {};
@@ -110,11 +111,12 @@ export const resolveParagraphStyles = (
     variantTag = LEGACY_TO_VARIANT[visualAppearance];
   } else {
     variantTag = TEXT_APPEARANCE_TO_VARIANT[visualAppearance];
-    if (!textAppearanceMatchesVariant(visualAppearance)) {
+    if (!textAppearanceMatchesVariant(visualAppearance, tokens)) {
       // The cell doesn't equal the variant's canonical defaults — emit the
       // cell's size / line-height / letter-spacing inline so it overrides
       // the variant. (Reached by text-xl, text-2xl, text-3xl, text-4xl.)
-      const cell = SCALE_TEXT[TEXT_APPEARANCE_TO_CELL[visualAppearance]];
+      const cell =
+        tokens.scales.text[TEXT_APPEARANCE_TO_CELL[visualAppearance]];
       sx.fontSize = cell.fontSize;
       sx.lineHeight = cell.lineHeight;
       if (cell.letterSpacing) {
@@ -127,7 +129,7 @@ export const resolveParagraphStyles = (
   }
 
   if (isStrong) {
-    sx.fontWeight = WEIGHTS.semibold;
+    sx.fontWeight = tokens.weights.semibold;
   }
   if (isItalic) {
     sx.fontStyle = 'italic';

@@ -2,8 +2,9 @@ import MuiDivider from '@mui/material/Divider';
 import classNames from 'classnames';
 import React, {HTMLAttributes} from 'react';
 
-import {BrandColor, cssVarForBrandColor} from '@/components/common/colors';
+import {BrandColor} from '@/components/common/colors';
 import type {SpacingProps} from '@/components/common/types';
+import {useBrandColors} from '@/themes/common/colors/brandColors';
 
 // Legacy Divider color values, kept so existing Contentful entries continue
 // to render via the original `.divider--color-{value}` CSS classes in
@@ -41,10 +42,11 @@ const Divider: React.FC<DividerProps> = ({
   width = 'small',
   className,
 }) => {
+  const brandColors = useBrandColors();
   const legacy = isLegacyDividerColor(color);
   const vertical = direction === 'vertical';
   const sx = {
-    ...(legacy ? {} : {borderColor: cssVarForBrandColor(color as BrandColor)}),
+    ...(legacy ? {} : {borderColor: brandColors.cssVar(color as BrandColor)}),
     // Small adds nothing: MUI's default `thin` border stays as-is. Vertical
     // dividers draw their line on the right border in MUI.
     ...(width === 'medium'

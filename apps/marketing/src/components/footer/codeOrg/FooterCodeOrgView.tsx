@@ -10,7 +10,7 @@ import {MouseEvent} from 'react';
 import {SUPPORTED_LOCALES_CONFIG} from '@/config/locale';
 import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {SCALE_TEXT, WEIGHTS} from '@/themes/code.org/typography/tokens';
+import {getTypographyTokens} from '@/themes/common/typography/typographyTokens';
 import logoImage from '@public/images/codeai-logo-primary.svg';
 import awsLogo from '@public/images/powered-by-aws.webp';
 
@@ -117,17 +117,20 @@ const LinkColumn = styled('div', {
 
 // Not a heading element: the footer follows arbitrary page content, so any
 // fixed h-level can break axe's heading-order rule (e.g. h1 → h3).
-const ColumnHeading = styled('span')(({theme}) => ({
-  // Custom Text "Overline" preset (text-sm semibold uppercase), but purple
-  // dark instead of the preset's gray6.
-  fontFamily: theme.typography.fontFamily,
-  fontSize: SCALE_TEXT.sm.fontSize,
-  lineHeight: SCALE_TEXT.sm.lineHeight,
-  fontWeight: WEIGHTS.semibold,
-  textTransform: 'uppercase',
-  color: CODEAI_PURPLE_DARK,
-  margin: 0,
-}));
+const ColumnHeading = styled('span')(({theme}) => {
+  const {weights, scales} = getTypographyTokens(theme);
+  return {
+    // Custom Text "Overline" preset (text-sm semibold uppercase), but purple
+    // dark instead of the preset's gray6.
+    fontFamily: theme.typography.fontFamily,
+    fontSize: scales.text.sm.fontSize,
+    lineHeight: scales.text.sm.lineHeight,
+    fontWeight: weights.semibold,
+    textTransform: 'uppercase',
+    color: CODEAI_PURPLE_DARK,
+    margin: 0,
+  };
+});
 
 // Continuation lists (heading-less Contentful columns) sit beside the
 // heading's first list, tighter than the gap between headed columns.

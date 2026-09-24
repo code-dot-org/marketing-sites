@@ -1,4 +1,5 @@
 import {WEIGHTS} from '@/themes/code.org/typography/tokens';
+import {CODE_ORG_TYPOGRAPHY_TOKENS} from '@/themes/code.org/typography/typographyTokens';
 
 import {resolveParagraphStyles} from '../resolveParagraphStyles';
 
@@ -121,5 +122,33 @@ describe('resolveParagraphStyles', () => {
       expect(result.sx.fontWeight).toBe(WEIGHTS.semibold);
       expect(result.sx.fontStyle).toBe('italic');
     });
+  });
+});
+
+describe('resolveParagraphStyles with brand tokens', () => {
+  const tokens = {
+    ...CODE_ORG_TYPOGRAPHY_TOKENS,
+    weights: {...CODE_ORG_TYPOGRAPHY_TOKENS.weights, semibold: 650},
+    scales: {
+      ...CODE_ORG_TYPOGRAPHY_TOKENS.scales,
+      text: {
+        ...CODE_ORG_TYPOGRAPHY_TOKENS.scales.text,
+        '3xl': {fontSize: '2rem', lineHeight: '2.5rem'},
+      },
+    },
+  };
+
+  it('resolves text cells from the tokens passed in', () => {
+    const {sx} = resolveParagraphStyles({visualAppearance: 'text-3xl'}, tokens);
+    expect(sx.fontSize).toBe('2rem');
+    expect(sx.lineHeight).toBe('2.5rem');
+  });
+
+  it('resolves the strong weight from the tokens passed in', () => {
+    const {sx} = resolveParagraphStyles(
+      {visualAppearance: 'text-md', isStrong: true},
+      tokens,
+    );
+    expect(sx.fontWeight).toBe(650);
   });
 });

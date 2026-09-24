@@ -5,7 +5,7 @@ import {styled} from '@mui/material/styles';
 
 import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {CODE_ORG_DISPLAY_FONT_STACK} from '@/themes/code.org/typography/fontStack';
+import {getTypographyTokens} from '@/themes/common/typography/typographyTokens';
 
 import {PROMO_BACKGROUNDS} from './config';
 import SubmenuColumn from './SubmenuColumn';
@@ -52,7 +52,7 @@ const PrimaryLink = styled(MuiLink)(({theme}) => ({
   ...theme.typography.h4,
   // The dropdown is all Geist except this link (h4 is on the Geist text
   // track since July 2026).
-  fontFamily: CODE_ORG_DISPLAY_FONT_STACK,
+  fontFamily: getTypographyTokens(theme).fontStacks.display,
   display: 'inline-flex',
   alignItems: 'center',
   gap: theme.spacing(1),

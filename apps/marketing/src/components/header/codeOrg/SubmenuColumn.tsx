@@ -3,8 +3,7 @@ import MuiLink from '@mui/material/Link';
 import {styled} from '@mui/material/styles';
 
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {CODE_ORG_TEXT_FONT_STACK} from '@/themes/code.org/typography/fontStack';
-import {SCALE_TEXT, WEIGHTS} from '@/themes/code.org/typography/tokens';
+import {getTypographyTokens} from '@/themes/common/typography/typographyTokens';
 
 import {HeaderSubmenuColumn, HeaderSubmenuItem} from './types';
 import {getExternalLinkProps} from './utils';
@@ -30,14 +29,17 @@ const ColumnRoot = styled('div', {
 
 // Not a heading element: the panel can appear on any page, so a fixed
 // h-level could break axe's heading-order rule.
-const ColumnHeading = styled('span')({
-  // Custom Text "Overline" preset (text-sm semibold uppercase gray6).
-  fontFamily: CODE_ORG_TEXT_FONT_STACK,
-  fontWeight: WEIGHTS.semibold,
-  fontSize: SCALE_TEXT.sm.fontSize,
-  lineHeight: SCALE_TEXT.sm.lineHeight,
-  textTransform: 'uppercase',
-  color: 'var(--codeai-gray-6)',
+const ColumnHeading = styled('span')(({theme}) => {
+  const {fontStacks, weights, scales} = getTypographyTokens(theme);
+  return {
+    // Custom Text "Overline" preset (text-sm semibold uppercase gray6).
+    fontFamily: fontStacks.text,
+    fontWeight: weights.semibold,
+    fontSize: scales.text.sm.fontSize,
+    lineHeight: scales.text.sm.lineHeight,
+    textTransform: 'uppercase',
+    color: 'var(--codeai-gray-6)',
+  };
 });
 
 // No list gap: the theme's MuiLink bottom margin spaces the items.
@@ -101,13 +103,16 @@ const TitleRow = styled('span')(({theme}) => ({
   gap: theme.spacing(0.5),
 }));
 
-const ItemTitle = styled('span')({
-  fontFamily: CODE_ORG_TEXT_FONT_STACK,
-  fontWeight: WEIGHTS.medium,
-  fontSize: SCALE_TEXT.lg.fontSize,
-  lineHeight: 1.1,
-  letterSpacing: '-0.02em',
-  color: CODEAI_PURPLE_PRIMARY,
+const ItemTitle = styled('span')(({theme}) => {
+  const {fontStacks, weights, scales} = getTypographyTokens(theme);
+  return {
+    fontFamily: fontStacks.text,
+    fontWeight: weights.medium,
+    fontSize: scales.text.lg.fontSize,
+    lineHeight: 1.1,
+    letterSpacing: '-0.02em',
+    color: CODEAI_PURPLE_PRIMARY,
+  };
 });
 
 const Chevron = styled(Icon)({

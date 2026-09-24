@@ -7,18 +7,15 @@ import React, {ReactNode} from 'react';
 
 import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
 
-import {
-  BrandColor,
-  cssVarForBrandColor,
-  EnclosingBackground,
-  resolveTextColorForBackground,
-} from '@/components/common/colors';
+import {BrandColor, EnclosingBackground} from '@/components/common/colors';
 import {externalLinkIconProps} from '@/components/common/constants';
 import {
   ComponentSize,
   RemoveMarginBottomProps,
 } from '@/components/common/types';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
+import {useBrandColors} from '@/themes/common/colors/brandColors';
+import type {BrandColorTokens} from '@/themes/common/colors/types';
 
 type IconPosition = 'left' | 'right';
 type Hierarchy = 'color' | 'black' | 'white';
@@ -71,31 +68,25 @@ const resolveBrandSize = (size: ComponentSize): ResolvedSize =>
 const applyContrastSwitch = (
   hierarchy: Hierarchy,
   enclosingBackground: EnclosingBackground,
+  colors: BrandColorTokens,
 ): Hierarchy => {
   if (hierarchy === 'white') return 'white';
-  const resolved = resolveTextColorForBackground(
-    'primary',
-    enclosingBackground,
-  ).value;
+  const resolved = colors.resolveText('primary', enclosingBackground);
   return resolved === 'white' ? 'white' : hierarchy;
 };
 
 const resolveLegacyLinkColor = (
   color: BrandColor,
   enclosingBackground: EnclosingBackground,
+  colors: BrandColorTokens,
 ): string => {
   if (color === 'primary') {
-    const resolved = resolveTextColorForBackground(
-      'primary',
-      enclosingBackground,
-    );
-    return resolved.value === 'primary'
+    const resolved = colors.resolveText('primary', enclosingBackground);
+    return resolved === 'primary'
       ? 'var(--codeai-purple-primary)'
-      : cssVarForBrandColor(resolved.value);
+      : colors.cssVar(resolved);
   }
-  return cssVarForBrandColor(
-    resolveTextColorForBackground(color, enclosingBackground).value,
-  );
+  return colors.cssVar(colors.resolveText(color, enclosingBackground));
 };
 
 const styles = {
@@ -128,6 +119,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
 }) => {
   const theme = useTheme();
   const enclosingBackground = useSectionBackground();
+  const brandColors = useBrandColors();
 
   // Tenant discriminator: code.org uses Geist, csforall uses Roboto Mono.
   const isBrandTenant = String(theme.typography.fontFamily).includes('Geist');
@@ -142,6 +134,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
     const renderedHierarchy = applyContrastSwitch(
       baseHierarchy,
       enclosingBackground,
+      brandColors,
     );
     const renderedSize = resolveBrandSize(size);
 
@@ -189,7 +182,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
       target={isLinkExternal || openInNewTab ? '_blank' : undefined}
       rel={isLinkExternal || openInNewTab ? 'noopener noreferrer' : undefined}
       sx={{
-        color: resolveLegacyLinkColor(color, enclosingBackground),
+        color: resolveLegacyLinkColor(color, enclosingBackground, brandColors),
         fontWeight: isStrong ? 600 : 500,
         marginBottom: removeMarginBottom ? 0 : undefined,
         textDecoration: 'none',

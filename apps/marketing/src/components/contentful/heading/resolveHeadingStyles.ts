@@ -16,12 +16,12 @@
 
 import {createTheme} from '@mui/material/styles';
 
-import {
-  DISPLAY_APPEARANCE_ROLES,
-  SCALE_DISPLAY,
-  type Breakpoint,
-  type DisplayAppearanceValue,
-} from '@/themes/code.org/typography/tokens';
+import {CODE_ORG_TYPOGRAPHY_TOKENS} from '@/themes/code.org/typography/typographyTokens';
+import type {
+  BrandTypographyTokens,
+  Breakpoint,
+  DisplayAppearanceValue,
+} from '@/themes/common/typography/types';
 
 export type HeadingLevelValue =
   | 'heading-xxl'
@@ -86,6 +86,7 @@ const cellEntries = (cell: {
 
 export const resolveHeadingStyles = (
   args: ResolveHeadingArgs,
+  tokens: BrandTypographyTokens = CODE_ORG_TYPOGRAPHY_TOKENS,
 ): ResolveHeadingResult => {
   const {
     visualAppearance,
@@ -112,8 +113,8 @@ export const resolveHeadingStyles = (
   // sizes at narrower widths. Weight + family stay from the level's
   // variant — no `sx.fontWeight` is emitted by this step.
   if (appearance !== 'default') {
-    const cellRole = DISPLAY_APPEARANCE_ROLES[appearance];
-    const defaultCell = SCALE_DISPLAY[cellRole.size];
+    const cellRole = tokens.displayAppearanceRoles[appearance];
+    const defaultCell = tokens.scales.display[cellRole.size];
     Object.assign(sx, cellEntries(defaultCell));
 
     // Lock the cell's responsive step values at the same media-query keys
@@ -125,7 +126,7 @@ export const resolveHeadingStyles = (
         if (!stepSize) continue;
         const queryBp = VIEWPORT_QUERY_BP[viewport];
         if (!queryBp) continue;
-        const stepCell = SCALE_DISPLAY[stepSize];
+        const stepCell = tokens.scales.display[stepSize];
         const mq = SHARED_BREAKPOINTS.down(queryBp);
         sx[mq] = cellEntries(stepCell);
       }

@@ -12,6 +12,9 @@ const config = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   testPathIgnorePatterns: ['<rootDir>/tests'], // Playwright tests
+  // Keep the module map out of .next, which `next build` may be writing when
+  // turbo runs build and test in parallel.
+  modulePathIgnorePatterns: ['<rootDir>/.next/'],
   moduleNameMapper: {
     // `swiper/css` has no .css suffix, so next/jest's CSS mock misses it
     '^swiper/css(/.*)?$': '<rootDir>/src/__mocks__/styleMock.js',

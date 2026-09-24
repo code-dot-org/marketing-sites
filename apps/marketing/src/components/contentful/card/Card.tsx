@@ -4,6 +4,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Chip from '@mui/material/Chip';
+import {useTheme} from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import {HTMLAttributes, useMemo} from 'react';
 
@@ -12,7 +13,7 @@ import Overline from '@/components/contentful/overline';
 import NextImage from '@/components/nextImage/NextImage';
 import {useStatsigLogger} from '@/providers/statsig/client';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
-import theme from '@/themes/csforall';
+import csforallTheme from '@/themes/csforall';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
@@ -68,6 +69,10 @@ const Card: React.FC<CardProps> = ({
   eventMetadata,
   className,
 }) => {
+  // Brands with their own palette use their Black; others keep CSforAll's.
+  const black =
+    useTheme().mixins.brandColors?.cssVar('black') ??
+    csforallTheme.palette.common.black;
   // Get image url from Contentful
   const imageSource = useMemo(
     () => imageSrc && getAbsoluteImageUrl(imageSrc),
@@ -115,7 +120,7 @@ const Card: React.FC<CardProps> = ({
       className={className}
       raised={false}
       sx={{
-        border: `1px solid ${theme.palette.common.black}`,
+        border: `1px solid ${black}`,
         boxShadow: 'none',
         borderRadius: 'var(--codeai-radius-md, 12px)',
         minWidth: 275,
@@ -127,7 +132,7 @@ const Card: React.FC<CardProps> = ({
             height: setImageHeight,
             aspectRatio: imageAspectRatio || 'auto',
             position: 'relative',
-            backgroundColor: theme.palette.common.black,
+            backgroundColor: black,
           }}
           component={'div'}
         >

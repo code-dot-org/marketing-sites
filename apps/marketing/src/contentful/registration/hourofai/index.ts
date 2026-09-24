@@ -9,6 +9,7 @@ import {
 } from '@contentful/experiences-components-react';
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import Badge from '@/components/contentful/badge';
 import ButtonMui, {
   ButtonMuiContentfulComponentDefinition,
 } from '@/components/contentful/button';
@@ -27,54 +28,53 @@ import PeopleCollection, {
 import TextCollection, {
   TextCollectionContentfulComponentDefinition,
 } from '@/components/contentful/collections/textCollection';
-import CustomText, {
-  CustomTextContentfulComponentDefinition,
-} from '@/components/contentful/customText';
-import Divider, {
-  CodeOrgDividerContentfulComponentDefinition,
-} from '@/components/contentful/divider';
+import CustomText from '@/components/contentful/customText';
+import Divider from '@/components/contentful/divider';
 import FAQAccordion, {
   FAQAccordionContentfulComponentDefinition,
 } from '@/components/contentful/faqAccordion';
-import Heading, {
-  HeadingContentfulComponentDefinition,
-} from '@/components/contentful/heading';
+import Heading from '@/components/contentful/heading';
+import Icon from '@/components/contentful/icon';
 import Iframe, {
   IframeContentfulComponentDefinition,
 } from '@/components/contentful/iframe';
 import Image, {
   ImageCorporateSiteContentfulComponentDefinition,
 } from '@/components/contentful/image';
-import Link, {
-  BrandLinkContentfulComponentDefinition,
-} from '@/components/contentful/link';
-import Overline, {
-  OverlineContentfulComponentDefinition,
-} from '@/components/contentful/overline';
-import Paragraph, {
-  ParagraphContentfulComponentDefinition,
-} from '@/components/contentful/paragraph';
+import Link from '@/components/contentful/link';
+import Paragraph from '@/components/contentful/paragraph';
 import RichText, {
   RichTextContentfulComponentDefinition,
 } from '@/components/contentful/richText';
-import Section, {
-  SectionCorporateSiteContentfulComponentDefinition,
-} from '@/components/contentful/section';
+import Section from '@/components/contentful/section';
 import Spacer, {
   SpacerContentfulComponentDefinition,
 } from '@/components/contentful/spacer';
-import Testimonial, {
-  TestimonialContentfulComponentDefinition,
-} from '@/components/contentful/testimonial';
+import Testimonial from '@/components/contentful/testimonial';
 import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
 import {SECTION_MAX_WIDTH} from '@/themes/hourofai/constants/layout';
 
+import {hourOfAiBreakpoints} from './breakpoints';
+import {
+  HourOfAiBadgeDefinition,
+  HourOfAiBrandLinkDefinition,
+  HourOfAiCustomTextDefinition,
+  HourOfAiDividerDefinition,
+  HourOfAiHeadingDefinition,
+  HourOfAiIconDefinition,
+  HourOfAiParagraphDefinition,
+  HourOfAiSectionDefinition,
+  HourOfAiTestimonialDefinition,
+} from './definitions';
+import {hourOfAiDesignTokens} from './designTokens';
+
 // Native structure components, re-registered so they carry our categories and
 // container defaults. Mirrors the Code.org setup: the SDK React components and
 // full variable schemas are untouched, so only the defaults for new instances
 // change. Requires __unsafe__enableBuiltInStructureOverwrites below.
+
 const containerDefinitionWithOverrides: ComponentDefinition = {
   ...containerDefinition,
   category: '02: Page Structure',
@@ -133,6 +133,10 @@ const singleColumnDefinitionWithOverrides: ComponentDefinition = {
 const contentfulRegistration = {
   componentRegistrations: [
     {
+      component: Badge,
+      definition: HourOfAiBadgeDefinition,
+    },
+    {
       component: ButtonMui,
       definition: ButtonMuiContentfulComponentDefinition,
     },
@@ -146,11 +150,11 @@ const contentfulRegistration = {
     },
     {
       component: CustomText,
-      definition: CustomTextContentfulComponentDefinition,
+      definition: HourOfAiCustomTextDefinition,
     },
     {
       component: Divider,
-      definition: CodeOrgDividerContentfulComponentDefinition,
+      definition: HourOfAiDividerDefinition,
       options: {
         wrapContainerWidth: '100%',
       },
@@ -161,7 +165,11 @@ const contentfulRegistration = {
     },
     {
       component: Heading,
-      definition: HeadingContentfulComponentDefinition,
+      definition: HourOfAiHeadingDefinition,
+    },
+    {
+      component: Icon,
+      definition: HourOfAiIconDefinition,
     },
     {
       component: Iframe,
@@ -176,19 +184,15 @@ const contentfulRegistration = {
     },
     {
       component: Link,
-      definition: BrandLinkContentfulComponentDefinition,
+      definition: HourOfAiBrandLinkDefinition,
     },
     {
       component: LogoCollection,
       definition: LogoCollectionContentfulComponentDefinition,
     },
     {
-      component: Overline,
-      definition: OverlineContentfulComponentDefinition,
-    },
-    {
       component: Paragraph,
-      definition: ParagraphContentfulComponentDefinition,
+      definition: HourOfAiParagraphDefinition,
     },
     {
       component: PeopleCollection,
@@ -200,7 +204,7 @@ const contentfulRegistration = {
     },
     {
       component: Section,
-      definition: SectionCorporateSiteContentfulComponentDefinition,
+      definition: HourOfAiSectionDefinition,
       options: {
         wrapContainerWidth: '100%',
       },
@@ -215,7 +219,7 @@ const contentfulRegistration = {
     },
     {
       component: Testimonial,
-      definition: TestimonialContentfulComponentDefinition,
+      definition: HourOfAiTestimonialDefinition,
     },
     {
       component: Video,
@@ -270,6 +274,8 @@ const contentfulRegistration = {
     // Required to re-register the reserved structure component ids above.
     __unsafe__enableBuiltInStructureOverwrites: true,
   },
+  designTokens: hourOfAiDesignTokens,
+  breakpoints: hourOfAiBreakpoints,
 };
 
 export default contentfulRegistration;
