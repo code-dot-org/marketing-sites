@@ -10,6 +10,7 @@ import {
   HourOfAiIconDefinition,
   HourOfAiParagraphDefinition,
   HourOfAiSectionDefinition,
+  HourOfAiSimpleListDefinition,
   HourOfAiTestimonialDefinition,
 } from '../definitions';
 import {hourOfAiDesignTokens} from '../designTokens';
@@ -95,6 +96,16 @@ describe('Hour of AI color pickers', () => {
     ]);
     expect(variable(HourOfAiSectionDefinition, 'background').defaultValue).toBe(
       'white',
+    );
+  });
+
+  it('limits SimpleList icon and text colors to the palette', () => {
+    expect(values(HourOfAiSimpleListDefinition, 'type')).toEqual(PALETTE);
+    expect(variable(HourOfAiSimpleListDefinition, 'type').defaultValue).toBe(
+      'purpleDark',
+    );
+    expect(values(HourOfAiSimpleListDefinition, 'textColor')).toEqual(
+      BODY_TEXT,
     );
   });
 

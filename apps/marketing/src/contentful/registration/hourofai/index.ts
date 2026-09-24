@@ -47,6 +47,7 @@ import RichText, {
   RichTextContentfulComponentDefinition,
 } from '@/components/contentful/richText';
 import Section from '@/components/contentful/section';
+import SimpleList from '@/components/contentful/simpleList';
 import Spacer, {
   SpacerContentfulComponentDefinition,
 } from '@/components/contentful/spacer';
@@ -66,6 +67,7 @@ import {
   HourOfAiIconDefinition,
   HourOfAiParagraphDefinition,
   HourOfAiSectionDefinition,
+  HourOfAiSimpleListDefinition,
   HourOfAiTestimonialDefinition,
 } from './definitions';
 import {hourOfAiDesignTokens} from './designTokens';
@@ -208,6 +210,10 @@ const contentfulRegistration = {
       options: {
         wrapContainerWidth: '100%',
       },
+    },
+    {
+      component: SimpleList,
+      definition: HourOfAiSimpleListDefinition,
     },
     {
       component: Spacer,

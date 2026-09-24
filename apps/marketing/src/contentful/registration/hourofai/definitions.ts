@@ -10,6 +10,7 @@ import {IconContentfulComponentDefinition} from '@/components/contentful/icon';
 import {BrandLinkContentfulComponentDefinition} from '@/components/contentful/link';
 import {ParagraphContentfulComponentDefinition} from '@/components/contentful/paragraph';
 import {SectionCorporateSiteContentfulComponentDefinition} from '@/components/contentful/section';
+import {SimpleListContentfulComponentDefinition} from '@/components/contentful/simpleList';
 import {TestimonialContentfulComponentDefinition} from '@/components/contentful/testimonial';
 
 import {hourOfAiColorOptions, hourOfAiTextColorOptions} from './colorOptions';
@@ -124,6 +125,14 @@ export const HourOfAiSectionDefinition = withVariables(
         {value: 'transparent', displayName: 'Transparent'},
       ],
     },
+  },
+);
+
+export const HourOfAiSimpleListDefinition = withVariables(
+  SimpleListContentfulComponentDefinition,
+  {
+    type: {defaultValue: 'purpleDark', in: hourOfAiColorOptions('purpleDark')},
+    textColor: {defaultValue: 'black', in: hourOfAiTextColorOptions('black')},
   },
 );
 

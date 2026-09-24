@@ -13,10 +13,13 @@ import {
   BrandColor,
   LEGACY_ICON_COLORS,
   LegacyIconColor,
-  resolvedCssVarForBrandColor,
 } from '@/components/common/colors';
 import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
+import {
+  resolvedTextCssVar,
+  useBrandColors,
+} from '@/themes/common/colors/brandColors';
 
 export type SimpleListItemEntry = Entry & {
   sys: {
@@ -111,13 +114,14 @@ const SimpleListContentful: React.FunctionComponent<
   // classes; everything else is a brand-manifest CSS value applied inline,
   // routed through the contrast switch via the enclosing SectionBackground.
   const enclosingBackground = useSectionBackground();
+  const brandColors = useBrandColors();
   const legacyType = isLegacyIconColor(type) ? type : undefined;
   const iconColor =
     type && !isLegacyIconColor(type)
-      ? resolvedCssVarForBrandColor(type, enclosingBackground)
+      ? resolvedTextCssVar(brandColors, type, enclosingBackground)
       : undefined;
   const resolvedTextColor = textColor
-    ? resolvedCssVarForBrandColor(textColor, enclosingBackground)
+    ? resolvedTextCssVar(brandColors, textColor, enclosingBackground)
     : undefined;
 
   return (
