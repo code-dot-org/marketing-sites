@@ -1,6 +1,8 @@
 // Imports the variants directly; the full registration list trips Jest's
 // ESM transforms (see code.org/__tests__/divider.registration.test.ts).
 
+import {ActivityCardContentfulComponentDefinition as ActivityCard} from '@/components/contentful/activityCard/ActivityCardContentfulDefinition';
+
 import {
   HourOfAiBadgeDefinition,
   HourOfAiBrandLinkDefinition,
@@ -125,6 +127,39 @@ describe('Hour of AI color pickers', () => {
     expect(
       variable(HourOfAiTestimonialDefinition, 'background').validations?.in,
     ).toEqual([{value: 'Pattern Dark', displayName: 'Dark Purple'}]);
+  });
+
+  it('offers large-text Activity Card title colors, defaulting to Dark Purple', () => {
+    expect(values(ActivityCard, 'titleColor')).toEqual(PALETTE);
+    expect(variable(ActivityCard, 'titleColor').defaultValue).toBe(
+      'purpleDark',
+    );
+    expect(values(ActivityCard, 'organizationBadgeColor')).toEqual([
+      'purple',
+      'pink',
+      'blue',
+      'black',
+      'pinkLight',
+      'blueLight',
+      'blackLight',
+    ]);
+    expect(variable(ActivityCard, 'organizationBadgeColor').defaultValue).toBe(
+      'blueLight',
+    );
+  });
+
+  it('shows every Activity Card field by default', () => {
+    for (const name of [
+      'showOrganization',
+      'showAges',
+      'showTopics',
+      'showActivityType',
+      'showLength',
+      'showTutorialLink',
+      'showTeacherLink',
+    ]) {
+      expect(variable(ActivityCard, name).defaultValue).toBe(true);
+    }
   });
 
   it('offers the palette in Studio design tokens', () => {

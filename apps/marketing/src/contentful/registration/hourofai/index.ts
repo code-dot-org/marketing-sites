@@ -9,6 +9,9 @@ import {
 } from '@contentful/experiences-components-react';
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import ActivityCard, {
+  ActivityCardContentfulComponentDefinition,
+} from '@/components/contentful/activityCard';
 import Badge from '@/components/contentful/badge';
 import Card, {
   CardContentfulComponentDefinition,
@@ -133,6 +136,10 @@ const singleColumnDefinitionWithOverrides: ComponentDefinition = {
  */
 const contentfulRegistration = {
   componentRegistrations: [
+    {
+      component: ActivityCard,
+      definition: ActivityCardContentfulComponentDefinition,
+    },
     {
       component: Badge,
       definition: HourOfAiBadgeDefinition,
