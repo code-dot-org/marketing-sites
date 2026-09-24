@@ -10,9 +10,6 @@ import {
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import Badge from '@/components/contentful/badge';
-import ButtonMui, {
-  ButtonMuiContentfulComponentDefinition,
-} from '@/components/contentful/button';
 import Card, {
   CardContentfulComponentDefinition,
 } from '@/components/contentful/card';
@@ -28,6 +25,7 @@ import PeopleCollection, {
 import TextCollection, {
   TextCollectionContentfulComponentDefinition,
 } from '@/components/contentful/collections/textCollection';
+import ButtonLegacy from '@/components/contentful/corporateSite/buttonLegacy';
 import CustomText from '@/components/contentful/customText';
 import Divider from '@/components/contentful/divider';
 import FAQAccordion, {
@@ -61,6 +59,7 @@ import {hourOfAiBreakpoints} from './breakpoints';
 import {
   HourOfAiBadgeDefinition,
   HourOfAiBrandLinkDefinition,
+  HourOfAiButtonDefinition,
   HourOfAiCustomTextDefinition,
   HourOfAiDividerDefinition,
   HourOfAiHeadingDefinition,
@@ -139,8 +138,8 @@ const contentfulRegistration = {
       definition: HourOfAiBadgeDefinition,
     },
     {
-      component: ButtonMui,
-      definition: ButtonMuiContentfulComponentDefinition,
+      component: ButtonLegacy,
+      definition: HourOfAiButtonDefinition,
     },
     {
       component: Card,

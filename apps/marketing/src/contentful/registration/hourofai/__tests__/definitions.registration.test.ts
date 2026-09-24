@@ -4,6 +4,7 @@
 import {
   HourOfAiBadgeDefinition,
   HourOfAiBrandLinkDefinition,
+  HourOfAiButtonDefinition,
   HourOfAiCustomTextDefinition,
   HourOfAiDividerDefinition,
   HourOfAiHeadingDefinition,
@@ -59,6 +60,17 @@ describe('Hour of AI color pickers', () => {
     expect(
       variable(HourOfAiBrandLinkDefinition, 'color').validations?.in?.[0],
     ).toEqual({value: 'color', displayName: 'Dark Purple (default)'});
+  });
+
+  it('offers Dark Purple, Black and White Buttons', () => {
+    expect(values(HourOfAiButtonDefinition, 'color')).toEqual([
+      'purple',
+      'black',
+      'white',
+    ]);
+    expect(variable(HourOfAiButtonDefinition, 'color').defaultValue).toBe(
+      'purple',
+    );
   });
 
   it('defaults Divider and the Icon fill to Light Blue', () => {

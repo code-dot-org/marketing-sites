@@ -3,6 +3,7 @@
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {BadgeContentfulComponentDefinition} from '@/components/contentful/badge';
+import {ButtonLegacyContentfulComponentDefinition} from '@/components/contentful/corporateSite/buttonLegacy';
 import {CustomTextContentfulComponentDefinition} from '@/components/contentful/customText';
 import {CodeOrgDividerContentfulComponentDefinition} from '@/components/contentful/divider/dividerContentfulDefinition';
 import {HeadingContentfulComponentDefinition} from '@/components/contentful/heading';
@@ -106,6 +107,20 @@ export const HourOfAiBadgeDefinition = withVariables(
         {value: 'purple', displayName: 'Dark Purple (default)'},
         {value: 'pink', displayName: 'Pink'},
         {value: 'blue', displayName: 'Blue'},
+      ],
+    },
+  },
+);
+
+export const HourOfAiButtonDefinition = withVariables(
+  ButtonLegacyContentfulComponentDefinition,
+  {
+    color: {
+      defaultValue: 'purple',
+      in: [
+        {value: 'purple', displayName: 'Dark Purple (default)'},
+        {value: 'black', displayName: 'Black'},
+        {value: 'white', displayName: 'White'},
       ],
     },
   },
