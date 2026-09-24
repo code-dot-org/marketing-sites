@@ -16,12 +16,6 @@ import ActivityCarousel, {
   ActivityCarouselContentfulComponentDefinition,
 } from '@/components/contentful/activityCarousel';
 import Badge from '@/components/contentful/badge';
-import Card, {
-  CardContentfulComponentDefinition,
-} from '@/components/contentful/card';
-import CardCollection, {
-  CardCollectionContentfulComponentDefinition,
-} from '@/components/contentful/collections/cardCollection';
 import LogoCollection, {
   LogoCollectionContentfulComponentDefinition,
 } from '@/components/contentful/collections/logoCollection';
@@ -129,9 +123,10 @@ const singleColumnDefinitionWithOverrides: ComponentDefinition = {
  * Deliberately a curated starter set rather than a copy of the Code.org
  * registry. Excluded on purpose: unit cards and carousels, the course catalog,
  * catalog interstitials, curriculum/lab snapshots, hero banners, action blocks,
- * badges, editorial cards, tab groups, skinny banners and everything under
- * `contentful/corporateSite/` (adoption map, AFE eligibility, donation blocks,
- * state gap map, your-school). Add components here as the site needs them —
+ * editorial cards, tab groups, skinny banners, the deprecated CSforAll Button,
+ * Card and Card Collection, and everything under `contentful/corporateSite/`
+ * except the Button (adoption map, AFE eligibility, donation blocks, state gap
+ * map, your-school). Add components here as the site needs them —
  * a component that is not registered for this brand renders NOTHING on it.
  *
  * The native structure components (Container, Section, Columns, SingleColumn)
@@ -157,14 +152,6 @@ const contentfulRegistration = {
     {
       component: ButtonLegacy,
       definition: HourOfAiButtonDefinition,
-    },
-    {
-      component: Card,
-      definition: CardContentfulComponentDefinition,
-    },
-    {
-      component: CardCollection,
-      definition: CardCollectionContentfulComponentDefinition,
     },
     {
       component: CustomText,
