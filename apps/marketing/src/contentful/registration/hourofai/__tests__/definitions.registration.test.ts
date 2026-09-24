@@ -15,7 +15,6 @@ import {
   HourOfAiParagraphDefinition,
   HourOfAiSectionDefinition,
   HourOfAiSimpleListDefinition,
-  HourOfAiTestimonialDefinition,
 } from '../definitions';
 import {hourOfAiDesignTokens} from '../designTokens';
 
@@ -122,12 +121,6 @@ describe('Hour of AI color pickers', () => {
     expect(values(HourOfAiSimpleListDefinition, 'textColor')).toEqual(
       BODY_TEXT,
     );
-  });
-
-  it('offers a single Dark Purple Testimonial background', () => {
-    expect(
-      variable(HourOfAiTestimonialDefinition, 'background').validations?.in,
-    ).toEqual([{value: 'Pattern Dark', displayName: 'Dark Purple'}]);
   });
 
   it('offers large-text Activity Card title colors, defaulting to Dark Purple', () => {

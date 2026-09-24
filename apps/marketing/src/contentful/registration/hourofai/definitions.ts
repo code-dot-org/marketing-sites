@@ -12,7 +12,6 @@ import {BrandLinkContentfulComponentDefinition} from '@/components/contentful/li
 import {ParagraphContentfulComponentDefinition} from '@/components/contentful/paragraph';
 import {SectionCorporateSiteContentfulComponentDefinition} from '@/components/contentful/section';
 import {SimpleListContentfulComponentDefinition} from '@/components/contentful/simpleList';
-import {TestimonialContentfulComponentDefinition} from '@/components/contentful/testimonial';
 
 import {hourOfAiColorOptions, hourOfAiTextColorOptions} from './colorOptions';
 
@@ -148,15 +147,5 @@ export const HourOfAiSimpleListDefinition = withVariables(
   {
     type: {defaultValue: 'purpleDark', in: hourOfAiColorOptions('purpleDark')},
     textColor: {defaultValue: 'black', in: hourOfAiTextColorOptions('black')},
-  },
-);
-
-export const HourOfAiTestimonialDefinition = withVariables(
-  TestimonialContentfulComponentDefinition,
-  {
-    background: {
-      defaultValue: 'Pattern Dark',
-      in: [{value: 'Pattern Dark', displayName: 'Dark Purple'}],
-    },
   },
 );

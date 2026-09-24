@@ -233,6 +233,10 @@ test.describe(`[${getSiteType()}] All the things`, () => {
       let component: Locator;
 
       test.beforeEach(async () => {
+        test.skip(
+          getSiteType() === 'hourofai',
+          'People Collection is not registered on Hour of AI',
+        );
         component = allTheThingsPage.getSectionLocator('People Collection');
         await component.scrollIntoViewIfNeeded();
       });
