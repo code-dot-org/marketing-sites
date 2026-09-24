@@ -9,10 +9,7 @@ import {fontAwesomeV6BrandIconsMap} from '@/components/common/constants';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 import {GEIST_FONT} from '@/themes/code.org/constants/fonts';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
-import {
-  getBrandColors,
-  useBrandColors,
-} from '@/themes/common/colors/brandColors';
+import {useBrandColors} from '@/themes/common/colors/brandColors';
 import {createFontStack} from '@/themes/common/constants';
 
 export type BadgeColor =
@@ -138,17 +135,6 @@ const SIZE_METRICS: Record<
   },
 };
 
-// Stored color value of each dark-variant fill, for brands that set the text
-// color on a fill.
-const DARK_FILL_VALUE: Record<BadgeColor, string> = {
-  black: 'gray8',
-  purple: 'purplePrimary',
-  blue: 'bluePrimary',
-  green: 'greenPrimary',
-  orange: 'orangePrimary',
-  pink: 'pinkPrimary',
-};
-
 interface BadgeOwnerState {
   variant: BadgeVariant;
   color: BadgeColor;
@@ -160,13 +146,9 @@ interface BadgeOwnerState {
 
 const BadgeRoot = styled('span', {
   shouldForwardProp: prop => prop !== 'ownerState',
-})<{ownerState: BadgeOwnerState}>(({ownerState, theme}) => {
-  const {background, text: paletteText} =
+})<{ownerState: BadgeOwnerState}>(({ownerState}) => {
+  const {background, text} =
     BADGE_PALETTE[ownerState.color][ownerState.variant];
-  const text =
-    (ownerState.variant === 'dark' &&
-      getBrandColors(theme).textOnFill?.(DARK_FILL_VALUE[ownerState.color])) ||
-    paletteText;
   const metrics = SIZE_METRICS[ownerState.size];
 
   // Logical inline padding keyed to the icon slot so RTL flips for free.

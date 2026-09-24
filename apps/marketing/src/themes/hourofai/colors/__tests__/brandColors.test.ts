@@ -58,12 +58,6 @@ describe('Hour of AI contrast swaps', () => {
     expect(colors.resolveText('primary', 'black')).toBe('white');
     expect(colors.backgroundTone('purplePrimary')).toBe('dark');
   });
-
-  it('sets readable text on fills', () => {
-    expect(colors.textOnFill?.('purpleDark')).toBe('var(--palette-white)');
-    expect(colors.textOnFill?.('pinkPrimary')).toBe('var(--palette-white)');
-    expect(colors.textOnFill?.('bluePrimary')).toBe('var(--palette-black)');
-  });
 });
 
 describe('brandColors.scss', () => {

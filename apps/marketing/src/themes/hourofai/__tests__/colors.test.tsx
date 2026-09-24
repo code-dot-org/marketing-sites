@@ -68,10 +68,8 @@ describe('components on the Hour of AI theme', () => {
     });
   });
 
-  it('uses black text on a Blue badge fill', () => {
+  it('uses white text on a Blue badge fill, like Pink', () => {
     withHourOfAi(<Badge text="New" color="blue" appearance="dark" />);
-    expect(screen.getByText('New')).toHaveStyle({
-      color: 'var(--palette-black)',
-    });
+    expect(screen.getByText('New')).toHaveStyle({color: '#ffffff'});
   });
 });
