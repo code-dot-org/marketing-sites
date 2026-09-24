@@ -79,6 +79,21 @@ describe('Hour of AI radii', () => {
     });
   });
 
+  it('rounds the accordion summary and details so they don’t square the corners', () => {
+    expect(slot('MuiAccordion', 'root')).toMatchObject({
+      boxShadow: 'none',
+      '&::before': {display: 'none'},
+    });
+    expect(slot('MuiAccordionSummary', 'root')).toMatchObject({
+      borderRadius: 'var(--codeai-radius-md)',
+      '&.Mui-expanded': {borderBottomLeftRadius: 0, borderBottomRightRadius: 0},
+    });
+    expect(slot('MuiAccordionDetails', 'root')).toMatchObject({
+      borderBottomLeftRadius: 'var(--codeai-radius-md)',
+      borderBottomRightRadius: 'var(--codeai-radius-md)',
+    });
+  });
+
   it('keeps video square', () => {
     expect(slot('MuiVideo', 'wrapper')).toMatchObject({
       borderRadius: 'var(--codeai-radius-none)',
