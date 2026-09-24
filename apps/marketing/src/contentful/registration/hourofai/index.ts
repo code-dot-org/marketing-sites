@@ -12,6 +12,9 @@ import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 import ActivityCard, {
   ActivityCardContentfulComponentDefinition,
 } from '@/components/contentful/activityCard';
+import ActivityCarousel, {
+  ActivityCarouselContentfulComponentDefinition,
+} from '@/components/contentful/activityCarousel';
 import Badge from '@/components/contentful/badge';
 import Card, {
   CardContentfulComponentDefinition,
@@ -139,6 +142,13 @@ const contentfulRegistration = {
     {
       component: ActivityCard,
       definition: ActivityCardContentfulComponentDefinition,
+    },
+    {
+      component: ActivityCarousel,
+      definition: ActivityCarouselContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+      },
     },
     {
       component: Badge,

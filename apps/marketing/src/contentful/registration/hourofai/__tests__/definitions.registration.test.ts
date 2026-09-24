@@ -2,6 +2,7 @@
 // ESM transforms (see code.org/__tests__/divider.registration.test.ts).
 
 import {ActivityCardContentfulComponentDefinition as ActivityCard} from '@/components/contentful/activityCard/ActivityCardContentfulDefinition';
+import {ActivityCarouselContentfulComponentDefinition as ActivityCarousel} from '@/components/contentful/activityCarousel/ActivityCarouselContentfulDefinition';
 
 import {
   HourOfAiBadgeDefinition,
@@ -160,6 +161,22 @@ describe('Hour of AI color pickers', () => {
     ]) {
       expect(variable(ActivityCard, name).defaultValue).toBe(true);
     }
+  });
+
+  it('gives Activity Carousel the Activity Card toggles and palette colors', () => {
+    for (const name of Object.keys(ActivityCard.variables)) {
+      if (name.startsWith('show') || name === 'organizationBadgeColor') {
+        expect(variable(ActivityCarousel, name)).toEqual(
+          variable(ActivityCard, name),
+        );
+      }
+    }
+    expect(variable(ActivityCarousel, 'cardWidth').defaultValue).toBe('325px');
+    expect(variable(ActivityCard, 'width').defaultValue).toBe('325px');
+    expect(values(ActivityCarousel, 'activityTitleColor')).toEqual(PALETTE);
+    expect(variable(ActivityCarousel, 'activities').validations?.required).toBe(
+      true,
+    );
   });
 
   it('offers the palette in Studio design tokens', () => {
