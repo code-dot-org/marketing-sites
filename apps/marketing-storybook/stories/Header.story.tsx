@@ -1,6 +1,8 @@
 import {DEFAULT_HEADER_CONTENT} from '@/components/header/codeOrg/config';
 import HeaderCodeOrgView from '@/components/header/codeOrg/HeaderCodeOrgView';
 import {HeaderContent} from '@/components/header/codeOrg/types';
+import {DEFAULT_HEADER_CONTENT as HOUR_OF_AI_HEADER_CONTENT} from '@/components/header/hourOfAi/config';
+import HeaderHourOfAiView from '@/components/header/hourOfAi/HeaderHourOfAiView';
 import {Meta, StoryObj} from '@storybook/react';
 import {userEvent, within} from 'storybook/test';
 
@@ -133,6 +135,16 @@ export const Default: StoryObj<typeof HeaderCodeOrgView> = {
     eyes: {
       themes: ['code.org'],
     },
+  },
+};
+
+export const HourOfAi: StoryObj<typeof HeaderHourOfAiView> = {
+  render: () => <HeaderHourOfAiView content={HOUR_OF_AI_HEADER_CONTENT} />,
+  globals: {theme: 'hourofai'},
+  parameters: {
+    // Layout match: Geist is a variable font and Applitools render nodes
+    // rasterize its interpolated weights slightly differently per run.
+    eyes: {matchLevel: 'Layout'},
   },
 };
 
