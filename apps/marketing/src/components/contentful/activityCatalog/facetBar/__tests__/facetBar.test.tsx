@@ -74,6 +74,69 @@ describe('FacetBar', () => {
     expect(screen.getByText('Language Arts')).toBeInTheDocument();
   });
 
+  it('starts every facet collapsed on Hour of AI', () => {
+    const props = {
+      facets: mockFacets as any,
+      selectedFacets: {},
+      onFacetChange,
+      onSearchTermChange,
+      onClearAll,
+      searchTerm: '',
+    };
+    const {rerender} = render(<FacetBar {...props} />);
+    const expanded = () =>
+      screen.getAllByRole('button').map(b => b.getAttribute('aria-expanded'));
+    expect(expanded()).toEqual(['true', 'true']);
+    rerender(<FacetBar {...props} hourOfAi />);
+    // defaultExpanded only applies on mount.
+    rerender(<></>);
+    rerender(<FacetBar {...props} hourOfAi />);
+    expect(expanded()).toEqual(['false', 'false']);
+  });
+
+  it('opens Hour of AI facets that have an active filter, including once filters load', () => {
+    const props = {
+      facets: mockFacets as any,
+      onFacetChange,
+      onSearchTermChange,
+      onClearAll,
+      searchTerm: '',
+      hourOfAi: true,
+    };
+    const expanded = () =>
+      screen.getAllByRole('button').map(b => b.getAttribute('aria-expanded'));
+    const {rerender} = render(<FacetBar {...props} selectedFacets={{}} />);
+    expect(expanded()).toEqual(['false', 'false']);
+    // Filters arrive from the URL after the first render.
+    rerender(<FacetBar {...props} selectedFacets={{grade: new Set(['2'])}} />);
+    expect(expanded()).toEqual(['false', 'true']);
+    // A visitor's toggle wins over the filter.
+    fireEvent.click(screen.getByText('Grade'));
+    expect(expanded()).toEqual(['false', 'false']);
+    fireEvent.click(screen.getByText('Subject'));
+    expect(expanded()).toEqual(['true', 'false']);
+  });
+
+  it('puts the Hour of AI search first, outside the drawer only', () => {
+    const props = {
+      facets: mockFacets as any,
+      selectedFacets: {},
+      onFacetChange,
+      onSearchTermChange,
+      onClearAll,
+      searchTerm: '',
+    };
+    const {container, rerender} = render(<FacetBar {...props} hourOfAi />);
+    const search = screen.getByPlaceholderText('Search...');
+    expect(container.firstElementChild?.firstElementChild).toContainElement(
+      search,
+    );
+    rerender(<FacetBar {...props} hourOfAi isInDrawer />);
+    expect(screen.queryByPlaceholderText('Search...')).toBeNull();
+    rerender(<FacetBar {...props} />);
+    expect(screen.queryByPlaceholderText('Search...')).toBeNull();
+  });
+
   it('checks the checkbox if the facet value is selected', () => {
     render(
       <FacetBar

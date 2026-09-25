@@ -39,10 +39,8 @@ describe('ActivitiesHero', () => {
     );
   });
 
-  it('uses the theme h1 variant when useThemeHeading is set', () => {
-    render(
-      <ActivitiesHero activityType={ActivityType.HOUR_OF_AI} useThemeHeading />,
-    );
+  it('uses the theme h1 variant on Hour of AI', () => {
+    render(<ActivitiesHero activityType={ActivityType.HOUR_OF_AI} hourOfAi />);
     expect(screen.getByRole('heading', {level: 1})).toHaveClass(
       'MuiTypography-h1',
     );

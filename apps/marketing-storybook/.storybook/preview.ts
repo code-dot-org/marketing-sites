@@ -5,6 +5,7 @@ import {loadFonts, injectFontAwesome} from '@code-dot-org/fonts';
 
 import '@code-dot-org/fonts/brands/code.org/index.css';
 import '@code-dot-org/fonts/brands/CSForAll/index.css';
+import '@code-dot-org/fonts/brands/HourOfAI/index.css';
 
 import './preview.module.scss';
 import MuiDecorator from '../decorators/MuiDecorator';

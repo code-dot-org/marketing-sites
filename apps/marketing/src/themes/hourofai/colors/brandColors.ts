@@ -18,12 +18,4 @@ export const HOUR_OF_AI_BRAND_COLORS: BrandColorTokens = {
 
   backgroundTone: value =>
     value ? (hourOfAiColor(value)?.tone ?? 'light') : 'light',
-
-  textOnFill: value => {
-    const fill = hourOfAiColor(value);
-    if (!fill) return undefined;
-    return fill.tone === 'dark'
-      ? 'var(--palette-white)'
-      : 'var(--palette-black)';
-  },
 };

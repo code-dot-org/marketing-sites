@@ -3,6 +3,7 @@
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {BadgeContentfulComponentDefinition} from '@/components/contentful/badge';
+import {ButtonLegacyContentfulComponentDefinition} from '@/components/contentful/corporateSite/buttonLegacy';
 import {CustomTextContentfulComponentDefinition} from '@/components/contentful/customText';
 import {CodeOrgDividerContentfulComponentDefinition} from '@/components/contentful/divider/dividerContentfulDefinition';
 import {HeadingContentfulComponentDefinition} from '@/components/contentful/heading';
@@ -10,7 +11,7 @@ import {IconContentfulComponentDefinition} from '@/components/contentful/icon';
 import {BrandLinkContentfulComponentDefinition} from '@/components/contentful/link';
 import {ParagraphContentfulComponentDefinition} from '@/components/contentful/paragraph';
 import {SectionCorporateSiteContentfulComponentDefinition} from '@/components/contentful/section';
-import {TestimonialContentfulComponentDefinition} from '@/components/contentful/testimonial';
+import {SimpleListContentfulComponentDefinition} from '@/components/contentful/simpleList';
 
 import {hourOfAiColorOptions, hourOfAiTextColorOptions} from './colorOptions';
 
@@ -110,6 +111,20 @@ export const HourOfAiBadgeDefinition = withVariables(
   },
 );
 
+export const HourOfAiButtonDefinition = withVariables(
+  ButtonLegacyContentfulComponentDefinition,
+  {
+    color: {
+      defaultValue: 'purple',
+      in: [
+        {value: 'purple', displayName: 'Dark Purple (default)'},
+        {value: 'black', displayName: 'Black'},
+        {value: 'white', displayName: 'White'},
+      ],
+    },
+  },
+);
+
 export const HourOfAiSectionDefinition = withVariables(
   SectionCorporateSiteContentfulComponentDefinition,
   {
@@ -127,12 +142,10 @@ export const HourOfAiSectionDefinition = withVariables(
   },
 );
 
-export const HourOfAiTestimonialDefinition = withVariables(
-  TestimonialContentfulComponentDefinition,
+export const HourOfAiSimpleListDefinition = withVariables(
+  SimpleListContentfulComponentDefinition,
   {
-    background: {
-      defaultValue: 'Pattern Dark',
-      in: [{value: 'Pattern Dark', displayName: 'Dark Purple'}],
-    },
+    type: {defaultValue: 'purpleDark', in: hourOfAiColorOptions('purpleDark')},
+    textColor: {defaultValue: 'black', in: hourOfAiTextColorOptions('black')},
   },
 );

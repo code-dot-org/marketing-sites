@@ -9,25 +9,17 @@ import {
 } from '@contentful/experiences-components-react';
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
+import ActivityCard, {
+  ActivityCardContentfulComponentDefinition,
+} from '@/components/contentful/activityCard';
+import ActivityCarousel, {
+  ActivityCarouselContentfulComponentDefinition,
+} from '@/components/contentful/activityCarousel';
 import Badge from '@/components/contentful/badge';
-import ButtonMui, {
-  ButtonMuiContentfulComponentDefinition,
-} from '@/components/contentful/button';
-import Card, {
-  CardContentfulComponentDefinition,
-} from '@/components/contentful/card';
-import CardCollection, {
-  CardCollectionContentfulComponentDefinition,
-} from '@/components/contentful/collections/cardCollection';
-import LogoCollection, {
-  LogoCollectionContentfulComponentDefinition,
-} from '@/components/contentful/collections/logoCollection';
-import PeopleCollection, {
-  PeopleCollectionContentfulComponentDefinition,
-} from '@/components/contentful/collections/peopleCollection';
 import TextCollection, {
   TextCollectionContentfulComponentDefinition,
 } from '@/components/contentful/collections/textCollection';
+import ButtonLegacy from '@/components/contentful/corporateSite/buttonLegacy';
 import CustomText from '@/components/contentful/customText';
 import Divider from '@/components/contentful/divider';
 import FAQAccordion, {
@@ -47,10 +39,10 @@ import RichText, {
   RichTextContentfulComponentDefinition,
 } from '@/components/contentful/richText';
 import Section from '@/components/contentful/section';
+import SimpleList from '@/components/contentful/simpleList';
 import Spacer, {
   SpacerContentfulComponentDefinition,
 } from '@/components/contentful/spacer';
-import Testimonial from '@/components/contentful/testimonial';
 import Video, {
   VideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
@@ -60,13 +52,14 @@ import {hourOfAiBreakpoints} from './breakpoints';
 import {
   HourOfAiBadgeDefinition,
   HourOfAiBrandLinkDefinition,
+  HourOfAiButtonDefinition,
   HourOfAiCustomTextDefinition,
   HourOfAiDividerDefinition,
   HourOfAiHeadingDefinition,
   HourOfAiIconDefinition,
   HourOfAiParagraphDefinition,
   HourOfAiSectionDefinition,
-  HourOfAiTestimonialDefinition,
+  HourOfAiSimpleListDefinition,
 } from './definitions';
 import {hourOfAiDesignTokens} from './designTokens';
 
@@ -122,9 +115,11 @@ const singleColumnDefinitionWithOverrides: ComponentDefinition = {
  * Deliberately a curated starter set rather than a copy of the Code.org
  * registry. Excluded on purpose: unit cards and carousels, the course catalog,
  * catalog interstitials, curriculum/lab snapshots, hero banners, action blocks,
- * badges, editorial cards, tab groups, skinny banners and everything under
- * `contentful/corporateSite/` (adoption map, AFE eligibility, donation blocks,
- * state gap map, your-school). Add components here as the site needs them —
+ * editorial cards, tab groups, skinny banners, people and logo collections,
+ * testimonials, the deprecated CSforAll Button, Card and Card Collection, and
+ * everything under `contentful/corporateSite/` except the Button (adoption map,
+ * AFE eligibility, donation blocks, state gap map, your-school). Add
+ * components here as the site needs them —
  * a component that is not registered for this brand renders NOTHING on it.
  *
  * The native structure components (Container, Section, Columns, SingleColumn)
@@ -133,20 +128,23 @@ const singleColumnDefinitionWithOverrides: ComponentDefinition = {
 const contentfulRegistration = {
   componentRegistrations: [
     {
+      component: ActivityCard,
+      definition: ActivityCardContentfulComponentDefinition,
+    },
+    {
+      component: ActivityCarousel,
+      definition: ActivityCarouselContentfulComponentDefinition,
+      options: {
+        wrapContainerWidth: '100%',
+      },
+    },
+    {
       component: Badge,
       definition: HourOfAiBadgeDefinition,
     },
     {
-      component: ButtonMui,
-      definition: ButtonMuiContentfulComponentDefinition,
-    },
-    {
-      component: Card,
-      definition: CardContentfulComponentDefinition,
-    },
-    {
-      component: CardCollection,
-      definition: CardCollectionContentfulComponentDefinition,
+      component: ButtonLegacy,
+      definition: HourOfAiButtonDefinition,
     },
     {
       component: CustomText,
@@ -187,16 +185,8 @@ const contentfulRegistration = {
       definition: HourOfAiBrandLinkDefinition,
     },
     {
-      component: LogoCollection,
-      definition: LogoCollectionContentfulComponentDefinition,
-    },
-    {
       component: Paragraph,
       definition: HourOfAiParagraphDefinition,
-    },
-    {
-      component: PeopleCollection,
-      definition: PeopleCollectionContentfulComponentDefinition,
     },
     {
       component: RichText,
@@ -210,16 +200,16 @@ const contentfulRegistration = {
       },
     },
     {
+      component: SimpleList,
+      definition: HourOfAiSimpleListDefinition,
+    },
+    {
       component: Spacer,
       definition: SpacerContentfulComponentDefinition,
     },
     {
       component: TextCollection,
       definition: TextCollectionContentfulComponentDefinition,
-    },
-    {
-      component: Testimonial,
-      definition: HourOfAiTestimonialDefinition,
     },
     {
       component: Video,

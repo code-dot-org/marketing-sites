@@ -14,6 +14,4 @@ export interface BrandColorTokens {
   resolveText: (value: string, background?: EnclosingBackground) => string;
   /** Contrast tone of a Section background value. */
   backgroundTone: (value: string | null | undefined) => BackgroundTone;
-  /** Text color for content on a solid fill of `value`, if the brand sets one. */
-  textOnFill?: (value: string) => string | undefined;
 }

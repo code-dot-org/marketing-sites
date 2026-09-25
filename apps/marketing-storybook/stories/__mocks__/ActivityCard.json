@@ -1,0 +1,28 @@
+{
+  "title": "Train a Picture Sorter",
+  "shortDescription": "Teach a model to sort pictures into groups, then test where it gets things wrong and why.",
+  "organization": "Example Learning Lab",
+  "ages": ["9-12", "13-18"],
+  "topics": ["Artificial Intelligence"],
+  "activityType": ["Self-led tutorial"],
+  "length": ["One hour"],
+  "image": "//contentful-images.code.org/90t6bu6vlf76/6fdNRFZbNXpiXQd6v7fHen/d6328a3a965b3daca5fb0375caf72064/image-component.png",
+  "tutorialId": "example-picture-sorter",
+  "width": "325px",
+  "tutorialLink": {
+    "fields": {
+      "linkName": "❌ [ENG] Activity Card Tutorial Link",
+      "label": "Start",
+      "primaryTarget": "https://example.org/start",
+      "isThisAnExternalLink": true
+    }
+  },
+  "teacherLink": {
+    "fields": {
+      "linkName": "❌ [ENG] Activity Card Teacher Link",
+      "label": "Teacher notes",
+      "primaryTarget": "https://example.org/teacher-notes",
+      "isThisAnExternalLink": true
+    }
+  }
+}

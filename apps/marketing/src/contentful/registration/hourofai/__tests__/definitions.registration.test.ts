@@ -1,16 +1,20 @@
 // Imports the variants directly; the full registration list trips Jest's
 // ESM transforms (see code.org/__tests__/divider.registration.test.ts).
 
+import {ActivityCardContentfulComponentDefinition as ActivityCard} from '@/components/contentful/activityCard/ActivityCardContentfulDefinition';
+import {ActivityCarouselContentfulComponentDefinition as ActivityCarousel} from '@/components/contentful/activityCarousel/ActivityCarouselContentfulDefinition';
+
 import {
   HourOfAiBadgeDefinition,
   HourOfAiBrandLinkDefinition,
+  HourOfAiButtonDefinition,
   HourOfAiCustomTextDefinition,
   HourOfAiDividerDefinition,
   HourOfAiHeadingDefinition,
   HourOfAiIconDefinition,
   HourOfAiParagraphDefinition,
   HourOfAiSectionDefinition,
-  HourOfAiTestimonialDefinition,
+  HourOfAiSimpleListDefinition,
 } from '../definitions';
 import {hourOfAiDesignTokens} from '../designTokens';
 
@@ -60,6 +64,17 @@ describe('Hour of AI color pickers', () => {
     ).toEqual({value: 'color', displayName: 'Dark Purple (default)'});
   });
 
+  it('offers Dark Purple, Black and White Buttons', () => {
+    expect(values(HourOfAiButtonDefinition, 'color')).toEqual([
+      'purple',
+      'black',
+      'white',
+    ]);
+    expect(variable(HourOfAiButtonDefinition, 'color').defaultValue).toBe(
+      'purple',
+    );
+  });
+
   it('defaults Divider and the Icon fill to Light Blue', () => {
     expect(variable(HourOfAiDividerDefinition, 'color').defaultValue).toBe(
       'blueLight',
@@ -98,10 +113,63 @@ describe('Hour of AI color pickers', () => {
     );
   });
 
-  it('offers a single Dark Purple Testimonial background', () => {
-    expect(
-      variable(HourOfAiTestimonialDefinition, 'background').validations?.in,
-    ).toEqual([{value: 'Pattern Dark', displayName: 'Dark Purple'}]);
+  it('limits SimpleList icon and text colors to the palette', () => {
+    expect(values(HourOfAiSimpleListDefinition, 'type')).toEqual(PALETTE);
+    expect(variable(HourOfAiSimpleListDefinition, 'type').defaultValue).toBe(
+      'purpleDark',
+    );
+    expect(values(HourOfAiSimpleListDefinition, 'textColor')).toEqual(
+      BODY_TEXT,
+    );
+  });
+
+  it('offers large-text Activity Card title colors, defaulting to Dark Purple', () => {
+    expect(values(ActivityCard, 'titleColor')).toEqual(PALETTE);
+    expect(variable(ActivityCard, 'titleColor').defaultValue).toBe(
+      'purpleDark',
+    );
+    expect(values(ActivityCard, 'organizationBadgeColor')).toEqual([
+      'purple',
+      'pink',
+      'blue',
+      'black',
+      'pinkLight',
+      'blueLight',
+      'blackLight',
+    ]);
+    expect(variable(ActivityCard, 'organizationBadgeColor').defaultValue).toBe(
+      'blueLight',
+    );
+  });
+
+  it('shows every Activity Card field by default', () => {
+    for (const name of [
+      'showOrganization',
+      'showAges',
+      'showTopics',
+      'showActivityType',
+      'showLength',
+      'showTutorialLink',
+      'showTeacherLink',
+    ]) {
+      expect(variable(ActivityCard, name).defaultValue).toBe(true);
+    }
+  });
+
+  it('gives Activity Carousel the Activity Card toggles and palette colors', () => {
+    for (const name of Object.keys(ActivityCard.variables)) {
+      if (name.startsWith('show') || name === 'organizationBadgeColor') {
+        expect(variable(ActivityCarousel, name)).toEqual(
+          variable(ActivityCard, name),
+        );
+      }
+    }
+    expect(variable(ActivityCarousel, 'cardWidth').defaultValue).toBe('325px');
+    expect(variable(ActivityCard, 'width').defaultValue).toBe('325px');
+    expect(values(ActivityCarousel, 'activityTitleColor')).toEqual(PALETTE);
+    expect(variable(ActivityCarousel, 'activities').validations?.required).toBe(
+      true,
+    );
   });
 
   it('offers the palette in Studio design tokens', () => {

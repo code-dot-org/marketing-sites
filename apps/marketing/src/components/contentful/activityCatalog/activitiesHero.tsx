@@ -6,13 +6,14 @@ import {ActivityType} from '@/modules/activityCatalog/types/Activity';
 
 interface ActivitiesHeroProps {
   activityType: ActivityType;
-  /** Use the theme's h1 instead of the legacy fixed sizes. */
-  useThemeHeading?: boolean;
+  /** Hour of AI: the theme's h1 instead of the legacy fixed sizes, and more
+   *  space below. */
+  hourOfAi?: boolean;
 }
 
 export default function ActivitiesHero({
   activityType,
-  useThemeHeading = false,
+  hourOfAi = false,
 }: ActivitiesHeroProps) {
   const activityName =
     activityType === ActivityType.HOUR_OF_CODE ? 'Hour of Code' : 'Hour of AI';
@@ -24,15 +25,15 @@ export default function ActivitiesHero({
         mx: 'auto',
         px: {xs: 2, md: 4},
         pt: {xs: 4, md: 8},
-        pb: {xs: 2, md: 3},
+        pb: hourOfAi ? 'calc(6 * var(--mui-spacing))' : {xs: 2, md: 3},
         textAlign: 'center',
       }}
     >
       <Typography
         component="h1"
-        variant={useThemeHeading ? 'h1' : undefined}
+        variant={hourOfAi ? 'h1' : undefined}
         sx={
-          useThemeHeading
+          hourOfAi
             ? {mb: 1.5}
             : {
                 // Spec 009 — px literals replaced with rem; weight 800 (Extra

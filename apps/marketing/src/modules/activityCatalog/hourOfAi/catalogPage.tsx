@@ -57,12 +57,13 @@ export async function HourOfAiCatalogPage({
 
   return (
     <main>
-      <ActivitiesHero activityType={activityType} useThemeHeading />
+      <ActivitiesHero activityType={activityType} hourOfAi />
       <Suspense>
         <ActivityCatalog
           contentfulActivities={contentfulActivities}
           activities={await getAllActivities()}
           facets={await getSearchFacets()}
+          hourOfAi
         />
       </Suspense>
       <CatalogCrossLink activityType={activityType} />
