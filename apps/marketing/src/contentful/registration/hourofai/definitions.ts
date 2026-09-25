@@ -11,6 +11,11 @@ import {IconContentfulComponentDefinition} from '@/components/contentful/icon';
 import {BrandLinkContentfulComponentDefinition} from '@/components/contentful/link';
 import {ParagraphContentfulComponentDefinition} from '@/components/contentful/paragraph';
 import {SectionCorporateSiteContentfulComponentDefinition} from '@/components/contentful/section';
+import {
+  BACKGROUND_MOTION_SPEEDS,
+  BACKGROUND_MOTIONS,
+  SECTION_EFFECT_OPTIONS,
+} from '@/components/contentful/section/backgroundEffects';
 import {SimpleListContentfulComponentDefinition} from '@/components/contentful/simpleList';
 
 import {hourOfAiColorOptions, hourOfAiTextColorOptions} from './colorOptions';
@@ -125,7 +130,7 @@ export const HourOfAiButtonDefinition = withVariables(
   },
 );
 
-export const HourOfAiSectionDefinition = withVariables(
+const hourOfAiSection = withVariables(
   SectionCorporateSiteContentfulComponentDefinition,
   {
     background: {
@@ -135,12 +140,44 @@ export const HourOfAiSectionDefinition = withVariables(
         ...hourOfAiColorOptions().filter(
           o => !['white', 'black'].includes(o.value),
         ),
+        ...SECTION_EFFECT_OPTIONS,
         {value: 'black', displayName: 'Black'},
         {value: 'transparent', displayName: 'Transparent'},
       ],
     },
   },
 );
+
+// Motion only applies to the multi-color backgrounds (Aurora, Dusk).
+export const HourOfAiSectionDefinition: ComponentDefinition = {
+  ...hourOfAiSection,
+  variables: {
+    ...hourOfAiSection.variables,
+    backgroundMotion: {
+      displayName: 'Background motion',
+      type: 'Text',
+      group: 'style',
+      description:
+        'Slow motion for the Aurora and Dusk backgrounds. Stops for visitors who reduce motion.',
+      defaultValue: 'none',
+      validations: {in: [...BACKGROUND_MOTIONS]},
+    },
+    backgroundMotionSpeed: {
+      displayName: 'Motion speed',
+      type: 'Text',
+      group: 'style',
+      description:
+        'How fast the background moves. For On scroll, how far it moves.',
+      defaultValue: 'normal',
+      validations: {
+        in: BACKGROUND_MOTION_SPEEDS.map(({value, displayName}) => ({
+          value,
+          displayName,
+        })),
+      },
+    },
+  },
+};
 
 export const HourOfAiSimpleListDefinition = withVariables(
   SimpleListContentfulComponentDefinition,

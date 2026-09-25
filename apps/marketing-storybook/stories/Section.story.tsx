@@ -2,6 +2,11 @@ import {BRAND_COLORS} from '@/components/common/colors';
 import Heading from '@/components/contentful/heading';
 import Paragraph from '@/components/contentful/paragraph';
 import Section, {SectionBackground} from '@/components/contentful/section';
+import {
+  BACKGROUND_MOTION_SPEEDS,
+  BACKGROUND_MOTIONS,
+  SECTION_EFFECT_OPTIONS,
+} from '@/components/contentful/section/backgroundEffects';
 import bgPatternImage from '@public/images/bg-pattern-lines.webp';
 import type {Meta, StoryObj} from '@storybook/nextjs-vite';
 import {expect} from 'storybook/test';
@@ -291,4 +296,81 @@ export const WhiteAndDefaultAcrossBrandBackgrounds: Story = {
       ))}
     </div>
   ),
+};
+
+// Content on these backgrounds usually sits in a white box; they don't switch
+// text colors.
+const effectCard = {
+  background: 'white',
+  color: '#212121',
+  padding: 16,
+  borderRadius: 12,
+  display: 'inline-block',
+};
+
+// Hour of AI multi-color backgrounds: each preset wide and tall.
+export const HourOfAiBackgroundEffects: Story = {
+  globals: {theme: 'hourofai'},
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      {SECTION_EFFECT_OPTIONS.map(({value, displayName}) => (
+        <div key={value} style={{display: 'flex', gap: 16}}>
+          <div style={{flex: 1}}>
+            <Section background={value} padding="l">
+              <div style={{minHeight: 240}}>
+                <span style={effectCard}>{`${displayName}, wide`}</span>
+              </div>
+            </Section>
+          </div>
+          <div style={{width: 200}}>
+            <Section background={value} padding="l">
+              <div style={{minHeight: 320}}>
+                <span style={effectCard}>{`${displayName}, tall`}</span>
+              </div>
+            </Section>
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({canvas}) => {
+    for (const {displayName} of SECTION_EFFECT_OPTIONS) {
+      await expect(canvas.getByText(`${displayName}, wide`)).toBeVisible();
+      await expect(canvas.getByText(`${displayName}, tall`)).toBeVisible();
+    }
+  },
+  parameters: {eyes: {matchLevel: 'Layout'}},
+};
+
+// Motion never settles, so it's excluded from visual snapshots.
+export const HourOfAiBackgroundMotion: Story = {
+  globals: {theme: 'hourofai'},
+  args: {
+    background: 'aurora',
+    backgroundMotion: 'drift',
+    backgroundMotionSpeed: 'normal',
+    padding: 'l',
+  },
+  argTypes: {
+    background: {
+      control: 'select',
+      options: SECTION_EFFECT_OPTIONS.map(o => o.value),
+    },
+    backgroundMotion: {
+      control: 'select',
+      options: BACKGROUND_MOTIONS.map(o => o.value),
+    },
+    backgroundMotionSpeed: {
+      control: 'select',
+      options: BACKGROUND_MOTION_SPEEDS.map(o => o.value),
+    },
+  },
+  render: args => (
+    <Section {...args}>
+      <div style={{minHeight: 360}}>
+        <span style={effectCard}>Background motion</span>
+      </div>
+    </Section>
+  ),
+  parameters: {eyes: {include: false}},
 };
