@@ -1,6 +1,8 @@
 'use client';
 
-import {Box, Button} from '@mui/material';
+import {Box} from '@mui/material';
+
+import {LinkButton} from '@code-dot-org/component-library/button';
 
 import {
   HOUR_OF_AI_CATALOG_PATH,
@@ -26,18 +28,21 @@ export default function CatalogCrossLink({
         textAlign: 'center',
       }}
     >
-      <Button
+      {/* Same look as a Studio Button: Medium, Dark Purple, Primary. */}
+      <LinkButton
         href={
           toHourOfCode ? HOUR_OF_CODE_CATALOG_PATH : HOUR_OF_AI_CATALOG_PATH
         }
-        variant="contained"
-        color="primary"
-        sx={{textDecoration: 'none'}}
-      >
-        {toHourOfCode
-          ? 'Legacy Hour of Code Activities'
-          : 'Hour of AI Activities'}
-      </Button>
+        text={
+          toHourOfCode
+            ? 'Legacy Hour of Code Activities'
+            : 'Hour of AI Activities'
+        }
+        color="purple"
+        type="primary"
+        size="m"
+        iconRight={{iconName: 'angle-right', iconStyle: 'solid'}}
+      />
     </Box>
   );
 }
