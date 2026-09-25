@@ -10,6 +10,12 @@ import {
   isGradientBackground,
 } from '@/components/common/gradients';
 import type {SpacingProps} from '@/components/common/types';
+import SectionBackgroundEffect, {
+  BackgroundEffect,
+  BackgroundMotion,
+  BackgroundMotionSpeed,
+  isBackgroundEffect,
+} from '@/components/contentful/section/backgroundEffects';
 import {SectionBackgroundProvider} from '@/components/contentful/section/SectionBackgroundContext';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {useBrandColors} from '@/themes/common/colors/brandColors';
@@ -39,7 +45,8 @@ type BrandColorSectionBackground = (typeof BRAND_COLORS)[number]['value'];
 export type SectionBackground =
   | LegacySectionBackground
   | BrandColorSectionBackground
-  | BrandGradient;
+  | BrandGradient
+  | BackgroundEffect;
 
 const LEGACY_SECTION_BACKGROUNDS = [
   'primary',
@@ -92,6 +99,10 @@ export type SectionBackgroundImageRepeat =
 export interface SectionProps {
   /** Background color */
   background?: SectionBackground;
+  /** Motion for a multi-color background effect (Hour of AI only) */
+  backgroundMotion?: BackgroundMotion;
+  /** Speed of that motion */
+  backgroundMotionSpeed?: BackgroundMotionSpeed;
   /** Vertical padding */
   padding?: keyof Exclude<SpacingProps, 'xs' | 's'>;
   /** Vertical gap (rem) between direct children. Undefined → no gap. */
@@ -152,6 +163,8 @@ const BRAND_BACKGROUND_VALUES = new Set<string>(
 
 const Section: React.FC<SectionProps> = ({
   background = 'primary',
+  backgroundMotion,
+  backgroundMotionSpeed,
   padding = 'l',
   gap,
   backgroundImage,
@@ -199,6 +212,12 @@ const Section: React.FC<SectionProps> = ({
     ? (`${gradientFamilyFor(gradientBackgroundValue)}Primary` as BrandColor)
     : undefined;
 
+  // Multi-color effects mostly hold framed (e.g. white) Containers, so they
+  // skip contrast switching like Transparent: text keeps its authored color.
+  const effectBackgroundValue = isBackgroundEffect(background)
+    ? background
+    : undefined;
+
   const dataBgTone = isBrandBackground
     ? brandColors.backgroundTone(brandBackgroundValue)
     : gradientBackgroundValue
@@ -211,7 +230,7 @@ const Section: React.FC<SectionProps> = ({
   // Authors pick "Default" (which still inherits from data-theme cascades on
   // legacy parents) or an explicit color, and we render it verbatim.
   const providerValue =
-    background === 'transparent'
+    background === 'transparent' || effectBackgroundValue
       ? 'transparent'
       : (normalizedBrandBgFromGradient ?? brandBackgroundValue);
 
@@ -268,10 +287,23 @@ const Section: React.FC<SectionProps> = ({
         // User-supplied background image overrides the legacy pattern above
         // when both happen to be present.
         ...backgroundImageSx,
+        // The effect is absolutely positioned behind the content.
+        ...(effectBackgroundValue && {
+          position: 'relative',
+          isolation: 'isolate',
+        }),
       }}
       {...experienceProps}
     >
+      {effectBackgroundValue && (
+        <SectionBackgroundEffect
+          effect={effectBackgroundValue}
+          motion={backgroundMotion}
+          speed={backgroundMotionSpeed}
+        />
+      )}
       <Container
+        sx={effectBackgroundValue ? {position: 'relative'} : undefined}
         className={classNames(
           'container',
           `container--spacing-${padding}`,

@@ -1,6 +1,7 @@
 import {render, screen} from '@testing-library/react';
 
 import Section, {SectionProps, sectionBackground} from '../Section';
+import {useSectionBackground} from '../SectionBackgroundContext';
 
 describe('Section Component', () => {
   const renderComponent = (props: Partial<SectionProps> = {}) => {
@@ -144,6 +145,71 @@ describe('Section Component', () => {
         // would render for the same family.
         expect(`${family}Primary`).toBe(`${family}Primary`);
       });
+    });
+  });
+
+  describe('multi-color background effects', () => {
+    const sectionOf = () =>
+      screen.getByText('This is content.').closest('.container')
+        ?.parentElement as HTMLElement;
+
+    it('draws the effect behind the content with no contrast tone', () => {
+      renderComponent({background: 'aurora'});
+      const section = sectionOf();
+      const effect = section.querySelector('[data-background-effect]');
+
+      expect(section).toHaveClass('section-background-aurora');
+      // Like Transparent: descendants keep their authored colors.
+      expect(section).not.toHaveAttribute('data-bg-tone');
+      expect(effect).toHaveAttribute('data-background-effect', 'aurora');
+      expect(effect).toHaveAttribute('aria-hidden', 'true');
+      expect(section.firstElementChild).toBe(effect);
+    });
+
+    // The gradient CSS itself is covered in presets.test.ts: jsdom's CSSOM
+    // rejects multi-layer gradients, so it never reaches the DOM here.
+    it('renders static layouts without blob elements', () => {
+      renderComponent({background: 'dusk'});
+      const effect = sectionOf().querySelector('[data-background-effect]')!;
+      const layouts = Array.from(effect.children).slice(0, -1);
+
+      expect(layouts).toHaveLength(2);
+      layouts.forEach(layout => expect(layout.children).toHaveLength(0));
+    });
+
+    it('renders blob elements for motion', () => {
+      renderComponent({background: 'dusk', backgroundMotion: 'drift'});
+      const effect = sectionOf().querySelector('[data-background-effect]')!;
+      const [wide, tall] = Array.from(effect.children);
+
+      expect(wide.children).toHaveLength(5);
+      expect(tall.children).toHaveLength(4);
+    });
+
+    it('adds a mirrored frame for Breathe', () => {
+      renderComponent({background: 'aurora', backgroundMotion: 'breathe'});
+      const effect = sectionOf().querySelector('[data-background-effect]')!;
+
+      expect(effect.querySelectorAll('[data-frame="alt"]')).toHaveLength(2);
+    });
+
+    it('tells descendants the background is transparent', () => {
+      const Probe = () => <span>{`enclosing: ${useSectionBackground()}`}</span>;
+      render(
+        <Section background="dusk">
+          <Probe />
+        </Section>,
+      );
+
+      expect(screen.getByText('enclosing: transparent')).toBeInTheDocument();
+    });
+
+    it('renders no effect for plain backgrounds', () => {
+      renderComponent({background: 'purpleDark'});
+
+      expect(
+        sectionOf().querySelector('[data-background-effect]'),
+      ).not.toBeInTheDocument();
     });
   });
 });

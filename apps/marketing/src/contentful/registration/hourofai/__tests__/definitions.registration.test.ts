@@ -97,7 +97,7 @@ describe('Hour of AI color pickers', () => {
     ]);
   });
 
-  it('offers palette Section backgrounds with no gradients', () => {
+  it('offers palette and multi-color Section backgrounds, no gradients', () => {
     expect(values(HourOfAiSectionDefinition, 'background')).toEqual([
       'white',
       'purpleDark',
@@ -105,12 +105,38 @@ describe('Hour of AI color pickers', () => {
       'pinkLight',
       'bluePrimary',
       'blueLight',
+      'aurora',
+      'dusk',
       'black',
       'transparent',
     ]);
     expect(variable(HourOfAiSectionDefinition, 'background').defaultValue).toBe(
       'white',
     );
+  });
+
+  it('offers Section background motion, defaulting to none', () => {
+    expect(values(HourOfAiSectionDefinition, 'backgroundMotion')).toEqual([
+      'none',
+      'drift',
+      'breathe',
+      'pointer',
+      'scroll',
+    ]);
+    expect(
+      variable(HourOfAiSectionDefinition, 'backgroundMotion').defaultValue,
+    ).toBe('none');
+  });
+
+  it('offers Slow, Normal and Fast motion speeds, defaulting to Normal', () => {
+    expect(values(HourOfAiSectionDefinition, 'backgroundMotionSpeed')).toEqual([
+      'slow',
+      'normal',
+      'fast',
+    ]);
+    expect(
+      variable(HourOfAiSectionDefinition, 'backgroundMotionSpeed').defaultValue,
+    ).toBe('normal');
   });
 
   it('limits SimpleList icon and text colors to the palette', () => {
