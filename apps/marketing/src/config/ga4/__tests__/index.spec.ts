@@ -16,6 +16,11 @@ describe('Google Analytics Config', () => {
     expect(measurementId).toBe(GOOGLE_ANALYTICS_CONFIG[Brand.HOUR_OF_CODE]);
   });
 
+  it('should share the CODE_DOT_ORG measurement ID for HOUR_OF_AI', () => {
+    const measurementId = getGoogleAnalyticsMeasurementId(Brand.HOUR_OF_AI);
+    expect(measurementId).toBe('G-L9HT5MZ3HD');
+  });
+
   it('should return undefined for an unknown brand', () => {
     const measurementId = getGoogleAnalyticsMeasurementId(
       'UNKNOWN_BRAND' as Brand,
