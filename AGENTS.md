@@ -181,6 +181,8 @@ See [docs/ui-convention.md](docs/ui-convention.md).
 
 ## Active Technologies
 
+- TypeScript ~5.x, React 18, Next.js App Router (existing marketing app) + `@mui/material` (Box, Typography), `@contentful/experiences-sdk-react` (ComponentDefinition, editor properties), `@next/third-parties/google` (`sendGAEvent`, already used by not-found), the existing marketing `Link` component and `useSectionBackground`. No new dependencies. (012-auto-download)
+
 - TypeScript 5.x / React 18 (Next.js App Router) + `@mui/material` (Typography, Box), `@contentful/experiences-sdk-react` (ComponentDefinition), `@code-dot-org/component-library/fontAwesomeV6Icon`; internal `@/components/common/colors`, `@/themes/code.org/typography/tokens`, `@/themes/code.org/typography/fontStack`, `@/components/contentful/section/SectionBackgroundContext` (010-custom-text)
 - N/A (presentational; content authored in Contentful) (010-custom-text)
 

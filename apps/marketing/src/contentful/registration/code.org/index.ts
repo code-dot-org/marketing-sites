@@ -15,6 +15,9 @@ import ActionBlock, {
 import FullWidthActionBlock, {
   FullWidthActionBlockContentfulComponentDefinition,
 } from '@/components/contentful/actionBlocks/fullWidthActionBlock';
+import AutoDownload, {
+  AutoDownloadContentfulComponentDefinition,
+} from '@/components/contentful/autoDownload';
 import Badge, {
   BadgeContentfulComponentDefinition,
 } from '@/components/contentful/badge';
@@ -229,6 +232,15 @@ const contentfulRegistration = {
     {
       component: AFEEligibility,
       definition: AFEEligibilityContentfulComponentDefinition,
+    },
+    {
+      component: AutoDownload,
+      definition: AutoDownloadContentfulComponentDefinition,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
+      },
     },
     // '03: Content Building Blocks' components, in palette display order.
     {
