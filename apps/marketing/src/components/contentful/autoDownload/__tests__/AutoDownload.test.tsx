@@ -94,7 +94,26 @@ describe('AutoDownload', () => {
     expect(sendFileDownloadEventMock).toHaveBeenCalledWith({
       href: HREF,
       fileName: 'sample-toolkit.pdf',
+      method: 'auto',
+      parameters: {},
     });
+  });
+
+  it('sends authored analytics parameters with the automatic download', async () => {
+    render(
+      <AutoDownload
+        file={FILE}
+        analyticsParameters="download_campaign=springplcourse, method=link"
+      />,
+    );
+
+    await waitFor(() => expect(sendFileDownloadEventMock).toHaveBeenCalled());
+    expect(sendFileDownloadEventMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: 'auto',
+        parameters: {download_campaign: 'springplcourse'},
+      }),
+    );
   });
 
   it('does not start when autoStart is false', () => {
@@ -160,13 +179,53 @@ describe('AutoDownload', () => {
     expect(sendFileDownloadEventMock).not.toHaveBeenCalled();
   });
 
-  it('does not report a fallback link click', async () => {
-    render(<AutoDownload file={FILE} autoStart={false} />);
-    const link = screen.getByRole('link');
-    link.addEventListener('click', event => event.preventDefault());
+  describe('fallback link click', () => {
+    const renderAndClick = async (
+      props: Partial<React.ComponentProps<typeof AutoDownload>> = {},
+    ) => {
+      const documentListener = jest.fn();
+      document.addEventListener('click', documentListener);
+      render(
+        <AutoDownload
+          file={FILE}
+          autoStart={false}
+          analyticsParameters="download_campaign=springplcourse"
+          {...props}
+        />,
+      );
+      const link = screen.getByRole('link');
+      link.addEventListener('click', event => event.preventDefault());
+      await userEvent.click(link);
+      document.removeEventListener('click', documentListener);
+      return documentListener;
+    };
 
-    await userEvent.click(link);
-    expect(sendFileDownloadEventMock).not.toHaveBeenCalled();
+    it('reports the click with the authored parameters', async () => {
+      await renderAndClick();
+      expect(sendFileDownloadEventMock).toHaveBeenCalledTimes(1);
+      expect(sendFileDownloadEventMock).toHaveBeenCalledWith({
+        href: HREF,
+        fileName: 'sample-toolkit.pdf',
+        method: 'link',
+        parameters: {download_campaign: 'springplcourse'},
+      });
+    });
+
+    it("stops the click reaching GA's document-level tracking", async () => {
+      const documentListener = await renderAndClick();
+      expect(documentListener).not.toHaveBeenCalled();
+    });
+
+    it('does not report clicks in the editor', async () => {
+      await renderAndClick({isEditorMode: true});
+      expect(sendFileDownloadEventMock).not.toHaveBeenCalled();
+    });
+
+    it('does not report clicks on a preview host', async () => {
+      setHost('preview-hourofai.marketing-sites.localhost:3001');
+      await renderAndClick();
+      expect(sendFileDownloadEventMock).not.toHaveBeenCalled();
+    });
   });
 
   it('renders nothing on the live site without a file', () => {
@@ -206,6 +265,26 @@ describe('AutoDownload', () => {
       expect(startFileDownloadMock).not.toHaveBeenCalled();
       expect(
         screen.getByText('Auto-download is off in the editor and preview.'),
+      ).toBeInTheDocument();
+    });
+
+    it('lists accepted and ignored analytics parameters in the editor', () => {
+      render(
+        <AutoDownload
+          file={FILE}
+          isEditorMode
+          analyticsParameters="download_campaign=springplcourse, method=link"
+        />,
+      );
+      expect(
+        screen.getByText(
+          'Analytics parameters: download_campaign=springplcourse',
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Ignored analytics parameters: method=link (reserved name)',
+        ),
       ).toBeInTheDocument();
     });
 

@@ -22,6 +22,9 @@
     failMessage: {displayName: 'Message if the download fails', type: 'Text', group: 'content',
                   defaultValue: "The download didn't start automatically.",
                   validations: {bindingSourceType: ['manual', 'entry']}},
+    analyticsParameters: {displayName: 'Analytics parameters', type: 'Text', group: 'content',
+                  // Optional; name=value pairs, e.g. download_campaign=springplcourse
+                  validations: {bindingSourceType: ['manual']}},
   },
 }
 ```

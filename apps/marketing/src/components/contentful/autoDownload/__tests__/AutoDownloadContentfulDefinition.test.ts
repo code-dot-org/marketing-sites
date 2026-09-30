@@ -18,6 +18,17 @@ describe('AutoDownloadContentfulComponentDefinition', () => {
     });
   });
 
+  it('offers an optional, manual-only analytics parameters field', () => {
+    expect(definition.variables.analyticsParameters).toMatchObject({
+      type: 'Text',
+      group: 'content',
+      validations: {bindingSourceType: ['manual']},
+    });
+    expect(
+      definition.variables.analyticsParameters.defaultValue,
+    ).toBeUndefined();
+  });
+
   it('exposes localizable copy with the documented defaults', () => {
     expect(definition.variables.message).toMatchObject({
       type: 'Text',

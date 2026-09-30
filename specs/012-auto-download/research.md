@@ -40,6 +40,8 @@ Checked 2026-09-30. Each item says whether it was **confirmed** (MCP, live HTTP 
 
 ## R6. Analytics event and double counting
 
+> **Superseded in part (2026-09-30):** Dee asked for authored analytics parameters on both automatic downloads and link clicks. GA's built-in tracking can't carry them, so the component now reports link clicks itself (`method: 'link'`) and stops the click from reaching GA's document-level listener. That was verified against the live gtag on the local page: one click sent exactly one `file_download` and no built-in `file_download` or outbound `click`. The contract in contracts/file-download-event.md is current; the original decision is kept below for history.
+
 - **Confirmed (installed source)**: `sendGAEvent` from `@next/third-parties/google` pushes onto `window.dataLayer`. If GA hasn't initialised or the data layer doesn't exist yet, it drops the event with a console warning. `GoogleAnalytics` injects its init script with `next/script` (`afterInteractive`), so it can run after the component's hydration effect.
 - **Confirmed (repo)**: GA loads directly (gtag.js, no Tag Manager) inside `OneTrustProvider`. OneTrust's auto-block script holds back `googletagmanager.com` until consent. Hour of AI now shares Code.org's measurement id (`G-L9HT5MZ3HD`, set 2026-09-30), and its OneTrust domain is configured.
 - **Decision**: `sendFileDownloadEvent` sends `gtag('event', 'file_download', {file_name, file_extension, link_url, method: 'auto'})` once the download has started.

@@ -171,6 +171,14 @@
 
 **Checkpoint**: analytics contract implemented. Hour of AI shares Code.org's GA4 id (`src/config/ga4/index.ts`).
 
+### Follow-up: per-placement analytics parameters (added 2026-09-30)
+
+- [x] T028 [US3] Parse and validate the authored `name=value` list in `autoDownload/parseAnalyticsParameters.ts`, with tests in `autoDownload/__tests__/parseAnalyticsParameters.test.ts`.
+- [x] T029 [US3] Add the optional `analyticsParameters` Text variable (manual binding) to `autoDownload/AutoDownloadContentfulDefinition.ts`, with a definition test.
+- [x] T030 [US3] Send the parameters with both events: `method: 'auto'` from the download effect and `method: 'link'` from a native click listener on the link's wrapper, which also stops GA's built-in tracking from counting the click again (`autoDownload/AutoDownload.tsx`, `autoDownload/sendFileDownloadEvent.ts`, tests).
+- [x] T031 [US3] List accepted and ignored parameters in the editor/preview note, with an `EditorWithAnalyticsParameters` story in `apps/marketing-storybook/stories/AutoDownload.story.tsx`.
+- [x] T032 [US3] Verify on the local live host (draft mode) against the live gtag: one link click sends exactly one `file_download` (`method: link`) and no built-in duplicate.
+
 ---
 
 ## Phase 6: Polish & Cross-Cutting Concerns
@@ -186,7 +194,7 @@
 - [x] T025 Run `yarn release:dryrun` (build, lint, test) from the repo root and report the results.
 - [ ] T026 Walk through the quickstart manually on `http://hourofai.marketing-sites.localhost:3001` and `http://preview-hourofai.marketing-sites.localhost:3001`, with the draft page loaded via draft mode or a local fixture.
   - The file saves under its name; back/forward doesn't re-download; the preview host doesn't download; with JS off, the link works.
-- [ ] T027 [P] Hand off the analytics setup from `contracts/file-download-event.md` to the analytics manager (via Dee): keep built-in File downloads on, register the `method` dimension, and filter by hostname in the shared Code.org property.
+- [ ] T027 [P] Hand off the analytics setup from `contracts/file-download-event.md` to the analytics manager (via Dee): register `method` and each analytics parameter name as custom dimensions, and filter by hostname in the shared Code.org property.
 
 ---
 

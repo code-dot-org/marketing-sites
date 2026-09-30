@@ -8,7 +8,11 @@ const sendGAEventMock = sendGAEvent as jest.Mock;
 
 const HREF =
   'https://contentful-assets.code.org/hwu8vzk5v0g2/abc/def/hour-of-ai-toolkit.pdf';
-const EVENT = {href: HREF, fileName: 'hour-of-ai-toolkit.pdf'};
+const EVENT = {
+  href: HREF,
+  fileName: 'hour-of-ai-toolkit.pdf',
+  method: 'auto' as const,
+};
 
 const setReadyState = (state: DocumentReadyState) =>
   Object.defineProperty(document, 'readyState', {
@@ -35,6 +39,36 @@ describe('sendFileDownloadEvent', () => {
       link_url: HREF,
       method: 'auto',
     });
+  });
+
+  it('adds authored parameters without letting them overwrite the event fields', () => {
+    (window as {dataLayer?: unknown[]}).dataLayer = [];
+
+    sendFileDownloadEvent({
+      ...EVENT,
+      parameters: {download_campaign: 'springplcourse', method: 'link'},
+    });
+
+    expect(sendGAEventMock).toHaveBeenCalledWith(
+      'event',
+      'file_download',
+      expect.objectContaining({
+        download_campaign: 'springplcourse',
+        method: 'auto',
+      }),
+    );
+  });
+
+  it('reports fallback-link clicks with method link', () => {
+    (window as {dataLayer?: unknown[]}).dataLayer = [];
+
+    sendFileDownloadEvent({...EVENT, method: 'link'});
+
+    expect(sendGAEventMock).toHaveBeenCalledWith(
+      'event',
+      'file_download',
+      expect.objectContaining({method: 'link'}),
+    );
   });
 
   it('waits for window load when GA has not initialised yet', () => {

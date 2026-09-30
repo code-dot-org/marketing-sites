@@ -1,13 +1,14 @@
 'use client';
 
 import Box from '@mui/material/Box';
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 
 import Link from '@/components/contentful/link';
 import Paragraph from '@/components/contentful/paragraph';
 import {PREVIEW_HOSTNAMES} from '@/config/preview';
 
 import {AUTO_DOWNLOAD_DEFAULTS} from './AutoDownloadContentfulDefinition';
+import {parseAnalyticsParameters} from './parseAnalyticsParameters';
 import {sendFileDownloadEvent} from './sendFileDownloadEvent';
 import {
   getFileName,
@@ -21,6 +22,8 @@ type AutoDownloadProps = {
   message?: string;
   linkText?: string;
   failMessage?: string;
+  /** Authored `name=value` pairs sent with the download event. */
+  analyticsParameters?: string;
   /** Injected by the Experiences SDK in Studio. */
   isEditorMode?: boolean;
   /** Not authorable; lets stories render static states. */
@@ -53,11 +56,18 @@ const AutoDownload: React.FunctionComponent<AutoDownloadProps> = ({
   message = AUTO_DOWNLOAD_DEFAULTS.message,
   linkText = AUTO_DOWNLOAD_DEFAULTS.linkText,
   failMessage = AUTO_DOWNLOAD_DEFAULTS.failMessage,
+  analyticsParameters,
   isEditorMode = false,
   autoStart = true,
   className,
 }) => {
   const href = toAbsoluteFileUrl(file);
+  // Memoized on the authored string so the effect below doesn't re-run
+  // (and re-download) on every render.
+  const {parameters, rejected} = useMemo(
+    () => parseAnalyticsParameters(analyticsParameters),
+    [analyticsParameters],
+  );
   const [hasFailed, setHasFailed] = useState(false);
   // Preview is only detectable client-side, so it's set from the effect to
   // keep the server and first client render identical.
@@ -76,7 +86,9 @@ const AutoDownload: React.FunctionComponent<AutoDownloadProps> = ({
     const fileName = getFileName(href);
 
     startFileDownload(href, fileName, controller.signal)
-      .then(() => sendFileDownloadEvent({href, fileName}))
+      .then(() =>
+        sendFileDownloadEvent({href, fileName, method: 'auto', parameters}),
+      )
       .catch(error => {
         if (controller.signal.aborted) return;
         console.warn('Auto Download: the file could not be downloaded', error);
@@ -87,7 +99,31 @@ const AutoDownload: React.FunctionComponent<AutoDownloadProps> = ({
       controller.abort();
       isClaimed = false;
     };
-  }, [href, autoStart, isEditorMode]);
+  }, [href, autoStart, isEditorMode, parameters]);
+
+  // Reports fallback-link clicks ourselves so the authored parameters go with
+  // them. The native listener stops the click before it reaches GA's
+  // document-level file-download tracking, which would otherwise count the
+  // same click again without the parameters.
+  const linkWrapperRef = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const wrapper = linkWrapperRef.current;
+    if (!wrapper || !href) return;
+
+    const onClick = (event: MouseEvent) => {
+      event.stopPropagation();
+      if (isEditorMode || isPreviewHost()) return;
+      sendFileDownloadEvent({
+        href,
+        fileName: getFileName(href),
+        method: 'link',
+        parameters,
+      });
+    };
+
+    wrapper.addEventListener('click', onClick);
+    return () => wrapper.removeEventListener('click', onClick);
+  }, [href, isEditorMode, parameters]);
 
   if (!href) {
     return isEditorMode ? (
@@ -111,25 +147,41 @@ const AutoDownload: React.FunctionComponent<AutoDownloadProps> = ({
       {/* Inline inside a Paragraph so the link takes the brand body font;
           Hour of AI has no standalone Link theme styles. */}
       <Paragraph removeMarginBottom>
-        <Link
-          href={href}
-          isLinkExternal={false}
-          openInNewTab
-          ariaLabel={`${linkText} (opens in a new tab)`}
-          inline
-          removeMarginBottom
-        >
-          {linkText}
-        </Link>
+        <Box component="span" ref={linkWrapperRef}>
+          <Link
+            href={href}
+            isLinkExternal={false}
+            openInNewTab
+            ariaLabel={`${linkText} (opens in a new tab)`}
+            inline
+            removeMarginBottom
+          >
+            {linkText}
+          </Link>
+        </Box>
       </Paragraph>
       {(isEditorMode || isPreview) && (
-        <Paragraph
-          visualAppearance="text-sm"
-          removeMarginBottom
-          sx={{marginTop: '1rem'}}
-        >
-          Auto-download is off in the editor and preview.
-        </Paragraph>
+        <Box sx={{marginTop: '1rem'}}>
+          <Paragraph visualAppearance="text-sm" removeMarginBottom>
+            Auto-download is off in the editor and preview.
+          </Paragraph>
+          {Object.keys(parameters).length > 0 && (
+            <Paragraph visualAppearance="text-sm" removeMarginBottom>
+              Analytics parameters:{' '}
+              {Object.entries(parameters)
+                .map(([name, value]) => `${name}=${value}`)
+                .join(', ')}
+            </Paragraph>
+          )}
+          {rejected.length > 0 && (
+            <Paragraph visualAppearance="text-sm" removeMarginBottom>
+              Ignored analytics parameters:{' '}
+              {rejected
+                .map(({entry, reason}) => `${entry} (${reason})`)
+                .join(', ')}
+            </Paragraph>
+          )}
+        </Box>
       )}
     </Box>
   );

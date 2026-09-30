@@ -4,12 +4,13 @@ No Contentful content type or schema change. The only authored data is a compone
 
 ## Auto Download instance (Studio component variables)
 
-| Variable      | Type  | Binding           | Default                                     | Notes                                       |
-| ------------- | ----- | ----------------- | ------------------------------------------- | ------------------------------------------- |
-| `file`        | Media | `asset`           | none                                        | Required for the component to do anything.  |
-| `message`     | Text  | `manual`, `entry` | `Your download should start automatically.` | Localizable.                                |
-| `linkText`    | Text  | `manual`, `entry` | `If it doesn't, download the file here.`    | Localizable. Text of the fallback link.     |
-| `failMessage` | Text  | `manual`, `entry` | `The download didn't start automatically.`  | Localizable. Replaces `message` on failure. |
+| Variable              | Type  | Binding           | Default                                     | Notes                                                                                                                  |
+| --------------------- | ----- | ----------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `file`                | Media | `asset`           | none                                        | Required for the component to do anything.                                                                             |
+| `message`             | Text  | `manual`, `entry` | `Your download should start automatically.` | Localizable.                                                                                                           |
+| `linkText`            | Text  | `manual`, `entry` | `If it doesn't, download the file here.`    | Localizable. Text of the fallback link.                                                                                |
+| `failMessage`         | Text  | `manual`, `entry` | `The download didn't start automatically.`  | Localizable. Replaces `message` on failure.                                                                            |
+| `analyticsParameters` | Text  | `manual`          | none                                        | Optional `name=value` pairs sent with every download event; parsed and validated per contracts/file-download-event.md. |
 
 Editor-only prop injected by the SDK: `isEditorMode` (from `enableEditorProperties`).
 Internal prop, not in the Studio definition: `autoStart?: boolean` (default `true`). Stories use it to render a static state.
@@ -38,7 +39,7 @@ Internal prop, not in the Studio definition: `autoStart?: boolean` (default `tru
 ```
 
 - Every state shows the fallback link.
-- The analytics event is sent only when entering `started`.
+- The automatic download's analytics event is sent only when entering `started`. A fallback-link click sends its own event (`method: 'link'`) in any state except the editor and preview.
 - An aborted request (unmount or Strict Mode cleanup) returns to `idle` with no event.
 
 ## Download event (analytics)

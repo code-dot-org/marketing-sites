@@ -29,13 +29,13 @@
 
 See [contracts/file-download-event.md](contracts/file-download-event.md). One-time setup:
 
-- Keep "File downloads" switched on in the property's built-in tracking.
-- Register `method` as a custom dimension.
+- Register `method` and each analytics parameter name (for example `download_campaign`) as event-scoped custom dimensions, before the page goes live.
+- Editors set per-placement values in the component's **Analytics parameters** field, for example `download_campaign=springplcourse`.
 - Hour of AI shares the Code.org property. Filter reports by hostname `hourofai.org`.
 
 ## Verifying the event
 
 With GA debug mode (or Tag Assistant) and analytics consent granted:
 
-- Load the page and expect one `file_download` with `method=auto`.
-- Click the link and expect one `file_download` without `method`.
+- Load the page and expect one `file_download` with `method=auto` and the authored parameters.
+- Click the link and expect one `file_download` with `method=link` and the same parameters, and no second event from GA's built-in tracking.

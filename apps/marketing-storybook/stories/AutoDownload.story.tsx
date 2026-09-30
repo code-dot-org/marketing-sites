@@ -99,6 +99,26 @@ export const EditorMode: Story = {
   },
 };
 
+export const EditorWithAnalyticsParameters: Story = {
+  args: {
+    isEditorMode: true,
+    analyticsParameters: 'download_campaign=springplcourse, method=link',
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.getByText(
+        'Analytics parameters: download_campaign=springplcourse',
+      ),
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByText(
+        'Ignored analytics parameters: method=link (reserved name)',
+      ),
+    ).toBeInTheDocument();
+  },
+};
+
 export const EditorUnbound: Story = {
   args: {file: undefined, isEditorMode: true},
   play: async ({canvasElement}) => {

@@ -41,16 +41,16 @@ A content editor gets a revised toolkit. They upload it as a new asset, pick it 
 
 ### User Story 3 - Analytics manager measures downloads without code (Priority: P2)
 
-The analytics manager wants a download count per file. Every automatic download started by the component sends one standard file-download analytics event, carrying the file's name, extension and URL. Fallback-link clicks are counted by the analytics tool's own built-in file-download tracking, which sends the same event with the same fields. The analytics manager builds per-file events and reports from that in the analytics tool, so reusing the component for a new file needs no code change.
+The analytics manager wants a download count per file. Every automatic download and every fallback-link click sends one standard file-download analytics event, carrying the file's name, extension, URL, how it was downloaded, and any analytics parameters the editor set on that placement (for example `download_campaign=springplcourse`). The analytics manager builds per-file events and reports from that in the analytics tool, so reusing the component for a new file needs no code change.
 
 **Why this priority**: Measurement is required, but the download works without it. Hour of AI reports into the shared Code.org analytics property.
 
-**Independent Test**: With analytics enabled and consent granted, open a page using the component and confirm exactly one file-download event arrives with the expected file name. Click the fallback link and confirm exactly one more arrives, from the built-in tracking and without a `method` value.
+**Independent Test**: With analytics enabled and consent granted, open a page using the component and confirm exactly one file-download event arrives with the expected file name. Click the fallback link and confirm exactly one more arrives, with `method` set to `link`. Both carry the authored analytics parameters.
 
 **Acceptance Scenarios**:
 
-1. **Given** a visitor who has accepted analytics cookies, **When** the automatic download starts, **Then** exactly one file-download event is recorded, with the file name, extension, URL, and a method of `auto`.
-2. **Given** the same visitor, **When** they click the fallback link, **Then** exactly one file-download event is recorded, sent by the analytics tool's built-in download tracking. The component does not send a second one.
+1. **Given** a visitor who has accepted analytics cookies, **When** the automatic download starts, **Then** exactly one file-download event is recorded, with the file name, extension, URL, a method of `auto`, and the authored analytics parameters.
+2. **Given** the same visitor, **When** they click the fallback link, **Then** exactly one file-download event is recorded, with a method of `link` and the authored analytics parameters. The analytics tool's built-in download tracking does not send a second one.
 3. **Given** a visitor who has declined analytics cookies, **When** the download starts, **Then** the file still downloads and no analytics event is sent.
 
 ---
@@ -83,9 +83,10 @@ The analytics manager wants a download count per file. Every automatic download 
 - **FR-007**: If more than one instance is on a page, only the first MUST download automatically.
 - **FR-008**: If the automatic download fails, the component MUST update its message to point to the fallback link and MUST NOT show an error dialog or break the page.
 - **FR-009**: Status changes (started, failed) MUST be announced to assistive technology without moving focus. The component MUST meet WCAG 2.x AA, including contrast on light and dark section backgrounds.
-- **FR-010**: Each automatic download MUST send exactly one standard file-download analytics event. The event uses the same event name and field meanings as GA4's built-in download tracking (file name, file extension, file URL) plus a `method` value of `auto`. It MUST contain no personal data.
+- **FR-010**: Each automatic download and each fallback-link click MUST send exactly one standard file-download analytics event. The event uses the same event name and field meanings as GA4's built-in download tracking (file name, file extension, file URL), plus a `method` value (`auto` or `link`) and the placement's authored analytics parameters. It MUST contain no personal data.
+- **FR-010a (analytics parameters)**: Editors MUST be able to set optional analytics parameters per placement in Studio, as `name=value` pairs. Pairs that break GA4's naming limits or would overwrite the event's own fields or GA's page and campaign fields MUST be dropped, and the editor and preview MUST show which pairs will be sent and which were ignored (see contracts/file-download-event.md). Added 2026-09-30 at Dee's request.
 - **FR-011**: The analytics event MUST go through the site's existing analytics integration and consent gating. If analytics is unavailable, the event MUST be dropped without affecting the download.
-- **FR-012**: A single user action MUST NOT be double-counted. The component MUST NOT send its own event for fallback-link clicks, because GA4's built-in download tracking already counts them. The automatic download MUST NOT trigger the built-in tracking.
+- **FR-012**: A single user action MUST NOT be double-counted. The component MUST stop fallback-link clicks from reaching GA4's built-in download tracking, which can't carry the authored parameters. The automatic download MUST NOT trigger the built-in tracking.
 - **FR-013 (affected layers)**: The component belongs in the marketing app's Contentful component layer (`apps/marketing`). It is registered for Hour of AI and Code.org in Studio's `08: Advanced` category, and other brands can add it with a registration. It MUST be built with MUI and follow the section-background (light/dark) text colour convention. No shared design-system package change is expected.
 - **FR-014 (validation surfaces)**: Required: Storybook stories in the marketing Storybook, covering bound, unbound, editor/preview-disabled, failed, and dark-background states, with `play` coverage for the status message and link. Unit tests for the download trigger, the editor/preview suppression, back/forward suppression, single-instance behaviour, and analytics payload. Registration test for the Hour of AI brand.
 - **FR-015 (runtime flows)**: No middleware, route handler, redirect, or revalidation change. The component uses the Experiences SDK's existing registration path and editor-mode signal. Pages using it are served by the existing Experience route with unchanged caching (SWR/SIE).
@@ -100,7 +101,7 @@ The analytics manager wants a download count per file. Every automatic download 
 ### Systems and Contracts
 
 - **Upstream Inputs**: A Contentful file asset bound in Studio (URL, file name, content type). The Experiences SDK's editor-mode signal. The site's draft/preview state. The existing OneTrust consent state.
-- **Downstream Effects**: One standard GA4 `file_download` event per download (`file_name`, `file_extension`, `link_url`, plus a custom `method: 'auto'` parameter the analytics manager registers as a custom dimension). Fallback-link clicks are counted by GA4's built-in file-download tracking, which the analytics manager keeps switched on in the Hour of AI property. No cache tags, redirects, or SEO metadata changes.
+- **Downstream Effects**: One standard GA4 `file_download` event per download (`file_name`, `file_extension`, `link_url`, a custom `method` of `auto` or `link`, and the placement's authored parameters, each registered by the analytics manager as a custom dimension). GA4's built-in download tracking is suppressed for the fallback link. No cache tags, redirects, or SEO metadata changes.
 - **Runtime Surfaces**: A new marketing Contentful component and its Studio definition. Hour of AI and Code.org brand registrations. Marketing Storybook stories and mocks. Unit tests.
 - **Tenant / Hostname Paths**: `http://hourofai.marketing-sites.localhost:3001/toolkit` (live behaviour) and `http://preview-hourofai.marketing-sites.localhost:3001/toolkit` (auto-download suppressed).
 
@@ -135,7 +136,7 @@ The analytics manager wants a download count per file. Every automatic download 
 - The page is a standard Contentful Experience with a slug (for example `toolkit`). Locale handling for bare URLs such as `/toolkit` follows the site's existing behaviour.
 - Hour of AI shares the Code.org GA4 property and measurement id (decided 2026-09-30), and reports are split by hostname.
 - The site loads GA4 directly (not through Tag Manager). So the analytics manager can derive events and dimensions from what the site sends, but can't add new page triggers without code. That's why the component sends a generic event.
-- GA4's built-in file-download tracking is switched on in the Hour of AI property. It counts fallback-link clicks, and the component only reports automatic downloads (see FR-012).
+- GA4's built-in download tracking listens at the document level, so stopping the click on the link keeps it from double-counting (verified 2026-09-30; see FR-012).
 - Files are small (the toolkit is 150–250 KB). Editors keep uploaded PDFs tagged and accessible when compressing them.
 - Existing cache headers and revalidation windows stay unchanged. There's no new route handler or middleware.
 - No new personal-data collection, Student Records, or third-party data sharing is introduced.

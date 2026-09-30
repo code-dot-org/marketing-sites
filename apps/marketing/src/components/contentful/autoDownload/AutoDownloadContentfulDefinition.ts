@@ -44,6 +44,16 @@ export const AutoDownloadContentfulComponentDefinition: ComponentDefinition = {
         bindingSourceType: ['manual', 'entry'],
       },
     },
+    analyticsParameters: {
+      displayName: 'Analytics parameters',
+      type: 'Text',
+      group: 'content',
+      description:
+        'Optional. Extra GA4 parameters sent with the download event, as name=value pairs separated by commas (e.g. download_campaign=springplcourse). Each name must be registered as a custom dimension in GA. Short labels only; no personal data.',
+      validations: {
+        bindingSourceType: ['manual'],
+      },
+    },
     failMessage: {
       displayName: 'Message if the download fails',
       type: 'Text',
