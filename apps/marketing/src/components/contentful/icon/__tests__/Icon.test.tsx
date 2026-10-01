@@ -79,7 +79,8 @@ describe('Icon component', () => {
     expect(wrapper).toHaveStyle({
       width: `${24 * 1.75}px`,
       height: `${24 * 1.75}px`,
-      borderRadius: 'var(--codeai-radius-md, 0.625rem)',
+      borderRadius:
+        'var(--codeai-radius-icon, var(--codeai-radius-md, 0.625rem))',
       backgroundColor: cssVarForBrandColor('gray1'),
     });
   });
