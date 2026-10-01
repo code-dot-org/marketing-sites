@@ -19,9 +19,7 @@ import AutoDownload, {
   AutoDownloadContentfulComponentDefinition,
 } from '@/components/contentful/autoDownload';
 import Badge from '@/components/contentful/badge';
-import TextCollection, {
-  TextCollectionContentfulComponentDefinition,
-} from '@/components/contentful/collections/textCollection';
+import TextCollection from '@/components/contentful/collections/textCollection';
 import ButtonLegacy from '@/components/contentful/corporateSite/buttonLegacy';
 import CustomText from '@/components/contentful/customText';
 import Divider from '@/components/contentful/divider';
@@ -63,6 +61,7 @@ import {
   HourOfAiParagraphDefinition,
   HourOfAiSectionDefinition,
   HourOfAiSimpleListDefinition,
+  HourOfAiTextCollectionDefinition,
 } from './definitions';
 import {hourOfAiDesignTokens} from './designTokens';
 
@@ -221,7 +220,7 @@ const contentfulRegistration = {
     },
     {
       component: TextCollection,
-      definition: TextCollectionContentfulComponentDefinition,
+      definition: HourOfAiTextCollectionDefinition,
     },
     {
       component: Video,

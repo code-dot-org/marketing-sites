@@ -72,4 +72,35 @@ describe('TextCollection', () => {
     );
     expect(container.querySelector('.custom-class')).toBeInTheDocument();
   });
+
+  it('defaults to 3 columns, 1 on mobile', () => {
+    const {container} = render(
+      <TextCollection
+        textCollection={mockTextCollection as any}
+        sortOrder="manual"
+      />,
+    );
+    const grid = container.firstElementChild as HTMLElement;
+    expect(getComputedStyle(grid).getPropertyValue('--Grid-columns')).toBe(
+      '12',
+    );
+    expect(grid.firstElementChild).toHaveClass(
+      'MuiGrid-grid-xs-12',
+      'MuiGrid-grid-sm-4',
+    );
+  });
+
+  it('uses the set number of columns at every width', () => {
+    const {container} = render(
+      <TextCollection
+        textCollection={mockTextCollection as any}
+        sortOrder="manual"
+        columns="5"
+      />,
+    );
+    const grid = container.firstElementChild as HTMLElement;
+    expect(getComputedStyle(grid).getPropertyValue('--Grid-columns')).toBe('5');
+    expect(grid.firstElementChild).toHaveClass('MuiGrid-grid-xs-1');
+    expect(grid.firstElementChild).not.toHaveClass('MuiGrid-grid-sm-4');
+  });
 });
