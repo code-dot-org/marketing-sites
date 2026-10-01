@@ -9,7 +9,9 @@ const SEARCH_SX = {
   '& .MuiOutlinedInput-root': {
     borderRadius: brandRadius('md'),
     backgroundColor: 'var(--palette-white)',
-    '& fieldset, &:hover fieldset': {borderColor: 'var(--palette-light-pink)'},
+    '& fieldset, &:hover fieldset': {
+      borderColor: 'var(--palette-dark-purple)',
+    },
     '&.Mui-focused fieldset': {
       borderColor: 'var(--palette-pink)',
       borderWidth: '2px',

@@ -142,7 +142,7 @@ const FacetBar = ({
             color: 'card.contrastText',
             width: '100%',
             ...(hourOfAi && {
-              borderColor: 'var(--palette-light-pink)',
+              borderColor: 'var(--palette-dark-purple)',
               // The same top margin expanded or collapsed; the second
               // selector out-specifies MUI's expanded margin.
               '&:not(:first-of-type), &.Mui-expanded:not(:first-of-type)': {
@@ -175,7 +175,7 @@ const FacetBar = ({
           <AccordionDetails
             sx={
               hourOfAi
-                ? {borderTopColor: 'var(--palette-light-pink)'}
+                ? {borderTopColor: 'var(--palette-dark-purple)'}
                 : undefined
             }
           >
