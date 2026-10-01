@@ -69,4 +69,16 @@ describe('Hour of AI layout', () => {
       marginRight: sp(4),
     });
   });
+
+  it('styles Text Links like Code.org, underlining only the label', () => {
+    const root = slot('MuiLink', 'root');
+    expect(root).toMatchObject({
+      fontFamily: expect.stringMatching(/^Geist/),
+      fontWeight: 700,
+      textDecoration: 'none',
+      '&[data-hierarchy] > span': {textDecoration: 'underline'},
+      '&[data-hierarchy="color"]': {color: 'var(--palette-dark-purple)'},
+      '&.MuiLink-root.link--size-m': {fontSize: '0.875rem'},
+    });
+  });
 });

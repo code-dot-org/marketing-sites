@@ -9,6 +9,7 @@ import {BUTTON_OVERRIDES} from './button';
 import {CONTAINER_OVERRIDES} from './container';
 import {DIVIDER_OVERRIDES} from './divider';
 import {IMAGE_OVERRIDES} from './image';
+import {LINK_OVERRIDES} from './link';
 import {LIST_ITEM_OVERRIDES, LIST_OVERRIDES} from './list';
 import {TYPOGRAPHY_OVERRIDES} from './typography';
 import {VIDEO_OVERRIDES} from './video';
@@ -21,6 +22,7 @@ export const STYLE_OVERRIDES: Components<Theme> = {
   MuiContainer: CONTAINER_OVERRIDES,
   MuiDivider: DIVIDER_OVERRIDES,
   MuiImage: IMAGE_OVERRIDES,
+  MuiLink: LINK_OVERRIDES,
   MuiList: LIST_OVERRIDES,
   MuiListItem: LIST_ITEM_OVERRIDES,
   MuiTypography: TYPOGRAPHY_OVERRIDES,
