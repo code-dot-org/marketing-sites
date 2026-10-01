@@ -15,6 +15,9 @@ import ActivityCard, {
 import ActivityCarousel, {
   ActivityCarouselContentfulComponentDefinition,
 } from '@/components/contentful/activityCarousel';
+import AutoDownload, {
+  AutoDownloadContentfulComponentDefinition,
+} from '@/components/contentful/autoDownload';
 import Badge from '@/components/contentful/badge';
 import TextCollection, {
   TextCollectionContentfulComponentDefinition,
@@ -136,6 +139,15 @@ const contentfulRegistration = {
       definition: ActivityCarouselContentfulComponentDefinition,
       options: {
         wrapContainerWidth: '100%',
+      },
+    },
+    {
+      component: AutoDownload,
+      definition: AutoDownloadContentfulComponentDefinition,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
       },
     },
     {
