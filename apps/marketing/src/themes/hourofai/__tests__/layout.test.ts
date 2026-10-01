@@ -48,6 +48,16 @@ describe('Hour of AI layout', () => {
     });
   });
 
+  it("draws Section dividers in Code.org's grays", () => {
+    const root = slot('MuiContainer', 'root');
+    expect(root['&.MuiContainer-root.container--divider-primary']).toEqual({
+      borderBottom: '1px solid #d1d4d8',
+    });
+    expect(root['&.MuiContainer-root.container--divider-strong']).toEqual({
+      borderBottom: '1px solid #87909a',
+    });
+  });
+
   it('spaces text elements below with gutterBottom', () => {
     const gutter = slot('MuiTypography', 'gutterBottom');
     expect(gutter['&.MuiTypography-h1']).toEqual({marginBottom: sp(3)});
