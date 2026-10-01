@@ -20,6 +20,8 @@ export interface VideoProps {
   posterImage?: ExperienceAsset | string;
   /** Show caption */
   showCaption?: boolean;
+  /** Show the Download button (needs videoFallback) */
+  showDownload?: boolean;
   /** Label for Download button */
   downloadLabel?: string;
   /** The date and time the video was first published, in ISO 8601 format. */
