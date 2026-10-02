@@ -2,7 +2,7 @@ import {render} from '@testing-library/react';
 import {draftMode, headers} from 'next/headers';
 
 import {Brand, getBrandFromHostname} from '@/config/brand';
-import {getGoogleAnalyticsMeasurementId} from '@/config/ga4';
+import {getGoogleAnalyticsMeasurementIds} from '@/config/ga4';
 import {SupportedLocale} from '@/config/locale';
 import {getStage} from '@/config/stage';
 
@@ -19,7 +19,7 @@ jest.mock('@/config/brand', () => ({
 }));
 
 jest.mock('@/config/ga4', () => ({
-  getGoogleAnalyticsMeasurementId: jest.fn(),
+  getGoogleAnalyticsMeasurementIds: jest.fn(),
 }));
 
 jest.mock('@/config/stage', () => ({
@@ -36,11 +36,13 @@ jest.mock(
       <div>OneTrustProvider {children}</div>
     ),
 );
-jest.mock('@next/third-parties/google', () => ({
-  GoogleAnalytics: ({gaId}: {gaId: string}) => (
-    <div>GoogleAnalytics {gaId}</div>
-  ),
-}));
+jest.mock(
+  '@/providers/googleAnalytics/GoogleAnalyticsLoader',
+  () =>
+    ({measurementIds}: {measurementIds: string[]}) => (
+      <div>GoogleAnalyticsLoader {measurementIds.join(' ')}</div>
+    ),
+);
 jest.mock(
   '@/providers/statsig/StatsigProvider',
   () =>
@@ -86,7 +88,9 @@ describe('Layout', () => {
       get: jest.fn().mockReturnValue('example.com'),
     });
     (getBrandFromHostname as jest.Mock).mockReturnValue(brand);
-    (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue('GA-123456');
+    (getGoogleAnalyticsMeasurementIds as jest.Mock).mockReturnValue([
+      'GA-123456',
+    ]);
     (getStage as jest.Mock).mockReturnValue('production');
     (draftMode as jest.Mock).mockReturnValue(false);
 
@@ -102,33 +106,14 @@ describe('Layout', () => {
 
     expect(await findByText('OneTrustLoader')).toBeInTheDocument();
     expect(await findByText('OneTrustProvider')).toBeInTheDocument();
-    expect(await findByText('GoogleAnalytics GA-123456')).toBeInTheDocument();
+    expect(
+      await findByText('GoogleAnalyticsLoader GA-123456'),
+    ).toBeInTheDocument();
     expect(await findByText('StatsigProvider')).toBeInTheDocument();
     expect(await findByText('Child Component')).toBeInTheDocument();
     expect(
       await findByText(`OrganizationJsonLd for ${brand}`),
     ).toBeInTheDocument();
-  });
-
-  it('does not render GoogleAnalytics if measurement ID is missing', async () => {
-    (headers as jest.Mock).mockResolvedValue({
-      get: jest.fn().mockReturnValue('example.com'),
-    });
-    (getBrandFromHostname as jest.Mock).mockReturnValue('exampleBrand');
-    (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue(null);
-    (getStage as jest.Mock).mockReturnValue('production');
-
-    const {queryByText} = render(
-      await Layout({
-        children: <div>Child Component</div>,
-        params: Promise.resolve({
-          brand: 'code.org' as Brand,
-          locale: 'en-US' as SupportedLocale,
-        }),
-      }),
-    );
-
-    expect(queryByText('GoogleAnalytics')).not.toBeInTheDocument();
   });
 
   it('sets the html lang attribute based on locale', async () => {
@@ -138,7 +123,9 @@ describe('Layout', () => {
       get: jest.fn().mockReturnValue('example.com'),
     });
     (getBrandFromHostname as jest.Mock).mockReturnValue('code.org');
-    (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue('GA-123456');
+    (getGoogleAnalyticsMeasurementIds as jest.Mock).mockReturnValue([
+      'GA-123456',
+    ]);
     (getStage as jest.Mock).mockReturnValue('production');
 
     const {container} = render(
@@ -162,7 +149,9 @@ describe('Layout', () => {
       get: jest.fn().mockReturnValue('example.com'),
     });
     (getBrandFromHostname as jest.Mock).mockReturnValue('code.org');
-    (getGoogleAnalyticsMeasurementId as jest.Mock).mockReturnValue('GA-123456');
+    (getGoogleAnalyticsMeasurementIds as jest.Mock).mockReturnValue([
+      'GA-123456',
+    ]);
     (getStage as jest.Mock).mockReturnValue('production');
 
     const {container} = render(
