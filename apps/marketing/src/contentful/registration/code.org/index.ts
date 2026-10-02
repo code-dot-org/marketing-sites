@@ -147,7 +147,7 @@ import UnitCarousel, {
   UnitCarouselContentfulComponentDefinition,
 } from '@/components/contentful/unitCarousel';
 import Video, {
-  VideoContentfulComponentDefinition,
+  BrandVideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
 import {SECTION_MAX_WIDTH} from '@/themes/code.org/constants';
 
@@ -288,7 +288,7 @@ const contentfulRegistration = {
     },
     {
       component: Video,
-      definition: VideoContentfulComponentDefinition,
+      definition: BrandVideoContentfulComponentDefinition,
       options: {
         wrapContainerWidth: '100%',
       },

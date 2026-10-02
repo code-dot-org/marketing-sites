@@ -48,6 +48,16 @@ describe('Hour of AI layout', () => {
     });
   });
 
+  it("draws Section dividers in Code.org's grays", () => {
+    const root = slot('MuiContainer', 'root');
+    expect(root['&.MuiContainer-root.container--divider-primary']).toEqual({
+      borderBottom: '1px solid #d1d4d8',
+    });
+    expect(root['&.MuiContainer-root.container--divider-strong']).toEqual({
+      borderBottom: '1px solid #87909a',
+    });
+  });
+
   it('spaces text elements below with gutterBottom', () => {
     const gutter = slot('MuiTypography', 'gutterBottom');
     expect(gutter['&.MuiTypography-h1']).toEqual({marginBottom: sp(3)});
@@ -67,6 +77,18 @@ describe('Hour of AI layout', () => {
       marginBottom: 0,
       marginLeft: sp(4),
       marginRight: sp(4),
+    });
+  });
+
+  it('styles Text Links like Code.org, underlining only the label', () => {
+    const root = slot('MuiLink', 'root');
+    expect(root).toMatchObject({
+      fontFamily: expect.stringMatching(/^Geist/),
+      fontWeight: 700,
+      textDecoration: 'none',
+      '&[data-hierarchy] > span': {textDecoration: 'underline'},
+      '&[data-hierarchy="color"]': {color: 'var(--palette-dark-purple)'},
+      '&.MuiLink-root.link--size-m': {fontSize: '0.875rem'},
     });
   });
 });

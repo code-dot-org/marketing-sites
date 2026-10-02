@@ -3,6 +3,10 @@
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {BadgeContentfulComponentDefinition} from '@/components/contentful/badge';
+import {
+  TextCollectionContentfulComponentDefinition,
+  textCollectionColumnsDefinition,
+} from '@/components/contentful/collections/textCollection';
 import {ButtonLegacyContentfulComponentDefinition} from '@/components/contentful/corporateSite/buttonLegacy';
 import {CustomTextContentfulComponentDefinition} from '@/components/contentful/customText';
 import {CodeOrgDividerContentfulComponentDefinition} from '@/components/contentful/divider/dividerContentfulDefinition';
@@ -186,3 +190,11 @@ export const HourOfAiSimpleListDefinition = withVariables(
     textColor: {defaultValue: 'black', in: hourOfAiTextColorOptions('black')},
   },
 );
+
+export const HourOfAiTextCollectionDefinition: ComponentDefinition = {
+  ...TextCollectionContentfulComponentDefinition,
+  variables: {
+    ...TextCollectionContentfulComponentDefinition.variables,
+    ...textCollectionColumnsDefinition,
+  },
+};

@@ -19,9 +19,7 @@ import AutoDownload, {
   AutoDownloadContentfulComponentDefinition,
 } from '@/components/contentful/autoDownload';
 import Badge from '@/components/contentful/badge';
-import TextCollection, {
-  TextCollectionContentfulComponentDefinition,
-} from '@/components/contentful/collections/textCollection';
+import TextCollection from '@/components/contentful/collections/textCollection';
 import ButtonLegacy from '@/components/contentful/corporateSite/buttonLegacy';
 import CustomText from '@/components/contentful/customText';
 import Divider from '@/components/contentful/divider';
@@ -47,7 +45,7 @@ import Spacer, {
   SpacerContentfulComponentDefinition,
 } from '@/components/contentful/spacer';
 import Video, {
-  VideoContentfulComponentDefinition,
+  BrandVideoContentfulComponentDefinition,
 } from '@/components/contentful/video';
 import {SECTION_MAX_WIDTH} from '@/themes/hourofai/constants/layout';
 
@@ -63,6 +61,7 @@ import {
   HourOfAiParagraphDefinition,
   HourOfAiSectionDefinition,
   HourOfAiSimpleListDefinition,
+  HourOfAiTextCollectionDefinition,
 } from './definitions';
 import {hourOfAiDesignTokens} from './designTokens';
 
@@ -221,11 +220,11 @@ const contentfulRegistration = {
     },
     {
       component: TextCollection,
-      definition: TextCollectionContentfulComponentDefinition,
+      definition: HourOfAiTextCollectionDefinition,
     },
     {
       component: Video,
-      definition: VideoContentfulComponentDefinition,
+      definition: BrandVideoContentfulComponentDefinition,
       options: {
         wrapContainerWidth: '100%',
       },

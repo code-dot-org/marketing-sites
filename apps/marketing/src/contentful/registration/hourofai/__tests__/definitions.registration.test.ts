@@ -15,6 +15,7 @@ import {
   HourOfAiParagraphDefinition,
   HourOfAiSectionDefinition,
   HourOfAiSimpleListDefinition,
+  HourOfAiTextCollectionDefinition,
 } from '../definitions';
 import {hourOfAiDesignTokens} from '../designTokens';
 
@@ -201,5 +202,22 @@ describe('Hour of AI color pickers', () => {
   it('offers the palette in Studio design tokens', () => {
     expect(Object.keys(hourOfAiDesignTokens.color ?? {})).toEqual(PALETTE);
     expect(Object.keys(hourOfAiDesignTokens.border ?? {})).toEqual(PALETTE);
+  });
+});
+
+describe('Hour of AI Text Collection', () => {
+  it('adds a Design-tab Columns picker that defaults to the current layout', () => {
+    const columns = variable(HourOfAiTextCollectionDefinition, 'columns');
+    expect(columns.group).toBe('style');
+    expect(columns.defaultValue).toBe('default');
+    expect(values(HourOfAiTextCollectionDefinition, 'columns')).toEqual([
+      'default',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+    ]);
   });
 });

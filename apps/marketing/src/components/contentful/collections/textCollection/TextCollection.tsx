@@ -14,9 +14,21 @@ type ItemFields = {
 
 type ItemEntry = Entry<ItemFields>;
 
+/** `default` is 3 columns, 1 on mobile; a number is that many at any width. */
+export type TextCollectionColumns =
+  | 'default'
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6';
+
 export type TextCollectionProps = CollectionProps & {
   /** Collection content w/ fields from Contentful */
   textCollection: ItemEntry[];
+  /** Number of columns */
+  columns?: TextCollectionColumns;
 };
 
 const styles = {
@@ -34,6 +46,7 @@ const styles = {
 const TextCollection: React.FC<TextCollectionProps> = ({
   textCollection,
   sortOrder,
+  columns = 'default',
   className,
 }) => {
   if (!textCollection) {
@@ -81,13 +94,20 @@ const TextCollection: React.FC<TextCollectionProps> = ({
     return data;
   }, [textCollection, sortOrder]);
 
+  // A set column count makes each item one track of that many.
+  const columnCount = Number(columns) || undefined;
+  const itemSize = columnCount ? 1 : {xs: 12, sm: 4, md: 4};
+
   return (
-    <Grid container spacing={7.5} sx={styles.container} className={className}>
+    <Grid
+      container
+      columns={columnCount}
+      spacing={7.5}
+      sx={styles.container}
+      className={className}
+    >
       {textCollectionData.map(textCollection => (
-        <Grid
-          key={`id-${useId().replaceAll(':', '')}`}
-          size={{xs: 12, sm: 4, md: 4}}
-        >
+        <Grid key={`id-${useId().replaceAll(':', '')}`} size={itemSize}>
           {textCollection.item}
         </Grid>
       ))}

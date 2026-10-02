@@ -11,6 +11,11 @@ import {
   SECTION_PADDING_INLINE_MOBILE,
 } from '../constants/layout';
 
+// Code.org's gray-3 and gray-5. Not in the Hour of AI palette, which maps
+// every --codeai-gray-* to a brand color.
+const DIVIDER_GRAY = '#d1d4d8';
+const DIVIDER_GRAY_STRONG = '#87909a';
+
 // Section backgrounds (`section-background-*` on the Section root). Aliased
 // values get a rule too, so off-palette stored backgrounds render closest.
 // Legacy `primary` is Section's white default, not the Black text alias.
@@ -66,10 +71,10 @@ export const CONTAINER_OVERRIDES: Components<Theme>['MuiContainer'] = {
         paddingBottom: 0,
       },
       '&.MuiContainer-root.container--divider-primary': {
-        borderBottom: '1px solid var(--codeai-gray-3)',
+        borderBottom: `1px solid ${DIVIDER_GRAY}`,
       },
       '&.MuiContainer-root.container--divider-strong': {
-        borderBottom: '1px solid var(--codeai-gray-5)',
+        borderBottom: `1px solid ${DIVIDER_GRAY_STRONG}`,
       },
       ...sectionBackgroundRules,
     }),

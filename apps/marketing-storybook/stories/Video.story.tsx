@@ -18,6 +18,7 @@ export const Playground: StoryObj<typeof Video> = {
     uploadDate: '2025-01-01',
     videoFallback: 'https://example.com/video.mp4',
     showCaption: true,
+    showDownload: true,
   },
   argTypes: {
     youTubeId: {control: 'text'},
@@ -26,6 +27,7 @@ export const Playground: StoryObj<typeof Video> = {
     uploadDate: {control: 'text'},
     videoFallback: {control: 'text'},
     showCaption: {control: 'boolean'},
+    showDownload: {control: 'boolean'},
   },
 };
 

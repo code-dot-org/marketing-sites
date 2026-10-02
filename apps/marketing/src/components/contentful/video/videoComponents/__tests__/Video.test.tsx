@@ -89,6 +89,13 @@ describe('Video Component', () => {
     expect(downloadButton).toHaveAttribute('target', '_blank');
   });
 
+  it('hides the download button when showDownload is false', () => {
+    render(<Video {...defaultProps} showDownload={false} />);
+    expect(
+      screen.queryByRole('link', {name: defaultProps.downloadLabel}),
+    ).not.toBeInTheDocument();
+  });
+
   it('renders native video player when YouTube video fails and fallback is valid', () => {
     (ReactPlayer.canPlay as jest.Mock).mockReturnValue(true);
     render(<Video {...defaultProps} />);

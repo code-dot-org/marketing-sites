@@ -33,6 +33,7 @@ const Video: React.FC<VideoProps> = ({
   videoFallback,
   posterImage,
   showCaption,
+  showDownload = true,
   downloadLabel,
   uploadDate,
   errorHeading,
@@ -199,7 +200,7 @@ const Video: React.FC<VideoProps> = ({
             {videoTitle}
           </MuiTypography>
         )}
-        {videoFallback && (
+        {showDownload && videoFallback && (
           <TextLink
             className="video-download-button"
             href={videoFallback}

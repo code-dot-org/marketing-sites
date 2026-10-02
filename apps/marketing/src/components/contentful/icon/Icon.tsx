@@ -31,9 +31,11 @@ export type IconProps = Partial<RemoveMarginBottomProps> & {
 // Shape outer dimension is 1.75 × the icon size — gives the icon comfortable
 // padding without dwarfing it. Filled/outline backgrounds are always the
 // rounded square (the circle option was retired), cornered with the CodeAI
-// md radius token; fallback covers brands without the token scope.
+// md radius token unless the brand sets an icon radius; fallback covers
+// brands without the token scope.
 const SHAPE_RATIO = 1.75;
-const SQUARE_RADIUS = 'var(--codeai-radius-md, 0.625rem)';
+const SQUARE_RADIUS =
+  'var(--codeai-radius-icon, var(--codeai-radius-md, 0.625rem))';
 const OUTLINE_WIDTH = 3;
 
 const Icon: React.FC<IconProps> = ({

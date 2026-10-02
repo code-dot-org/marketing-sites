@@ -84,3 +84,19 @@ export const VideoContentfulComponentDefinition: ComponentDefinition = {
     },
   },
 };
+
+// Code.org and Hour of AI; csforall keeps the definition above.
+export const BrandVideoContentfulComponentDefinition: ComponentDefinition = {
+  ...VideoContentfulComponentDefinition,
+  variables: {
+    ...VideoContentfulComponentDefinition.variables,
+    showDownload: {
+      displayName: 'Show download button',
+      type: 'Boolean',
+      defaultValue: true,
+      group: 'style',
+      description:
+        'Check this to show the Download button under the video player. Needs a video fallback URL.',
+    },
+  },
+};
