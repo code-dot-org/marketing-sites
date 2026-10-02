@@ -1,4 +1,3 @@
-import {detachExperienceStyles} from '@contentful/experiences-sdk-react';
 import {Metadata} from 'next';
 import {draftMode} from 'next/headers';
 import {notFound} from 'next/navigation';
@@ -8,6 +7,7 @@ import {Brand} from '@/config/brand';
 import {getIcons} from '@/config/metadata/icons';
 import {getSiteVerification} from '@/config/metadata/siteVerification';
 import ExperiencePageLoader from '@/contentful/components/ExperiencePageLoader';
+import {detachExperienceStylesWithPrebinding} from '@/contentful/detachExperienceStylesWithPrebinding';
 import {getExperience} from '@/contentful/get-experience';
 import {registerContentfulComponents} from '@/contentful/registration';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
@@ -109,7 +109,9 @@ export default async function ExperiencePage({
   }
 
   // extract the styles from the experience
-  const stylesheet = experience ? detachExperienceStyles(experience) : null;
+  const stylesheet = experience
+    ? detachExperienceStylesWithPrebinding(experience)
+    : null;
 
   // experience currently needs to be stringified manually to be passed to the component
   const experienceJSON = experience ? JSON.stringify(experience) : null;
