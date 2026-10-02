@@ -1,6 +1,5 @@
 import {ThemeProvider} from '@mui/material';
 import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
-import {GoogleAnalytics} from '@next/third-parties/google';
 import {draftMode} from 'next/headers';
 
 import {
@@ -13,11 +12,12 @@ import {LogoTransitionProvider} from '@/components/contentful/logoTransitionModa
 import {getFooter} from '@/components/footer/Footer';
 import {getHeader} from '@/components/header/Header';
 import {getBrandFromString} from '@/config/brand';
-import {getGoogleAnalyticsMeasurementId} from '@/config/ga4';
+import {getGoogleAnalyticsMeasurementIds} from '@/config/ga4';
 import OrganizationJsonLd from '@/config/jsonLd/OrganizationJsonLd';
 import {SUPPORTED_LOCALES_MAP, SupportedLocale} from '@/config/locale';
 import {getStage} from '@/config/stage';
 import EnvironmentLoader from '@/providers/environment';
+import GoogleAnalyticsLoader from '@/providers/googleAnalytics/GoogleAnalyticsLoader';
 import LocalizeLoader from '@/providers/localize/LocalizeLoader';
 import OneTrustLoader from '@/providers/onetrust/OneTrustLoader';
 import OneTrustProvider from '@/providers/onetrust/OneTrustProvider';
@@ -38,7 +38,6 @@ export default async function Layout({
   const locale = syncParams.locale as SupportedLocale;
 
   await getCriticalFonts(brand);
-  const googleAnalyticsMeasurementId = getGoogleAnalyticsMeasurementId(brand);
   const statsigClientKey = process.env.STATSIG_CLIENT_KEY;
   const localeConfig = SUPPORTED_LOCALES_MAP.get(locale);
   const theme = getMuiTheme(brand);
@@ -75,9 +74,9 @@ export default async function Layout({
             />
 
             <OneTrustProvider>
-              {googleAnalyticsMeasurementId && (
-                <GoogleAnalytics gaId={googleAnalyticsMeasurementId} />
-              )}
+              <GoogleAnalyticsLoader
+                measurementIds={getGoogleAnalyticsMeasurementIds(brand)}
+              />
               <StatsigProvider
                 stage={getStage()}
                 clientKey={statsigClientKey}
