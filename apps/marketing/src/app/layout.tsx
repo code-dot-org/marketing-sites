@@ -6,7 +6,7 @@ import '@code-dot-org/component-library-styles/radii.scss';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Code.org',
+  title: 'CodeAI',
   description: 'Anyone can learn!',
 };
 
