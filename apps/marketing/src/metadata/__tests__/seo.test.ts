@@ -121,6 +121,19 @@ describe('getSeoMetadata', () => {
     expect(result.title).toBeUndefined();
   });
 
+  it('falls back to the brand default title when the resolved title is empty', () => {
+    mockResolvedSeo({title: ''});
+
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.HOUR_OF_AI,
+      'en-US',
+      'faq',
+    );
+
+    expect(result.title).toBe('Hour of AI');
+  });
+
   // CSFORALL-COMPAT: the old content model has independent noindex/nofollow
   // flags and a keywords list. Remove when csforall is retired.
   it('supports nofollow independently of noindex', () => {
