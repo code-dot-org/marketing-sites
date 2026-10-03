@@ -3,13 +3,9 @@ import {Metadata} from 'next';
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
 import {getIcons} from '@/config/metadata/icons';
+import {BRAND_OPENGRAPH_DEFAULT_IMAGE_URL} from '@/config/metadata/opengraph';
 import {getCatalogPath} from '@/modules/activityCatalog/hourOfAi/paths';
 import {ActivityType} from '@/modules/activityCatalog/types/Activity';
-
-// TODO(hourofai): both catalogs share the Hour of AI logo because the Hour of
-// AI space has no default OG image yet (see BRAND_OPENGRAPH_DEFAULT_IMAGE_URL).
-const OPENGRAPH_IMAGE =
-  'https://contentful-images.code.org/27jkibac934d/6twVI3a8N6IoRIvwGuPMDq/c96010513f029b80a86e193b7a098135/hourofai_logo_og.jpg';
 
 const COPY = {
   [ActivityType.HOUR_OF_AI]: {
@@ -79,7 +75,7 @@ export function buildCatalogMetadata({
       title: copy.title,
       description: copy.description,
       url: './',
-      images: OPENGRAPH_IMAGE,
+      images: BRAND_OPENGRAPH_DEFAULT_IMAGE_URL[Brand.HOUR_OF_AI],
     },
   };
 }

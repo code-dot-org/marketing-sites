@@ -4,6 +4,7 @@ import {Metadata} from 'next';
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
 import {BRAND_OPENGRAPH_DEFAULT_IMAGE_URL} from '@/config/metadata/opengraph';
+import {BRAND_DEFAULT_TITLE} from '@/config/metadata/title';
 import {resolveSeoFields, ResolvedSeoFields} from '@/metadata/resolveSeoFields';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 
@@ -14,9 +15,10 @@ export function getSeoMetadata(
   slug: string,
 ): Metadata {
   const seo = resolveSeoFields(experience);
+  const title = seo.title || (brand && BRAND_DEFAULT_TITLE[brand]);
 
   return {
-    ...(seo.title ? {title: seo.title} : undefined),
+    ...(title ? {title} : undefined),
     description: seo.description,
     ...(seo.keywords?.length ? {keywords: seo.keywords} : undefined),
     alternates: {
