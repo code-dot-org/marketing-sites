@@ -5,6 +5,7 @@ import {Brand} from '@/config/brand';
 import CSForAllFavIcon from './favicons/csforall.ico';
 import CDOFavIconIco from './favicons/favicon-codeai.ico';
 import CDOFavIconSvg from './favicons/favicon-codeai.svg';
+import HourOfAIFavIcon from './favicons/hourofai.ico';
 import HOCFavIcon from './favicons/hourofcode.ico';
 
 export function getIcons(brand: Brand): Array<Icon> {
@@ -19,8 +20,6 @@ export function getIcons(brand: Brand): Array<Icon> {
     case Brand.CS_FOR_ALL:
       return [{url: CSForAllFavIcon.src}];
     case Brand.HOUR_OF_AI:
-      // TODO(hourofai): add favicons/hourofai.ico (or .svg) and return it here.
-      // Empty means the browser default is used.
-      return [];
+      return [{url: HourOfAIFavIcon.src}];
   }
 }
