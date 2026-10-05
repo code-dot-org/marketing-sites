@@ -17,104 +17,123 @@ async function waitForImages(page: Page) {
   }
 }
 
-async function assertFlappyGame(page: Page) {
-  await expect(
-    page.getByRole('img', {name: 'Make a Flappy game'}),
-  ).toBeVisible();
-  await expect(page.getByRole('main')).toContainText('Make a Flappy game');
-  await expect(page.getByRole('main')).toContainText('Computer Science only');
-  const startTutorialButton = page.getByLabel('Make a Flappy game tutorial');
+// Phones get a second, hidden search field beside the Filters button.
+function searchField(page: Page) {
+  return page.getByPlaceholder('Search...').locator('visible=true');
+}
 
-  await expect(startTutorialButton).toBeVisible();
-  await expect(startTutorialButton).toHaveAttribute(
+async function assertMixAndMove(page: Page) {
+  await expect(page.getByRole('main')).toContainText('Mix & Move with AI');
+  const startButton = page.getByLabel('Get started with Mix & Move with AI', {
+    exact: true,
+  });
+
+  await expect(startButton).toBeVisible();
+  await expect(startButton).toHaveAttribute(
     'href',
-    'http://studio.code.org/s/flappy/reset',
+    'https://studio.code.org/s/mix-move-ai-2025/reset',
   );
 }
 
 test.describe('Activity Catalog', () => {
-  test('should filter activities', {tag: '@csforall'}, async ({page}) => {
-    test.skip(getSiteType() !== 'csforall', 'Only runs on csforall site');
+  test('should filter activities', {tag: '@hourofai'}, async ({page}) => {
+    test.skip(getSiteType() !== 'hourofai', 'Only runs on hourofai site');
 
     const marketingPage = new MarketingPage(page);
-    await marketingPage.goto('/activities/hour-of-code');
+    await marketingPage.goto('/activities');
 
     // Wait for activity catalog to be visible
     await expect(
-      page.getByRole('heading', {name: 'Explore Hour of Code Activities'}),
+      page.getByRole('heading', {name: 'Explore Hour of AI Activities'}),
     ).toBeVisible();
-    await expect(page.getByPlaceholder('Search...')).toBeVisible();
+    await expect(searchField(page)).toBeVisible();
     await expect(
       page.getByText('Loading more activities...'),
     ).not.toBeVisible();
 
-    // Click the "13-18" label element
+    // Facets start collapsed; open each one before picking a value
+    await page.getByRole('button', {name: 'Age', exact: true}).click();
     await page.locator('label').filter({hasText: '13-18'}).click();
 
-    // Click the "Computer Science only" check box
-    await page.getByLabel('Computer Science only').check();
+    await page.getByRole('button', {name: 'Topic', exact: true}).click();
+    await page.getByLabel('Art, Media, Music').check();
 
     // Ensure the query parameters updated with the selected facets
     await page.waitForURL(
-      '**/en-US/activities/hour-of-code?term=&ages=13-18&topic=Computer%2520Science%2520only',
+      '**/en-US/activities?term=&ages=13-18&topic=Art%252C%2520Media%252C%2520Music',
     );
-    await assertFlappyGame(page);
+    await assertMixAndMove(page);
 
-    // Search for flappy (lower case on purpose to test case insensitivity)
-    await page.getByPlaceholder('Search...').fill('flappy');
+    // Search in lower case on purpose to test case insensitivity
+    await searchField(page).fill('mix & move');
 
-    await assertFlappyGame(page);
+    await assertMixAndMove(page);
 
     // Search for something that doesn't exist
-    await page.getByPlaceholder('Search...').fill('nonexistentactivity');
+    await searchField(page).fill('nonexistentactivity');
 
     // Ensure no results message is shown
     await expect(page.getByText('No activities found')).toBeVisible();
   });
 
-  test('should deep link to activities', {tag: '@csforall'}, async ({page}) => {
-    test.skip(getSiteType() !== 'csforall', 'Only runs on csforall site');
+  test('should deep link to activities', {tag: '@hourofai'}, async ({page}) => {
+    test.skip(getSiteType() !== 'hourofai', 'Only runs on hourofai site');
 
     const marketingPage = new MarketingPage(page);
 
-    await marketingPage.goto('/en-US/activities/hour-of-code', {
+    await marketingPage.goto('/en-US/activities', {
       term: '',
       ages: '6-8',
-      topic: 'Computer Science only',
-      languageProgramming: 'Blocks',
+      topic: 'Computer Science',
+      activityType: 'Game or app',
     });
 
-    // Ensure "6-8" checked
     await expect(page.getByLabel('6-8')).toBeChecked();
+    await expect(
+      page.getByLabel('Computer Science', {exact: true}),
+    ).toBeChecked();
+    await expect(page.getByLabel('Game or app')).toBeChecked();
 
-    // Ensure "Computer Science only" checked
-    await expect(page.getByLabel('Computer Science only')).toBeChecked();
-
-    await assertFlappyGame(page);
+    await assertMixAndMove(page);
   });
 
-  test('eyes', {tag: '@csforall'}, async ({page, eyes, browserName}) => {
+  test(
+    'should load the Hour of Code catalog',
+    {tag: '@hourofai'},
+    async ({page}) => {
+      test.skip(getSiteType() !== 'hourofai', 'Only runs on hourofai site');
+
+      const marketingPage = new MarketingPage(page);
+      await marketingPage.goto('/hour-of-code/activities');
+
+      await expect(
+        page.getByRole('heading', {name: 'Explore Hour of Code Activities'}),
+      ).toBeVisible();
+      await expect(searchField(page)).toBeVisible();
+    },
+  );
+
+  test('eyes', {tag: '@hourofai'}, async ({page, eyes, browserName}) => {
     // This test waits for images to load, so it is slow
     test.slow();
     test.skip(browserName === 'webkit', 'AVIF does not work on Webkit');
-    test.skip(getSiteType() !== 'csforall', 'Only runs on csforall site');
+    test.skip(getSiteType() !== 'hourofai', 'Only runs on hourofai site');
 
     const marketingPage = new MarketingPage(page);
-    await marketingPage.goto('/activities/hour-of-code');
+    await marketingPage.goto('/activities');
 
     // Wait for activity catalog to be visible
     await expect(
-      page.getByRole('heading', {name: 'Explore Hour of Code Activities'}),
+      page.getByRole('heading', {name: 'Explore Hour of AI Activities'}),
     ).toBeVisible();
-    await expect(page.getByPlaceholder('Search...')).toBeVisible();
+    await expect(searchField(page)).toBeVisible();
 
     // Wait for lazy loaded images to load
     await waitForImages(page);
 
-    // Search for flappy (lower case on purpose to test case insensitivity)
-    await page.getByPlaceholder('Search...').fill('flappy');
+    await searchField(page).fill('mix & move');
 
-    await assertFlappyGame(page);
+    await assertMixAndMove(page);
 
     await eyes.check('Activity Catalog');
   });
