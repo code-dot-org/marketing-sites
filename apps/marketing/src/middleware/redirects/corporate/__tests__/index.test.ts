@@ -124,6 +124,12 @@ describe('getRedirects', () => {
     expect(getQueryPreservingRedirectResponse).not.toHaveBeenCalled();
   });
 
+  it('does not throw for /certificates without a session id', () => {
+    const req = createMockRequest('/certificates');
+
+    expect(getRedirects(req)).toBeUndefined();
+  });
+
   it('returns undefined for unrelated paths', () => {
     const req = createMockRequest('/other/path');
     const result = getRedirects(req);

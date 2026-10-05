@@ -63,7 +63,7 @@ export function getRedirects(request: NextRequest) {
 
   // Permanently redirect /certificates/:session_id to studio.code.org/api/hour/certificates/:session_id
   // The :session_id parameter always starts with an underscore (e.g., "_1_537adb90bcf397109ef4358f4c66c493")
-  if (pathParts[0] === 'certificates' && pathParts[1].startsWith('_')) {
+  if (pathParts[0] === 'certificates' && pathParts[1]?.startsWith('_')) {
     const redirectUrl = new URL(`/api/hour${fullPath}`, getStudioBaseUrl());
 
     return getQueryPreservingRedirectResponse(redirectUrl, request, {
