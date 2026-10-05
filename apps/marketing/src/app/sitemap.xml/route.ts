@@ -163,13 +163,6 @@ export async function GET(request: Request) {
     writeSitemapEntry(sitemapStream, slug, {lastmod: entry?.sys?.updatedAt});
   }
 
-  // CSForAll Activity catalog
-  if (brand === Brand.CS_FOR_ALL) {
-    Object.values(ActivityType).forEach(activityType => {
-      writeSitemapEntry(sitemapStream, `/activities/${activityType}`);
-    });
-  }
-
   // Hour of AI activity catalogs
   if (brand === Brand.HOUR_OF_AI) {
     Object.values(ActivityType).forEach(activityType => {

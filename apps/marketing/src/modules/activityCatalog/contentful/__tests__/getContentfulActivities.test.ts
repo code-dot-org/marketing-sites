@@ -31,7 +31,7 @@ describe('getContentfulActivities', () => {
     expect(getContentfulClient).toHaveBeenCalledWith(true);
     expect(getAllEntriesForContentType).toHaveBeenCalledWith(
       mockClient,
-      'curriculum',
+      'activity',
       {'metadata.tags.sys.id[in]': ['hour-of-ai']},
     );
     expect(result).toEqual(mockActivities);
@@ -52,7 +52,7 @@ describe('getContentfulActivities', () => {
     expect(getContentfulClient).toHaveBeenCalledWith(false);
     expect(getAllEntriesForContentType).toHaveBeenCalledWith(
       mockClient,
-      'curriculum',
+      'activity',
       {'metadata.tags.sys.id[in]': ['hour-of-ai']},
     );
     expect(result).toEqual(mockActivities);

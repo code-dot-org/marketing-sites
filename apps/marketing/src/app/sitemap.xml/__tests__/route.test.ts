@@ -141,8 +141,8 @@ describe('GET /sitemap.xml', () => {
     expect(body).toContain(
       '<loc>https://code.marketing-sites.localhost/fr</loc>',
     );
-    // does not exist on Code.org, only CSForAll
-    expect(body).not.toContain('/en-US/activities/hour-of-ai');
+    // the catalog only exists on Hour of AI
+    expect(body).not.toContain('/en-US/activities');
   });
 
   it('includes hreflang alternate links and x-default in sitemap entries', async () => {
@@ -247,7 +247,7 @@ describe('GET /sitemap.xml', () => {
     });
   });
 
-  it('includes hour of ai activities on CSForAll', async () => {
+  it('omits the activity catalog on CSForAll', async () => {
     jest.resetAllMocks();
     (getContentfulClient as jest.Mock).mockReturnValue({});
     (getAllEntriesForContentType as jest.Mock).mockResolvedValue([
@@ -263,10 +263,8 @@ describe('GET /sitemap.xml', () => {
       mockRequest('csforall.marketing-sites.code.org'),
     );
     const body = await response.text();
-    // Should not have double slash
-    expect(body).toContain('/en-US/activities/hour-of-ai');
 
-    expect(body).toContain('/fr/activities/hour-of-ai');
+    expect(body).not.toContain('/activities');
   });
 
   it('includes the Hour of AI catalog routes on Hour of AI', async () => {
@@ -288,9 +286,7 @@ describe('GET /sitemap.xml', () => {
 
     expect(body).toContain('/en-US/activities</loc>');
     expect(body).toContain('/en-US/hour-of-code/activities</loc>');
-    // The Hour of AI catalog has no prefix of its own, and the CSforAll URL
-    // structure stays CSforAll-only.
+    // The Hour of AI catalog has no prefix of its own.
     expect(body).not.toContain('/en-US/hour-of-ai/activities');
-    expect(body).not.toContain('/en-US/activities/hour-of-ai');
   });
 });
