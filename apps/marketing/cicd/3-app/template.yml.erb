@@ -2,6 +2,7 @@
 # Get region configuration and selected AZs from the new configuration structure
 region_config = MarketingSites::Configuration::regions[options[:region].to_sym]
 selected_azs = region_config[:selected_availability_zones]
+site_config = MarketingSites::Configuration.site_config(options[:site_type], options[:environment_type])
 
 is_production = options[:environment_type] == 'production'
 has_production_domain = options[:production_domain_name] && !options[:production_domain_name].empty?
@@ -150,6 +151,17 @@ Resources:
       HostedZoneId: !Ref ProductionHostedZoneId
       Name: !Ref ProductionDomainName
       Type: A
+<% if site_config.google_site_verification_token %>
+  ProductionDomainGoogleSiteVerificationDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref ProductionHostedZoneId
+      Name: !Ref ProductionDomainName
+      Type: TXT
+      TTL: 300
+      ResourceRecords:
+        - '"google-site-verification=<%= site_config.google_site_verification_token %>"'
+<% end %>
 <% end %>
   CloudFrontOriginAccessControl:
     Type: AWS::CloudFront::OriginAccessControl

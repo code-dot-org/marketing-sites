@@ -120,7 +120,8 @@ module MarketingSites
           base_domain_name: 'aiday.org'
         }.freeze,
         [:hourofai, :production] => {
-          base_domain_name: 'hourofai.org'
+          base_domain_name: 'hourofai.org',
+          google_site_verification_token: 'aq2YIHhpWmrAb4sroGgWI3x3sGPCYw4OdS3WEQOZJnI'
         }.freeze
       }.freeze
     }.freeze
