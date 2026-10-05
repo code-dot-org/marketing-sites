@@ -21,7 +21,6 @@ export async function HourOfAiCatalogPage({
 }) {
   const contentfulActivities = (await getContentfulActivities(
     activityType,
-    'activity',
   )) as unknown as Entry<Activity>[];
 
   const db = createDatabase(contentfulActivities);
