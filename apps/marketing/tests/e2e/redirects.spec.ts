@@ -6,6 +6,9 @@ import {getStage} from '@/config/stage';
 import {test} from './fixtures/base';
 import {MarketingPage} from './pom/marketing';
 
+// Added to every request by MarketingPage.goto and carried over by redirects
+const UTM_SOURCE = 'marketing-sites-automated-tests';
+
 test.describe('Redirects', () => {
   test('should do a temporary redirect to an internal URL', async ({
     page,
@@ -28,12 +31,21 @@ test.describe('Redirects', () => {
     });
 
     const marketingPage = new MarketingPage(page);
-    await marketingPage.goto('/engineering-redirect-internal-test-501a67e6');
+    // Non-UTM params are dropped, since destinations can be third-party
+    await marketingPage.goto('/engineering-redirect-internal-test-501a67e6', {
+      term: 'not-carried-over',
+    });
 
     expect(redirectStatus).toEqual(307);
     expect(cacheControl).toEqual(STALE_WHILE_REVALIDATE_ONE_HOUR);
     expect(etag).toBeDefined();
-    await page.waitForURL('**/en-US/engineering/all-the-things?t=14');
+    await page.waitForURL(
+      url =>
+        url.pathname === '/en-US/engineering/all-the-things' &&
+        url.searchParams.get('t') === '14' &&
+        url.searchParams.get('utm_source') === UTM_SOURCE &&
+        !url.searchParams.has('term'),
+    );
   });
 
   test('should do a permanent redirect to an external URL', async ({
@@ -62,6 +74,10 @@ test.describe('Redirects', () => {
     expect(redirectStatus).toEqual(308);
     expect(cacheControl).toEqual(STALE_WHILE_REVALIDATE_ONE_HOUR);
     expect(etag).toBeDefined();
-    await page.waitForURL('**/api/health_check');
+    await page.waitForURL(
+      url =>
+        url.pathname === '/api/health_check' &&
+        url.searchParams.get('utm_source') === UTM_SOURCE,
+    );
   });
 });
