@@ -1,6 +1,9 @@
 import {NextRequest} from 'next/server';
 
-import {getCachedRedirectResponse} from '@/middleware/utils/getCachedRedirectResponse';
+import {
+  getCachedRedirectResponse,
+  getQueryPreservingRedirectResponse,
+} from '@/middleware/utils/getCachedRedirectResponse';
 
 import {getRedirects} from '../index';
 
@@ -10,6 +13,10 @@ jest.mock('@/config/studio', () => ({
 }));
 jest.mock('@/middleware/utils/getCachedRedirectResponse', () => ({
   getCachedRedirectResponse: jest.fn((url, opts) => ({
+    url: url.toString(),
+    status: opts.status,
+  })),
+  getQueryPreservingRedirectResponse: jest.fn((url, request, opts) => ({
     url: url.toString(),
     status: opts.status,
   })),
@@ -74,9 +81,10 @@ describe('getRedirects', () => {
 
     getRedirects(req);
 
-    expect(getCachedRedirectResponse).toHaveBeenCalledWith(
+    expect(getQueryPreservingRedirectResponse).toHaveBeenCalledWith(
       new URL(reqPath, studioBaseUrl),
-      {status: 308},
+      req,
+      {status: 308, neverCache: true},
     );
   });
 
@@ -87,9 +95,11 @@ describe('getRedirects', () => {
 
     getRedirects(req);
 
-    expect(getCachedRedirectResponse).toHaveBeenCalledWith(
-      new URL(reqPath + reqQuery, studioBaseUrl),
-      {status: 308},
+    // The query string is carried over by the helper, uncached since `s` isn't in the CDN cache key
+    expect(getQueryPreservingRedirectResponse).toHaveBeenCalledWith(
+      new URL(reqPath, studioBaseUrl),
+      req,
+      {status: 308, neverCache: true},
     );
   });
 
@@ -99,9 +109,10 @@ describe('getRedirects', () => {
 
     getRedirects(req);
 
-    expect(getCachedRedirectResponse).toHaveBeenCalledWith(
+    expect(getQueryPreservingRedirectResponse).toHaveBeenCalledWith(
       new URL(`/api/hour/certificates/${sessionID}`, studioBaseUrl),
-      {status: 308},
+      req,
+      {status: 308, neverCache: true},
     );
   });
 
@@ -110,10 +121,7 @@ describe('getRedirects', () => {
 
     getRedirects(req);
 
-    expect(getCachedRedirectResponse).not.toHaveBeenCalledWith(
-      new URL('/api/hour/certificates/blank', studioBaseUrl),
-      {status: 308},
-    );
+    expect(getQueryPreservingRedirectResponse).not.toHaveBeenCalled();
   });
 
   it('returns undefined for unrelated paths', () => {
@@ -121,5 +129,6 @@ describe('getRedirects', () => {
     const result = getRedirects(req);
     expect(result).toBeUndefined();
     expect(getCachedRedirectResponse).not.toHaveBeenCalled();
+    expect(getQueryPreservingRedirectResponse).not.toHaveBeenCalled();
   });
 });

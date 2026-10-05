@@ -1,6 +1,9 @@
 import {NextRequest, NextFetchEvent, NextResponse} from 'next/server';
 
-import {STALE_WHILE_REVALIDATE_ONE_HOUR} from '@/cache/constants';
+import {
+  PRIVATE_NO_STORE,
+  STALE_WHILE_REVALIDATE_ONE_HOUR,
+} from '@/cache/constants';
 import {SUPPORTED_LOCALE_CODES, SupportedLocale} from '@/config/locale';
 import {getStage} from '@/config/stage';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
@@ -300,6 +303,8 @@ describe('withLocale middleware', () => {
     expect(response?.headers.get('location')).toBe(
       'https://test.code.org/zh-Hant/engineering/all-the-things?ref=github',
     );
+    // `ref` isn't in the CDN cache key, so caching would serve it to every visitor
+    expect(response?.headers.get('Cache-Control')).toEqual(PRIVATE_NO_STORE);
   });
 
   it('should redirect to the root locale path and preserve query parameters', async () => {

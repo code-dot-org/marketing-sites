@@ -1,11 +1,13 @@
 import {NextRequest} from 'next/server';
 
 import {getStudioBaseUrl} from '@/config/studio';
-import {getCachedRedirectResponse} from '@/middleware/utils/getCachedRedirectResponse';
+import {
+  getCachedRedirectResponse,
+  getQueryPreservingRedirectResponse,
+} from '@/middleware/utils/getCachedRedirectResponse';
 
 export function getRedirects(request: NextRequest) {
   const fullPath = request.nextUrl.pathname;
-  const urlQuery = request.nextUrl.search;
   const pathParts = fullPath.split('/').filter(Boolean);
 
   const maybeLocale = pathParts[0];
@@ -51,19 +53,22 @@ export function getRedirects(request: NextRequest) {
 
   // Permanently redirect /congrats/*?s=course_name_base64 to studio.code.org/congrats/*?s=course_name_base64
   if (pathParts[0] === 'congrats') {
-    const redirectUrl = new URL(fullPath + urlQuery, getStudioBaseUrl());
+    const redirectUrl = new URL(fullPath, getStudioBaseUrl());
 
-    return getCachedRedirectResponse(redirectUrl, {status: 308});
+    return getQueryPreservingRedirectResponse(redirectUrl, request, {
+      status: 308,
+      neverCache: true,
+    });
   }
 
   // Permanently redirect /certificates/:session_id to studio.code.org/api/hour/certificates/:session_id
   // The :session_id parameter always starts with an underscore (e.g., "_1_537adb90bcf397109ef4358f4c66c493")
   if (pathParts[0] === 'certificates' && pathParts[1].startsWith('_')) {
-    const redirectUrl = new URL(
-      `/api/hour${fullPath}` + urlQuery,
-      getStudioBaseUrl(),
-    );
+    const redirectUrl = new URL(`/api/hour${fullPath}`, getStudioBaseUrl());
 
-    return getCachedRedirectResponse(redirectUrl, {status: 308});
+    return getQueryPreservingRedirectResponse(redirectUrl, request, {
+      status: 308,
+      neverCache: true,
+    });
   }
 }

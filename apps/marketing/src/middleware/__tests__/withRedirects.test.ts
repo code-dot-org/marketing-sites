@@ -27,9 +27,13 @@ describe('withRedirects middleware', () => {
   const next = jest.fn();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const event = {} as any;
-  const makeRequest = (pathname = '/foo', host = 'localhost:3000') =>
+  const makeRequest = (
+    pathname = '/foo',
+    host = 'localhost:3000',
+    search = '',
+  ) =>
     ({
-      nextUrl: {pathname, origin: 'http://localhost:3000'},
+      nextUrl: {pathname, search, origin: 'http://localhost:3000'},
       headers: {get: (key: string) => (key === 'host' ? host : undefined)},
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as any;
@@ -158,6 +162,46 @@ describe('withRedirects middleware', () => {
           'Cache-Control': STALE_WHILE_REVALIDATE_ONE_HOUR,
         },
       }),
+    );
+  });
+
+  it('carries over UTM params and caches the redirect', async () => {
+    (fetch as jest.Mock).mockResolvedValue({
+      status: 200,
+      headers: {get: () => undefined},
+      json: async () => ({
+        redirectEntry: {destination: 'https://external.com/x', permanent: true},
+      }),
+    });
+    const response = await withRedirects(next)(
+      makeRequest('/foo', 'localhost:3000', '?utm_source=email'),
+      event,
+    );
+    expect(response?.headers.get('location')).toBe(
+      'https://external.com/x?utm_source=email',
+    );
+    expect(response?.headers.get('Cache-Control')).toBe(
+      STALE_WHILE_REVALIDATE_ONE_HOUR,
+    );
+  });
+
+  it('drops non-UTM params, which may be sent to third parties', async () => {
+    (fetch as jest.Mock).mockResolvedValue({
+      status: 200,
+      headers: {get: () => undefined},
+      json: async () => ({
+        redirectEntry: {destination: 'https://external.com/x', permanent: true},
+      }),
+    });
+    const response = await withRedirects(next)(
+      makeRequest('/foo', 'localhost:3000', '?term=robots&utm_source=email'),
+      event,
+    );
+    expect(response?.headers.get('location')).toBe(
+      'https://external.com/x?utm_source=email',
+    );
+    expect(response?.headers.get('Cache-Control')).toBe(
+      STALE_WHILE_REVALIDATE_ONE_HOUR,
     );
   });
 

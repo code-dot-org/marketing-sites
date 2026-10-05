@@ -1,10 +1,10 @@
-import {NextFetchEvent, NextRequest, NextResponse} from 'next/server';
+import {NextFetchEvent, NextRequest} from 'next/server';
 
-import {STALE_WHILE_REVALIDATE_ONE_HOUR} from '@/cache/constants';
 import {RedirectEntryResponse} from '@/cache/redirects/types';
 import {getBrandFromHostname} from '@/config/brand';
 import {getLocalhostAddress} from '@/config/host';
 import {getBrandRedirects} from '@/middleware/redirects';
+import {getQueryPreservingRedirectResponse} from '@/middleware/utils/getCachedRedirectResponse';
 
 import {MiddlewareFactory} from './types';
 
@@ -47,22 +47,17 @@ export const withRedirects: MiddlewareFactory = next => {
       ? `${request.nextUrl.origin}${redirectEntry.destination}`
       : redirectEntry.destination;
 
-    if (redirectEntry) {
-      const responseHeaders: HeadersInit = {
-        'Cache-Control': STALE_WHILE_REVALIDATE_ONE_HOUR,
-      };
+    // Destinations can be third-party, so only UTM params are carried over
+    const response = getQueryPreservingRedirectResponse(redirectUrl, request, {
+      status: redirectEntry.permanent ? 308 : 307,
+      carryOver: 'cdn-cache-key',
+    });
 
-      const etagValue = redirectCacheByBrandResponse.headers.get('ETag');
-      if (etagValue) {
-        responseHeaders['ETag'] = etagValue;
-      }
-
-      return NextResponse.redirect(redirectUrl, {
-        status: redirectEntry.permanent ? 308 : 307,
-        headers: responseHeaders,
-      });
+    const etagValue = redirectCacheByBrandResponse.headers.get('ETag');
+    if (etagValue) {
+      response.headers.set('ETag', etagValue);
     }
 
-    return next(request, event);
+    return response;
   };
 };

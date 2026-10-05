@@ -11,7 +11,7 @@ import {
 import {getStage} from '@/config/stage';
 import {getContentfulSlug} from '@/contentful/slug/getContentfulSlug';
 import {setLanguageCookie} from '@/middleware/i18n/setLanguageCookie';
-import {getCachedRedirectResponse} from '@/middleware/utils/getCachedRedirectResponse';
+import {getQueryPreservingRedirectResponse} from '@/middleware/utils/getCachedRedirectResponse';
 
 import {MiddlewareFactory} from './types';
 
@@ -86,10 +86,10 @@ export const withLocale: MiddlewareFactory = next => {
     const locale = cookieLocale || browserPreferredLocale || 'en-US';
 
     const localizedPath = isRootRoute ? `/${locale}` : `/${locale}/${slug}`;
-    const redirectUrl = new URL(localizedPath, request.url);
-    // Preserve query parameters
-    redirectUrl.search = request.nextUrl.search;
-    const response = getCachedRedirectResponse(redirectUrl);
+    const response = getQueryPreservingRedirectResponse(
+      new URL(localizedPath, request.url),
+      request,
+    );
 
     // Set the language cookie if discovered via Accept-Language header
     setLanguageCookie({
