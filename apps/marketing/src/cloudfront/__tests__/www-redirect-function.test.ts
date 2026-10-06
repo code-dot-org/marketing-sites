@@ -1,53 +1,72 @@
+import {readFileSync} from 'fs';
+import path from 'path';
+
 /**
  * Unit tests for the www. redirect CloudFront Function defined in
  * cicd/3-app/template.yml.erb (WwwRedirectCloudFrontFunction).
  *
- * The CloudFront Function is embedded inline in the CloudFormation template.
- * These tests exercise the same logic to verify correctness. If the function
- * implementation changes in the template, update the handler below to match.
+ * The function's code is read straight out of the template, so these tests
+ * always exercise what gets deployed.
  *
  * CloudFront Functions event structure:
  * https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/functions-event-structure.html
  */
 
 // ---------------------------------------------------------------------------
-// Handler — copied from WwwRedirectCloudFrontFunction in template.yml.erb.
-// Keep in sync with the template.
-// ---------------------------------------------------------------------------
-function handler(event: CloudFrontFunctionEvent) {
-  const request = event.request;
-  const host = request.headers.host.value.replace(/^www\./i, '');
-  const qs = request.rawQueryString;
-  return {
-    statusCode: 301,
-    statusDescription: 'Moved Permanently',
-    headers: {
-      location: {value: 'https://' + host + request.uri + (qs ? '?' + qs : '')},
-    },
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Types — minimal subset of the CloudFront Functions event structure.
+// Types — minimal subset of the CloudFront Functions (cloudfront-js-2.0)
+// event structure. rawQueryString is a method, not a property.
 // ---------------------------------------------------------------------------
 interface CloudFrontFunctionEvent {
   request: {
     headers: {host: {value: string}};
     uri: string;
-    rawQueryString: string;
+    rawQueryString: () => string | undefined;
   };
 }
+
+interface CloudFrontFunctionResult {
+  statusCode: number;
+  statusDescription: string;
+  headers: {location: {value: string}};
+}
+
+const TEMPLATE_PATH = path.join(
+  __dirname,
+  '../../../cicd/3-app/template.yml.erb',
+);
+
+function loadHandler(): (
+  event: CloudFrontFunctionEvent,
+) => CloudFrontFunctionResult {
+  const template = readFileSync(TEMPLATE_PATH, 'utf8');
+  const match = template.match(
+    /WwwRedirectCloudFrontFunction:[\s\S]*?FunctionCode: \|\n([\s\S]*?)\n\s*FunctionConfig:/,
+  );
+  if (!match) {
+    throw new Error('WwwRedirectCloudFrontFunction code not found in template');
+  }
+
+  const lines = match[1].split('\n');
+  const indent = Math.min(
+    ...lines.filter(line => line.trim()).map(line => line.search(/\S/)),
+  );
+  const code = lines.map(line => line.slice(indent)).join('\n');
+
+  return new Function(`${code}\nreturn handler;`)();
+}
+
+const handler = loadHandler();
 
 function makeEvent(
   host: string,
   uri: string,
-  rawQueryString = '',
+  rawQueryString?: string,
 ): CloudFrontFunctionEvent {
   return {
     request: {
       headers: {host: {value: host}},
       uri,
-      rawQueryString,
+      rawQueryString: () => rawQueryString,
     },
   };
 }
@@ -93,7 +112,13 @@ describe('www redirect CloudFront Function', () => {
     );
   });
 
+  // rawQueryString() returns undefined without a ? and '' for a bare ?
   it('omits the ? when there is no query string', () => {
+    const result = handler(makeEvent('www.example.net', '/about'));
+    expect(result.headers.location.value).toBe('https://example.net/about');
+  });
+
+  it('omits the ? when the query string is empty', () => {
     const result = handler(makeEvent('www.example.net', '/about', ''));
     expect(result.headers.location.value).toBe('https://example.net/about');
   });
