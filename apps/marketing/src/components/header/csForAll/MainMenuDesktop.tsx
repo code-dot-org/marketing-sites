@@ -63,6 +63,10 @@ const MainMenuDesktop = ({
     }
 
     if (type === 'button' && topLevelLink.href) {
+      const isExternal =
+        !topLevelLink.isInternal &&
+        isExternalLink(topLevelLink.href, brand, 'production');
+
       return (
         <Button
           key={key}
@@ -71,16 +75,8 @@ const MainMenuDesktop = ({
           disableElevation
           disableRipple
           sx={buttonStyles.button}
-          target={
-            isExternalLink(topLevelLink.href, brand, 'production')
-              ? '_blank'
-              : undefined
-          }
-          rel={
-            isExternalLink(topLevelLink.href, brand, 'production')
-              ? 'noopener noreferrer'
-              : undefined
-          }
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
         >
           {topLevelLink.label}
         </Button>

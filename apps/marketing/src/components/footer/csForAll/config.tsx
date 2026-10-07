@@ -11,7 +11,12 @@ export const COPYRIGHT_TEXT_CSFORALL = {
 export const SITE_LINKS_CSFORALL = [
   {key: 'initiatives', label: 'Initiatives', href: '/initiatives'},
   {key: 'take-action', label: 'Take Action', href: '/take-action'},
-  {key: 'hour-of-ai', label: 'Hour of AI', href: '/hour-of-ai'},
+  {
+    key: 'hour-of-ai',
+    label: 'Hour of AI',
+    href: 'https://hourofai.org/?utm_source=csforall.org&utm_medium=web&utm_campaign=hour-of-ai&utm_term=hourofai&utm_content=footer',
+    isInternal: true,
+  },
   // Marketing does not have permission to collect donations yet
   //{ key: 'donate', label: 'Donate', href: 'https://donate.code.org/campaign/708610/donate',},
   {

@@ -29,6 +29,8 @@ export interface SiteLink extends AnchorHTMLAttributes<HTMLAnchorElement> {
   label: string;
   href: string;
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  /** Treat an off-site href as internal: same tab, referrer kept */
+  isInternal?: boolean;
 }
 
 export interface SocialLink extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -135,30 +137,29 @@ const FooterMui: React.FC<FooterProps> = ({
               aria-label="Site links"
               sx={{flexWrap: 'wrap'}}
             >
-              {siteLinks?.map(({key, label, href, onClick, ...linkProps}) => (
-                <ListItem key={key}>
-                  <FooterLink
-                    href={href}
-                    variant="body4"
-                    target={
-                      typeof onClick !== 'function' &&
-                      isExternalLink(href, brand, 'production')
-                        ? '_blank'
-                        : undefined
-                    }
-                    rel={
-                      typeof onClick !== 'function' &&
-                      isExternalLink(href, brand, 'production')
-                        ? 'noopener noreferrer'
-                        : undefined
-                    }
-                    onClick={onClick}
-                    {...linkProps}
-                  >
-                    {label}
-                  </FooterLink>
-                </ListItem>
-              ))}
+              {siteLinks?.map(
+                ({key, label, href, onClick, isInternal, ...linkProps}) => {
+                  const isExternal =
+                    !isInternal &&
+                    typeof onClick !== 'function' &&
+                    isExternalLink(href, brand, 'production');
+
+                  return (
+                    <ListItem key={key}>
+                      <FooterLink
+                        href={href}
+                        variant="body4"
+                        target={isExternal ? '_blank' : undefined}
+                        rel={isExternal ? 'noopener noreferrer' : undefined}
+                        onClick={onClick}
+                        {...linkProps}
+                      >
+                        {label}
+                      </FooterLink>
+                    </ListItem>
+                  );
+                },
+              )}
             </FooterLinks>
           </Grid>
           {/* Language Selector */}

@@ -11,20 +11,19 @@ const LinkItem = ({
   label,
   href = '',
   typography = 'body3',
+  isInternal = false,
   ...linkProps
 }: LinkItemProps) => {
+  const isExternal = !isInternal && isExternalLink(href, brand, 'production');
+
   return (
     <Typography
       variant={typography}
       component={Link}
       href={href}
       sx={{textDecoration: 'none'}}
-      target={isExternalLink(href, brand, 'production') ? '_blank' : undefined}
-      rel={
-        isExternalLink(href, brand, 'production')
-          ? 'noopener noreferrer'
-          : undefined
-      }
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
       {...linkProps}
     >
       {label}

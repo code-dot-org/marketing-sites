@@ -69,6 +69,22 @@ describe('MainMenuDesktop', () => {
     expect(externalLink).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
+  it('does not set target and rel when isInternal is set', () => {
+    render(
+      <MainMenuDesktop
+        mainMenuDesktopItems={[
+          {
+            type: 'button',
+            topLevelLink: {...externalLinkItem, isInternal: true},
+          },
+        ]}
+      />,
+    );
+    const link = screen.getByRole('link', {name: /External/i});
+    expect(link).not.toHaveAttribute('target');
+    expect(link).not.toHaveAttribute('rel');
+  });
+
   it('renders dropdown menu item', () => {
     render(<MainMenuDesktop mainMenuDesktopItems={[menuItems[2]]} />);
     expect(screen.getByTestId('dropdown-menu')).toHaveTextContent('Dropdown');

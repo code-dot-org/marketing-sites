@@ -31,32 +31,8 @@ const SHARED_LINKS = {
     label: 'Home',
   },
   HOUR_OF_AI: {
-    href: '/hour-of-ai',
+    href: 'https://hourofai.org/?utm_source=csforall.org&utm_medium=web&utm_campaign=hour-of-ai&utm_term=hourofai&utm_content=header',
     label: 'Hour of AI',
-  },
-  HOUR_OF_AI_ABOUT: {
-    href: '/hour-of-ai',
-    label: 'About',
-  },
-  HOUR_OF_AI_ACTIVITIES: {
-    href: '/activities/hour-of-ai',
-    label: 'Activities',
-  },
-  HOUR_OF_AI_HOST_AN_EVENT: {
-    href: '/hour-of-ai/how-to/k-12educator',
-    label: 'Host an Event',
-  },
-  HOUR_OF_AI_FAQS: {
-    href: '/hour-of-ai/faq',
-    label: 'FAQs',
-  },
-  HOUR_OF_AI_PARTNERS: {
-    href: '/hour-of-ai/partners',
-    label: 'Partners',
-  },
-  HOUR_OF_AI_RESOURCES: {
-    href: '/hour-of-ai/resources',
-    label: 'Resources',
   },
   INITIATIVES: {
     href: '/initiatives',
@@ -116,7 +92,10 @@ export const TOP_LEVEL_LINKS: {linkList: LinkItemProps[]} = {
   linkList: [
     createLinkItem(SHARED_LINKS.INITIATIVES, {typography: 'h4'}),
     createLinkItem(SHARED_LINKS.TAKE_ACTION, {typography: 'h4'}),
-    createLinkItem(SHARED_LINKS.HOUR_OF_AI, {typography: 'h4'}),
+    createLinkItem(SHARED_LINKS.HOUR_OF_AI, {
+      typography: 'h4',
+      isInternal: true,
+    }),
     // Marketing does not have permission to collect donations yet
     // createLinkItem(SHARED_LINKS.DONATE, {typography: 'h4'}),
     createLinkItem(SHARED_LINKS.NEWS_AND_RESOURCES, {typography: 'h4'}),
@@ -140,18 +119,6 @@ export const TAKE_ACTION_LINKS: {linkList: LinkItemProps[]} = {
   ],
 };
 
-// Main Menu Hour of AI Dropdown Links
-export const HOUR_OF_AI_LINKS: {linkList: LinkItemProps[]} = {
-  linkList: [
-    createLinkItem(SHARED_LINKS.HOUR_OF_AI_ABOUT),
-    createLinkItem(SHARED_LINKS.HOUR_OF_AI_ACTIVITIES),
-    createLinkItem(SHARED_LINKS.HOUR_OF_AI_PARTNERS),
-    createLinkItem(SHARED_LINKS.HOUR_OF_AI_RESOURCES),
-    createLinkItem(SHARED_LINKS.HOUR_OF_AI_HOST_AN_EVENT),
-    createLinkItem(SHARED_LINKS.HOUR_OF_AI_FAQS),
-  ],
-};
-
 // Main Menu Desktop Configuration
 const [initiativesLink, takeActionLink, hourOfAiLink, newsLink] =
   TOP_LEVEL_LINKS.linkList;
@@ -168,9 +135,8 @@ export const MAIN_MENU_DESKTOP_ITEMS = [
     dropdownConfig: TAKE_ACTION_LINKS,
   },
   {
-    type: 'dropdown' as const,
+    type: 'button' as const,
     topLevelLink: hourOfAiLink,
-    dropdownConfig: HOUR_OF_AI_LINKS,
   },
   // Marketing does not have permission to collect donations yet
   // {
