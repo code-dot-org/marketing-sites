@@ -67,6 +67,22 @@ describe('FooterMui', () => {
     expect(siteLink).toHaveAttribute('href', siteLinks[0].href);
   });
 
+  it('does not set target and rel on a site link when isInternal is set', () => {
+    renderFooterContainer({
+      siteLinks: [
+        {
+          key: 'external',
+          label: 'External',
+          href: 'https://example.com',
+          isInternal: true,
+        },
+      ],
+    });
+    const siteLink = screen.getByRole('link', {name: 'External'});
+    expect(siteLink).not.toHaveAttribute('target');
+    expect(siteLink).not.toHaveAttribute('rel');
+  });
+
   it('renders footer social links', () => {
     renderFooterContainer();
     const socialLink = screen.getByRole('link', {name: socialLinks[0].label});

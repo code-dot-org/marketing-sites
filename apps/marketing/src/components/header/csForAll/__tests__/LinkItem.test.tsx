@@ -34,6 +34,14 @@ describe('LinkItem', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
+  it('does not set target and rel when isInternal is set', () => {
+    mockedIsExternalLink.mockReturnValue(true);
+    render(<LinkItem {...defaultProps} isInternal />);
+    const link = screen.getByText('Test Link');
+    expect(link).not.toHaveAttribute('target');
+    expect(link).not.toHaveAttribute('rel');
+  });
+
   it('does not set target and rel for internal links', () => {
     render(<LinkItem {...defaultProps} />);
     const link = screen.getByText('Test Link');

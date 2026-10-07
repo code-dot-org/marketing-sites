@@ -13,4 +13,6 @@ export interface LinkItemProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   typography?: React.ComponentProps<typeof Typography>['variant'];
   // Brand for the link, used with external links
   brand?: Brand;
+  /** Treat an off-site href as internal: same tab, referrer kept */
+  isInternal?: boolean;
 }
