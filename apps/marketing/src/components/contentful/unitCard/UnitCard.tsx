@@ -7,10 +7,6 @@ import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon
 
 import Badge from '@/components/contentful/badge/Badge';
 import {
-  CardBadgeColor,
-  parseCardBadgeColor,
-} from '@/components/contentful/badge/constants';
-import {
   cardColorCss,
   type ContentCardColor,
 } from '@/components/contentful/contentCard/constants';
@@ -24,8 +20,8 @@ import {LinkEntry} from '@/types/contentful/entries/Link';
 import {mergeGradeBands} from './mergeGradeBands';
 
 // Full brand-color list plus the legacy family values (rendered via the
-// family's primary token). Shared by the title-color fields on Unit Card,
-// Unit Carousel (heading + unit titles), and Course Catalog.
+// family's primary token). Shared by the heading-color fields on Unit
+// Carousel and Course Catalog.
 export type UnitTitleColor = ContentCardColor;
 
 export const unitTitleColorCss = cardColorCss;
@@ -47,11 +43,6 @@ export interface UnitCardProps {
   link?: LinkEntry;
   /** Whether to render the topics row */
   showTopics?: boolean;
-  /** Badge color applied to every topic on the card. Light variants render
-   *  Badge's light appearance (light background, dark text). */
-  topicBadgeColor?: CardBadgeColor;
-  /** Unit title color */
-  titleColor?: UnitTitleColor;
   /** Grow to the surrounding container's width instead of the standard card width */
   fullWidth?: boolean;
   /** Custom classname */
@@ -102,17 +93,15 @@ const TopicsRow = styled('div')({
 // Semantically an H4 (one level under the carousel's H3 course heading),
 // but visually card-sized — the theme's h4 scale is too large for the
 // 264px card.
-const Title = styled('h4', {
-  shouldForwardProp: prop => prop !== 'titleColor',
-})<{titleColor: UnitTitleColor}>(({titleColor}) => ({
+const Title = styled('h4')({
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
   fontSize: '1.25rem',
   lineHeight: '1.5rem',
   fontWeight: 500,
-  color: unitTitleColorCss(titleColor),
+  color: '#000000',
   margin: 0,
   paddingBottom: '8px',
-}));
+});
 
 const Description = styled('p')({
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
@@ -185,8 +174,6 @@ const UnitCard: React.FC<UnitCardProps> = ({
   image,
   link,
   showTopics = true,
-  topicBadgeColor = 'purple',
-  titleColor = 'black',
   fullWidth = false,
   className,
 }) => {
@@ -204,8 +191,6 @@ const UnitCard: React.FC<UnitCardProps> = ({
   const gradeBand = mergeGradeBands(gradeBands);
   const durationText = (duration ?? []).filter(Boolean).join(', ');
   const visibleTopics = showTopics ? (topics ?? []).filter(Boolean) : [];
-  const {color: badgeFamily, isLight: badgeIsLight} =
-    parseCardBadgeColor(topicBadgeColor);
   const linkFields = link?.fields;
 
   return (
@@ -223,16 +208,16 @@ const UnitCard: React.FC<UnitCardProps> = ({
                 key={topic}
                 text={topic}
                 size="small"
-                color={badgeFamily}
+                color="purple"
                 // The card interior is always white, so Badge's section-tone
                 // auto-detection would pick the wrong variant on dark
-                // sections. Light picks force the light variant.
-                appearance={badgeIsLight ? 'light' : 'dark'}
+                // sections.
+                appearance="dark"
               />
             ))}
           </TopicsRow>
         )}
-        <Title titleColor={titleColor}>{title}</Title>
+        <Title>{title}</Title>
         {shortDescription && <Description>{shortDescription}</Description>}
         <BottomBlock>
           {gradeBand && <GradeChip>Grades {gradeBand}</GradeChip>}

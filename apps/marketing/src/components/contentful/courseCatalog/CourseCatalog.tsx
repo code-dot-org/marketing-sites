@@ -3,7 +3,6 @@
 import {styled, Theme} from '@mui/material/styles';
 import React, {useMemo, useState} from 'react';
 
-import {CardBadgeColor} from '@/components/contentful/badge/constants';
 import {UnitTitleColor} from '@/components/contentful/unitCard';
 import {
   gradeRangesOverlap,
@@ -58,12 +57,8 @@ export interface CourseCatalogProps {
   showUnitCount?: boolean;
   /** Whether to render the topics row on every card */
   showTopics?: boolean;
-  /** Badge color applied to every topic on every card */
-  topicBadgeColor?: CardBadgeColor;
   /** Overrides every card's Link entry label; empty uses the entry labels */
   linkTextOverride?: string;
-  /** Title color applied to every card's unit title */
-  unitTitleColor?: UnitTitleColor;
   /** Heading color applied to every carousel's course title */
   headingColor?: UnitTitleColor;
   /** Injected by Contentful Studio via enableEditorProperties */
@@ -183,9 +178,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({
   courses,
   showUnitCount = true,
   showTopics = true,
-  topicBadgeColor = 'purple',
   linkTextOverride = 'Explore',
-  unitTitleColor = 'black',
   headingColor = 'black',
   isEditorMode,
   className,
@@ -215,21 +208,11 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({
               .filter((unit): unit is CourseUnitEntry => Boolean(unit)),
             showUnitCount,
             showTopics,
-            topicBadgeColor,
             linkTextOverride,
-            unitTitleColor,
             headingColor,
           },
         })),
-    [
-      courses,
-      showUnitCount,
-      showTopics,
-      topicBadgeColor,
-      linkTextOverride,
-      unitTitleColor,
-      headingColor,
-    ],
+    [courses, showUnitCount, showTopics, linkTextOverride, headingColor],
   );
 
   // Show placeholder text until content entries are bound

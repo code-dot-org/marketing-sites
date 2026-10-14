@@ -37,7 +37,7 @@ describe('UnitCard component', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders each topic as a purple badge by default', () => {
+  it('renders each topic as a purple badge', () => {
     render(<UnitCard {...defaultProps} />);
     for (const topic of ['Special Topic', 'AI']) {
       expect(screen.getByText(topic)).toHaveStyle({
@@ -46,34 +46,11 @@ describe('UnitCard component', () => {
     }
   });
 
-  it('applies the selected topic badge color to all topics', () => {
-    render(<UnitCard {...defaultProps} topicBadgeColor="green" />);
-    for (const topic of ['Special Topic', 'AI']) {
-      expect(screen.getByText(topic)).toHaveStyle({
-        backgroundColor: 'var(--codeai-green-primary)',
-      });
-    }
-  });
-
-  it('renders Light picks with the light badge variant (light bg, dark text)', () => {
-    render(<UnitCard {...defaultProps} topicBadgeColor="greenLight" />);
-    for (const topic of ['Special Topic', 'AI']) {
-      expect(screen.getByText(topic)).toHaveStyle({
-        backgroundColor: 'var(--codeai-green-light)',
-        color: 'var(--codeai-green-dark)',
-      });
-    }
-  });
-
-  it('renders the title in black by default and a family primary when set', () => {
-    const heading = () =>
-      screen.getByRole('heading', {level: 4, name: 'Problem Solving with AI'});
-    const {rerender} = render(<UnitCard {...defaultProps} />);
-    expect(heading()).toHaveStyle({color: '#000000'});
-    rerender(<UnitCard {...defaultProps} titleColor="orange" />);
-    expect(heading()).toHaveStyle({color: 'var(--codeai-orange-primary)'});
-    rerender(<UnitCard {...defaultProps} titleColor="purpleDark" />);
-    expect(heading()).toHaveStyle({color: 'var(--codeai-purple-dark)'});
+  it('renders the title in black', () => {
+    render(<UnitCard {...defaultProps} />);
+    expect(
+      screen.getByRole('heading', {level: 4, name: 'Problem Solving with AI'}),
+    ).toHaveStyle({color: '#000000'});
   });
 
   it('caps the card at the standard width unless fullWidth is set', () => {

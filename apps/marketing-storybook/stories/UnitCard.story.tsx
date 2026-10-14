@@ -18,10 +18,6 @@ const meta: Meta<UnitCardProps> = {
     eyes: {matchLevel: 'Layout'},
   },
   argTypes: {
-    topicBadgeColor: {
-      control: 'select',
-      options: ['black', 'purple', 'blue', 'green', 'orange', 'pink'],
-    },
     showTopics: {control: 'boolean'},
   },
 };
@@ -56,12 +52,11 @@ export const Grid: Story = {
         gap: '16px',
       }}
     >
-      {(['purple', 'blue', 'green'] as const).map((color, idx) => (
+      {[0, 1, 2].map(idx => (
         <UnitCard
-          key={color}
+          key={idx}
           {...mockArgs}
           title={`Unit Card ${idx + 1}`}
-          topicBadgeColor={color}
           topics={['Special Topic', 'AI']}
           // Varying description lengths exercise the equal-height layout:
           // the flexible gap opens between description and grade band.

@@ -235,20 +235,11 @@ describe('UnitCarousel component', () => {
     ).toHaveLength(3);
   });
 
-  it('applies the heading color and the unit title color', () => {
-    render(
-      <UnitCarousel
-        {...defaultProps}
-        headingColor="blue"
-        unitTitleColor="green"
-      />,
-    );
+  it('applies the heading color to the carousel title', () => {
+    render(<UnitCarousel {...defaultProps} headingColor="blue" />);
     expect(
       screen.getByRole('heading', {level: 3, name: 'AI Foundations'}),
     ).toHaveStyle({color: 'var(--codeai-blue-primary)'});
-    for (const cardTitle of screen.getAllByRole('heading', {level: 4})) {
-      expect(cardTitle).toHaveStyle({color: 'var(--codeai-green-primary)'});
-    }
   });
 
   it('hides topics on every card when showTopics is false', () => {
@@ -256,15 +247,6 @@ describe('UnitCarousel component', () => {
     expect(
       screen.queryByText('Artificial Intelligence'),
     ).not.toBeInTheDocument();
-  });
-
-  it('applies the selected badge color to every card', () => {
-    render(<UnitCarousel {...defaultProps} topicBadgeColor="green" />);
-    for (const badge of screen.getAllByText('Artificial Intelligence')) {
-      expect(badge).toHaveStyle({
-        backgroundColor: 'var(--codeai-green-primary)',
-      });
-    }
   });
 
   it('renders a placeholder when no units are bound', () => {

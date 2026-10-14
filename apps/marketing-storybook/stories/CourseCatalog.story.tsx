@@ -21,10 +21,6 @@ const meta: Meta<CourseCatalogProps> = {
   tags: ['autodocs'],
   parameters: {eyes: {include: false}},
   argTypes: {
-    topicBadgeColor: {
-      control: 'select',
-      options: ['black', 'purple', 'blue', 'green', 'orange', 'pink'],
-    },
     showTopics: {control: 'boolean'},
     showUnitCount: {control: 'boolean'},
   },

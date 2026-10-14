@@ -13,7 +13,6 @@ import NavIconButton, {
 } from '@code-dot-org/component-library/button';
 
 import {backgroundToneFor} from '@/components/common/colors';
-import {CardBadgeColor} from '@/components/contentful/badge/constants';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 import UnitCard, {
   UnitTitleColor,
@@ -62,12 +61,8 @@ export interface UnitCarouselProps {
   showUnitCount?: boolean;
   /** Whether to render the topics row on every card */
   showTopics?: boolean;
-  /** Badge color applied to every topic on every card */
-  topicBadgeColor?: CardBadgeColor;
   /** Overrides every card's Link entry label; empty uses the entry label */
   linkTextOverride?: string;
-  /** Title color applied to every card's unit title */
-  unitTitleColor?: UnitTitleColor;
   /** Course title heading color */
   headingColor?: UnitTitleColor;
   /** Custom classname */
@@ -229,9 +224,7 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
   units,
   showUnitCount = true,
   showTopics = true,
-  topicBadgeColor = 'purple',
   linkTextOverride = 'Explore',
-  unitTitleColor = 'black',
   headingColor = 'black',
   className,
 }) => {
@@ -290,12 +283,10 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
               image: image?.fields?.file?.url,
               link,
               showTopics,
-              topicBadgeColor,
-              titleColor: unitTitleColor,
             },
           };
         }),
-    [units, showTopics, topicBadgeColor, linkTextOverride, unitTitleColor],
+    [units, showTopics, linkTextOverride],
   );
 
   // Show placeholder text until a content entry is bound
