@@ -201,7 +201,9 @@ describe('UnitCarousel component', () => {
     );
     expect(screen.getByText('Grades 8-10')).toBeInTheDocument();
     expect(screen.getByText('1 hour')).toBeInTheDocument();
-    expect(screen.getByText('AI')).toBeInTheDocument();
+    expect(screen.getByTestId('unit-card-topics')).toHaveTextContent(
+      'Topics: AI',
+    );
   });
 
   it('resolves each unit image through the entity store', () => {
@@ -244,9 +246,7 @@ describe('UnitCarousel component', () => {
 
   it('hides topics on every card when showTopics is false', () => {
     render(<UnitCarousel {...defaultProps} showTopics={false} />);
-    expect(
-      screen.queryByText('Artificial Intelligence'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/Topics:/)).not.toBeInTheDocument();
   });
 
   it('renders a placeholder when no units are bound', () => {

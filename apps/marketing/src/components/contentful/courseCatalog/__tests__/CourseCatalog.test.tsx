@@ -240,9 +240,7 @@ describe('CourseCatalog component', () => {
         showUnitCount={false}
       />,
     );
-    expect(
-      screen.queryByText('Artificial Intelligence'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/Topics:/)).not.toBeInTheDocument();
     expect(screen.queryByText(/2 Units/)).not.toBeInTheDocument();
   });
 
