@@ -3,11 +3,16 @@
 import UnitCarousel, {
   UnitCarouselProps,
 } from '@/components/contentful/unitCarousel';
+import {useInMemoryEntities} from '@contentful/experiences-sdk-react';
 import {Meta, StoryObj} from '@storybook/react';
 import {within} from '@testing-library/dom';
 import {expect} from 'storybook/test';
 
+import CourseCatalogMock from './__mocks__/CourseCatalogCourses.json';
 import UnitCarouselCourseMock from './__mocks__/UnitCarouselCourse.json';
+
+// Seeds the course mocks' Marketing Link entry for the Courses story.
+useInMemoryEntities().addEntities(CourseCatalogMock.seedEntities as any);
 
 const meta: Meta<UnitCarouselProps> = {
   title: 'Marketing/UnitCarousel',
@@ -17,6 +22,7 @@ const meta: Meta<UnitCarouselProps> = {
   argTypes: {
     showTopics: {control: 'boolean'},
     showUnitCount: {control: 'boolean'},
+    cardType: {control: 'select', options: ['unit', 'course']},
   },
 };
 export default meta;
@@ -95,7 +101,42 @@ export const WithoutTopics: Story = {
   render: () => <UnitCarousel {...mockArgs} showTopics={false} />,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    await expect(canvas.queryByText('Special Topic')).toBeNull();
+    await expect(canvas.queryByText(/Topics:/)).toBeNull();
+  },
+};
+
+// Course entries borrow the unit mock's image, topics and description; the
+// first course has no Marketing Link, so it falls back to the Curriculum
+// Link.
+const unitFields = (mockArgs.units![0] as any).fields;
+const courseEntries = CourseCatalogMock.courses.map((course, idx) => ({
+  ...course,
+  fields: {
+    ...course.fields,
+    courseDescription: unitFields.shortDescription,
+    image: unitFields.image,
+    topics: unitFields.topics,
+    duration: ['School Year'],
+    primaryLinkRef: unitFields.primaryLinkRef,
+    secondaryLinkRef: idx === 0 ? undefined : course.fields.secondaryLinkRef,
+  },
+})) as any as UnitCarouselProps['units'];
+
+export const Courses: Story = {
+  render: () => (
+    <UnitCarousel
+      cardType="course"
+      title="Explore our courses"
+      units={courseEntries}
+    />
+  ),
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('4 Courses')).toBeVisible();
+    await expect(canvas.queryByText(/Pathway/)).toBeNull();
+    await expect(
+      canvasElement.querySelector('button[aria-label="Next courses"]'),
+    ).not.toBeNull();
   },
 };
 
@@ -103,6 +144,8 @@ export const Placeholder: Story = {
   render: () => <UnitCarousel title="AI Foundations" />,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText(/Unit Carousel placeholder/)).toBeVisible();
+    await expect(
+      canvas.getByText(/Curriculum Carousel placeholder/),
+    ).toBeVisible();
   },
 };

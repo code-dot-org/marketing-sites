@@ -31,6 +31,19 @@ useInMemoryEntities().addEntities([
   } as any,
   {
     sys: {
+      id: 'course-marketing-link-1',
+      type: 'Entry',
+      contentType: {sys: {type: 'Link', linkType: 'ContentType', id: 'link'}},
+    },
+    fields: {
+      label: 'Learn more',
+      primaryTarget: '/csp',
+      isThisAnExternalLink: false,
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any,
+  {
+    sys: {
       id: 'unit-link-1',
       type: 'Entry',
       contentType: {sys: {type: 'Link', linkType: 'ContentType', id: 'link'}},
@@ -94,6 +107,25 @@ describe('UnitCarousel component', () => {
       screen.getByRole('heading', {level: 3, name: 'AI Foundations'}),
     ).toBeInTheDocument();
     expect(screen.getAllByRole('heading', {level: 4})).toHaveLength(3);
+  });
+
+  it('renders the selected heading levels without changing visual size', () => {
+    render(
+      <UnitCarousel
+        {...defaultProps}
+        headingLevel="h2"
+        cardTitleHeadingLevel="h3"
+      />,
+    );
+    expect(
+      screen.getByRole('heading', {level: 2, name: 'AI Foundations'}),
+    ).toBeInTheDocument();
+    const cardTitles = screen.getAllByRole('heading', {level: 3});
+    expect(cardTitles).toHaveLength(3);
+    cardTitles.forEach(title =>
+      expect(title).toHaveStyle({fontSize: '1.25rem'}),
+    );
+    expect(screen.queryByRole('heading', {level: 4})).not.toBeInTheDocument();
   });
 
   it('renders the course details link', () => {
@@ -251,7 +283,9 @@ describe('UnitCarousel component', () => {
 
   it('renders a placeholder when no units are bound', () => {
     render(<UnitCarousel title="AI Foundations" />);
-    expect(screen.getByText(/Unit Carousel placeholder/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Curriculum Carousel placeholder/),
+    ).toBeInTheDocument();
     expect(screen.queryByTestId('swiper')).not.toBeInTheDocument();
   });
 
@@ -263,5 +297,114 @@ describe('UnitCarousel component', () => {
     expect(
       screen.getByRole('button', {name: 'Next units'}),
     ).toBeInTheDocument();
+  });
+
+  describe('course card type', () => {
+    const makeCourse = (
+      id: string,
+      title: string,
+      fields: Record<string, unknown> = {},
+    ): CourseUnitEntry =>
+      ({
+        sys: {id, contentType: {sys: {id: 'course'}}},
+        fields: {
+          title,
+          courseDescription: `${title} description`,
+          grade: ['9', '10', '11', '12'],
+          topics: ['Programming'],
+          duration: ['School Year'],
+          image: {sys: {type: 'Link', linkType: 'Asset', id: 'unit-asset-1'}},
+          primaryLinkRef: {
+            sys: {type: 'Link', linkType: 'Entry', id: 'unit-link-1'},
+          },
+          secondaryLinkRef: {
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id: 'course-marketing-link-1',
+            },
+          },
+          ...fields,
+        },
+      }) as unknown as CourseUnitEntry;
+
+    const courseProps: UnitCarouselProps = {
+      cardType: 'course',
+      title: 'High School Courses',
+      gradeBands: ['9-12'],
+      units: [
+        makeCourse('c1', 'Computer Science Principles'),
+        makeCourse('c2', 'AP Computer Science A', {
+          secondaryLinkRef: undefined,
+        }),
+        makeUnit('u1', 'Problem Solving with AI'),
+      ],
+      linkTextOverride: '',
+    };
+
+    it('renders course cards from Course entries only', () => {
+      const {container} = render(<UnitCarousel {...courseProps} />);
+      expect(screen.getAllByTestId('swiper-slide')).toHaveLength(2);
+      expect(
+        screen.queryByText('Problem Solving with AI'),
+      ).not.toBeInTheDocument();
+      const cards = container.querySelectorAll('article');
+      cards.forEach(card =>
+        expect(card).toHaveAttribute('data-card-type', 'course'),
+      );
+      expect(
+        screen.getByText('Computer Science Principles description'),
+      ).toBeInTheDocument();
+    });
+
+    it('links to the Marketing Link, falling back to the Curriculum Link', () => {
+      render(<UnitCarousel {...courseProps} />);
+      expect(screen.getByRole('link', {name: 'Learn more'})).toHaveAttribute(
+        'href',
+        '/csp',
+      );
+      expect(
+        screen.getByRole('link', {name: 'Explore this unit'}),
+      ).toHaveAttribute('href', '/unit-1');
+    });
+
+    it('passes each course its duration', () => {
+      render(<UnitCarousel {...courseProps} />);
+      expect(screen.getAllByText('School Year')).toHaveLength(2);
+    });
+
+    it('counts courses and drops the pathway grade summary', () => {
+      render(<UnitCarousel {...courseProps} />);
+      expect(screen.getByText('2 Courses')).toBeInTheDocument();
+      expect(screen.queryByText(/Pathway/)).not.toBeInTheDocument();
+    });
+
+    it('labels the nav buttons for courses', () => {
+      render(<UnitCarousel {...courseProps} />);
+      expect(
+        screen.getByRole('button', {name: 'Previous courses'}),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', {name: 'Next courses'}),
+      ).toBeInTheDocument();
+    });
+
+    it('points at Card Type when Course entries are bound in unit mode', () => {
+      render(
+        <UnitCarousel
+          {...courseProps}
+          cardType="unit"
+          units={courseProps.units!.slice(0, 2)}
+        />,
+      );
+      expect(
+        screen.getByText(/These are Course entries\. Set Card Type to Course/),
+      ).toBeInTheDocument();
+    });
+
+    it('asks for a Course Catalog entry in the placeholder', () => {
+      render(<UnitCarousel cardType="course" />);
+      expect(screen.getByText(/Course Catalog/)).toBeInTheDocument();
+    });
   });
 });
