@@ -2,7 +2,6 @@
 import {ComponentDefinition} from '@contentful/experiences-sdk-react';
 
 import {brandTextColorOptions} from '@/components/common/colors';
-import {CARD_BADGE_COLOR_OPTIONS} from '@/components/contentful/badge/constants';
 
 export const CourseCatalogContentfulComponentDefinition: ComponentDefinition = {
   id: 'courseCatalog',
@@ -41,16 +40,6 @@ export const CourseCatalogContentfulComponentDefinition: ComponentDefinition = {
       defaultValue: true,
       group: 'style',
     },
-    topicBadgeColor: {
-      displayName: 'Topic Badge Color',
-      description: 'Applied to every topic badge on every card.',
-      type: 'Text',
-      defaultValue: 'purple',
-      group: 'style',
-      validations: {
-        in: CARD_BADGE_COLOR_OPTIONS,
-      },
-    },
     linkTextOverride: {
       displayName: 'Link Text Override',
       description:
@@ -58,16 +47,6 @@ export const CourseCatalogContentfulComponentDefinition: ComponentDefinition = {
       type: 'Text',
       defaultValue: 'Explore',
       group: 'style',
-    },
-    unitTitleColor: {
-      displayName: 'Unit Title Color',
-      description: 'Applied to the unit title on every card.',
-      type: 'Text',
-      defaultValue: 'purpleDark',
-      group: 'style',
-      validations: {
-        in: brandTextColorOptions('purpleDark'),
-      },
     },
     headingColor: {
       displayName: 'Heading Color',

@@ -7,10 +7,6 @@ import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon
 
 import Badge from '@/components/contentful/badge/Badge';
 import {
-  CardBadgeColor,
-  parseCardBadgeColor,
-} from '@/components/contentful/badge/constants';
-import {
   cardColorCss,
   type ContentCardColor,
 } from '@/components/contentful/contentCard/constants';
@@ -21,54 +17,64 @@ import {codeaiRadius} from '@/themes/code.org/constants/radius';
 import {CODE_ORG_TEXT_FONT_STACK} from '@/themes/code.org/typography/fontStack';
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
+import {CARD_WIDTH_PX, HeadingLevel, UnitCardType} from './constants';
 import {mergeGradeBands} from './mergeGradeBands';
 
 // Full brand-color list plus the legacy family values (rendered via the
-// family's primary token). Shared by the title-color fields on Unit Card,
-// Unit Carousel (heading + unit titles), and Course Catalog.
+// family's primary token). Shared by the heading-color fields on Unit
+// Carousel and Course Catalog.
 export type UnitTitleColor = ContentCardColor;
 
 export const unitTitleColorCss = cardColorCss;
 
 export interface UnitCardProps {
+  /** Unit or Course presentation */
+  cardType?: UnitCardType;
   /** Unit title */
   title?: string;
   /** Short description of the unit */
   shortDescription?: string;
   /** Grade-band values, merged into one span (e.g. ["K-5","6-8"] → K-8) */
   gradeBands?: string[];
-  /** Duration values (the curriculum entry's Length field) */
+  /** Duration values; anything but exactly one reads "Flexible duration" */
   duration?: string[];
-  /** Topic labels rendered as badges */
+  /** Topic labels, rendered as a comma-separated list */
   topics?: string[];
   /** Image URL or Contentful asset */
   image?: string;
   /** Link content-type entry for the footer link */
   link?: LinkEntry;
-  /** Whether to render the topics row */
+  /** Whether to render the topics line */
   showTopics?: boolean;
-  /** Badge color applied to every topic on the card. Light variants render
-   *  Badge's light appearance (light background, dark text). */
-  topicBadgeColor?: CardBadgeColor;
-  /** Unit title color */
-  titleColor?: UnitTitleColor;
+  /** Semantic heading tag for the title; the visual size is unaffected */
+  titleHeadingLevel?: HeadingLevel;
   /** Grow to the surrounding container's width instead of the standard card width */
   fullWidth?: boolean;
   /** Custom classname */
   className?: string;
 }
 
-const IMAGE_HEIGHT_PX = 134;
+const MAX_TOPICS = 4;
+
+// Grows with the course card's width to keep the unit card's proportions.
+const IMAGE_HEIGHT_PX: Record<UnitCardType, number> = {
+  unit: 134,
+  course: 161,
+};
+
+const forwardCardType = {
+  shouldForwardProp: (prop: string) => prop !== 'cardType',
+};
 
 const CardRoot = styled('article', {
-  shouldForwardProp: prop => prop !== 'fullWidth',
-})<{fullWidth: boolean}>(({fullWidth}) => ({
+  shouldForwardProp: prop => prop !== 'fullWidth' && prop !== 'cardType',
+})<{fullWidth: boolean; cardType: UnitCardType}>(({fullWidth, cardType}) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  // 264px matches the Unit Carousel's slide width so standalone cards and
+  // Matches the Unit Carousel's slide width so standalone cards and
   // carousel cards render identically; fullWidth defers to the container.
-  maxWidth: fullWidth ? 'none' : '264px',
+  maxWidth: fullWidth ? 'none' : `${CARD_WIDTH_PX[cardType]}px`,
   // Fills the row container so cards in a grid share one height.
   height: '100%',
   overflow: 'hidden',
@@ -78,11 +84,14 @@ const CardRoot = styled('article', {
   backgroundColor: '#ffffff',
 }));
 
-const ImageArea = styled('div')({
+const ImageArea = styled(
+  'div',
+  forwardCardType,
+)<{cardType: UnitCardType}>(({cardType}) => ({
   position: 'relative',
-  height: `${IMAGE_HEIGHT_PX}px`,
+  height: `${IMAGE_HEIGHT_PX[cardType]}px`,
   backgroundColor: 'var(--codeai-gray-1, #f2f2f2)',
-});
+}));
 
 const Content = styled('div')({
   display: 'flex',
@@ -92,24 +101,24 @@ const Content = styled('div')({
   padding: '20px',
 });
 
-const TopicsRow = styled('div')({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '4px',
+const GradeBadgeRow = styled('div')({
   paddingBottom: '12px',
 });
 
-// Semantically an H4 (one level under the carousel's H3 course heading),
-// but visually card-sized — the theme's h4 scale is too large for the
-// 264px card.
+// Card-sized regardless of the semantic level (rendered via `as`) — the
+// theme's heading scale is too large for the card.
 const Title = styled('h4', {
-  shouldForwardProp: prop => prop !== 'titleColor',
-})<{titleColor: UnitTitleColor}>(({titleColor}) => ({
+  // Filtering `as` is what makes emotion swap the tag instead of forwarding
+  // it as a DOM attribute.
+  shouldForwardProp: prop => !['as', 'cardType'].includes(prop as string),
+})<{cardType: UnitCardType}>(({cardType}) => ({
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
-  fontSize: '1.25rem',
-  lineHeight: '1.5rem',
+  // Course titles sit one step up the type scale.
+  ...(cardType === 'course'
+    ? {fontSize: '1.5rem', lineHeight: '1.75rem'}
+    : {fontSize: '1.25rem', lineHeight: '1.5rem'}),
   fontWeight: 500,
-  color: unitTitleColorCss(titleColor),
+  color: '#000000',
   margin: 0,
   paddingBottom: '8px',
 }));
@@ -124,24 +133,9 @@ const Description = styled('p')({
   paddingBottom: '12px',
 });
 
-const GradeChip = styled('span')({
-  display: 'inline-block',
-  minWidth: '90px',
-  padding: '2px 12px',
-  border: '1px solid var(--codeai-gray-2, #e4e6e9)',
-  // No CodeAI radius token this small — sm (8px) is buttons-only.
-  borderRadius: '2px',
-  fontFamily: CODE_ORG_TEXT_FONT_STACK,
-  fontSize: '0.75rem',
-  lineHeight: '1.125rem',
-  fontWeight: 600,
-  textAlign: 'center',
-  color: 'var(--codeai-gray-6, #5f6872)',
-  marginBottom: '12px',
-});
-
-// Groups the grade chip and footer at the card bottom; in equal-height rows
-// the flexible gap opens between the description and this block.
+// Groups the topics line and footer at the card bottom; in equal-height
+// rows the flexible gap opens between the description and this block, so
+// these lines align across cards.
 const BottomBlock = styled('div')({
   display: 'flex',
   flexDirection: 'column',
@@ -160,9 +154,11 @@ const FooterRow = styled('div')({
   borderTop: '1px solid var(--codeai-gray-2, #e4e6e9)',
 });
 
-const DurationLabel = styled('span')({
+// Icon-led meta line (topics, duration). Baseline alignment keeps the icon
+// on the first line when the text wraps.
+const MetaLine = styled('span')({
   display: 'inline-flex',
-  alignItems: 'center',
+  alignItems: 'baseline',
   gap: '6px',
   fontFamily: CODE_ORG_TEXT_FONT_STACK,
   fontSize: '0.75rem',
@@ -171,12 +167,31 @@ const DurationLabel = styled('span')({
   color: 'var(--codeai-gray-6, #5f6872)',
 });
 
-// Keeps the link on the right edge when there is no duration.
+// The "Topics:" label keeps the line's 500 weight; the list reads lighter.
+const MetaValue = styled('span')({
+  fontWeight: 400,
+});
+
+const MetaIcon: React.FC<{iconName: string}> = ({iconName}) => (
+  <FontAwesomeV6Icon
+    iconName={iconName}
+    iconStyle="solid"
+    style={{fontSize: '12px'}}
+    aria-hidden="true"
+  />
+);
+
+const TopicsLine = styled(MetaLine)({
+  paddingBottom: '12px',
+});
+
+// Keeps the link on the right edge.
 const ExploreSlot = styled('span')({
   marginInlineStart: 'auto',
 });
 
 const UnitCard: React.FC<UnitCardProps> = ({
+  cardType = 'unit',
   title,
   shortDescription,
   gradeBands,
@@ -185,8 +200,7 @@ const UnitCard: React.FC<UnitCardProps> = ({
   image,
   link,
   showTopics = true,
-  topicBadgeColor = 'purple',
-  titleColor = 'black',
+  titleHeadingLevel = 'h4',
   fullWidth = false,
   className,
 }) => {
@@ -194,78 +208,86 @@ const UnitCard: React.FC<UnitCardProps> = ({
   if (!title) {
     return (
       <em>
-        <strong>🗂 Unit Card placeholder.</strong> Please bind a "Curriculum"
-        content type entry in the Content sidebar.
+        <strong>🗂 Curriculum Card placeholder.</strong> Please bind a
+        "Curriculum" or "Course" content type entry in the Content sidebar.
       </em>
     );
   }
 
   const imageUrl = getAbsoluteImageUrl(image);
   const gradeBand = mergeGradeBands(gradeBands);
-  const durationText = (duration ?? []).filter(Boolean).join(', ');
+  const durations = (duration ?? []).filter(Boolean);
+  // Several lengths, or none, means the unit/course can run at any length.
+  const durationText =
+    durations.length === 1 ? durations[0] : 'Flexible duration';
   const visibleTopics = showTopics ? (topics ?? []).filter(Boolean) : [];
-  const {color: badgeFamily, isLight: badgeIsLight} =
-    parseCardBadgeColor(topicBadgeColor);
+  // Long topic lists are capped so the line stays short; the ellipsis
+  // signals the rest.
+  const topicsText = [
+    ...visibleTopics.slice(0, MAX_TOPICS),
+    ...(visibleTopics.length > MAX_TOPICS ? ['...'] : []),
+  ].join(', ');
   const linkFields = link?.fields;
 
   return (
-    <CardRoot className={className} fullWidth={fullWidth}>
+    <CardRoot
+      className={className}
+      fullWidth={fullWidth}
+      cardType={cardType}
+      data-card-type={cardType}
+    >
       {imageUrl && (
-        <ImageArea>
+        <ImageArea cardType={cardType}>
           <NextImage src={imageUrl} alt="" style={{objectFit: 'cover'}} />
         </ImageArea>
       )}
       <Content>
-        {visibleTopics.length > 0 && (
-          <TopicsRow data-testid="unit-card-topics">
-            {visibleTopics.map(topic => (
-              <Badge
-                key={topic}
-                text={topic}
-                size="small"
-                color={badgeFamily}
-                // The card interior is always white, so Badge's section-tone
-                // auto-detection would pick the wrong variant on dark
-                // sections. Light picks force the light variant.
-                appearance={badgeIsLight ? 'light' : 'dark'}
-              />
-            ))}
-          </TopicsRow>
+        {gradeBand && (
+          <GradeBadgeRow>
+            <Badge
+              text={`Grades ${gradeBand}`}
+              size="small"
+              color="blue"
+              // The card interior is always white, so Badge's section-tone
+              // auto-detection would pick the wrong variant on dark sections.
+              appearance="light"
+            />
+          </GradeBadgeRow>
         )}
-        <Title titleColor={titleColor}>{title}</Title>
+        <Title as={titleHeadingLevel} cardType={cardType}>
+          {title}
+        </Title>
         {shortDescription && <Description>{shortDescription}</Description>}
         <BottomBlock>
-          {gradeBand && <GradeChip>Grades {gradeBand}</GradeChip>}
-          {(durationText || linkFields) && (
-            <FooterRow>
-              {durationText && (
-                <DurationLabel>
-                  <FontAwesomeV6Icon
-                    iconName="clock"
-                    iconStyle="solid"
-                    style={{fontSize: '12px'}}
-                    aria-hidden="true"
-                  />
-                  {durationText}
-                </DurationLabel>
-              )}
-              {linkFields && (
-                <ExploreSlot>
-                  <Link
-                    href={linkFields.primaryTarget}
-                    isLinkExternal={!!linkFields.isThisAnExternalLink}
-                    ariaLabel={linkFields.ariaLabel || undefined}
-                    color="black"
-                    size="s"
-                    icon="angle-right"
-                    removeMarginBottom
-                  >
-                    {linkFields.label}
-                  </Link>
-                </ExploreSlot>
-              )}
-            </FooterRow>
+          {visibleTopics.length > 0 && (
+            <TopicsLine data-testid="unit-card-topics">
+              <MetaIcon iconName="tags" />
+              <span>
+                Topics: <MetaValue>{topicsText}</MetaValue>
+              </span>
+            </TopicsLine>
           )}
+          <FooterRow>
+            <MetaLine>
+              <MetaIcon iconName="clock" />
+              {durationText}
+            </MetaLine>
+            {linkFields && (
+              <ExploreSlot>
+                <Link
+                  href={linkFields.primaryTarget}
+                  isLinkExternal={!!linkFields.isThisAnExternalLink}
+                  ariaLabel={linkFields.ariaLabel || undefined}
+                  color="black"
+                  size="s"
+                  icon="angle-right"
+                  removeMarginBottom
+                >
+                  {linkFields.label}
+                </Link>
+              </ExploreSlot>
+            )}
+          </FooterRow>
         </BottomBlock>
       </Content>
     </CardRoot>

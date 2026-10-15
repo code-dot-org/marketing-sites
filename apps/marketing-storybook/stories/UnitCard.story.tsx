@@ -18,11 +18,8 @@ const meta: Meta<UnitCardProps> = {
     eyes: {matchLevel: 'Layout'},
   },
   argTypes: {
-    topicBadgeColor: {
-      control: 'select',
-      options: ['black', 'purple', 'blue', 'green', 'orange', 'pink'],
-    },
     showTopics: {control: 'boolean'},
+    cardType: {control: 'select', options: ['unit', 'course']},
   },
 };
 export default meta;
@@ -56,15 +53,14 @@ export const Grid: Story = {
         gap: '16px',
       }}
     >
-      {(['purple', 'blue', 'green'] as const).map((color, idx) => (
+      {[0, 1, 2].map(idx => (
         <UnitCard
-          key={color}
+          key={idx}
           {...mockArgs}
           title={`Unit Card ${idx + 1}`}
-          topicBadgeColor={color}
           topics={['Special Topic', 'AI']}
           // Varying description lengths exercise the equal-height layout:
-          // the flexible gap opens between description and grade band.
+          // the flexible gap opens between description and topics.
           shortDescription={
             idx === 1
               ? 'A short description.'
@@ -80,7 +76,7 @@ export const WithoutTopics: Story = {
   render: () => <UnitCard {...mockArgs} showTopics={false} />,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    await expect(canvas.queryByText('Special Topic')).toBeNull();
+    await expect(canvas.queryByText(/Topics:/)).toBeNull();
   },
 };
 
@@ -92,10 +88,37 @@ export const MergedGradeBands: Story = {
   },
 };
 
+const courseArgs: UnitCardProps = {
+  ...mockArgs,
+  cardType: 'course',
+  title: 'Computer Science Principles',
+  gradeBands: ['9', '10', '11', '12'],
+  duration: ['School Year'],
+};
+
+export const Course: Story = {
+  render: () => <UnitCard {...courseArgs} />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('Grades 9-12')).toBeVisible();
+    await expect(canvas.getByText('School Year')).toBeVisible();
+    await expect(canvas.queryByText('1 hour')).toBeNull();
+  },
+};
+
+export const UnitAndCourse: Story = {
+  render: () => (
+    <div style={{display: 'flex', gap: '32px', alignItems: 'stretch'}}>
+      <UnitCard {...mockArgs} />
+      <UnitCard {...courseArgs} />
+    </div>
+  ),
+};
+
 export const Placeholder: Story = {
   render: () => <UnitCard />,
   play: async ({canvasElement}) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByText(/Unit Card placeholder/)).toBeVisible();
+    await expect(canvas.getByText(/Curriculum Card placeholder/)).toBeVisible();
   },
 };

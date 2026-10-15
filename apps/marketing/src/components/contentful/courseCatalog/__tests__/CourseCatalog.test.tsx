@@ -134,13 +134,12 @@ describe('CourseCatalog component', () => {
     expect(screen.getByText('CS Fundamentals description')).toBeInTheDocument();
   });
 
-  it('forwards link text override and title colors to every carousel', () => {
+  it('forwards link text override and heading color to every carousel', () => {
     render(
       <CourseCatalog
         {...defaultProps}
         linkTextOverride="View unit"
         headingColor="orange"
-        unitTitleColor="pink"
       />,
     );
     expect(screen.getAllByRole('link', {name: 'View unit'})).not.toHaveLength(
@@ -149,12 +148,6 @@ describe('CourseCatalog component', () => {
     expect(
       screen.getByRole('heading', {level: 3, name: 'CS Fundamentals'}),
     ).toHaveStyle({color: 'var(--codeai-orange-primary)'});
-    for (const cardTitle of screen.getAllByRole('heading', {
-      level: 4,
-      name: 'Unit 1',
-    })) {
-      expect(cardTitle).toHaveStyle({color: 'var(--codeai-pink-primary)'});
-    }
   });
 
   it('ignores bound entries of another content type', () => {
@@ -247,19 +240,8 @@ describe('CourseCatalog component', () => {
         showUnitCount={false}
       />,
     );
-    expect(
-      screen.queryByText('Artificial Intelligence'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/Topics:/)).not.toBeInTheDocument();
     expect(screen.queryByText(/2 Units/)).not.toBeInTheDocument();
-  });
-
-  it('applies the selected badge color across all cards', () => {
-    render(<CourseCatalog {...defaultProps} topicBadgeColor="green" />);
-    for (const badge of screen.getAllByText('Artificial Intelligence')) {
-      expect(badge).toHaveStyle({
-        backgroundColor: 'var(--codeai-green-primary)',
-      });
-    }
   });
 
   it('shows all courses with disabled pills in editor mode', async () => {

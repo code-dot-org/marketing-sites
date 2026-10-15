@@ -13,12 +13,16 @@ import NavIconButton, {
 } from '@code-dot-org/component-library/button';
 
 import {backgroundToneFor} from '@/components/common/colors';
-import {CardBadgeColor} from '@/components/contentful/badge/constants';
 import {useSectionBackground} from '@/components/contentful/section/SectionBackgroundContext';
 import UnitCard, {
   UnitTitleColor,
   unitTitleColorCss,
 } from '@/components/contentful/unitCard';
+import {
+  CARD_WIDTH_PX,
+  HeadingLevel,
+  UnitCardType,
+} from '@/components/contentful/unitCard/constants';
 import {mergeGradeBands} from '@/components/contentful/unitCard/mergeGradeBands';
 import {resolveContentfulLink} from '@/contentful/resolveLink';
 import {CODE_ORG_TEXT_FONT_STACK} from '@/themes/code.org/typography/fontStack';
@@ -26,13 +30,26 @@ import {LinkEntry} from '@/types/contentful/entries/Link';
 import {Entry} from '@/types/contentful/Entry';
 import {ExperienceAsset} from '@/types/contentful/ExperienceAsset';
 
-const CURRICULUM_CONTENT_TYPE_ID = 'curriculum';
+// Each card type accepts only its own entries; anything else bound is
+// dropped.
+const CONTENT_TYPE_BY_CARD_TYPE: Record<UnitCardType, string> = {
+  unit: 'curriculum',
+  course: 'course',
+};
+
+const NOUNS: Record<UnitCardType, {singular: string; plural: string}> = {
+  unit: {singular: 'Unit', plural: 'Units'},
+  course: {singular: 'Course', plural: 'Courses'},
+};
 
 // Curriculum entries carry two field vocabularies: curriculum units use
 // grade/duration/topics, activity-catalog entries use ages/length/topic.
+// Course entries use courseDescription and add a Marketing Link
+// (secondaryLinkRef).
 type CourseUnitFields = {
   title?: string;
   shortDescription?: string;
+  courseDescription?: string;
   grade?: string[];
   ages?: string[];
   duration?: string[];
@@ -43,11 +60,14 @@ type CourseUnitFields = {
   // {sys: {type: 'Link'}} stubs — resolved via resolveContentfulLink.
   image?: ExperienceAsset;
   primaryLinkRef?: LinkEntry;
+  secondaryLinkRef?: LinkEntry;
 };
 
 export type CourseUnitEntry = Entry<CourseUnitFields>;
 
 export interface UnitCarouselProps {
+  /** Unit cards from Curriculum entries, or Course cards from Course entries */
+  cardType?: UnitCardType;
   /** Course title */
   title?: string;
   /** Course description paragraph, shown beside the title */
@@ -56,36 +76,40 @@ export interface UnitCarouselProps {
   courseDetailsLink?: LinkEntry;
   /** Course grade-band values, merged into one span in the subtitle */
   gradeBands?: string[];
-  /** Curriculum entries from the Course entry's Units field */
+  /** Curriculum entries (a Course's Units) or, for the course card type,
+   *  Course entries (a Course Catalog's Courses) */
   units?: CourseUnitEntry[];
   /** Whether to render the unit count in the subtitle */
   showUnitCount?: boolean;
   /** Whether to render the topics row on every card */
   showTopics?: boolean;
-  /** Badge color applied to every topic on every card */
-  topicBadgeColor?: CardBadgeColor;
   /** Overrides every card's Link entry label; empty uses the entry label */
   linkTextOverride?: string;
-  /** Title color applied to every card's unit title */
-  unitTitleColor?: UnitTitleColor;
   /** Course title heading color */
   headingColor?: UnitTitleColor;
+  /** Semantic tag for the carousel title; the visual size stays h3 */
+  headingLevel?: HeadingLevel;
+  /** Semantic tag for every card title; the visual size is unaffected */
+  cardTitleHeadingLevel?: HeadingLevel;
   /** Custom classname */
   className?: string;
 }
 
-const Root = styled('div')({
+const Root = styled('div', {
+  shouldForwardProp: prop => prop !== 'cardType',
+})<{cardType: UnitCardType}>(({cardType}) => ({
   width: '100%',
   // slidesPerView="auto" takes slide width from CSS; 85vw guards tiny
-  // viewports. 264px fits four full cards plus a 32px sliver of the fifth
-  // at the 1216px content width. height auto + flex let slides stretch to
-  // the tallest card (UnitCard fills them via height: 100%).
+  // viewports. At the 1216px content width, unit slides fit four full cards
+  // plus a sliver of the fifth, course slides three plus part of a fourth. height
+  // auto + flex let slides stretch to the tallest card (UnitCard fills them
+  // via height: 100%).
   '& .swiper-slide': {
-    width: 'min(264px, 85vw)',
+    width: `min(${CARD_WIDTH_PX[cardType]}px, 85vw)`,
     height: 'auto',
     display: 'flex',
   },
-});
+}));
 
 // Header row: course info (title, metadata, description) on the left taking
 // all leftover width, actions (details button, nav arrows) in an auto-width
@@ -148,10 +172,14 @@ const DescriptionParagraph = styled('p', {
   margin: '8px 0 0',
 }));
 
-// The course heading is a standard H3 — everything inherits from the theme's
-// h3 variant (family, weight, sizes, responsive steps); only color is custom.
+// The course heading looks like a standard H3 at any semantic level
+// (rendered via `as`) — everything inherits from the theme's h3 variant
+// (family, weight, sizes, responsive steps); only color is custom.
 const Title = styled('h3', {
-  shouldForwardProp: prop => prop !== 'headingColor' && prop !== 'light',
+  // Filtering `as` is what makes emotion swap the tag instead of forwarding
+  // it as a DOM attribute.
+  shouldForwardProp: prop =>
+    !['as', 'headingColor', 'light'].includes(prop as string),
 })<{headingColor: UnitTitleColor; light?: boolean}>(
   ({theme, headingColor, light}) => ({
     ...theme.typography.h3,
@@ -222,6 +250,7 @@ const CarouselViewport = styled('div', {
 });
 
 const UnitCarousel: React.FC<UnitCarouselProps> = ({
+  cardType = 'unit',
   title,
   courseDescription,
   courseDetailsLink,
@@ -229,10 +258,10 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
   units,
   showUnitCount = true,
   showTopics = true,
-  topicBadgeColor = 'purple',
   linkTextOverride = 'Explore',
-  unitTitleColor = 'black',
   headingColor = 'black',
+  headingLevel = 'h3',
+  cardTitleHeadingLevel = 'h4',
   className,
 }) => {
   const carouselId = `id-${useId().replaceAll(':', '')}`;
@@ -261,13 +290,17 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
       (units ?? [])
         .filter(
           unit =>
-            unit?.sys?.contentType?.sys?.id === CURRICULUM_CONTENT_TYPE_ID,
+            unit?.sys?.contentType?.sys?.id ===
+            CONTENT_TYPE_BY_CARD_TYPE[cardType],
         )
         .map(({sys, fields}) => {
           const image = resolveContentfulLink<ExperienceAsset>(fields.image);
-          const resolvedLink = resolveContentfulLink<LinkEntry>(
-            fields.primaryLinkRef,
-          );
+          // Course cards prefer the Marketing Link; not every course has
+          // one, so they fall back to the Curriculum Link.
+          const resolvedLink =
+            (cardType === 'course' &&
+              resolveContentfulLink<LinkEntry>(fields.secondaryLinkRef)) ||
+            resolveContentfulLink<LinkEntry>(fields.primaryLinkRef);
           // Link Text Override relabels every card's link; when cleared, the
           // bound Link entry's label shows. Target and aria label always stay
           // inherited from the entry.
@@ -282,28 +315,43 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
           return {
             id: sys.id,
             props: {
+              cardType,
               title: fields.title,
-              shortDescription: fields.shortDescription,
+              shortDescription:
+                fields.shortDescription ?? fields.courseDescription,
               gradeBands: fields.grade ?? fields.ages,
               duration: fields.duration ?? fields.length,
               topics: fields.topics ?? fields.topic,
               image: image?.fields?.file?.url,
               link,
               showTopics,
-              topicBadgeColor,
-              titleColor: unitTitleColor,
+              titleHeadingLevel: cardTitleHeadingLevel,
             },
           };
         }),
-    [units, showTopics, topicBadgeColor, linkTextOverride, unitTitleColor],
+    [cardType, units, showTopics, linkTextOverride, cardTitleHeadingLevel],
   );
+
+  const noun = NOUNS[cardType];
 
   // Show placeholder text until a content entry is bound
   if (!cards.length) {
+    // Entries bound for the other card type are all dropped by the filter;
+    // point the author at the Card Type picker instead of the binding.
+    const otherType: UnitCardType = cardType === 'unit' ? 'course' : 'unit';
+    const boundOtherType = (units ?? []).some(
+      unit =>
+        unit?.sys?.contentType?.sys?.id ===
+        CONTENT_TYPE_BY_CARD_TYPE[otherType],
+    );
     return (
       <em>
-        <strong>🎠 Unit Carousel placeholder.</strong> Please bind a "Course"
-        content type entry with Units in the Content sidebar.
+        <strong>🎠 Curriculum Carousel placeholder.</strong>{' '}
+        {boundOtherType
+          ? `These are ${NOUNS[otherType].singular} entries. Set Card Type to ${NOUNS[otherType].singular} in the Design tab.`
+          : cardType === 'course'
+            ? 'Please bind a "Course Catalog" content type entry with Courses in the Content sidebar.'
+            : 'Please bind a "Course" entry (Units) or a "Course Catalog" entry (Courses) in the Content sidebar.'}
       </em>
     );
   }
@@ -313,20 +361,27 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
       ? courseDetailsLink.fields
       : undefined;
 
-  const gradeBand = mergeGradeBands(gradeBands);
+  // Course cards show their own grade bands, so the pathway summary is
+  // unit-only.
+  const gradeBand = cardType === 'unit' && mergeGradeBands(gradeBands);
   const subtitle = [
-    showUnitCount && `${cards.length} ${cards.length === 1 ? 'Unit' : 'Units'}`,
+    showUnitCount &&
+      `${cards.length} ${cards.length === 1 ? noun.singular : noun.plural}`,
     gradeBand && `Grades ${gradeBand} Pathway`,
   ]
     .filter(Boolean)
     .join(' • ');
 
   return (
-    <Root className={className}>
+    <Root className={className} cardType={cardType}>
       <Header>
         <HeaderInfo>
           {title && (
-            <Title headingColor={headingColor} light={onDarkSection}>
+            <Title
+              as={headingLevel}
+              headingColor={headingColor}
+              light={onDarkSection}
+            >
               {title}
             </Title>
           )}
@@ -360,7 +415,7 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
               size="l"
               isIconOnly
               icon={{iconName: 'chevron-left', iconStyle: 'solid'}}
-              ariaLabel="Previous units"
+              ariaLabel={`Previous ${noun.plural.toLowerCase()}`}
               onClick={() => undefined}
             />
             <NavIconButton
@@ -370,7 +425,7 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
               size="l"
               isIconOnly
               icon={{iconName: 'chevron-right', iconStyle: 'solid'}}
-              ariaLabel="Next units"
+              ariaLabel={`Next ${noun.plural.toLowerCase()}`}
               onClick={() => undefined}
             />
           </NavButtons>
@@ -387,8 +442,8 @@ const UnitCarousel: React.FC<UnitCarouselProps> = ({
           }}
           // The A11y module rewrites the nav buttons' aria-labels; keep ours.
           a11y={{
-            prevSlideMessage: 'Previous units',
-            nextSlideMessage: 'Next units',
+            prevSlideMessage: `Previous ${noun.plural.toLowerCase()}`,
+            nextSlideMessage: `Next ${noun.plural.toLowerCase()}`,
           }}
           onSwiper={updateEndFade}
           onProgress={updateEndFade}
