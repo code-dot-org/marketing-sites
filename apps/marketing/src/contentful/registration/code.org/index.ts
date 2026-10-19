@@ -83,6 +83,9 @@ import EditorialCard, {
 import FAQAccordion, {
   FAQAccordionContentfulComponentDefinition,
 } from '@/components/contentful/faqAccordion';
+import FileDownloader, {
+  FileDownloaderContentfulComponentDefinition,
+} from '@/components/contentful/fileDownloader';
 import Heading, {
   HeadingContentfulComponentDefinition,
 } from '@/components/contentful/heading';
@@ -236,6 +239,15 @@ const contentfulRegistration = {
     {
       component: AutoDownload,
       definition: AutoDownloadContentfulComponentDefinition,
+      options: {
+        enableEditorProperties: {
+          isEditorMode: true,
+        },
+      },
+    },
+    {
+      component: FileDownloader,
+      definition: FileDownloaderContentfulComponentDefinition,
       options: {
         enableEditorProperties: {
           isEditorMode: true,
