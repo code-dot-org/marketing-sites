@@ -141,11 +141,24 @@ export const Open: Story = {
       '2024 Impact Report',
       '2023 Impact Report',
     ]);
+    // MUI focuses the first option on open and shades it only when the
+    // browser reports :focus-visible, which varies between eyes runs. Moving
+    // focus to the list (still inside the menu's focus trap) clears it, so
+    // the snapshot always matches a mouse open.
+    const [firstItem] = within(menu).getAllByRole('menuitem');
+    await waitFor(() => expect(firstItem).toHaveFocus());
+    menu.focus();
+    await waitFor(() => expect(firstItem).not.toHaveClass('Mui-focusVisible'));
+    await expect(getComputedStyle(firstItem).backgroundColor).toBe(
+      'rgba(0, 0, 0, 0)',
+    );
   },
 };
 
 // Mocks the file fetch and the save so the story never downloads anything.
+// Looks the same as Default once the menu closes; behavior only.
 export const DownloadsFile: Story = {
+  parameters: {eyes: {include: false}},
   beforeEach: () => {
     const fetchSpy = spyOn(window, 'fetch').mockResolvedValue(
       new Response(new Blob(['%PDF-1.4'], {type: 'application/pdf'})),
