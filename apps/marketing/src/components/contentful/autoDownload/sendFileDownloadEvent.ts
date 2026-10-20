@@ -5,7 +5,7 @@ import {getFileExtension} from './startFileDownload';
 type FileDownloadEvent = {
   href: string;
   fileName: string;
-  method: 'auto' | 'link';
+  method: 'auto' | 'link' | 'dropdown';
   /** Authored parameters, already validated by parseAnalyticsParameters. */
   parameters?: Record<string, string>;
 };
@@ -27,7 +27,7 @@ const hasDataLayer = () =>
   Array.isArray((window as {dataLayer?: unknown}).dataLayer);
 
 /**
- * Reports a download (automatic or fallback-link click) to GA4. The GA init script is injected
+ * Reports a download (automatic, fallback-link click or dropdown choice) to GA4. The GA init script is injected
  * after hydration, so if it hasn't run yet this retries once on window `load`
  * and then drops the event. Never throws.
  */

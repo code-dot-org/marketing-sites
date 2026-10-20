@@ -13,12 +13,13 @@ gtag('event', 'file_download', {
   file_extension: 'pdf', // no leading dot
   link_url:
     'https://contentful-assets.code.org/hwu8vzk5v0g2/<assetId>/<hash>/hour-of-ai-toolkit.pdf',
-  method: 'auto', // or 'link'
+  method: 'auto', // or 'link', 'dropdown'
 });
 ```
 
 - `method: 'auto'` is sent once per automatic download, after the file has been fetched and the save has started. It isn't sent in the editor, in preview, on back/forward, by non-first instances, or on failure.
 - `method: 'link'` is sent once per fallback-link click. It isn't sent in the editor or in preview.
+- `method: 'dropdown'` is sent once per file chosen in a File Downloader dropdown. It isn't sent in the editor or in preview.
 - Sent through the site's existing GA integration only. When GA is absent, blocked, or not consented, the event is dropped without affecting the download.
 
 ## GA4 built-in tracking is suppressed for the fallback link
@@ -41,7 +42,7 @@ The Studio field **Analytics parameters** takes `name=value` pairs separated by 
 ## Reporting guidance for the analytics manager
 
 - A per-file event is `file_download` where `file_name` contains the file name (for example `hour-of-ai-toolkit.pdf`). Match on the name, not the full path, because the path's hash changes each time the file is replaced.
-- Split automatic downloads from link clicks with the `method` custom dimension: `auto` or `link`.
+- Split automatic downloads from link clicks with the `method` custom dimension: `auto`, `link`, or `dropdown`.
 - Split by campaign or content with the authored parameters' custom dimensions.
 - Hour of AI shares the Code.org property, so filter by hostname `hourofai.org` to separate it.
 
