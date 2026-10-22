@@ -32,6 +32,28 @@ describe('ActivitiesHero', () => {
     ).toBeInTheDocument();
   });
 
+  it('renders all-activities content without an activity type', () => {
+    render(<ActivitiesHero hourOfAi />);
+    expect(
+      screen.getByRole('heading', {level: 1, name: 'Explore Activities'}),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /^Dive into the Hour of AI and Hour of Code activities below!/,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it.each([
+    [ActivityType.HOUR_OF_AI, 'Hour of AI'],
+    [ActivityType.HOUR_OF_CODE, 'Hour of Code'],
+  ])('matches the subtext to %s', (activityType, name) => {
+    render(<ActivitiesHero activityType={activityType} hourOfAi />);
+    expect(
+      screen.getByText(new RegExp(`^Dive into the ${name} activities below!`)),
+    ).toBeInTheDocument();
+  });
+
   it('uses the legacy fixed title styles by default', () => {
     render(<ActivitiesHero activityType={ActivityType.HOUR_OF_AI} />);
     expect(screen.getByRole('heading', {level: 1})).not.toHaveClass(

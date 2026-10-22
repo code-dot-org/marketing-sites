@@ -5,18 +5,23 @@ import {Box, Typography} from '@mui/material';
 import {ActivityType} from '@/modules/activityCatalog/types/Activity';
 
 interface ActivitiesHeroProps {
-  activityType: ActivityType;
+  /** The catalog shown; undefined for all activities. */
+  activityType?: ActivityType;
   /** Hour of AI: the theme's h1 instead of the legacy fixed sizes, and more
    *  space below. */
   hourOfAi?: boolean;
 }
 
+const ACTIVITY_NAMES = {
+  [ActivityType.HOUR_OF_AI]: 'Hour of AI',
+  [ActivityType.HOUR_OF_CODE]: 'Hour of Code',
+};
+
 export default function ActivitiesHero({
   activityType,
   hourOfAi = false,
 }: ActivitiesHeroProps) {
-  const activityName =
-    activityType === ActivityType.HOUR_OF_CODE ? 'Hour of Code' : 'Hour of AI';
+  const activityName = activityType && ACTIVITY_NAMES[activityType];
 
   return (
     <Box
@@ -47,12 +52,15 @@ export default function ActivitiesHero({
               }
         }
       >
-        Explore {activityName} Activities
+        {activityName
+          ? `Explore ${activityName} Activities`
+          : 'Explore Activities'}
       </Typography>
 
       <Typography component="p" variant="body2">
-        Dive into the {activityName} activities below! As you explore, preview
-        each activity to find the ones that best match your learners' needs.
+        Dive into the {activityName ?? 'Hour of AI and Hour of Code'} activities
+        below! As you explore, preview each activity to find the ones that best
+        match your learners' needs.
       </Typography>
     </Box>
   );

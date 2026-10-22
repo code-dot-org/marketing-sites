@@ -267,7 +267,7 @@ describe('GET /sitemap.xml', () => {
     expect(body).not.toContain('/activities');
   });
 
-  it('includes the Hour of AI catalog routes on Hour of AI', async () => {
+  it('includes the Hour of AI catalog route on Hour of AI', async () => {
     jest.resetAllMocks();
     (getContentfulClient as jest.Mock).mockReturnValue({});
     (getAllEntriesForContentType as jest.Mock).mockResolvedValue([
@@ -285,8 +285,9 @@ describe('GET /sitemap.xml', () => {
     const body = await response.text();
 
     expect(body).toContain('/en-US/activities</loc>');
-    expect(body).toContain('/en-US/hour-of-code/activities</loc>');
-    // The Hour of AI catalog has no prefix of its own.
+    // Hour of Code is a filter on the same catalog now.
+    expect(body).not.toContain('/en-US/hour-of-code/activities');
+    // The catalog has no prefix of its own.
     expect(body).not.toContain('/en-US/hour-of-ai/activities');
   });
 });

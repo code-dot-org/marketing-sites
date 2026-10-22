@@ -129,6 +129,65 @@ describe('createDatabase', () => {
     });
   });
 
+  describe('catalogs', () => {
+    const tagged = (title: string, tags: string[], featuredPosition?: number) =>
+      ({
+        metadata: {
+          tags: tags.map(id => ({sys: {id, type: 'Link', linkType: 'Tag'}})),
+        },
+        fields: {
+          title,
+          organization: 'Org',
+          featuredPosition,
+          primaryLinkRef: '',
+        },
+      }) as unknown as Entry<Activity>;
+
+    const docs = toOramaActivities([
+      tagged('Hello World', ['hour-of-code'], 1),
+      tagged('Mix & Move', ['hour-of-ai'], 1),
+      tagged('Minecraft', ['hour-of-ai', 'hour-of-code'], 6),
+      tagged('Untagged', []),
+      tagged('Other tag', ['some-other-tag']),
+    ]);
+
+    it('reads catalogs from the Hour of AI and Hour of Code tags', () => {
+      expect(docs.map(doc => doc.catalogs)).toEqual([
+        ['hour-of-code'],
+        ['hour-of-ai'],
+        ['hour-of-ai', 'hour-of-code'],
+        [],
+        [],
+      ]);
+    });
+
+    it('sorts both catalogs together by position, then title', async () => {
+      const result = await search(createDatabase(docs), {
+        sortBy: {property: 'sortKey', order: 'ASC'},
+      });
+
+      expect(result.hits.map(hit => hit.document.title)).toEqual([
+        'Hello World',
+        'Mix & Move',
+        'Minecraft',
+        'Other tag',
+        'Untagged',
+      ]);
+    });
+
+    it('keeps each catalog in its own featured order', async () => {
+      const result = await search(createDatabase(docs), {
+        where: {catalogs: {containsAny: ['hour-of-code']}},
+        sortBy: {property: 'sortKey', order: 'ASC'},
+      });
+
+      expect(result.hits.map(hit => hit.document.title)).toEqual([
+        'Hello World',
+        'Minecraft',
+      ]);
+    });
+  });
+
   it('should return an Orama database instance', () => {
     const db = createDatabase([]);
     expect(db).toBeDefined();

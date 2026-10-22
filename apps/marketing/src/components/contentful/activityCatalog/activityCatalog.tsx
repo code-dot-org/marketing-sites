@@ -15,9 +15,17 @@ import FacetBar from '@/components/contentful/activityCatalog/facetBar/facetBar'
 import FacetDrawer from '@/components/contentful/activityCatalog/facetDrawer/facetDrawer';
 import ActivityCollection from '@/components/csforall/activityCollection/ActivityCollection';
 import ActivityCardCollection from '@/modules/activityCatalog/hourOfAi/ActivityCardCollection';
+import {
+  CATALOG_SEARCH_PARAM,
+  parseCatalog,
+} from '@/modules/activityCatalog/hourOfAi/paths';
 import {createDatabase} from '@/modules/activityCatalog/orama/createDatabase';
-import {OramaActivity} from '@/modules/activityCatalog/types/Activity';
+import {
+  ActivityType,
+  OramaActivity,
+} from '@/modules/activityCatalog/types/Activity';
 
+import CatalogFilterButtons from './catalogFilterButtons';
 import {FACET_CONFIG} from './config/facets';
 import HourOfAiSearchField from './hourOfAiSearchField';
 
@@ -26,18 +34,55 @@ interface ActivityCatalogProps {
   documents: OramaActivity[];
   activities: InternalTypedDocument<OramaActivity>[];
   facets: FacetResult | undefined;
+  /** Hour of AI: the facets of each catalog, shown while it is selected. */
+  catalogFacets?: Partial<Record<ActivityType, FacetResult>>;
   /**
    * Hour of AI layout: Activity Cards, a "Filters" column with search as its
-   * first item, styled like the facets, and every facet collapsed. Off for
-   * CSforAll.
+   * first item, styled like the facets, every facet collapsed, and the
+   * catalog filter. Off for CSforAll.
    */
   hourOfAi?: boolean;
+}
+
+// The Filters column and, on Hour of AI, the heading above it.
+const FILTERS_COLUMN_SX = {
+  display: {xs: 'none', sm: 'none', md: 'block'},
+  maxWidth: 275,
+  flexBasis: 275,
+};
+
+// Hour of AI: 32px between the facets and the cards, like the gaps between
+// facets.
+const HOUR_OF_AI_RESULTS_COLUMN_SX = {pl: {md: 2}};
+
+/**
+ * Adds selected values a facet result doesn't have, so a selection made in
+ * another catalog stays visible and can be cleared.
+ */
+function withSelectedValues(
+  facets: FacetResult | undefined,
+  selectedFacets: Record<string, Set<string>>,
+): FacetResult | undefined {
+  if (!facets) {
+    return facets;
+  }
+
+  return Object.fromEntries(
+    Object.entries(facets).map(([facet, result]) => {
+      const values = {...result.values};
+      selectedFacets[facet]?.forEach(value => {
+        values[value] ??= 0;
+      });
+      return [facet, {...result, values}];
+    }),
+  );
 }
 
 const ActivityCatalog = ({
   documents,
   activities,
   facets,
+  catalogFacets,
   hourOfAi = false,
 }: ActivityCatalogProps) => {
   const allowedFacetSet = new Set(facets ? Object.keys(facets) : []);
@@ -51,6 +96,8 @@ const ActivityCatalog = ({
     Record<string, Set<string>>
   >({});
   const [searchTerm, setSearchTerm] = useState<string>('');
+  // Hour of AI: the selected catalog; undefined shows all activities.
+  const [catalog, setCatalog] = useState<ActivityType | undefined>();
   const [isFacetDrawerOpen, setIsFacetDrawerOpen] = useState<boolean>(false);
   const [isClientLoading, setIsClientLoading] = useState<boolean>(true);
 
@@ -76,8 +123,14 @@ const ActivityCatalog = ({
     const facetsFromUrl = deserializeSelectedFacets(searchParams.toString());
     setSelectedFacets(facetsFromUrl);
 
+    // Restore the catalog filter
+    const catalogFromUrl = hourOfAi
+      ? parseCatalog(searchParams.get(CATALOG_SEARCH_PARAM))
+      : undefined;
+    setCatalog(catalogFromUrl);
+
     // Restore the search results based on the restored state
-    updateSearchResults(termFromSearchParam, facetsFromUrl);
+    updateSearchResults(termFromSearchParam, facetsFromUrl, catalogFromUrl);
 
     setIsClientLoading(false);
   };
@@ -87,10 +140,19 @@ const ActivityCatalog = ({
    * This allows for sharing links with specific search terms and facets selected.
    * @param searchTerm - The current search term to serialize.
    * @param selectedFacets - The currently selected facets to serialize.
+   * @param selectedCatalog - The selected catalog; left out of the URL for all activities.
    */
   const serializeClientState = useDebouncedCallback(
-    (searchTerm: string, selectedFacets: Record<string, Set<string>>) => {
+    (
+      searchTerm: string,
+      selectedFacets: Record<string, Set<string>>,
+      selectedCatalog: ActivityType | undefined,
+    ) => {
       const params = new URLSearchParams();
+
+      if (selectedCatalog) {
+        params.set(CATALOG_SEARCH_PARAM, selectedCatalog);
+      }
 
       /**
        * For each selected facet, add it to the URL search params as a comma-separated list.
@@ -106,13 +168,21 @@ const ActivityCatalog = ({
         }
       });
 
+      // An empty search term is left out, like the catalog filter
+      const query = [
+        searchTerm && `term=${encodeURIComponent(searchTerm)}`,
+        params.toString(),
+      ]
+        .filter(Boolean)
+        .join('&');
+
       // Update the URL without reloading the page
       // Note: Using pushState instead of router.push to avoid extraneous RSC requests
       // See: https://nextjs.org/docs/app/guides/single-page-applications#shallow-routing-on-the-client
       window.history.pushState(
         null,
         '',
-        `?term=${encodeURIComponent(searchTerm)}&${params.toString()}`,
+        query ? `?${query}` : window.location.pathname,
       );
     },
     250, // Debounce by 250ms to avoid excessive URL updates while typing
@@ -152,6 +222,7 @@ const ActivityCatalog = ({
   const updateSearchResults = async (
     term: string,
     searchFacets: Record<string, Set<string>>,
+    selectedCatalog: ActivityType | undefined,
   ) => {
     if (!db) {
       return;
@@ -183,6 +254,7 @@ const ActivityCatalog = ({
       properties: ['title', 'languagesText'],
       where: {
         ...facetFilters,
+        ...(selectedCatalog && {catalogs: {containsAny: [selectedCatalog]}}),
       },
       sortBy: {property: 'sortKey', order: 'ASC'},
       // Every match; Orama defaults to 10.
@@ -221,7 +293,7 @@ const ActivityCatalog = ({
     setSearchTerm(nextSearchTerm);
 
     // Update the URL query parameters
-    serializeClientState(nextSearchTerm, selectedFacets);
+    serializeClientState(nextSearchTerm, selectedFacets, catalog);
   };
 
   /**
@@ -257,7 +329,7 @@ const ActivityCatalog = ({
     // Update the selected facets state
     setSelectedFacets(newSelectedFacets);
     // Update the URL query parameters
-    serializeClientState(searchTerm, newSelectedFacets);
+    serializeClientState(searchTerm, newSelectedFacets, catalog);
   };
 
   /**
@@ -280,7 +352,25 @@ const ActivityCatalog = ({
 
     setSelectedFacets(newSelectedFacets);
     // Update the URL query parameters
-    serializeClientState(searchTerm, newSelectedFacets);
+    serializeClientState(searchTerm, newSelectedFacets, catalog);
+  };
+
+  /**
+   * Selects a catalog, or all activities, and clears the search and facets,
+   * since the catalogs don't share every facet value. Updates the URL right
+   * away rather than after the typing debounce.
+   * @param nextCatalog - The catalog to show; undefined for all activities.
+   */
+  const handleCatalogChange = (nextCatalog: ActivityType | undefined) => {
+    if (nextCatalog === catalog) {
+      return;
+    }
+
+    setCatalog(nextCatalog);
+    setSelectedFacets({});
+    setSearchTerm('');
+    serializeClientState('', {}, nextCatalog);
+    serializeClientState.flush();
   };
 
   const handleFacetChange = (
@@ -302,7 +392,7 @@ const ActivityCatalog = ({
   const handleClearAll = () => {
     setSelectedFacets({});
     setSearchTerm('');
-    serializeClientState('', {});
+    serializeClientState('', {}, catalog);
   };
 
   const toggleFacetDrawer = (isOpen: boolean) => {
@@ -310,7 +400,10 @@ const ActivityCatalog = ({
   };
 
   const facetBarProps: ComponentProps<typeof FacetBar> = {
-    facets,
+    facets: withSelectedValues(
+      (catalog && catalogFacets?.[catalog]) || facets,
+      selectedFacets,
+    ),
     selectedFacets,
     searchTerm,
     onFacetChange: handleFacetChange,
@@ -327,34 +420,37 @@ const ActivityCatalog = ({
         onClose={() => toggleFacetDrawer(false)}
       />
 
-      <Grid container justifyContent="center" flexWrap={'nowrap'}>
+      {hourOfAi && (
+        // The Filters heading shares a row with the catalog filter, laid out
+        // like the columns below, so the first facet lines up with the cards.
         <Grid
-          size={3}
-          sx={{
-            display: {xs: 'none', sm: 'none', md: 'block'},
-            maxWidth: 275,
-            flexBasis: 275,
-          }}
+          container
+          justifyContent="center"
+          alignItems="center"
+          flexWrap={'nowrap'}
+          sx={{mb: 2}}
         >
-          {hourOfAi && (
+          <Grid size={3} sx={FILTERS_COLUMN_SX}>
             <Box sx={{px: 2}}>
-              <Typography
-                component="h2"
-                variant="h6"
-                sx={{fontWeight: 700, mb: 2}}
-              >
+              <Typography component="h2" variant="h6" sx={{fontWeight: 700}}>
                 Filters
               </Typography>
             </Box>
-          )}
+          </Grid>
+          <Grid size={9} sx={HOUR_OF_AI_RESULTS_COLUMN_SX}>
+            <CatalogFilterButtons
+              value={catalog}
+              onChange={handleCatalogChange}
+            />
+          </Grid>
+        </Grid>
+      )}
+
+      <Grid container justifyContent="center" flexWrap={'nowrap'}>
+        <Grid size={3} sx={FILTERS_COLUMN_SX}>
           <FacetBar {...facetBarProps} />
         </Grid>
-        <Grid
-          size={9}
-          // Hour of AI: 32px between the facets and the cards, like the
-          // gaps between facets.
-          sx={hourOfAi ? {pl: {md: 2}, pt: 'var(--mui-spacing)'} : undefined}
-        >
+        <Grid size={9} sx={hourOfAi ? HOUR_OF_AI_RESULTS_COLUMN_SX : undefined}>
           <Box
             sx={{
               // Hour of AI desktop has nothing left in this row.

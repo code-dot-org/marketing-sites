@@ -22,6 +22,8 @@ export interface Activity {
 
 export interface OramaActivity extends Activity {
   sortKey: string;
+  /** The activity's catalogs, from its Contentful tags. */
+  catalogs: OramaEnum;
 }
 
 export enum ActivityType {

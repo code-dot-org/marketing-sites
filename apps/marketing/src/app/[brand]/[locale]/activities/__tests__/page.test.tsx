@@ -1,7 +1,6 @@
 import {Brand} from '@/config/brand';
 import {getIcons} from '@/config/metadata/icons';
 import {HourOfAiCatalogPage} from '@/modules/activityCatalog/hourOfAi/catalogPage';
-import {ActivityType} from '@/modules/activityCatalog/types/Activity';
 
 import Page, {generateMetadata} from '../page';
 
@@ -18,12 +17,12 @@ jest.mock('next/navigation', () => ({
 const params = (brand: string, locale = 'en-US') =>
   Promise.resolve({brand, locale});
 
-describe('Hour of AI catalog (/activities)', () => {
+describe('Activity catalog (/activities)', () => {
   it('renders the catalog for the Hour of AI brand', async () => {
     const element = await Page({params: params(Brand.HOUR_OF_AI)});
 
     expect(element.type).toBe(HourOfAiCatalogPage);
-    expect(element.props).toEqual({activityType: ActivityType.HOUR_OF_AI});
+    expect(element.props).toEqual({});
   });
 
   it.each([Brand.CODE_DOT_ORG, Brand.CS_FOR_ALL, Brand.HOUR_OF_CODE])(

@@ -44,7 +44,7 @@ test.describe('Activity Catalog', () => {
 
     // Wait for activity catalog to be visible
     await expect(
-      page.getByRole('heading', {name: 'Explore Hour of AI Activities'}),
+      page.getByRole('heading', {name: 'Explore Activities'}),
     ).toBeVisible();
     await expect(searchField(page)).toBeVisible();
     await expect(
@@ -60,7 +60,7 @@ test.describe('Activity Catalog', () => {
 
     // Ensure the query parameters updated with the selected facets
     await page.waitForURL(
-      '**/en-US/activities?term=&ages=13-18&topic=Art%252C%2520Media%252C%2520Music',
+      '**/en-US/activities?ages=13-18&topic=Art%252C%2520Media%252C%2520Music',
     );
     await assertMixAndMove(page);
 
@@ -97,21 +97,49 @@ test.describe('Activity Catalog', () => {
     await assertMixAndMove(page);
   });
 
-  test(
-    'should load the Hour of Code catalog',
-    {tag: '@hourofai'},
-    async ({page}) => {
-      test.skip(getSiteType() !== 'hourofai', 'Only runs on hourofai site');
+  test('should filter by catalog', {tag: '@hourofai'}, async ({page}) => {
+    test.skip(getSiteType() !== 'hourofai', 'Only runs on hourofai site');
 
-      const marketingPage = new MarketingPage(page);
-      await marketingPage.goto('/hour-of-code/activities');
+    const marketingPage = new MarketingPage(page);
+    await marketingPage.goto('/activities', {ages: '6-8'});
 
-      await expect(
-        page.getByRole('heading', {name: 'Explore Hour of Code Activities'}),
-      ).toBeVisible();
-      await expect(searchField(page)).toBeVisible();
-    },
-  );
+    await expect(
+      page.getByRole('heading', {name: 'Explore Activities'}),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', {name: 'All activities', exact: true}),
+    ).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByLabel('6-8')).toBeChecked();
+    await assertMixAndMove(page);
+
+    await page.getByRole('button', {name: 'Hour of AI', exact: true}).click();
+    // Picking a catalog clears the search and facets
+    await page.waitForURL('**/en-US/activities?cat=hour-of-ai');
+    await expect(page.getByLabel('6-8')).not.toBeChecked();
+    await expect(
+      page.getByRole('heading', {name: 'Explore Hour of AI Activities'}),
+    ).toBeVisible();
+    await assertMixAndMove(page);
+
+    // Mix & Move with AI is only tagged Hour of AI
+    await page.getByRole('button', {name: 'Hour of Code', exact: true}).click();
+    await page.waitForURL('**/en-US/activities?cat=hour-of-code');
+    await expect(
+      page.getByRole('heading', {name: 'Explore Hour of Code Activities'}),
+    ).toBeVisible();
+    await expect(page.getByRole('main')).not.toContainText(
+      'Mix & Move with AI',
+    );
+
+    await page
+      .getByRole('button', {name: 'All activities', exact: true})
+      .click();
+    await page.waitForURL(url => url.search === '');
+    await expect(
+      page.getByRole('heading', {name: 'Explore Activities'}),
+    ).toBeVisible();
+    await assertMixAndMove(page);
+  });
 
   test('eyes', {tag: '@hourofai'}, async ({page, eyes, browserName}) => {
     // This test waits for images to load, so it is slow
@@ -124,7 +152,7 @@ test.describe('Activity Catalog', () => {
 
     // Wait for activity catalog to be visible
     await expect(
-      page.getByRole('heading', {name: 'Explore Hour of AI Activities'}),
+      page.getByRole('heading', {name: 'Explore Activities'}),
     ).toBeVisible();
     await expect(searchField(page)).toBeVisible();
 

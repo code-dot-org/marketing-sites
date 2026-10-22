@@ -3,8 +3,10 @@ import {create, insertMultiple, Orama} from '@orama/orama';
 import {ActivitySchema} from '@/modules/activityCatalog/orama/schema/ActivitySchema';
 import {
   Activity,
+  ActivityType,
   OramaActivity,
   OramaEnum,
+  ValidActivityTypes,
 } from '@/modules/activityCatalog/types/Activity';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {Entry} from '@/types/contentful/Entry';
@@ -43,8 +45,13 @@ export function toOramaActivities(
 
     const sortKey = prefix + fields.title;
 
+    const catalogs = (activity.metadata?.tags ?? [])
+      .map(tag => tag.sys.id)
+      .filter(id => ValidActivityTypes.has(id as ActivityType));
+
     return {
       sortKey,
+      catalogs,
       title: fields.title || '',
       image: getAbsoluteImageUrl(fields.image) || '',
       organization: new Array(fields.organization) as unknown as OramaEnum,

@@ -21,4 +21,5 @@ export const ActivitySchema = {
   primaryButton: 'string',
   featuredPosition: 'number',
   sortKey: 'string',
+  catalogs: 'enum[]',
 } as const;

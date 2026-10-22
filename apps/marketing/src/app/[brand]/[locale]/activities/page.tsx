@@ -4,11 +4,8 @@ import {notFound} from 'next/navigation';
 import {Brand} from '@/config/brand';
 import {HourOfAiCatalogPage} from '@/modules/activityCatalog/hourOfAi/catalogPage';
 import {buildCatalogMetadata} from '@/modules/activityCatalog/hourOfAi/metadata';
-import {ActivityType} from '@/modules/activityCatalog/types/Activity';
 
 export const revalidate = 3600;
-
-const ACTIVITY_TYPE = ActivityType.HOUR_OF_AI;
 
 export async function generateStaticParams() {
   return [];
@@ -21,11 +18,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const {locale = 'en-US'} = await params;
 
-  return buildCatalogMetadata({locale, activityType: ACTIVITY_TYPE});
+  return buildCatalogMetadata({locale});
 }
 
 /**
- * The Hour of AI catalog, served at the bare /activities on hourofai.org.
+ * The Hour of AI and Hour of Code catalog, served at the bare /activities on
+ * hourofai.org.
  */
 export default async function HourOfAiActivitiesPage({
   params,
@@ -38,5 +36,5 @@ export default async function HourOfAiActivitiesPage({
     return notFound();
   }
 
-  return <HourOfAiCatalogPage activityType={ACTIVITY_TYPE} />;
+  return <HourOfAiCatalogPage />;
 }

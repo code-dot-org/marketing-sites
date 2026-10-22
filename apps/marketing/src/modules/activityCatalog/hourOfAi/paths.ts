@@ -1,14 +1,17 @@
-import {ActivityType} from '@/modules/activityCatalog/types/Activity';
+import {
+  ActivityType,
+  ValidActivityTypes,
+} from '@/modules/activityCatalog/types/Activity';
 
-/**
- * Catalog paths on hourofai.org. The site is the Hour of AI site, so its own
- * catalog sits at the bare path and only Hour of Code carries a prefix.
- */
-export const HOUR_OF_AI_CATALOG_PATH = '/activities';
-export const HOUR_OF_CODE_CATALOG_PATH = '/hour-of-code/activities';
+/** The catalog's path on hourofai.org, for both Hour of AI and Hour of Code. */
+export const CATALOG_PATH = '/activities';
 
-export function getCatalogPath(activityType: ActivityType) {
-  return activityType === ActivityType.HOUR_OF_AI
-    ? HOUR_OF_AI_CATALOG_PATH
-    : HOUR_OF_CODE_CATALOG_PATH;
+/** Search param for the catalog filter; absent means all activities. */
+export const CATALOG_SEARCH_PARAM = 'cat';
+
+/** The catalog a `cat` value selects, or undefined for all activities. */
+export function parseCatalog(value: string | null | undefined) {
+  return ValidActivityTypes.has(value as ActivityType)
+    ? (value as ActivityType)
+    : undefined;
 }
