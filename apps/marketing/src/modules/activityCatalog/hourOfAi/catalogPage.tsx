@@ -5,13 +5,16 @@ import ActivityCatalog from '@/components/contentful/activityCatalog';
 import ActivitiesHero from '@/components/contentful/activityCatalog/activitiesHero';
 import {getContentfulActivities} from '@/modules/activityCatalog/contentful/getContentfulActivities';
 import CatalogCrossLink from '@/modules/activityCatalog/hourOfAi/crossLink';
-import {createDatabase} from '@/modules/activityCatalog/orama/createDatabase';
+import {
+  createDatabase,
+  toOramaActivities,
+} from '@/modules/activityCatalog/orama/createDatabase';
 import {Activity, ActivityType} from '@/modules/activityCatalog/types/Activity';
 import {Entry} from '@/types/contentful/Entry';
 
 /**
  * The catalog page served on hourofai.org, for both Hour of AI and Hour of
- * Code. Fetches activities, builds an Orama database and hands serialized data
+ * Code. Fetches activities, builds an Orama database and hands its documents
  * to the client-side catalog.
  */
 export async function HourOfAiCatalogPage({
@@ -23,7 +26,8 @@ export async function HourOfAiCatalogPage({
     activityType,
   )) as unknown as Entry<Activity>[];
 
-  const db = createDatabase(contentfulActivities);
+  const documents = toOramaActivities(contentfulActivities);
+  const db = createDatabase(documents);
 
   const getSearchFacets = async () => {
     const facetResults: Results<Activity> = await search(db, {
@@ -59,7 +63,7 @@ export async function HourOfAiCatalogPage({
       <ActivitiesHero activityType={activityType} hourOfAi />
       <Suspense>
         <ActivityCatalog
-          contentfulActivities={contentfulActivities}
+          documents={documents}
           activities={await getAllActivities()}
           facets={await getSearchFacets()}
           hourOfAi

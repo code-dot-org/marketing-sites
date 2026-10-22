@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {search} from '@orama/orama';
+import {create, insertMultiple, search} from '@orama/orama';
 import {render, screen, fireEvent, waitFor} from '@testing-library/react';
 import {useSearchParams} from 'next/navigation';
 
@@ -65,81 +65,44 @@ const mockFacets: any = {
 
 const useSearchParamsMock = useSearchParams as jest.Mock;
 
-// Adjust mockContentfulActivities to match the Activity type
-const mockContentfulActivities: any = [
+const mockDocuments: any = [
   {
-    sys: {
-      id: '1',
-      type: 'Entry',
-      createdAt: '2025-01-01T00:00:00Z',
-      updatedAt: '2025-01-01T00:00:00Z',
-      locale: 'en-US',
-      contentType: {
-        sys: {id: 'activity', type: 'Link', linkType: 'ContentType'},
-      },
-      revision: 1,
-      space: {sys: {id: 'space-id', type: 'Link', linkType: 'Space'}},
-      environment: {sys: {id: 'env-id', type: 'Link', linkType: 'Environment'}},
-      publishedVersion: 1,
-    },
-    metadata: {tags: []},
-    fields: {
-      title: 'Test Activity',
-      image: 'https://localhost/test-image.jpg',
-      organization: ['Test Organization'],
-      ages: ['10-12'],
-      languageProgramming: ['JavaScript'],
-      shortDescription: 'A short description.',
-      longDescription: 'A long description.',
-      primaryLinkRef: 'https://example.com',
-      technologyClassroom: ['Tech'],
-      topic: ['Topic'],
-      activityType: ['hour-of-code'],
-      length: ['1 hour'],
-      accessibilitys: ['Accessible'],
-      languagesText: 'English',
-      supportedLanguages: ['English'],
-      standards: 'Standard',
-      tutorialID: 'tutorial-1',
-      featuredPosition: 1,
-    },
+    sortKey: '001Test Activity',
+    title: 'Test Activity',
+    image: 'https://localhost/test-image.jpg',
+    organization: ['Test Organization'],
+    ages: ['10-12'],
+    languageProgramming: ['JavaScript'],
+    shortDescription: 'A short description.',
+    primaryLinkRef: '{"fields":{}}',
+    technologyClassroom: ['Tech'],
+    topic: ['Topic'],
+    activityType: ['hour-of-code'],
+    length: ['1 hour'],
+    accessibilitys: ['Accessible'],
+    languagesText: 'English',
+    supportedLanguages: ['English'],
+    tutorialID: 'tutorial-1',
+    featuredPosition: 1,
   },
   {
-    sys: {
-      id: '2',
-      type: 'Entry',
-      createdAt: '2025-01-02T00:00:00Z',
-      updatedAt: '2025-01-02T00:00:00Z',
-      locale: 'en-US',
-      contentType: {
-        sys: {id: 'activity', type: 'Link', linkType: 'ContentType'},
-      },
-      revision: 1,
-      space: {sys: {id: 'space-id', type: 'Link', linkType: 'Space'}},
-      environment: {sys: {id: 'env-id', type: 'Link', linkType: 'Environment'}},
-      publishedVersion: 1,
-    },
-    metadata: {tags: []},
-    fields: {
-      title: 'Another Activity',
-      image: 'https://localhost/another-image.jpg',
-      organization: ['Another Organization'],
-      ages: ['13-15'],
-      languageProgramming: ['Python'],
-      shortDescription: 'Another short description.',
-      longDescription: 'Another long description.',
-      primaryLinkRef: 'https://example.org',
-      technologyClassroom: ['Another Tech'],
-      topic: ['Another Topic'],
-      activityType: ['hour-of-ai'],
-      length: ['2 hours'],
-      accessibilitys: ['Accessible'],
-      languagesText: 'Spanish',
-      supportedLanguages: ['Spanish'],
-      standards: 'Another Standard',
-      tutorialID: 'tutorial-2',
-      featuredPosition: 2,
-    },
+    sortKey: '002Another Activity',
+    title: 'Another Activity',
+    image: 'https://localhost/another-image.jpg',
+    organization: ['Another Organization'],
+    ages: ['13-15'],
+    languageProgramming: ['Python'],
+    shortDescription: 'Another short description.',
+    primaryLinkRef: '{"fields":{}}',
+    technologyClassroom: ['Another Tech'],
+    topic: ['Another Topic'],
+    activityType: ['hour-of-ai'],
+    length: ['2 hours'],
+    accessibilitys: ['Accessible'],
+    languagesText: 'Spanish',
+    supportedLanguages: ['Spanish'],
+    tutorialID: 'tutorial-2',
+    featuredPosition: 2,
   },
 ];
 
@@ -159,7 +122,7 @@ describe('ActivityCatalog', () => {
   it('renders FacetDrawer, FacetBar, and ActivityCollection', async () => {
     render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -172,7 +135,7 @@ describe('ActivityCatalog', () => {
   it('renders the CSforAll cards by default and Activity Cards when asked', () => {
     const {rerender} = render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -182,7 +145,7 @@ describe('ActivityCatalog', () => {
 
     rerender(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
         hourOfAi
@@ -195,7 +158,7 @@ describe('ActivityCatalog', () => {
   it('adds the Hour of AI Filters column only when asked', () => {
     const {rerender} = render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -207,7 +170,7 @@ describe('ActivityCatalog', () => {
 
     rerender(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
         hourOfAi
@@ -224,7 +187,7 @@ describe('ActivityCatalog', () => {
   it('updates searchTerm when typing in search box', async () => {
     render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -240,7 +203,7 @@ describe('ActivityCatalog', () => {
   it('opens and closes facet drawer', () => {
     render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -263,7 +226,7 @@ describe('ActivityCatalog', () => {
     });
     render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -284,7 +247,7 @@ describe('ActivityCatalog', () => {
     });
     render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -300,7 +263,7 @@ describe('ActivityCatalog', () => {
   it('renders with undefined facets', () => {
     render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={undefined}
       />,
@@ -309,10 +272,41 @@ describe('ActivityCatalog', () => {
     expect(screen.getByTestId('FacetBar')).toBeInTheDocument();
   });
 
+  it('builds the search index once across re-renders', () => {
+    render(
+      <ActivityCatalog
+        documents={mockDocuments}
+        activities={mockActivities}
+        facets={mockFacets}
+      />,
+    );
+    fireEvent.change(screen.getByPlaceholderText('Search...'), {
+      target: {value: 'robot'},
+    });
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(insertMultiple).toHaveBeenCalledWith({}, mockDocuments);
+  });
+
+  it('asks Orama for every match, not its default page of 10', async () => {
+    render(
+      <ActivityCatalog
+        documents={mockDocuments}
+        activities={mockActivities}
+        facets={mockFacets}
+      />,
+    );
+    await waitFor(() => {
+      expect(search).toHaveBeenCalledWith(
+        {},
+        expect.objectContaining({limit: mockDocuments.length}),
+      );
+    });
+  });
+
   it('search box has correct aria-label', () => {
     render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
       />,
@@ -350,7 +344,7 @@ describe('ActivityCatalog', () => {
 
     render(
       <ActivityCatalog
-        contentfulActivities={mockContentfulActivities}
+        documents={mockDocuments}
         activities={mockActivities}
         facets={mockFacets}
       />,

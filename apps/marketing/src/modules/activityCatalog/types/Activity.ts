@@ -7,7 +7,6 @@ export interface Activity {
   ages: OramaEnum;
   languageProgramming: OramaEnum;
   shortDescription: string;
-  longDescription: string;
   primaryLinkRef: string;
   secondaryLinkRef?: string;
   technologyClassroom: OramaEnum;
@@ -17,7 +16,6 @@ export interface Activity {
   accessibilitys: OramaEnum;
   languagesText: string;
   supportedLanguages: OramaEnum;
-  standards: string;
   tutorialID: string;
   featuredPosition: number;
 }

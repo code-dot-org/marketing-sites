@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {FacetResult, InternalTypedDocument, search} from '@orama/orama';
 import {useSearchParams} from 'next/navigation';
-import {ChangeEvent, ComponentProps, useEffect, useState} from 'react';
+import {ChangeEvent, ComponentProps, useEffect, useMemo, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 
 import FacetBar from '@/components/contentful/activityCatalog/facetBar/facetBar';
@@ -16,17 +16,14 @@ import FacetDrawer from '@/components/contentful/activityCatalog/facetDrawer/fac
 import ActivityCollection from '@/components/csforall/activityCollection/ActivityCollection';
 import ActivityCardCollection from '@/modules/activityCatalog/hourOfAi/ActivityCardCollection';
 import {createDatabase} from '@/modules/activityCatalog/orama/createDatabase';
-import {
-  Activity,
-  OramaActivity,
-} from '@/modules/activityCatalog/types/Activity';
-import {Entry} from '@/types/contentful/Entry';
+import {OramaActivity} from '@/modules/activityCatalog/types/Activity';
 
 import {FACET_CONFIG} from './config/facets';
 import HourOfAiSearchField from './hourOfAiSearchField';
 
 interface ActivityCatalogProps {
-  contentfulActivities: Entry<Activity>[];
+  /** Every activity, from toOramaActivities. */
+  documents: OramaActivity[];
   activities: InternalTypedDocument<OramaActivity>[];
   facets: FacetResult | undefined;
   /**
@@ -38,7 +35,7 @@ interface ActivityCatalogProps {
 }
 
 const ActivityCatalog = ({
-  contentfulActivities,
+  documents,
   activities,
   facets,
   hourOfAi = false,
@@ -58,7 +55,8 @@ const ActivityCatalog = ({
   const [isClientLoading, setIsClientLoading] = useState<boolean>(true);
 
   const searchParams = useSearchParams();
-  const db = createDatabase(contentfulActivities);
+  // Built once, not on every keystroke.
+  const db = useMemo(() => createDatabase(documents), [documents]);
 
   // Populate selected facets and search term from the URL search params on load and when they change.
   useEffect(() => {
@@ -187,7 +185,8 @@ const ActivityCatalog = ({
         ...facetFilters,
       },
       sortBy: {property: 'sortKey', order: 'ASC'},
-      limit: 200,
+      // Every match; Orama defaults to 10.
+      limit: Math.max(documents.length, 1),
     });
 
     const nextResults = searchResults.hits
