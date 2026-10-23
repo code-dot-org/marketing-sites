@@ -4,29 +4,30 @@ import {Suspense} from 'react';
 import ActivityCatalog from '@/components/contentful/activityCatalog';
 import ActivitiesHero from '@/components/contentful/activityCatalog/activitiesHero';
 import {getContentfulActivities} from '@/modules/activityCatalog/contentful/getContentfulActivities';
-import CatalogCrossLink from '@/modules/activityCatalog/hourOfAi/crossLink';
-import {createDatabase} from '@/modules/activityCatalog/orama/createDatabase';
+import CatalogHero from '@/modules/activityCatalog/hourOfAi/catalogHero';
+import {
+  createDatabase,
+  toOramaActivities,
+} from '@/modules/activityCatalog/orama/createDatabase';
 import {Activity, ActivityType} from '@/modules/activityCatalog/types/Activity';
 import {Entry} from '@/types/contentful/Entry';
 
 /**
- * The catalog page served on hourofai.org, for both Hour of AI and Hour of
- * Code. Fetches activities, builds an Orama database and hands serialized data
- * to the client-side catalog.
+ * The catalog page served on hourofai.org: Hour of AI and Hour of Code
+ * activities together, filterable by catalog. Fetches activities, builds an
+ * Orama database and hands its documents to the client-side catalog.
  */
-export async function HourOfAiCatalogPage({
-  activityType,
-}: {
-  activityType: ActivityType;
-}) {
+export async function HourOfAiCatalogPage() {
   const contentfulActivities = (await getContentfulActivities(
-    activityType,
+    Object.values(ActivityType),
   )) as unknown as Entry<Activity>[];
 
-  const db = createDatabase(contentfulActivities);
+  const documents = toOramaActivities(contentfulActivities);
+  const db = createDatabase(documents);
 
-  const getSearchFacets = async () => {
+  const getSearchFacets = async (catalog?: ActivityType) => {
     const facetResults: Results<Activity> = await search(db, {
+      ...(catalog && {where: {catalogs: {containsAny: [catalog]}}}),
       facets: {
         organization: {},
         ages: {},
@@ -56,16 +57,26 @@ export async function HourOfAiCatalogPage({
 
   return (
     <main>
-      <ActivitiesHero activityType={activityType} hourOfAi />
+      {/* The fallback puts the all-activities h1 in the server HTML. */}
+      <Suspense fallback={<ActivitiesHero hourOfAi />}>
+        <CatalogHero />
+      </Suspense>
       <Suspense>
         <ActivityCatalog
-          contentfulActivities={contentfulActivities}
+          documents={documents}
           activities={await getAllActivities()}
           facets={await getSearchFacets()}
+          catalogFacets={{
+            [ActivityType.HOUR_OF_AI]: await getSearchFacets(
+              ActivityType.HOUR_OF_AI,
+            ),
+            [ActivityType.HOUR_OF_CODE]: await getSearchFacets(
+              ActivityType.HOUR_OF_CODE,
+            ),
+          }}
           hourOfAi
         />
       </Suspense>
-      <CatalogCrossLink activityType={activityType} />
     </main>
   );
 }

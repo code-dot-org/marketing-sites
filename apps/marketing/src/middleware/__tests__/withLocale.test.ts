@@ -307,6 +307,70 @@ describe('withLocale middleware', () => {
     expect(response?.headers.get('Cache-Control')).toEqual(PRIVATE_NO_STORE);
   });
 
+  describe('activity catalog filter', () => {
+    const catalogRequest = (search: string) =>
+      ({
+        url: 'https://hourofai.org',
+        nextUrl: {
+          pathname: '/activities',
+          url: `https://hourofai.org/activities${search}`,
+          search,
+        },
+        cookies: {get: jest.fn()},
+        headers: {
+          get: jest.fn((name: string) =>
+            name === 'accept-language' ? 'en-US' : 'hourofai.org',
+          ),
+        },
+      }) as unknown as NextRequest;
+
+    beforeEach(() => {
+      (getContentfulSlug as jest.Mock).mockReturnValue('activities');
+    });
+
+    it('keeps cat on the locale redirect and lets the CDN cache it', async () => {
+      const response = await withLocale(next)(
+        catalogRequest('?cat=hour-of-code'),
+        mockEvent,
+      );
+
+      expect(response?.headers.get('location')).toBe(
+        'https://hourofai.org/en-US/activities?cat=hour-of-code',
+      );
+      // cat is in the CDN cache key, so this redirect is only served to
+      // requests with the same cat
+      expect(response?.headers.get('Cache-Control')).toEqual(
+        STALE_WHILE_REVALIDATE_ONE_HOUR,
+      );
+    });
+
+    it('caches cat alongside UTM params', async () => {
+      const response = await withLocale(next)(
+        catalogRequest('?cat=hour-of-ai&utm_source=email'),
+        mockEvent,
+      );
+
+      expect(response?.headers.get('location')).toBe(
+        'https://hourofai.org/en-US/activities?cat=hour-of-ai&utm_source=email',
+      );
+      expect(response?.headers.get('Cache-Control')).toEqual(
+        STALE_WHILE_REVALIDATE_ONE_HOUR,
+      );
+    });
+
+    it('still does not cache cat with a param outside the cache key', async () => {
+      const response = await withLocale(next)(
+        catalogRequest('?cat=hour-of-code&ages=6-8'),
+        mockEvent,
+      );
+
+      expect(response?.headers.get('location')).toBe(
+        'https://hourofai.org/en-US/activities?cat=hour-of-code&ages=6-8',
+      );
+      expect(response?.headers.get('Cache-Control')).toEqual(PRIVATE_NO_STORE);
+    });
+  });
+
   it('should redirect to the root locale path and preserve query parameters', async () => {
     const request = {
       nextUrl: {

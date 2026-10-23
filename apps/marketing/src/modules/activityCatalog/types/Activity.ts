@@ -7,7 +7,6 @@ export interface Activity {
   ages: OramaEnum;
   languageProgramming: OramaEnum;
   shortDescription: string;
-  longDescription: string;
   primaryLinkRef: string;
   secondaryLinkRef?: string;
   technologyClassroom: OramaEnum;
@@ -17,13 +16,14 @@ export interface Activity {
   accessibilitys: OramaEnum;
   languagesText: string;
   supportedLanguages: OramaEnum;
-  standards: string;
   tutorialID: string;
   featuredPosition: number;
 }
 
 export interface OramaActivity extends Activity {
   sortKey: string;
+  /** The activity's catalogs, from its Contentful tags. */
+  catalogs: OramaEnum;
 }
 
 export enum ActivityType {

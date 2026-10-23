@@ -8,7 +8,11 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
     {
       lists: [
         [
-          {label: 'Hour of AI Activities', href: '/activities'},
+          {label: 'Hour of AI Activities', href: '/activities?cat=hour-of-ai'},
+          {
+            label: 'Hour of Code Activities',
+            href: '/activities?cat=hour-of-code',
+          },
           {label: 'Partners', href: '/partners'},
         ],
       ],

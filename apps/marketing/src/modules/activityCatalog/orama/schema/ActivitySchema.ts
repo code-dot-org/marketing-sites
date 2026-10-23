@@ -8,7 +8,6 @@ export const ActivitySchema = {
   ages: 'enum[]',
   languageProgramming: 'enum[]',
   shortDescription: 'string',
-  longDescription: 'string',
   primaryLinkRef: 'string',
   secondaryLinkRef: 'string',
   technologyClassroom: 'enum[]',
@@ -18,9 +17,9 @@ export const ActivitySchema = {
   accessibilitys: 'enum[]',
   languagesText: 'string',
   supportedLanguages: 'enum[]',
-  standards: 'string',
   tutorialID: 'string',
   primaryButton: 'string',
   featuredPosition: 'number',
   sortKey: 'string',
+  catalogs: 'enum[]',
 } as const;

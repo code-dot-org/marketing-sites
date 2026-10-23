@@ -6,11 +6,12 @@ import {Activity} from '@/modules/activityCatalog/types/Activity';
 import {Entry} from '@/types/contentful/Entry';
 
 /**
- * Retrieves all activities from Contentful.
- * @param activityType The type of activities to retrieve (e.g., 'hour-of-ai', 'hour-of-code').
+ * Retrieves activities from Contentful.
+ * @param activityTypes The catalogs to retrieve (e.g., 'hour-of-ai', 'hour-of-code'). An activity tagged
+ * with any of them is returned once; untagged activities are not returned.
  * @returns A promise that resolves to an array of activity entries.
  */
-export async function getContentfulActivities(activityType: string) {
+export async function getContentfulActivities(activityTypes: string[]) {
   const isDraftModeEnabled = (await draftMode()).isEnabled;
   const contentfulClient = getContentfulClient(isDraftModeEnabled);
 
@@ -20,10 +21,10 @@ export async function getContentfulActivities(activityType: string) {
     );
     return [];
   }
-  console.log('Fetching activities for activityType:', activityType);
+  console.log('Fetching activities for activityTypes:', activityTypes);
   return getAllEntriesForContentType<Entry<Activity>>(
     contentfulClient,
     'activity',
-    {'metadata.tags.sys.id[in]': [activityType]},
+    {'metadata.tags.sys.id[in]': activityTypes},
   );
 }

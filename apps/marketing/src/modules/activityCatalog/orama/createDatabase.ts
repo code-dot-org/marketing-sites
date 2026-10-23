@@ -3,8 +3,10 @@ import {create, insertMultiple, Orama} from '@orama/orama';
 import {ActivitySchema} from '@/modules/activityCatalog/orama/schema/ActivitySchema';
 import {
   Activity,
+  ActivityType,
   OramaActivity,
   OramaEnum,
+  ValidActivityTypes,
 } from '@/modules/activityCatalog/types/Activity';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
 import {Entry} from '@/types/contentful/Entry';
@@ -13,16 +15,26 @@ import {Entry} from '@/types/contentful/Entry';
 const FEATURED_POSITION_MAX = 999999;
 
 /**
- * Creates an Orama database from an array of Contentful activity entries.
- * @param activities - An array of Contentful activity entries.
- * @returns An Orama database instance populated with the provided activities.
+ * Stringifies a link entry for the cards, which only read its fields. The
+ * entry's sys and metadata would only add page weight.
  */
-export function createDatabase(
-  activities: Entry<Activity>[],
-): Orama<typeof ActivitySchema> {
-  const db = create({schema: ActivitySchema});
+function stringifyLink(link: unknown) {
+  const fields = (link as {fields?: unknown} | undefined)?.fields;
 
-  const oramaEntries: OramaActivity[] = activities.map(activity => {
+  return JSON.stringify(fields === undefined ? link : {fields});
+}
+
+/**
+ * Maps Contentful activity entries to the documents the catalog searches. The
+ * server sends these to the client instead of the entries, which carry far
+ * more data than the catalog uses.
+ * @param activities - An array of Contentful activity entries.
+ * @returns One Orama document per activity.
+ */
+export function toOramaActivities(
+  activities: Entry<Activity>[],
+): OramaActivity[] {
+  return activities.map(activity => {
     const fields = activity.fields;
 
     // Featured activities have a lower number and are sorted first
@@ -33,15 +45,19 @@ export function createDatabase(
 
     const sortKey = prefix + fields.title;
 
+    const catalogs = (activity.metadata?.tags ?? [])
+      .map(tag => tag.sys.id)
+      .filter(id => ValidActivityTypes.has(id as ActivityType));
+
     return {
       sortKey,
+      catalogs,
       title: fields.title || '',
       image: getAbsoluteImageUrl(fields.image) || '',
       organization: new Array(fields.organization) as unknown as OramaEnum,
       ages: fields.ages || [],
       languageProgramming: fields.languageProgramming || [],
       shortDescription: fields.shortDescription || '',
-      longDescription: fields.longDescription || '',
       technologyClassroom: fields.technologyClassroom || [],
       topic: fields.topic || [],
       activityType: fields.activityType || [],
@@ -49,19 +65,29 @@ export function createDatabase(
       accessibilitys: fields.accessibilitys || [],
       languagesText: fields.languagesText || '',
       supportedLanguages: fields.supportedLanguages || [],
-      standards: fields.standards || '',
       tutorialID: fields.tutorialID || '',
       // This is passed as a stringified JSON to allow the entry to be passed directly into the ActivityCollection component
       // It will be deserialized there
-      primaryLinkRef: JSON.stringify(fields.primaryLinkRef),
+      primaryLinkRef: stringifyLink(fields.primaryLinkRef),
       secondaryLinkRef: fields.secondaryLinkRef
-        ? JSON.stringify(fields.secondaryLinkRef)
+        ? stringifyLink(fields.secondaryLinkRef)
         : undefined,
       featuredPosition: fields.featuredPosition || FEATURED_POSITION_MAX,
     };
   });
+}
 
-  insertMultiple(db, oramaEntries);
+/**
+ * Creates an Orama database from catalog documents.
+ * @param activities - Documents from toOramaActivities.
+ * @returns An Orama database instance populated with the provided activities.
+ */
+export function createDatabase(
+  activities: OramaActivity[],
+): Orama<typeof ActivitySchema> {
+  const db = create({schema: ActivitySchema});
+
+  insertMultiple(db, activities);
 
   return db;
 }

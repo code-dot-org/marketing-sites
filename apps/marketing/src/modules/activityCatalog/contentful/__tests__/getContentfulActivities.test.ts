@@ -25,7 +25,7 @@ describe('getContentfulActivities', () => {
       mockActivities,
     );
 
-    const result = await getContentfulActivities('hour-of-ai');
+    const result = await getContentfulActivities(['hour-of-ai']);
 
     expect(draftMode).toHaveBeenCalled();
     expect(getContentfulClient).toHaveBeenCalledWith(true);
@@ -46,7 +46,7 @@ describe('getContentfulActivities', () => {
       mockActivities,
     );
 
-    const result = await getContentfulActivities('hour-of-ai');
+    const result = await getContentfulActivities(['hour-of-ai']);
 
     expect(draftMode).toHaveBeenCalled();
     expect(getContentfulClient).toHaveBeenCalledWith(false);
@@ -58,12 +58,27 @@ describe('getContentfulActivities', () => {
     expect(result).toEqual(mockActivities);
   });
 
+  it('asks for activities tagged with any of the catalogs', async () => {
+    const mockClient = {};
+    (draftMode as jest.Mock).mockResolvedValue({isEnabled: false});
+    (getContentfulClient as jest.Mock).mockReturnValue(mockClient);
+    (getAllEntriesForContentType as jest.Mock).mockResolvedValue([]);
+
+    await getContentfulActivities(['hour-of-ai', 'hour-of-code']);
+
+    expect(getAllEntriesForContentType).toHaveBeenCalledWith(
+      mockClient,
+      'activity',
+      {'metadata.tags.sys.id[in]': ['hour-of-ai', 'hour-of-code']},
+    );
+  });
+
   it('returns empty array and warns when client is not available', async () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     (draftMode as jest.Mock).mockResolvedValue({isEnabled: true});
     (getContentfulClient as jest.Mock).mockReturnValue(undefined);
 
-    const result = await getContentfulActivities('hour-of-ai');
+    const result = await getContentfulActivities(['hour-of-ai']);
 
     expect(draftMode).toHaveBeenCalled();
     expect(getContentfulClient).toHaveBeenCalledWith(true);
@@ -78,7 +93,9 @@ describe('getContentfulActivities', () => {
     const error = new Error('Draft mode error');
     (draftMode as jest.Mock).mockRejectedValue(error);
 
-    await expect(getContentfulActivities('hour-of-ai')).rejects.toThrow(error);
+    await expect(getContentfulActivities(['hour-of-ai'])).rejects.toThrow(
+      error,
+    );
 
     expect(draftMode).toHaveBeenCalled();
     expect(getContentfulClient).not.toHaveBeenCalled();

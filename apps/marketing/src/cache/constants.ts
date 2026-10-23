@@ -27,4 +27,6 @@ export const CDN_CACHE_KEY_QUERY_PARAMS = new Set([
   'utm_campaign',
   'utm_term',
   'utm_content',
+  // The activity catalog's filter, so locale redirects can keep it.
+  'cat',
 ]);
