@@ -4,10 +4,11 @@ import {
   Experience,
 } from '@contentful/experiences-sdk-react';
 
-import {detachExperienceStylesWithPrebinding} from '@/contentful/detachExperienceStylesWithPrebinding';
+// Hour of AI's card patterns bind a container background image through a
+// pattern's content type binding. SDK 3.x left those images out of the SSR
+// stylesheet (fixed in 4.0.1), so they only showed in Studio.
 
 const CARD_IMAGE = 'card-image.png';
-const MANUAL_IMAGE = 'https://example.com/manual.png';
 
 const designValue = (value: unknown) => ({
   type: 'DesignValue',
@@ -59,6 +60,9 @@ const cardPattern = {
           parameterDefinitions: {
             cardParam: {passToNodes: [], contentTypes: ['card']},
           },
+          // Studio always saves this list; the SDK ignores the binding
+          // without it.
+          allowedVariableOverrides: [],
           variableMappings: {
             cardImage: {
               type: 'ContentTypeMapping',
@@ -190,34 +194,17 @@ const pageNode = (
   children: [],
 });
 
-const withoutClassNames = (experience: Experience) =>
-  JSON.stringify(experience, (key, value) =>
-    key === 'cfSsrClassName' ? undefined : value,
-  );
-
-describe('detachExperienceStylesWithPrebinding', () => {
-  it('adds a prebound background image for a pattern on the page', () => {
+describe('detachExperienceStyles with a pattern content type binding', () => {
+  it('includes the background image of a pattern on the page', () => {
     const experience = makeExperience({
       patternNode: pageNode('cardPattern', 'cardParam'),
       usedComponents: [cardPattern],
     });
 
-    expect(detachExperienceStylesWithPrebinding(experience)).toContain(
-      CARD_IMAGE,
-    );
+    expect(detachExperienceStyles(experience)).toContain(CARD_IMAGE);
   });
 
-  // When this fails, the SDK handles prebinding: remove the workaround.
-  it('is still needed: the SDK alone drops the image', () => {
-    const experience = makeExperience({
-      patternNode: pageNode('cardPattern', 'cardParam'),
-      usedComponents: [cardPattern],
-    });
-
-    expect(detachExperienceStyles(experience)).not.toContain(CARD_IMAGE);
-  });
-
-  it('fills an exposed variable a nested pattern left empty', () => {
+  it('includes it for a nested pattern whose exposed variable is empty', () => {
     const experience = makeExperience({
       patternNode: pageNode('rowPattern', 'rowParam', {
         rowImage: {type: 'UnboundValue', key: 'emptyImage'},
@@ -226,56 +213,15 @@ describe('detachExperienceStylesWithPrebinding', () => {
       unboundValues: {emptyImage: {}},
     });
 
-    expect(detachExperienceStylesWithPrebinding(experience)).toContain(
-      CARD_IMAGE,
-    );
+    expect(detachExperienceStyles(experience)).toContain(CARD_IMAGE);
   });
 
-  it('routes a nested pattern without an exposed variable', () => {
+  it('includes it for a nested pattern without an exposed variable', () => {
     const experience = makeExperience({
       patternNode: pageNode('rowPattern', 'rowParam'),
       usedComponents: [rowPattern(), cardPattern],
     });
 
-    expect(detachExperienceStylesWithPrebinding(experience)).toContain(
-      CARD_IMAGE,
-    );
+    expect(detachExperienceStyles(experience)).toContain(CARD_IMAGE);
   });
-
-  it('keeps an image an author set manually', () => {
-    const experience = makeExperience({
-      patternNode: pageNode('rowPattern', 'rowParam', {
-        rowImage: {type: 'UnboundValue', key: 'manualImage'},
-      }),
-      usedComponents: [rowPattern('rowImage'), cardPattern],
-      unboundValues: {manualImage: {value: MANUAL_IMAGE}},
-    });
-
-    const stylesheet = detachExperienceStylesWithPrebinding(experience);
-
-    expect(stylesheet).toContain(MANUAL_IMAGE);
-    expect(stylesheet).not.toContain(CARD_IMAGE);
-  });
-
-  it.each([
-    ['an exposed variable', 'rowImage'],
-    ['a routed variable', undefined],
-  ])(
-    'leaves the experience as it found it with %s, apart from class names',
-    (_, exposedKey) => {
-      const experience = makeExperience({
-        patternNode: pageNode('rowPattern', 'rowParam', {
-          rowImage: {type: 'UnboundValue', key: 'emptyImage'},
-        }),
-        usedComponents: [rowPattern(exposedKey), cardPattern],
-        unboundValues: {emptyImage: {}},
-      });
-      const before = withoutClassNames(experience);
-
-      expect(detachExperienceStylesWithPrebinding(experience)).toContain(
-        CARD_IMAGE,
-      );
-      expect(withoutClassNames(experience)).toBe(before);
-    },
-  );
 });
