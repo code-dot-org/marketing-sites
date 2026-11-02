@@ -70,6 +70,14 @@ export const Playground: Story = {
       control: {type: 'select'},
       options: ['none', 'uppercase', 'lowercase', 'capitalize'],
     },
+    accentColor: {
+      control: {type: 'select'},
+      options: ['none', ...BRAND_COLORS.map(c => c.value)],
+    },
+    accentLineBreak: {
+      control: {type: 'select'},
+      options: ['off', 'always', 'desktop'],
+    },
   },
 };
 
@@ -505,4 +513,49 @@ export const Overrides: Story = {
       </Heading>
     </div>
   ),
+};
+
+// Two-tone heading: `*marked*` copy renders in the Accent Color inside the
+// same <h*>, so the heading reads as one sentence.
+const TWO_TONE_COPY =
+  'Digital fluency for every student, *in every classroom.*';
+const TWO_TONE_TEXT = 'Digital fluency for every student, in every classroom.';
+
+export const Accent: Story = {
+  render: () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+      {(['off', 'always', 'desktop'] as const).map(accentLineBreak => (
+        <Heading
+          key={accentLineBreak}
+          visualAppearance="heading-xl"
+          color="purplePrimary"
+          accentColor="purpleDark"
+          accentLineBreak={accentLineBreak}
+          removeMarginBottom={false}
+        >
+          {TWO_TONE_COPY}
+        </Heading>
+      ))}
+      <Section background="purpleDark" padding="m">
+        <Heading
+          visualAppearance="heading-xl"
+          color="white"
+          accentColor="purpleLight"
+          accentLineBreak="always"
+          removeMarginBottom={true}
+        >
+          {TWO_TONE_COPY}
+        </Heading>
+      </Section>
+    </div>
+  ),
+  play: async ({canvas}) => {
+    const headings = canvas.getAllByRole('heading', {
+      level: 2,
+      name: TWO_TONE_TEXT,
+    });
+    expect(headings).toHaveLength(4);
+    expect(headings[0].querySelector('br')).toBeNull();
+    expect(headings[1].querySelector('br')).not.toBeNull();
+  },
 };

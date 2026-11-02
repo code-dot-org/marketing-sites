@@ -299,7 +299,7 @@ export const brandColorOptionsWithDefault = (defaultValue: BrandColor) =>
 //   - Legacy `primary` is excluded from all text pickers: stored values keep
 //     rendering (as Black — see the manifest entry above); authors pick
 //     Black directly.
-export const brandTextColorOptions = (defaultValue: BrandColor) => {
+export const brandTextColorOptions = (defaultValue?: BrandColor) => {
   const blackEntry = BRAND_COLORS.find(c => c.value === 'black');
   const whiteEntry = BRAND_COLORS.find(c => c.value === 'white');
   const familyEntries = BRAND_COLORS.filter(

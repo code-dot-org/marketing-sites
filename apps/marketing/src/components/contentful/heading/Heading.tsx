@@ -1,5 +1,6 @@
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import {ReactNode} from 'react';
+import {Fragment, ReactNode} from 'react';
 
 import {BrandColor} from '@/components/common/colors';
 import {RemoveMarginBottomProps} from '@/components/common/types';
@@ -15,8 +16,11 @@ import {
   type HeadingAppearanceValue,
   type HeadingLevelValue,
 } from './resolveHeadingStyles';
+import {splitAccent} from './splitAccent';
 
 type HeadingTextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+
+type HeadingAccentLineBreak = 'off' | 'always' | 'desktop';
 
 export type HeadingProps = RemoveMarginBottomProps & {
   /** Heading content */
@@ -57,7 +61,49 @@ export type HeadingProps = RemoveMarginBottomProps & {
   textTransform?: HeadingTextTransform;
   /** Stacking order. Applies with position: relative so the value is honored. */
   zIndex?: string;
+  /**
+   * Color for `*marked*` runs in string content. `'none'` (default) leaves
+   * the content untouched, markers included.
+   */
+  accentColor?: BrandColor | 'none';
+  /** Line break at each color change; `'desktop'` breaks at md (900px) up. */
+  accentLineBreak?: HeadingAccentLineBreak;
 };
+
+const renderAccent = (
+  text: string,
+  accentCssColor: string,
+  lineBreak: HeadingAccentLineBreak,
+) =>
+  splitAccent(text).map((segment, index, segments) => {
+    const colorChanges =
+      index > 0 && segments[index - 1].accent !== segment.accent;
+
+    return (
+      <Fragment key={index}>
+        {colorChanges && lineBreak !== 'off' && (
+          <Box
+            component="br"
+            sx={
+              lineBreak === 'desktop'
+                ? theme => ({
+                    display: 'none',
+                    [theme.breakpoints.up('md')]: {display: 'inline'},
+                  })
+                : undefined
+            }
+          />
+        )}
+        {segment.accent ? (
+          <Box component="span" sx={{color: accentCssColor}}>
+            {segment.text}
+          </Box>
+        ) : (
+          segment.text
+        )}
+      </Fragment>
+    );
+  });
 
 const Heading: React.FunctionComponent<HeadingProps> = ({
   children,
@@ -73,6 +119,8 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
   fontKerning,
   textTransform = 'none',
   zIndex,
+  accentColor = 'none',
+  accentLineBreak = 'off',
 }) => {
   const enclosingBackground = useSectionBackground();
   const brandColors = useBrandColors();
@@ -111,7 +159,13 @@ const Heading: React.FunctionComponent<HeadingProps> = ({
       gutterBottom={!removeMarginBottom}
       sx={sx}
     >
-      {children}
+      {accentColor !== 'none' && typeof children === 'string'
+        ? renderAccent(
+            children,
+            resolvedTextCssVar(brandColors, accentColor, enclosingBackground),
+            accentLineBreak,
+          )
+        : children}
     </Typography>
   );
 };

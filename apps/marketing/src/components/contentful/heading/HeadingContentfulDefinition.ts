@@ -43,6 +43,35 @@ export const HeadingContentfulComponentDefinition: ComponentDefinition = {
         in: brandTextColorOptions('purpleDark'),
       },
     },
+    accentColor: {
+      displayName: 'Accent Color',
+      type: 'Text',
+      defaultValue: 'none',
+      group: 'style',
+      description:
+        'Colors text wrapped in asterisks in the Content, e.g. "Digital fluency for every student, *in every classroom.*". "None" shows the asterisks as typed.',
+      validations: {
+        in: [
+          {value: 'none', displayName: 'None (default)'},
+          ...brandTextColorOptions(),
+        ],
+      },
+    },
+    accentLineBreak: {
+      displayName: 'Accent Line Break',
+      type: 'Text',
+      defaultValue: 'off',
+      group: 'style',
+      description:
+        'Starts a new line where the color changes. Needs an Accent Color.',
+      validations: {
+        in: [
+          {value: 'off', displayName: 'Off (default)'},
+          {value: 'always', displayName: 'Always'},
+          {value: 'desktop', displayName: 'Desktop only (900px+)'},
+        ],
+      },
+    },
     textTransform: {
       displayName: 'Transform Case',
       type: 'Text',

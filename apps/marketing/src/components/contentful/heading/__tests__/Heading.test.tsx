@@ -80,6 +80,75 @@ describe('Heading Component', () => {
     expect(window.getComputedStyle(heading).marginBottom).toBe('0px');
   });
 
+  describe('accent', () => {
+    const TWO_TONE = 'Digital fluency for every student, *in every classroom.*';
+
+    it('renders markers literally when accentColor is none', () => {
+      render(
+        <Heading visualAppearance="heading-xl" removeMarginBottom={false}>
+          {TWO_TONE}
+        </Heading>,
+      );
+      expect(screen.getByRole('heading', {level: 2})).toHaveTextContent(
+        TWO_TONE,
+      );
+    });
+
+    it('renders one heading with the accent run in a colored span', () => {
+      render(
+        <Heading
+          visualAppearance="heading-xl"
+          accentColor="purpleDark"
+          removeMarginBottom={false}
+        >
+          {TWO_TONE}
+        </Heading>,
+      );
+      const heading = screen.getByRole('heading', {level: 2});
+      expect(heading).toHaveTextContent(
+        'Digital fluency for every student, in every classroom.',
+      );
+      expect(heading.querySelector('span')).toHaveTextContent(
+        'in every classroom.',
+      );
+      expect(heading.querySelector('br')).toBeNull();
+    });
+
+    it('adds a line break at the color change when enabled', () => {
+      render(
+        <Heading
+          visualAppearance="heading-xl"
+          accentColor="purpleDark"
+          accentLineBreak="always"
+          removeMarginBottom={false}
+        >
+          {TWO_TONE}
+        </Heading>,
+      );
+      const heading = screen.getByRole('heading', {level: 2});
+      expect(heading.querySelectorAll('br')).toHaveLength(1);
+      expect(heading.querySelector('br')?.nextSibling).toBe(
+        heading.querySelector('span'),
+      );
+    });
+
+    it('hides the desktop-only line break below md', () => {
+      render(
+        <Heading
+          visualAppearance="heading-xl"
+          accentColor="purpleDark"
+          accentLineBreak="desktop"
+          removeMarginBottom={false}
+        >
+          {TWO_TONE}
+        </Heading>,
+      );
+      expect(
+        screen.getByRole('heading', {level: 2}).querySelector('br'),
+      ).toHaveStyle({display: 'none'});
+    });
+  });
+
   // Spec 009 — canonical default + override surface.
   describe('spec 009 refactor', () => {
     it('does not emit a `clamp(` font-size by default', () => {
