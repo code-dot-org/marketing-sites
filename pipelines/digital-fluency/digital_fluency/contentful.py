@@ -25,7 +25,7 @@ MAX_RATE_LIMIT_RETRIES = 3
 MAX_RATE_LIMIT_WAIT_SECONDS = 10
 
 # Field IDs of the proposed envelope content type
-# (see contentful/sodf-envelope.content-type.json).
+# (see contentful/digital-fluency-envelope.content-type.json).
 ENVELOPE_FIELDS = (
     "title",
     "payload",

@@ -2,9 +2,9 @@
 #
 # Reads the Advocacy team's Google Sheet with keyless, read-only credentials
 # (Workload Identity Federation), runs placeholder Python, validates the result
-# against pipelines/sodf/schema, and optionally writes it to one Contentful
-# entry as a DRAFT. It never publishes. Setup: pipelines/sodf/README.md.
-name: SODF data pipeline
+# against pipelines/digital-fluency/schema, and optionally writes it to one Contentful
+# entry as a DRAFT. It never publishes. Setup: pipelines/digital-fluency/README.md.
+name: Digital Fluency data pipeline
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ permissions:
 
 # One run at a time so two triggers can't interleave Contentful writes.
 concurrency:
-  group: sodf-data-pipeline
+  group: digital-fluency-data-pipeline
   cancel-in-progress: false
 
 jobs:
@@ -27,15 +27,15 @@ jobs:
     name: Read sheet, validate, write draft
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    # Holds the SODF_* variables and the Contentful secret. Tighten to `main`
+    # Holds the DIGITAL_FLUENCY_* variables and the Contentful secret. Tighten to `main`
     # (deployment branch rule, optional reviewers) before launch.
-    environment: sodf-data-pipeline
+    environment: digital-fluency-data-pipeline
     permissions:
       contents: read
       id-token: write # Needed to request the GitHub OIDC token for Google.
     defaults:
       run:
-        working-directory: pipelines/sodf
+        working-directory: pipelines/digital-fluency
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -43,9 +43,9 @@ jobs:
 
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version-file: pipelines/sodf/.python-version
+          python-version-file: pipelines/digital-fluency/.python-version
           cache: pip
-          cache-dependency-path: pipelines/sodf/requirements.txt
+          cache-dependency-path: pipelines/digital-fluency/requirements.txt
 
       - name: Install pinned dependencies
         run: python -m pip install --require-hashes --no-deps -r requirements.txt
@@ -53,8 +53,8 @@ jobs:
       - name: Authenticate to Google (read-only, keyless)
         uses: google-github-actions/auth@7b53cdc2a387814ed14eec026287aac689ae8c9b # v2.1.9
         with:
-          workload_identity_provider: ${{ vars.SODF_GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.SODF_GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ vars.DIGITAL_FLUENCY_GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.DIGITAL_FLUENCY_GCP_SERVICE_ACCOUNT }}
           # Writes a short-lived external-account credentials file and sets
           # GOOGLE_APPLICATION_CREDENTIALS, so google.auth.default() finds it.
           # The Python requests only the spreadsheets.readonly scope.
@@ -62,19 +62,19 @@ jobs:
 
       - name: Read sheet, transform, validate
         env:
-          SODF_SPREADSHEET_ID: ${{ vars.SODF_SPREADSHEET_ID }}
-          SODF_RANGES: ${{ vars.SODF_RANGES }}
-          SODF_HEADER_ROW: ${{ vars.SODF_HEADER_ROW || '2' }}
-        run: python -m sodf_pipeline build --output "$RUNNER_TEMP/sodf-envelope.json"
+          DIGITAL_FLUENCY_SPREADSHEET_ID: ${{ vars.DIGITAL_FLUENCY_SPREADSHEET_ID }}
+          DIGITAL_FLUENCY_RANGES: ${{ vars.DIGITAL_FLUENCY_RANGES }}
+          DIGITAL_FLUENCY_HEADER_ROW: ${{ vars.DIGITAL_FLUENCY_HEADER_ROW || '2' }}
+        run: python -m digital_fluency build --output "$RUNNER_TEMP/digital-fluency-envelope.json"
 
       - name: Write draft to Contentful
         if: ${{ inputs.write_to_contentful }}
         env:
           # Google credentials aren't needed past this point.
           GOOGLE_APPLICATION_CREDENTIALS: ''
-          CONTENTFUL_SPACE_ID: ${{ vars.SODF_CONTENTFUL_SPACE_ID }}
-          CONTENTFUL_ENVIRONMENT_ID: ${{ vars.SODF_CONTENTFUL_ENVIRONMENT_ID }}
-          CONTENTFUL_ENTRY_ID: ${{ vars.SODF_CONTENTFUL_ENTRY_ID }}
-          CONTENTFUL_CONTENT_TYPE_ID: ${{ vars.SODF_CONTENTFUL_CONTENT_TYPE_ID || 'stateOfDigitalFluencyData' }}
-          CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.SODF_CONTENTFUL_MANAGEMENT_TOKEN }}
-        run: python -m sodf_pipeline write --input "$RUNNER_TEMP/sodf-envelope.json"
+          CONTENTFUL_SPACE_ID: ${{ vars.DIGITAL_FLUENCY_CONTENTFUL_SPACE_ID }}
+          CONTENTFUL_ENVIRONMENT_ID: ${{ vars.DIGITAL_FLUENCY_CONTENTFUL_ENVIRONMENT_ID }}
+          CONTENTFUL_ENTRY_ID: ${{ vars.DIGITAL_FLUENCY_CONTENTFUL_ENTRY_ID }}
+          CONTENTFUL_CONTENT_TYPE_ID: ${{ vars.DIGITAL_FLUENCY_CONTENTFUL_CONTENT_TYPE_ID || 'stateOfDigitalFluencyData' }}
+          CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.DIGITAL_FLUENCY_CONTENTFUL_MANAGEMENT_TOKEN }}
+        run: python -m digital_fluency write --input "$RUNNER_TEMP/digital-fluency-envelope.json"

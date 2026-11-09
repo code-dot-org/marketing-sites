@@ -1,14 +1,14 @@
 import unittest
 
-from sodf_pipeline import cli, contentful, transform
-from sodf_pipeline.errors import PipelineError
+from digital_fluency import cli, contentful, transform
+from digital_fluency.errors import PipelineError
 from tests.fakes import FakeResponse, FakeSession
 from tests.test_build import synthetic_extract
 
 TARGET = contentful.ContentfulTarget(
     space_id="space1",
     environment_id="sandbox",
-    entry_id="sodfData",
+    entry_id="digitalFluencyData",
     content_type_id="stateOfDigitalFluencyData",
 )
 

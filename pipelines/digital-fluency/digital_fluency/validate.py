@@ -13,7 +13,7 @@ from typing import Any
 
 from .errors import PipelineError
 
-SCHEMA_PATH = Path(__file__).resolve().parent.parent / "schema" / "sodf-payload.schema.json"
+SCHEMA_PATH = Path(__file__).resolve().parent.parent / "schema" / "digital-fluency-payload.schema.json"
 
 # Conservative local cap so an oversized payload fails here, not in Contentful.
 # Confirm Contentful's actual JSON-field and entry-size limits before raising it.

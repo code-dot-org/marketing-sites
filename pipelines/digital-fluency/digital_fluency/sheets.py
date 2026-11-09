@@ -122,7 +122,7 @@ def fetch_ranges(
     Returns the API's ``valueRanges`` list, in the same order as ``ranges``.
     """
     if not ranges:
-        raise PipelineError("No ranges configured. Set SODF_RANGES.")
+        raise PipelineError("No ranges configured. Set DIGITAL_FLUENCY_RANGES.")
     url = f"{SHEETS_API_BASE}/{quote(spreadsheet_id, safe='')}/values:batchGet"
     response = session.get(
         url,
@@ -244,7 +244,7 @@ def read_sheet(
     duplicate headers. No partial result is returned.
     """
     if not spreadsheet_id:
-        raise PipelineError("No spreadsheet configured. Set SODF_SPREADSHEET_ID.")
+        raise PipelineError("No spreadsheet configured. Set DIGITAL_FLUENCY_SPREADSHEET_ID.")
     session = session_factory(quota_project_id)
     read_at = now().isoformat(timespec="seconds").replace("+00:00", "Z")
     specs = [parse_range_spec(spec, header_row) for spec in ranges]

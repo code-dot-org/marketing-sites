@@ -7,7 +7,7 @@ that a sheet edit made it all the way to Contentful without copying cell values
 into the envelope.
 
 To plug in the real methodology (the prototype's ``build_json_from_xlsx.py``),
-replace :func:`build_payload` and update ``schema/sodf-payload.schema.json`` to
+replace :func:`build_payload` and update ``schema/digital-fluency-payload.schema.json`` to
 match. Keep the function pure (extract in, dict out) so it stays testable.
 """
 

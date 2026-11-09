@@ -3,7 +3,7 @@
     "id": "stateOfDigitalFluencyData"
   },
   "name": "State of Digital Fluency Data",
-  "description": "PROPOSED, not yet created. Machine-written envelope around validated State of Digital Fluency JSON. Written as a draft by the SODF GitHub Actions pipeline; do not edit by hand. Publish after reviewing on a preview host.",
+  "description": "PROPOSED, not yet created. Machine-written envelope around validated State of Digital Fluency JSON. Written as a draft by the Digital Fluency GitHub Actions pipeline; do not edit by hand. Publish after reviewing on a preview host.",
   "displayField": "title",
   "fields": [
     {

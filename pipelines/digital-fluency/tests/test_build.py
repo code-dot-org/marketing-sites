@@ -1,9 +1,9 @@
 import copy
 import unittest
 
-from sodf_pipeline import cli, transform, validate
-from sodf_pipeline.errors import PipelineError
-from sodf_pipeline.sheets import RangeTable, SheetExtract
+from digital_fluency import cli, transform, validate
+from digital_fluency.errors import PipelineError
+from digital_fluency.sheets import RangeTable, SheetExtract
 
 
 def synthetic_extract() -> SheetExtract:

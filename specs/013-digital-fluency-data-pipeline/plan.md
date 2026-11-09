@@ -1,4 +1,4 @@
-# Implementation Plan: SODF Data Pipeline — Auth Wiring POC
+# Implementation Plan: Digital Fluency Data Pipeline — Auth Wiring POC
 
 **Branch**: `claude/quirky-wright-7lktbz` | **Date**: 2026-11-09 | **Spec**: [spec.md](./spec.md)
 
@@ -15,14 +15,14 @@ sheet trigger (Workstream 5) are out of scope.
 
 ## Technical Context
 
-- **Language**: Python 3.12.10 (pinned in `pipelines/sodf/.python-version`).
+- **Language**: Python 3.12.10 (pinned in `pipelines/digital-fluency/.python-version`).
 - **Dependencies**: `google-auth`, `requests`, `jsonschema`, plus transitive
   deps, all hash-locked in `requirements.txt`. Every version is at least 14
   days old.
 - **Testing**: stdlib `unittest`, synthetic data, fake HTTP sessions. No
   credentials in CI.
 - **Runtime**: `workflow_dispatch` on `ubuntu-24.04`; actions pinned by SHA.
-- **Affected apps/packages**: none. New `pipelines/sodf/` (outside Yarn
+- **Affected apps/packages**: none. New `pipelines/digital-fluency/` (outside Yarn
   workspaces and Turbo) and two workflows.
 - **Brands/locales/preview/draft**: no site change. The pipeline writes a
   Contentful draft only.
@@ -44,7 +44,7 @@ sheet trigger (Workstream 5) are out of scope.
 
 ## Key Decisions (POC only)
 
-1. **Location (OD-5, proposed):** top-level `pipelines/sodf/`, with its own CI
+1. **Location (OD-5, proposed):** top-level `pipelines/digital-fluency/`, with its own CI
    workflow and outside Yarn/Turbo. Revisit before launch.
 2. **ADC, not a raw access token:** the auth action writes an external-account
    credentials file, and `google.auth.default(scopes=[spreadsheets.readonly])`
@@ -62,14 +62,14 @@ sheet trigger (Workstream 5) are out of scope.
 ## Project Structure
 
 ```text
-.github/workflows/sodf-data-pipeline.yml   # on-demand pipeline
-.github/workflows/sodf-pipeline-ci.yml     # unit tests on PRs
-pipelines/sodf/
+.github/workflows/digital-fluency-data-pipeline.yml   # on-demand pipeline
+.github/workflows/digital-fluency-pipeline-ci.yml     # unit tests on PRs
+pipelines/digital-fluency/
 ├── README.md                              # setup: GCP, Contentful, GitHub
 ├── requirements.txt, .python-version
-├── schema/sodf-payload.schema.json
-├── contentful/sodf-envelope.content-type.json   # proposal, human applies
-├── sodf_pipeline/{sheets,transform,validate,contentful,cli}.py
+├── schema/digital-fluency-payload.schema.json
+├── contentful/digital-fluency-envelope.content-type.json   # proposal, human applies
+├── digital_fluency/{sheets,transform,validate,contentful,cli}.py
 └── tests/
 ```
 
@@ -79,5 +79,5 @@ pipelines/sodf/
   as Viewer with the service account.
 - Contentful: content type, custom role (no publish), bot user, token with an
   expiry (README §2).
-- GitHub: `sodf-data-pipeline` environment with its variables and secret;
+- GitHub: `digital-fluency-data-pipeline` environment with its variables and secret;
   merge the workflow to `main` so it can be dispatched (README §3).

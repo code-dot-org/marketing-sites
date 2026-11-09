@@ -1,8 +1,8 @@
 import unittest
 from datetime import datetime, timezone
 
-from sodf_pipeline import sheets
-from sodf_pipeline.errors import PipelineError
+from digital_fluency import sheets
+from digital_fluency.errors import PipelineError
 from tests.fakes import FakeResponse, FakeSession
 
 # Synthetic data shaped like the sheet: human labels in row 1, machine names in row 2.

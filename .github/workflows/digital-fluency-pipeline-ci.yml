@@ -1,30 +1,30 @@
-# Unit tests for the State of Digital Fluency pipeline (pipelines/sodf).
+# Unit tests for the State of Digital Fluency pipeline (pipelines/digital-fluency).
 # No credentials: all tests use synthetic data and fake HTTP sessions.
-name: SODF pipeline CI
+name: Digital Fluency pipeline CI
 
 on:
   pull_request:
     paths:
-      - 'pipelines/sodf/**'
-      - '.github/workflows/sodf-*.yml'
+      - 'pipelines/digital-fluency/**'
+      - '.github/workflows/digital-fluency-*.yml'
   push:
     branches:
       - main
     paths:
-      - 'pipelines/sodf/**'
-      - '.github/workflows/sodf-*.yml'
+      - 'pipelines/digital-fluency/**'
+      - '.github/workflows/digital-fluency-*.yml'
 
 permissions:
   contents: read
 
 jobs:
   test:
-    name: Test SODF pipeline
+    name: Test Digital Fluency pipeline
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     defaults:
       run:
-        working-directory: pipelines/sodf
+        working-directory: pipelines/digital-fluency
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -32,9 +32,9 @@ jobs:
 
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version-file: pipelines/sodf/.python-version
+          python-version-file: pipelines/digital-fluency/.python-version
           cache: pip
-          cache-dependency-path: pipelines/sodf/requirements.txt
+          cache-dependency-path: pipelines/digital-fluency/requirements.txt
 
       - name: Install pinned dependencies
         run: python -m pip install --require-hashes --no-deps -r requirements.txt

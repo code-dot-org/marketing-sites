@@ -1,4 +1,4 @@
-# Pinned, hash-locked dependencies for the SODF pipeline.
+# Pinned, hash-locked dependencies for the Digital Fluency pipeline.
 # Direct: google-auth, requests, jsonschema. Everything else is transitive.
 # Install: python -m pip install --require-hashes --no-deps -r requirements.txt
 

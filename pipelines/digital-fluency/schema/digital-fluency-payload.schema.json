@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://code.org/schemas/sodf-payload.schema.json",
+  "$id": "https://code.org/schemas/digital-fluency-payload.schema.json",
   "title": "State of Digital Fluency payload (POC placeholder)",
   "description": "Contract for the JSON stored in the Contentful envelope. POC version: a summary of what was read from the sheet, with no cell values. Replace with the real report contract (tiers, scores, 51 jurisdictions) when scoring lands. Changes here need engineering review: this is where untrusted data enters production.",
   "type": "object",

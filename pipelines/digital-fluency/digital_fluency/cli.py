@@ -1,4 +1,4 @@
-"""Command-line entry point: ``python -m sodf_pipeline <command>``.
+"""Command-line entry point: ``python -m digital_fluency <command>``.
 
 Commands:
 
@@ -33,15 +33,15 @@ def _env(name: str, default: str = "") -> str:
 
 
 def _ranges_from_env() -> list[str]:
-    return [r.strip() for r in _env("SODF_RANGES").split(",") if r.strip()]
+    return [r.strip() for r in _env("DIGITAL_FLUENCY_RANGES").split(",") if r.strip()]
 
 
 def _header_row_from_env() -> int:
-    raw = _env("SODF_HEADER_ROW", "2")
+    raw = _env("DIGITAL_FLUENCY_HEADER_ROW", "2")
     try:
         return int(raw)
     except ValueError as exc:
-        raise PipelineError(f"SODF_HEADER_ROW must be an integer, got '{raw}'.") from exc
+        raise PipelineError(f"DIGITAL_FLUENCY_HEADER_ROW must be an integer, got '{raw}'.") from exc
 
 
 def _run_url() -> str | None:
@@ -108,16 +108,16 @@ def _write_step_summary(lines: list[str]) -> None:
 
 def cmd_describe(_args: argparse.Namespace) -> int:
     session = sheets.authorized_session(_env("GOOGLE_CLOUD_QUOTA_PROJECT") or None)
-    spreadsheet_id = _env("SODF_SPREADSHEET_ID")
+    spreadsheet_id = _env("DIGITAL_FLUENCY_SPREADSHEET_ID")
     if not spreadsheet_id:
-        raise PipelineError("No spreadsheet configured. Set SODF_SPREADSHEET_ID.")
+        raise PipelineError("No spreadsheet configured. Set DIGITAL_FLUENCY_SPREADSHEET_ID.")
     print(json.dumps(sheets.describe_spreadsheet(session, spreadsheet_id), indent=2))
     return 0
 
 
 def cmd_build(args: argparse.Namespace) -> int:
     extract = sheets.read_sheet(
-        spreadsheet_id=_env("SODF_SPREADSHEET_ID"),
+        spreadsheet_id=_env("DIGITAL_FLUENCY_SPREADSHEET_ID"),
         ranges=_ranges_from_env(),
         header_row=_header_row_from_env(),
         quota_project_id=_env("GOOGLE_CLOUD_QUOTA_PROJECT") or None,
@@ -131,7 +131,7 @@ def cmd_build(args: argparse.Namespace) -> int:
     output.write_text(json.dumps(envelope, indent=2) + "\n", encoding="utf-8")
 
     summary = [
-        "### SODF build",
+        "### Digital Fluency build",
         f"- Read at: `{extract.read_at}`",
         f"- Payload size: {validate.payload_size_bytes(payload)} bytes (valid)",
         "",
@@ -167,7 +167,7 @@ def cmd_write(args: argparse.Namespace) -> int:
         else "published entry now has unpublished changes"
     )
     summary = [
-        "### SODF Contentful write",
+        "### Digital Fluency Contentful write",
         f"- Entry {result.action}: [{target.entry_id}]({result.web_url})",
         f"- Version: {result.version}; state: {state}",
         "- Review on a preview host, then publish in Contentful.",
@@ -178,7 +178,7 @@ def cmd_write(args: argparse.Namespace) -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="sodf_pipeline", description=__doc__.split("\n")[0])
+    parser = argparse.ArgumentParser(prog="digital_fluency", description=__doc__.split("\n")[0])
     sub = parser.add_subparsers(dest="command", required=True)
 
     sub.add_parser("describe", help="List tabs and named ranges.").set_defaults(func=cmd_describe)
