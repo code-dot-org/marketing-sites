@@ -254,8 +254,8 @@ logs an alert.
 - **FR-002**: The Google identity used by the pipeline MUST have no project
   roles and MUST have Viewer access to only the report sheet; the requested
   access scope MUST be read-only spreadsheets.
-- **FR-003**: The federation provider (in the `codeai-marketing-sites`
-  Google Cloud project) MUST accept only the `code-dot-org/marketing-sites`
+- **FR-003**: The federation provider (in the `marketing-sites-gdrive`
+  Google Cloud project, Production folder) MUST accept only the `code-dot-org/marketing-sites`
   repository, matched by its immutable repository ID. The reader service
   account's binding MUST, before launch, be limited to the pipeline workflow
   file on `main`. The pipeline MAY also be gated behind a GitHub Environment

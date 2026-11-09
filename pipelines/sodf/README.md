@@ -43,9 +43,10 @@ pip install --require-hashes --no-deps -r requirements.txt
 
 gcloud auth application-default login \
   --scopes=https://www.googleapis.com/auth/spreadsheets.readonly,https://www.googleapis.com/auth/cloud-platform
-# Personal credentials need a project to bill Sheets API quota to. This needs
-# roles/serviceusage.serviceUsageConsumer on that project (ask Platform & Infra).
-export GOOGLE_CLOUD_QUOTA_PROJECT=codeai-marketing-sites
+# Personal credentials need a project to bill Sheets API quota to. Use a
+# Development-folder project where you have serviceusage.serviceUsageConsumer,
+# not the Production pipeline project (no people get roles there).
+export GOOGLE_CLOUD_QUOTA_PROJECT=<your-development-project-id>
 
 export SODF_SPREADSHEET_ID=<id from the sheet URL>
 python -m sodf_pipeline describe            # lists tabs + named ranges, no values
@@ -102,7 +103,7 @@ To replace the placeholder with real scoring, edit `transform.build_payload` and
 | `SODF_HEADER_ROW`                     | env / GitHub var              | Default `2`                                                                                         |
 | `GOOGLE_CLOUD_QUOTA_PROJECT`          | local only                    | Not needed in Actions                                                                               |
 | `SODF_GCP_WORKLOAD_IDENTITY_PROVIDER` | GitHub var                    | `projects/<number>/locations/global/workloadIdentityPools/github-actions/providers/marketing-sites` |
-| `SODF_GCP_SERVICE_ACCOUNT`            | GitHub var                    | `sodf-sheet-reader@codeai-marketing-sites.iam.gserviceaccount.com`                                  |
+| `SODF_GCP_SERVICE_ACCOUNT`            | GitHub var                    | `sodf-sheet-reader@marketing-sites-gdrive.iam.gserviceaccount.com`                                  |
 | `SODF_CONTENTFUL_SPACE_ID`            | GitHub var                    |                                                                                                     |
 | `SODF_CONTENTFUL_ENVIRONMENT_ID`      | GitHub var                    | Start with a sandbox environment                                                                    |
 | `SODF_CONTENTFUL_ENTRY_ID`            | GitHub var                    | The single envelope entry                                                                           |
@@ -115,9 +116,12 @@ Put all of these on a GitHub Environment named **`sodf-data-pipeline`**.
 
 ### 1. Google: Workload Identity Federation (Platform & Infrastructure)
 
-All of this lives in the **`codeai-marketing-sites`** project. That project is
-for marketing-sites in general, not only GitHub, so the GitHub trust is kept to
-its own pool, and each job gets its own service account.
+All of this lives in the **`marketing-sites-gdrive`** project, in the
+**Production** folder. It gives marketing-sites access to Google Workspace data
+(Drive, Sheets). It inherits Production's org policies and folder roles, so make
+sure those roles are tight. The GitHub trust has its own pool, and each job
+gets its own service account. No people need roles in this project. Local runs
+bill their quota to a Development project instead.
 
 - **Pool** `github-actions`: trusts GitHub's OIDC issuer.
 - **Provider** `marketing-sites`: accepts only this repository, matched by its
@@ -134,7 +138,7 @@ service-account key creation here (`iam.disableServiceAccountKeyCreation`, or
 its managed equivalent).
 
 ```bash
-PROJECT_ID=codeai-marketing-sites
+PROJECT_ID=marketing-sites-gdrive
 PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
 REPO_ID=1080799522
 POOL=projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions
@@ -176,7 +180,7 @@ gcloud iam service-accounts add-iam-policy-binding $SA --project=$PROJECT_ID \
 ```
 
 Grant the service account **no** project roles. Then share **only the report
-sheet** with `sodf-sheet-reader@codeai-marketing-sites.iam.gserviceaccount.com`
+sheet** with `sodf-sheet-reader@marketing-sites-gdrive.iam.gserviceaccount.com`
 as **Viewer**. Test sharing with a throwaway sheet first. Workspace policy may
 block sharing with an address outside the domain.
 
@@ -186,7 +190,7 @@ GitHub variables for this step:
   `projects/<PROJECT_NUMBER>/locations/global/workloadIdentityPools/github-actions/providers/marketing-sites`
   (the project **number**, not the ID)
 - `SODF_GCP_SERVICE_ACCOUNT` =
-  `sodf-sheet-reader@codeai-marketing-sites.iam.gserviceaccount.com`
+  `sodf-sheet-reader@marketing-sites-gdrive.iam.gserviceaccount.com`
 
 New IAM bindings can take a few minutes to apply. An early permission error may
 clear up on a retry.
