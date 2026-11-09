@@ -43,10 +43,9 @@ pip install --require-hashes --no-deps -r requirements.txt
 
 gcloud auth application-default login \
   --scopes=https://www.googleapis.com/auth/spreadsheets.readonly,https://www.googleapis.com/auth/cloud-platform
-# Personal credentials need a project to bill Sheets API quota to. Use a
-# Development-folder project where you have serviceusage.serviceUsageConsumer,
-# not the Production pipeline project (no people get roles there).
-export GOOGLE_CLOUD_QUOTA_PROJECT=<your-development-project-id>
+# Personal credentials need a project to bill Sheets API quota to. This needs
+# roles/serviceusage.serviceUsageConsumer on it (README §1, "Local developers").
+export GOOGLE_CLOUD_QUOTA_PROJECT=marketing-sites-gdrive
 
 export SODF_SPREADSHEET_ID=<id from the sheet URL>
 python -m sodf_pipeline describe            # lists tabs + named ranges, no values
@@ -120,8 +119,8 @@ All of this lives in the **`marketing-sites-gdrive`** project, in the
 **Production** folder. It gives marketing-sites access to Google Workspace data
 (Drive, Sheets). It inherits Production's org policies and folder roles, so make
 sure those roles are tight. The GitHub trust has its own pool, and each job
-gets its own service account. No people need roles in this project. Local runs
-bill their quota to a Development project instead.
+gets its own service account. The only role people get here is quota usage for
+local runs (below), which doesn't let them act as any service account.
 
 - **Pool** `github-actions`: trusts GitHub's OIDC issuer.
 - **Provider** `marketing-sites`: accepts only this repository, matched by its
@@ -191,6 +190,19 @@ GitHub variables for this step:
   (the project **number**, not the ID)
 - `SODF_GCP_SERVICE_ACCOUNT` =
   `sodf-sheet-reader@marketing-sites-gdrive.iam.gserviceaccount.com`
+
+**Local developers** (for example, David) bill their own Sheets reads to this
+project. That needs only `serviceUsageConsumer`. Don't grant Editor, Owner or
+Service Account Token Creator: any of those would let the person act as the
+reader.
+
+```bash
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --role=roles/serviceusage.serviceUsageConsumer \
+  --member="user:<developer email>"
+```
+
+Their own login still needs Viewer (or better) on the sheet to read it.
 
 New IAM bindings can take a few minutes to apply. An early permission error may
 clear up on a retry.
