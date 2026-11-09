@@ -43,8 +43,9 @@ pip install --require-hashes --no-deps -r requirements.txt
 
 gcloud auth application-default login \
   --scopes=https://www.googleapis.com/auth/spreadsheets.readonly,https://www.googleapis.com/auth/cloud-platform
-# Personal credentials need a project to bill Sheets API quota to:
-export GOOGLE_CLOUD_QUOTA_PROJECT=<codeai-gcp-project-id>
+# Personal credentials need a project to bill Sheets API quota to. This needs
+# roles/serviceusage.serviceUsageConsumer on that project (ask Platform & Infra).
+export GOOGLE_CLOUD_QUOTA_PROJECT=codeai-marketing-sites
 
 export SODF_SPREADSHEET_ID=<id from the sheet URL>
 python -m sodf_pipeline describe            # lists tabs + named ranges, no values
@@ -94,19 +95,19 @@ To replace the placeholder with real scoring, edit `transform.build_payload` and
 
 ## Configuration
 
-| Variable                              | Where                         | Notes                                                                                       |
-| ------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------- |
-| `SODF_SPREADSHEET_ID`                 | env / GitHub var              | Sheet ID                                                                                    |
-| `SODF_RANGES`                         | env / GitHub var              | Comma-separated named or A1 ranges, each optionally `@N`                                    |
-| `SODF_HEADER_ROW`                     | env / GitHub var              | Default `2`                                                                                 |
-| `GOOGLE_CLOUD_QUOTA_PROJECT`          | local only                    | Not needed in Actions                                                                       |
-| `SODF_GCP_WORKLOAD_IDENTITY_PROVIDER` | GitHub var                    | `projects/<number>/locations/global/workloadIdentityPools/github/providers/marketing-sites` |
-| `SODF_GCP_SERVICE_ACCOUNT`            | GitHub var                    | `sodf-sheet-reader@<project>.iam.gserviceaccount.com`                                       |
-| `SODF_CONTENTFUL_SPACE_ID`            | GitHub var                    |                                                                                             |
-| `SODF_CONTENTFUL_ENVIRONMENT_ID`      | GitHub var                    | Start with a sandbox environment                                                            |
-| `SODF_CONTENTFUL_ENTRY_ID`            | GitHub var                    | The single envelope entry                                                                   |
-| `SODF_CONTENTFUL_CONTENT_TYPE_ID`     | GitHub var                    | Default `stateOfDigitalFluencyData`                                                         |
-| `SODF_CONTENTFUL_MANAGEMENT_TOKEN`    | GitHub **environment secret** | Bot user's token; see below                                                                 |
+| Variable                              | Where                         | Notes                                                                                               |
+| ------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------- |
+| `SODF_SPREADSHEET_ID`                 | env / GitHub var              | Sheet ID                                                                                            |
+| `SODF_RANGES`                         | env / GitHub var              | Comma-separated named or A1 ranges, each optionally `@N`                                            |
+| `SODF_HEADER_ROW`                     | env / GitHub var              | Default `2`                                                                                         |
+| `GOOGLE_CLOUD_QUOTA_PROJECT`          | local only                    | Not needed in Actions                                                                               |
+| `SODF_GCP_WORKLOAD_IDENTITY_PROVIDER` | GitHub var                    | `projects/<number>/locations/global/workloadIdentityPools/github-actions/providers/marketing-sites` |
+| `SODF_GCP_SERVICE_ACCOUNT`            | GitHub var                    | `sodf-sheet-reader@codeai-marketing-sites.iam.gserviceaccount.com`                                  |
+| `SODF_CONTENTFUL_SPACE_ID`            | GitHub var                    |                                                                                                     |
+| `SODF_CONTENTFUL_ENVIRONMENT_ID`      | GitHub var                    | Start with a sandbox environment                                                                    |
+| `SODF_CONTENTFUL_ENTRY_ID`            | GitHub var                    | The single envelope entry                                                                           |
+| `SODF_CONTENTFUL_CONTENT_TYPE_ID`     | GitHub var                    | Default `stateOfDigitalFluencyData`                                                                 |
+| `SODF_CONTENTFUL_MANAGEMENT_TOKEN`    | GitHub **environment secret** | Bot user's token; see below                                                                         |
 
 Put all of these on a GitHub Environment named **`sodf-data-pipeline`**.
 
@@ -114,42 +115,81 @@ Put all of these on a GitHub Environment named **`sodf-data-pipeline`**.
 
 ### 1. Google: Workload Identity Federation (Platform & Infrastructure)
 
-Needs admin on a CodeAI Google Cloud project.
+All of this lives in the **`codeai-marketing-sites`** project. That project is
+for marketing-sites in general, not only GitHub, so the GitHub trust is kept to
+its own pool, and each job gets its own service account.
+
+- **Pool** `github-actions`: trusts GitHub's OIDC issuer.
+- **Provider** `marketing-sites`: accepts only this repository, matched by its
+  immutable repository ID `1080799522`. Renaming or transferring the repo
+  can't widen it. Any workflow in the repo may use the provider.
+- **Service account** `sodf-sheet-reader`: no project roles, Viewer on one
+  sheet. Its binding decides which workflow may act as it. During the POC that's
+  any workflow in the repo; before launch, only the SODF workflow on `main`.
+
+Keep project IAM tight. Owners, Editors and anyone with Service Account Token
+Creator can act as `sodf-sheet-reader` and read the sheet. Don't grant those
+roles broadly in this project. Enforce the org policy that blocks
+service-account key creation here (`iam.disableServiceAccountKeyCreation`, or
+its managed equivalent).
 
 ```bash
-PROJECT_ID=<project>
+PROJECT_ID=codeai-marketing-sites
 PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+REPO_ID=1080799522
+POOL=projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions
+SA=sodf-sheet-reader@$PROJECT_ID.iam.gserviceaccount.com
+```
+
+```bash
 gcloud services enable sheets.googleapis.com iamcredentials.googleapis.com sts.googleapis.com --project=$PROJECT_ID
 ```
 
 ```bash
-gcloud iam service-accounts create sodf-sheet-reader --project=$PROJECT_ID \
-  --display-name="SODF sheet reader (no project roles)"
-```
-
-```bash
-gcloud iam workload-identity-pools create github --location=global --project=$PROJECT_ID
+gcloud iam workload-identity-pools create github-actions --location=global --project=$PROJECT_ID \
+  --display-name="GitHub Actions" \
+  --description="OIDC trust for GitHub Actions workflows in code-dot-org repos"
 ```
 
 ```bash
 gcloud iam workload-identity-pools providers create-oidc marketing-sites \
-  --location=global --workload-identity-pool=github --project=$PROJECT_ID \
+  --location=global --workload-identity-pool=github-actions --project=$PROJECT_ID \
+  --display-name="code-dot-org/marketing-sites" \
   --issuer-uri="https://token.actions.githubusercontent.com" \
   --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository,attribute.repository_id=assertion.repository_id,attribute.ref=assertion.ref,attribute.workflow_ref=assertion.workflow_ref" \
-  --attribute-condition="assertion.repository=='code-dot-org/marketing-sites'"
+  --attribute-condition="assertion.repository_id=='$REPO_ID'"
 ```
 
 ```bash
-gcloud iam service-accounts add-iam-policy-binding \
-  sodf-sheet-reader@$PROJECT_ID.iam.gserviceaccount.com --project=$PROJECT_ID \
+gcloud iam service-accounts create sodf-sheet-reader --project=$PROJECT_ID \
+  --display-name="SODF sheet reader" \
+  --description="Read-only: Viewer on the SODF Google Sheet only. No project roles."
+```
+
+POC binding: any workflow in this repo may act as the reader. Branch runs work,
+so David can experiment.
+
+```bash
+gcloud iam service-accounts add-iam-policy-binding $SA --project=$PROJECT_ID \
   --role=roles/iam.workloadIdentityUser \
-  --member="principalSet://iam.googleapis.com/projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/github/attribute.repository/code-dot-org/marketing-sites"
+  --member="principalSet://iam.googleapis.com/$POOL/attribute.repository_id/$REPO_ID"
 ```
 
 Grant the service account **no** project roles. Then share **only the report
-sheet** with `sodf-sheet-reader@<project>.iam.gserviceaccount.com` as
-**Viewer**. Test sharing with a throwaway sheet first. Workspace policy may block
-sharing with an address outside the domain.
+sheet** with `sodf-sheet-reader@codeai-marketing-sites.iam.gserviceaccount.com`
+as **Viewer**. Test sharing with a throwaway sheet first. Workspace policy may
+block sharing with an address outside the domain.
+
+GitHub variables for this step:
+
+- `SODF_GCP_WORKLOAD_IDENTITY_PROVIDER` =
+  `projects/<PROJECT_NUMBER>/locations/global/workloadIdentityPools/github-actions/providers/marketing-sites`
+  (the project **number**, not the ID)
+- `SODF_GCP_SERVICE_ACCOUNT` =
+  `sodf-sheet-reader@codeai-marketing-sites.iam.gserviceaccount.com`
+
+New IAM bindings can take a few minutes to apply. An early permission error may
+clear up on a retry.
 
 ### 2. Contentful: envelope type, scoped role, bot user (needs a human)
 
@@ -194,9 +234,22 @@ needs no Contentful setup. Then run with `true`.
 
 ## Tighten before launch
 
-- Restrict the Google provider's condition to the workflow on `main`, matched by
-  repository ID:
-  `assertion.repository_id=='<id>' && assertion.workflow_ref=='code-dot-org/marketing-sites/.github/workflows/sodf-data-pipeline.yml@refs/heads/main'`.
+- Swap the reader's POC binding for one limited to the SODF workflow on `main`.
+  Add the new binding first, then remove the old one. Leave the provider
+  repo-wide, because other workflows may use it later.
+
+```bash
+gcloud iam service-accounts add-iam-policy-binding $SA --project=$PROJECT_ID \
+  --role=roles/iam.workloadIdentityUser \
+  --member="principalSet://iam.googleapis.com/$POOL/attribute.workflow_ref/code-dot-org/marketing-sites/.github/workflows/sodf-data-pipeline.yml@refs/heads/main"
+```
+
+```bash
+gcloud iam service-accounts remove-iam-policy-binding $SA --project=$PROJECT_ID \
+  --role=roles/iam.workloadIdentityUser \
+  --member="principalSet://iam.googleapis.com/$POOL/attribute.repository_id/$REPO_ID"
+```
+
 - Set the `sodf-data-pipeline` environment's deployment branches to `main` only.
 - Add CODEOWNERS for `pipelines/sodf/schema/` and the workflow files.
 - Decide how the sheet's menu triggers this workflow. A token that can dispatch
