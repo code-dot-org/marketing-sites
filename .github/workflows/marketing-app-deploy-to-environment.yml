@@ -6,18 +6,29 @@ name: Marketing-App-Deploy-To-Environment
 
 # Configures this workflow to run every time a change is pushed to `frontend`
 on:
+  # Manual dispatch inputs are restricted to choices so they cannot carry arbitrary text. The
+  # validate-inputs job below re-checks every input (including for workflow_call) before any job
+  # that touches a GitHub Environment, its secrets or AWS credentials can start.
   workflow_dispatch:
     inputs:
       ENVIRONMENT_TYPE:
         description: "The type of environment to deploy to, e.g. 'test' or 'production'."
         required: true
-        type: string
+        type: choice
+        options:
+          - test
+          - production
       SITE_TYPE:
         description: "The type of site to deploy, e.g. 'csforall' or 'corporate'."
         required: true
-        type: string
+        type: choice
+        options:
+          - aiday
+          - corporate
+          - csforall
+          - hourofai
       CONTAINER_IMAGE_DIGEST:
-        description: 'The sha256 digest of the container image to deploy.'
+        description: 'The sha256 digest of the container image to deploy, e.g. sha256:<64 lowercase hex characters>.'
         required: true
         type: string
   workflow_call:
@@ -43,11 +54,54 @@ env:
 
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
+  # Job: validate-inputs
+  # Rejects any input outside the known allowlist before the deploy job selects a GitHub Environment,
+  # receives its secrets, or assumes the deployer IAM role. This job deliberately has no `environment`
+  # and no extra permissions. Inputs reach the script only through `env`, never through `${{ }}`
+  # interpolation inside `run:`, so a malicious value cannot inject shell.
+  validate-inputs:
+    runs-on: ubuntu-24.04
+    permissions: {}
+    steps:
+      - name: Validate deploy inputs
+        env:
+          ENVIRONMENT_TYPE: ${{ inputs.ENVIRONMENT_TYPE }}
+          SITE_TYPE: ${{ inputs.SITE_TYPE }}
+          CONTAINER_IMAGE_DIGEST: ${{ inputs.CONTAINER_IMAGE_DIGEST }}
+        run: |
+          set -euo pipefail
+          errors=0
+
+          case "$ENVIRONMENT_TYPE" in
+            test|production) ;;
+            *) echo "::error::ENVIRONMENT_TYPE must be one of: test, production"; errors=1 ;;
+          esac
+
+          case "$SITE_TYPE" in
+            aiday|corporate|csforall|hourofai) ;;
+            *) echo "::error::SITE_TYPE must be one of: aiday, corporate, csforall, hourofai"; errors=1 ;;
+          esac
+
+          # Matches the `digest` output of docker/build-push-action in marketing-app-deploy.yml, which
+          # CloudFormation consumes as ghcr.io/code-dot-org/marketing@<digest>.
+          if [[ ! "$CONTAINER_IMAGE_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo "::error::CONTAINER_IMAGE_DIGEST must match ^sha256:[0-9a-f]{64}\$"
+            errors=1
+          fi
+
+          if [[ "$errors" -ne 0 ]]; then
+            exit 1
+          fi
+
+          echo "Inputs OK: marketing-sites-$ENVIRONMENT_TYPE-$SITE_TYPE @ $CONTAINER_IMAGE_DIGEST"
+
   # Job: deploy
   # This job pulls the task definition for the current task running in the cluster and updates the docker image tag with the one built in the previous job
   # Then, the task definition is deployed to the ECS service
   # See: https://docs.github.com/en/actions/use-cases-and-examples/deploying/deploying-to-amazon-elastic-container-service
   deploy:
+    needs:
+      - validate-inputs
     runs-on: ubuntu-24.04
     environment: marketing-sites-${{ inputs.ENVIRONMENT_TYPE }}-${{ inputs.SITE_TYPE }}
 
@@ -98,20 +152,36 @@ jobs:
 
       - name: '[${{ env.GITHUB_ENVIRONMENT_NAME }}] Deploy Marketing App to AWS'
         working-directory: ./apps/marketing/cicd/3-app
+        # All values are passed through env and quoted as shell variables. Never interpolate `${{ }}`
+        # expressions (especially inputs) directly into this script.
+        env:
+          DEPLOY_ENVIRONMENT_TYPE: ${{ vars.ENVIRONMENT_TYPE }}
+          DEPLOY_SITE_TYPE: ${{ vars.SITE_TYPE }}
+          DEPLOY_AWS_REGION: ${{ vars.AWS_REGION }}
+          ROOT_HOSTED_ZONE_ID: ${{ secrets.ROOT_HOSTED_ZONE_ID }}
+          APPLICATION_BASE_DOMAIN: ${{ vars.APPLICATION_BASE_DOMAIN }}
+          APPLICATION_SUBDOMAIN_NAME: ${{ vars.APPLICATION_SUBDOMAIN_NAME }}
+          CONTAINER_IMAGE_DIGEST: ${{ inputs.CONTAINER_IMAGE_DIGEST }}
+          CLOUDFORMATION_DEPLOYER_ROLE_ARN: ${{ secrets.CLOUDFORMATION_DEPLOYER_ROLE_ARN }}
+          APPLICATION_SERVER_SECRETS_ARN: ${{ secrets.APPLICATION_SERVER_SECRETS_ARN }}
+          CLOUDFORMATION_ROLE_BOUNDARY_ARN: ${{ secrets.CLOUDFORMATION_ROLE_BOUNDARY_ARN }}
+          PRODUCTION_DOMAIN_NAME: ${{ vars.PRODUCTION_DOMAIN_NAME }}
+          PRODUCTION_HOSTED_ZONE_ID: ${{ secrets.PRODUCTION_HOSTED_ZONE_ID }}
+          WEB_APPLICATION_FIREWALL_ARN: ${{ secrets.WEB_APPLICATION_FIREWALL_ARN }}
         run: |
-          bundle exec ruby deploy.rb --environment_type ${{ vars.ENVIRONMENT_TYPE }} \
-            --site_type ${{ vars.SITE_TYPE }} \
-            --region ${{ vars.AWS_REGION }} \
-            --hosted_zone_id ${{ secrets.ROOT_HOSTED_ZONE_ID }} \
-            --base_domain_name ${{ vars.APPLICATION_BASE_DOMAIN }} \
-            --subdomain_name ${{ vars.APPLICATION_SUBDOMAIN_NAME }} \
-            --container_image_hash ${{ inputs.CONTAINER_IMAGE_DIGEST }} \
-            --role_arn ${{ secrets.CLOUDFORMATION_DEPLOYER_ROLE_ARN }} \
-            --web_application_server_secrets_arn ${{ secrets.APPLICATION_SERVER_SECRETS_ARN }} \
-            --cloudformation_role_boundary ${{ secrets.CLOUDFORMATION_ROLE_BOUNDARY_ARN }} \
-            --production_domain_name "${{ vars.PRODUCTION_DOMAIN_NAME }}" \
-            --production_hosted_zone_id "${{ secrets.PRODUCTION_HOSTED_ZONE_ID }}" \
-            --web-application-firewall "${{ secrets.WEB_APPLICATION_FIREWALL_ARN }}"
+          bundle exec ruby deploy.rb --environment_type "$DEPLOY_ENVIRONMENT_TYPE" \
+            --site_type "$DEPLOY_SITE_TYPE" \
+            --region "$DEPLOY_AWS_REGION" \
+            --hosted_zone_id "$ROOT_HOSTED_ZONE_ID" \
+            --base_domain_name "$APPLICATION_BASE_DOMAIN" \
+            --subdomain_name "$APPLICATION_SUBDOMAIN_NAME" \
+            --container_image_hash "$CONTAINER_IMAGE_DIGEST" \
+            --role_arn "$CLOUDFORMATION_DEPLOYER_ROLE_ARN" \
+            --web_application_server_secrets_arn "$APPLICATION_SERVER_SECRETS_ARN" \
+            --cloudformation_role_boundary "$CLOUDFORMATION_ROLE_BOUNDARY_ARN" \
+            --production_domain_name "$PRODUCTION_DOMAIN_NAME" \
+            --production_hosted_zone_id "$PRODUCTION_HOSTED_ZONE_ID" \
+            --web-application-firewall "$WEB_APPLICATION_FIREWALL_ARN"
 
   ui-tests:
     runs-on: ubuntu-24.04
