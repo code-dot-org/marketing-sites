@@ -1,0 +1,84 @@
+{
+  "sys": {
+    "id": "stateOfDigitalFluencyData"
+  },
+  "name": "State of Digital Fluency Data",
+  "description": "PROPOSED, not yet created. Machine-written envelope around validated State of Digital Fluency JSON. Written as a draft by the SODF GitHub Actions pipeline; do not edit by hand. Publish after reviewing on a preview host.",
+  "displayField": "title",
+  "fields": [
+    {
+      "id": "title",
+      "name": "Title",
+      "type": "Symbol",
+      "required": true,
+      "localized": false,
+      "validations": [{"size": {"max": 255}}]
+    },
+    {
+      "id": "payload",
+      "name": "Payload (validated JSON)",
+      "type": "Object",
+      "required": true,
+      "localized": false,
+      "validations": []
+    },
+    {
+      "id": "schemaVersion",
+      "name": "Schema version",
+      "type": "Symbol",
+      "required": true,
+      "localized": false,
+      "validations": [{"size": {"max": 64}}]
+    },
+    {
+      "id": "dataAsOf",
+      "name": "Data as of",
+      "type": "Date",
+      "required": true,
+      "localized": false,
+      "validations": []
+    },
+    {
+      "id": "sourceSpreadsheetId",
+      "name": "Source spreadsheet ID",
+      "type": "Symbol",
+      "required": true,
+      "localized": false,
+      "validations": [{"size": {"max": 255}}]
+    },
+    {
+      "id": "sourceRevision",
+      "name": "Source revision",
+      "type": "Symbol",
+      "required": true,
+      "localized": false,
+      "validations": [{"size": {"max": 255}}]
+    },
+    {
+      "id": "warnings",
+      "name": "Run warnings",
+      "type": "Array",
+      "required": false,
+      "localized": false,
+      "validations": [{"size": {"max": 50}}],
+      "items": {
+        "type": "Symbol",
+        "validations": [{"size": {"max": 255}}]
+      }
+    },
+    {
+      "id": "runUrl",
+      "name": "Pipeline run URL",
+      "type": "Symbol",
+      "required": false,
+      "localized": false,
+      "validations": [
+        {
+          "regexp": {
+            "pattern": "^https://github\\.com/code-dot-org/marketing-sites/actions/runs/\\d+$"
+          }
+        }
+      ]
+    }
+  ]
+}
