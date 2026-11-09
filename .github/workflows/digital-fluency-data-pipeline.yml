@@ -63,8 +63,6 @@ jobs:
       - name: Read sheet, transform, validate
         env:
           DIGITAL_FLUENCY_SPREADSHEET_ID: ${{ vars.DIGITAL_FLUENCY_SPREADSHEET_ID }}
-          DIGITAL_FLUENCY_RANGES: ${{ vars.DIGITAL_FLUENCY_RANGES }}
-          DIGITAL_FLUENCY_HEADER_ROW: ${{ vars.DIGITAL_FLUENCY_HEADER_ROW || '2' }}
         run: python -m digital_fluency build --output "$RUNNER_TEMP/digital-fluency-envelope.json"
 
       - name: Write draft to Contentful

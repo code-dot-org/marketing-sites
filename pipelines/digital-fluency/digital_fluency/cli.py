@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 from typing import Any, Sequence
 
-from . import contentful, sheets, transform, validate
+from . import config, contentful, sheets, transform, validate
 from .errors import PipelineError
 
 ENVELOPE_TITLE = "State of Digital Fluency data"
@@ -32,16 +32,13 @@ def _env(name: str, default: str = "") -> str:
     return os.environ.get(name, default).strip()
 
 
-def _ranges_from_env() -> list[str]:
-    return [r.strip() for r in _env("DIGITAL_FLUENCY_RANGES").split(",") if r.strip()]
-
-
-def _header_row_from_env() -> int:
-    raw = _env("DIGITAL_FLUENCY_HEADER_ROW", "2")
-    try:
-        return int(raw)
-    except ValueError as exc:
-        raise PipelineError(f"DIGITAL_FLUENCY_HEADER_ROW must be an integer, got '{raw}'.") from exc
+def _ranges() -> list[str]:
+    """Ranges from config.py, or a local DIGITAL_FLUENCY_RANGES override."""
+    override = [r.strip() for r in _env("DIGITAL_FLUENCY_RANGES").split(",") if r.strip()]
+    if override:
+        print(f"Using DIGITAL_FLUENCY_RANGES override: {override}", file=sys.stderr)
+        return override
+    return list(config.SHEET_RANGES)
 
 
 def _run_url() -> str | None:
@@ -118,8 +115,8 @@ def cmd_describe(_args: argparse.Namespace) -> int:
 def cmd_build(args: argparse.Namespace) -> int:
     extract = sheets.read_sheet(
         spreadsheet_id=_env("DIGITAL_FLUENCY_SPREADSHEET_ID"),
-        ranges=_ranges_from_env(),
-        header_row=_header_row_from_env(),
+        ranges=_ranges(),
+        header_row=config.DEFAULT_HEADER_ROW,
         quota_project_id=_env("GOOGLE_CLOUD_QUOTA_PROJECT") or None,
     )
     payload = transform.build_payload(extract)

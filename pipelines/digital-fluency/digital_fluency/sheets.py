@@ -122,7 +122,7 @@ def fetch_ranges(
     Returns the API's ``valueRanges`` list, in the same order as ``ranges``.
     """
     if not ranges:
-        raise PipelineError("No ranges configured. Set DIGITAL_FLUENCY_RANGES.")
+        raise PipelineError("No ranges configured. See digital_fluency/config.py.")
     url = f"{SHEETS_API_BASE}/{quote(spreadsheet_id, safe='')}/values:batchGet"
     response = session.get(
         url,

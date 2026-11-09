@@ -21,6 +21,7 @@ only.
 
 | Path                                                    | What                                                                |
 | ------------------------------------------------------- | ------------------------------------------------------------------- |
+| `digital_fluency/config.py`                             | Which sheet ranges to read and their header rows                    |
 | `digital_fluency/sheets.py`                             | Google auth (ADC) + named-range reader; maps columns by header name |
 | `digital_fluency/transform.py`                          | **Placeholder**: swap in the real scoring here                      |
 | `schema/digital-fluency-payload.schema.json`            | Payload contract (POC). Changes need engineering review             |
@@ -50,16 +51,19 @@ export GOOGLE_CLOUD_QUOTA_PROJECT=marketing-sites-gdrive
 export DIGITAL_FLUENCY_SPREADSHEET_ID=<id from the sheet URL>
 python -m digital_fluency describe            # lists tabs + named ranges, no values
 
-# Named ranges or A1 ranges, comma-separated. `@N` = header row within that range.
-export DIGITAL_FLUENCY_RANGES="'State Data 2026'!A:AL@2,'Reference - Tiers'!A:C@1"
-export DIGITAL_FLUENCY_HEADER_ROW=2                    # default when a range has no @N
-python -m digital_fluency build --output out/envelope.json
+python -m digital_fluency build --output out/envelope.json  # reads config.py ranges
+
+# Optional, local only: try other ranges without editing config.py.
+# Named or A1 ranges, comma-separated; `@N` = header row within that range.
+# DIGITAL_FLUENCY_RANGES="'State Data 2026'!A:F@2" python -m digital_fluency build --output out/try.json
 ```
 
 ### The real sheet today (checked read-only on 2026-11-09)
 
-"CodeAI Digital Sciences — State Data 2026" has **no named ranges yet**. Use the
-A1 ranges above until the Advocacy team adds them.
+"CodeAI Digital Sciences — State Data 2026" has **no named ranges yet**, so
+`digital_fluency/config.py` uses A1 ranges until the Advocacy team adds them.
+The ranges are in code, not GitHub settings, because the transform depends on
+the sheet's structure. A range change gets reviewed with the code that reads it.
 
 | Tab                 | Layout                                                                                          | Use                 |
 | ------------------- | ----------------------------------------------------------------------------------------------- | ------------------- |
@@ -71,9 +75,9 @@ Things to note:
 
 - **Proposed named ranges.** Ask the Advocacy team to add `digital_fluency_state_data`
   (`'State Data 2026'!A2:AL`) and `digital_fluency_tiers` (`'Reference - Tiers'!A1:C`).
-  Both start at their header row, so set `DIGITAL_FLUENCY_RANGES=digital_fluency_state_data,digital_fluency_tiers`
-  and `DIGITAL_FLUENCY_HEADER_ROW=1`. After that, moving the tabs or columns won't break the
-  read.
+  Both start at their header row, so `config.py` would become
+  `digital_fluency_state_data@1` and `digital_fluency_tiers@1`. After that,
+  moving the tabs or columns won't break the read.
 - **Inconsistent headers.** Columns A and B use human labels in row 2
   (`State Name`, `Postal`), not snake_case machine names.
 - **Prose in the sheet.** The narrative columns (`overview`, `strengths`, `gaps`,
@@ -97,9 +101,8 @@ To replace the placeholder with real scoring, edit `transform.build_payload` and
 
 | Variable                                         | Where                         | Notes                                                                                               |
 | ------------------------------------------------ | ----------------------------- | --------------------------------------------------------------------------------------------------- |
-| `DIGITAL_FLUENCY_SPREADSHEET_ID`                 | env / GitHub var              | Sheet ID                                                                                            |
-| `DIGITAL_FLUENCY_RANGES`                         | env / GitHub var              | Comma-separated named or A1 ranges, each optionally `@N`                                            |
-| `DIGITAL_FLUENCY_HEADER_ROW`                     | env / GitHub var              | Default `2`                                                                                         |
+| `DIGITAL_FLUENCY_SPREADSHEET_ID`                 | env / GitHub var              | Sheet ID. A variable, not code, so the public repo doesn't publish an internal sheet's ID           |
+| `DIGITAL_FLUENCY_RANGES`                         | local only                    | Optional override of `config.py` ranges; ignored in Actions                                         |
 | `GOOGLE_CLOUD_QUOTA_PROJECT`                     | local only                    | Not needed in Actions                                                                               |
 | `DIGITAL_FLUENCY_GCP_WORKLOAD_IDENTITY_PROVIDER` | GitHub var                    | `projects/<number>/locations/global/workloadIdentityPools/github-actions/providers/marketing-sites` |
 | `DIGITAL_FLUENCY_GCP_SERVICE_ACCOUNT`            | GitHub var                    | `digital-fluency-sheet-reader@marketing-sites-gdrive.iam.gserviceaccount.com`                       |
