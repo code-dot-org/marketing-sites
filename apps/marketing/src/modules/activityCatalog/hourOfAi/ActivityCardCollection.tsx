@@ -21,8 +21,6 @@ const ActivityCardCollection: React.FC<{activities: Activity[]}> = ({
           <ActivityCard
             width="100%"
             titleColor="black"
-            showTopics={false}
-            showAges={false}
             showActivityType={false}
             showLength={false}
             title={activity.title}

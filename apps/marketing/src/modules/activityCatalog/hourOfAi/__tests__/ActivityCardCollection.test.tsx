@@ -17,7 +17,7 @@ const activity = {
   shortDescription: 'Train a model to sort pictures.',
   image: 'https://localhost/activity.png',
   organization: ['Example Org'],
-  ages: ['9-12'],
+  ages: ['6-8', '9-12'],
   topic: ['Artificial Intelligence'],
   activityType: ['Lesson plan'],
   length: ['One hour'],
@@ -49,14 +49,13 @@ describe('ActivityCardCollection', () => {
     });
   });
 
-  it('hides topics, ages, activity type and length', () => {
+  it('shows topics and merged ages, and hides activity type and length', () => {
     render(<ActivityCardCollection activities={[activity]} />);
-    for (const text of [
-      'Artificial Intelligence',
-      'Ages 9-12',
-      'Lesson plan',
-      'One hour',
-    ]) {
+    expect(screen.getAllByRole('listitem').map(li => li.textContent)).toEqual([
+      'Topics: Artificial Intelligence',
+      'Ages: 6-12',
+    ]);
+    for (const text of ['Lesson plan', 'One hour']) {
       expect(screen.queryByText(text)).toBeNull();
     }
   });

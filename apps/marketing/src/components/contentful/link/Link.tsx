@@ -48,6 +48,8 @@ export type LinkProps = RemoveMarginBottomProps & {
   inline?: boolean;
   /** Aria label for the link */
   ariaLabel?: EntryFields.Text;
+  /** Click handler, e.g. for analytics */
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
   /** Custom classname */
   className?: string | object;
 };
@@ -115,6 +117,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
   inline = false,
   removeMarginBottom,
   ariaLabel,
+  onClick,
   className,
 }) => {
   const theme = useTheme();
@@ -151,6 +154,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
         data-inline={inline ? 'true' : undefined}
         href={href}
         aria-label={ariaLabel}
+        onClick={onClick}
         target={isLinkExternal || openInNewTab ? '_blank' : undefined}
         rel={isLinkExternal || openInNewTab ? 'noopener noreferrer' : undefined}
         sx={{
@@ -179,6 +183,7 @@ const Link: React.FunctionComponent<LinkProps> = ({
       className={classNames(`link--size-${size}`, className)}
       href={href}
       aria-label={ariaLabel}
+      onClick={onClick}
       target={isLinkExternal || openInNewTab ? '_blank' : undefined}
       rel={isLinkExternal || openInNewTab ? 'noopener noreferrer' : undefined}
       sx={{

@@ -12,6 +12,7 @@ import {
   CardBadgeColor,
   parseCardBadgeColor,
 } from '@/components/contentful/badge/constants';
+import Link from '@/components/contentful/link';
 import NextImage from '@/components/nextImage/NextImage';
 import {useStatsigLogger} from '@/providers/statsig/client';
 import {EVENT} from '@/providers/statsig/statsigConstants';
@@ -22,10 +23,14 @@ import {HOUR_OF_AI_TEXT_FONT_STACK} from '@/themes/hourofai/typography/fontStack
 import {LinkEntry} from '@/types/contentful/entries/Link';
 
 import {cardWidthCss} from './cardWidth';
+import ClampedDescription from './ClampedDescription';
 import {formatAges} from './formatAges';
 
 const BLACK = 'var(--palette-black)';
 const LIGHT_BLUE = 'var(--palette-light-blue)';
+
+// Matches Unit Card's Course topics line.
+const MAX_TOPICS = 4;
 
 export interface ActivityCardProps {
   /** Activity title */
@@ -46,7 +51,7 @@ export interface ActivityCardProps {
   image?: string;
   /** Link entry for the tutorial ("Start") button */
   tutorialLink?: LinkEntry;
-  /** Link entry for the teacher resource ("Teacher notes") button */
+  /** Link entry for the teacher resource ("Teacher notes") text link */
   teacherLink?: LinkEntry;
   /** Tutorial ID, used as the analytics card id */
   tutorialId?: string;
@@ -115,22 +120,6 @@ const Title = styled('h4', {
   paddingBottom: '8px',
 }));
 
-const Description = styled('p')({
-  fontSize: '0.875rem',
-  lineHeight: '1.25rem',
-  margin: 0,
-  paddingBottom: '12px',
-});
-
-// Pinned to the card bottom so details and buttons line up across a row.
-const BottomBlock = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  alignSelf: 'stretch',
-  marginTop: 'auto',
-});
-
 const Details = styled('ul')({
   listStyle: 'none',
   margin: 0,
@@ -149,6 +138,15 @@ const Detail = styled('li')({
   fontWeight: 500,
 });
 
+// Like Unit Card's "Topics:" line: the label keeps 500, the list reads lighter.
+const DetailValue = styled('span')({
+  fontWeight: 400,
+});
+
+const TeacherLinkRow = styled('div')({
+  paddingBottom: '12px',
+});
+
 const VisuallyHidden = styled('span')({
   position: 'absolute',
   width: '1px',
@@ -158,18 +156,40 @@ const VisuallyHidden = styled('span')({
   whiteSpace: 'nowrap',
 });
 
-// Full-width buttons, stacked; specific to Activity Cards.
+// Pinned to the card bottom so the links, details and Start line up across
+// a row; the flexible gap opens under the description.
+const BottomBlock = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  alignSelf: 'stretch',
+  marginTop: 'auto',
+});
+
+// Full-width Start button; specific to Activity Cards.
 const ButtonRow = styled('div')({
   display: 'flex',
   flexDirection: 'column',
-  gap: '8px',
   alignSelf: 'stretch',
-  '& > a': {
+  '& > a, & > button': {
     width: '100%',
   },
 });
 
 const present = (values?: string[]) => (values ?? []).filter(Boolean);
+
+interface DetailItem {
+  label: string;
+  icon: string;
+  values: string[];
+  /** Shows "Label:" before the values instead of only to screen readers */
+  showLabel?: boolean;
+}
+
+const capTopics = (topics: string[]) => [
+  ...topics.slice(0, MAX_TOPICS),
+  ...(topics.length > MAX_TOPICS ? ['...'] : []),
+];
 
 const ActivityCard: React.FC<ActivityCardProps> = ({
   title,
@@ -211,11 +231,19 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   const {color: badgeFamily, isLight: badgeIsLight} = parseCardBadgeColor(
     organizationBadgeColor,
   );
+  const {span: ageSpan, audiences} = formatAges(ages);
   const details = [
+    showTopics && {
+      label: 'Topics',
+      icon: 'tags',
+      values: capTopics(present(topics)),
+      showLabel: true,
+    },
     showAges && {
-      label: 'Audience',
+      label: 'Ages',
       icon: 'user-group',
-      values: present([formatAges(ages) ?? '']),
+      values: present([ageSpan ?? '', ...audiences]),
+      showLabel: true,
     },
     showActivityType && {
       label: 'Activity type',
@@ -223,29 +251,27 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
       values: present(activityType),
     },
     showLength && {label: 'Length', icon: 'clock', values: present(length)},
-    showTopics && {label: 'Topics', icon: 'tag', values: present(topics)},
-  ].filter(
-    (d): d is {label: string; icon: string; values: string[]} =>
-      !!d && d.values.length > 0,
-  );
+  ].filter((d): d is DetailItem => !!d && d.values.length > 0);
+
+  const linkFields = (link?: LinkEntry) =>
+    link?.fields?.label && link.fields.primaryTarget ? link.fields : undefined;
+  const tutorial = showTutorialLink ? linkFields(tutorialLink) : undefined;
+  const teacher = showTeacherLink ? linkFields(teacherLink) : undefined;
 
   // Same events and payload as the CSforAll Card, so reporting carries over.
-  const buttons = [
-    showTutorialLink && {
-      link: tutorialLink,
-      type: 'primary' as const,
-      eventName: EVENT.CARD_PRIMARY_BUTTON_CLICKED,
-    },
-    showTeacherLink && {
-      link: teacherLink,
-      type: 'secondary' as const,
-      eventName: EVENT.CARD_SECONDARY_BUTTON_CLICKED,
-    },
-  ].flatMap(b =>
-    b && b.link?.fields?.label && b.link.fields.primaryTarget
-      ? [{...b, fields: b.link.fields}]
-      : [],
-  );
+  const logCardClick = (
+    eventName: string,
+    fields: NonNullable<LinkEntry['fields']>,
+  ) => {
+    if (tutorialId) {
+      logEvent(eventName, tutorialId, {
+        cardId: tutorialId,
+        cardTitle: title,
+        buttonText: fields.ariaLabel || '',
+        buttonTarget: fields.primaryTarget || '',
+      });
+    }
+  };
 
   return (
     <CardRoot className={className} width={cardWidthCss(width)}>
@@ -267,12 +293,30 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             />
           </BadgeRow>
         )}
-        {shortDescription && <Description>{shortDescription}</Description>}
-        {(details.length > 0 || buttons.length > 0) && (
+        {shortDescription && (
+          <ClampedDescription text={shortDescription} title={title} />
+        )}
+        {(teacher || details.length > 0 || tutorial) && (
           <BottomBlock>
+            {teacher && (
+              <TeacherLinkRow>
+                <Link
+                  href={teacher.primaryTarget}
+                  isLinkExternal={!!teacher.isThisAnExternalLink}
+                  ariaLabel={teacher.ariaLabel || undefined}
+                  size="s"
+                  removeMarginBottom
+                  onClick={() =>
+                    logCardClick(EVENT.CARD_SECONDARY_BUTTON_CLICKED, teacher)
+                  }
+                >
+                  {teacher.label}
+                </Link>
+              </TeacherLinkRow>
+            )}
             {details.length > 0 && (
               <Details>
-                {details.map(({label, icon, values}) => (
+                {details.map(({label, icon, values, showLabel}) => (
                   <Detail key={label}>
                     <FontAwesomeV6Icon
                       iconName={icon}
@@ -280,41 +324,39 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
                       style={{fontSize: '12px', width: '14px'}}
                       aria-hidden="true"
                     />
-                    <VisuallyHidden>{label}: </VisuallyHidden>
-                    {values.join(', ')}
+                    {showLabel ? (
+                      <span>
+                        {label}: <DetailValue>{values.join(', ')}</DetailValue>
+                      </span>
+                    ) : (
+                      <>
+                        <VisuallyHidden>{label}: </VisuallyHidden>
+                        {values.join(', ')}
+                      </>
+                    )}
                   </Detail>
                 ))}
               </Details>
             )}
-            {buttons.length > 0 && (
+            {tutorial && (
               <ButtonRow>
-                {buttons.map(({fields, type, eventName}) => (
-                  <LinkButton
-                    key={type}
-                    text={fields.label}
-                    type={type}
-                    color="purple"
-                    size="s"
-                    href={fields.primaryTarget}
-                    target={fields.isThisAnExternalLink ? '_blank' : '_self'}
-                    iconRight={
-                      fields.isThisAnExternalLink
-                        ? externalLinkIconProps
-                        : undefined
-                    }
-                    ariaLabel={fields.ariaLabel || undefined}
-                    analyticsCallback={() => {
-                      if (tutorialId) {
-                        logEvent(eventName, tutorialId, {
-                          cardId: tutorialId,
-                          cardTitle: title,
-                          buttonText: fields.ariaLabel || '',
-                          buttonTarget: fields.primaryTarget || '',
-                        });
-                      }
-                    }}
-                  />
-                ))}
+                <LinkButton
+                  text={tutorial.label}
+                  type="primary"
+                  color="purple"
+                  size="s"
+                  href={tutorial.primaryTarget}
+                  target={tutorial.isThisAnExternalLink ? '_blank' : '_self'}
+                  iconRight={
+                    tutorial.isThisAnExternalLink
+                      ? externalLinkIconProps
+                      : undefined
+                  }
+                  ariaLabel={tutorial.ariaLabel || undefined}
+                  analyticsCallback={() =>
+                    logCardClick(EVENT.CARD_PRIMARY_BUTTON_CLICKED, tutorial)
+                  }
+                />
               </ButtonRow>
             )}
           </BottomBlock>

@@ -92,7 +92,7 @@ export const ActivityCardContentfulComponentDefinition: ComponentDefinition = {
   category: '07: Activities',
   tooltip: {
     description:
-      'A compact card for one activity: image, organization badge, title, description, ages, activity type, length, topics, and tutorial and teacher buttons. Bind fields from an Activity entry.',
+      'A compact card for one activity: image, organization badge, title, description, topics, ages, activity type, length, a teacher notes link, and a tutorial button. Bind fields from an Activity entry.',
   },
   // Adding an empty array here so no default style options show in the Design tab.
   builtInStyles: [],
