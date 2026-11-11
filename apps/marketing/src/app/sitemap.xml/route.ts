@@ -12,6 +12,8 @@ import {isUnknownFieldError} from '@/contentful/errors';
 import {getAllEntriesForContentType} from '@/contentful/get-entries';
 import logger from '@/logger/contentful';
 import {CATALOG_PATH} from '@/modules/activityCatalog/hourOfAi/paths';
+import {getReport} from '@/modules/stateOfDigitalFluency/getReport';
+import {overviewPath, statePath} from '@/modules/stateOfDigitalFluency/paths';
 import {SeoMetadataEntry} from '@/types/contentful/entries/SeoMetadata';
 import {Entry} from '@/types/contentful/Entry';
 
@@ -104,6 +106,26 @@ function writeSitemapEntry(
 }
 
 /**
+ * Writes the State of Digital Fluency pages (not the printable ones). A
+ * report failure is logged and skipped so it never fails the sitemap.
+ */
+async function writeReportEntries(sitemapStream: SitemapStream) {
+  try {
+    const report = await getReport({isDraft: false});
+    if (!report) {
+      return;
+    }
+    writeSitemapEntry(sitemapStream, overviewPath());
+    for (const state of report.data.states) {
+      const slug = state.slug ?? state.postal.toLowerCase();
+      writeSitemapEntry(sitemapStream, statePath(slug));
+    }
+  } catch (error) {
+    logger.error(`Failed to add State of Digital Fluency pages: ${error}`);
+  }
+}
+
+/**
  * GET /sitemap.xml
  * Returns a sitemap for the site by querying Contentful for all experience entries and filtering out ones that are
  * excluded from indexing.
@@ -165,6 +187,11 @@ export async function GET(request: Request) {
   // Hour of AI activity catalog
   if (brand === Brand.HOUR_OF_AI) {
     writeSitemapEntry(sitemapStream, CATALOG_PATH);
+  }
+
+  // State of Digital Fluency: listed only once the report is published.
+  if (brand === Brand.CODE_DOT_ORG) {
+    await writeReportEntries(sitemapStream);
   }
 
   sitemapStream.end();

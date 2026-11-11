@@ -2,11 +2,15 @@ import {STALE_WHILE_REVALIDATE_ONE_DAY} from '@/cache/constants';
 import {getStage} from '@/config/stage';
 import {getContentfulClient} from '@/contentful/client';
 import {getAllEntriesForContentType} from '@/contentful/get-entries';
+import {getReport} from '@/modules/stateOfDigitalFluency/getReport';
 
 import {GET} from '../route';
 
 jest.mock('@/contentful/client');
 jest.mock('@/contentful/get-entries');
+jest.mock('@/modules/stateOfDigitalFluency/getReport', () => ({
+  getReport: jest.fn(),
+}));
 jest.mock('@tinyhttp/etag', () => ({
   eTag: jest.fn(() => 'mock-etag'),
 }));
@@ -289,5 +293,71 @@ describe('GET /sitemap.xml', () => {
     expect(body).not.toContain('/en-US/hour-of-code/activities');
     // The catalog has no prefix of its own.
     expect(body).not.toContain('/en-US/hour-of-ai/activities');
+  });
+
+  describe('State of Digital Fluency', () => {
+    const report = {
+      data: {
+        meta: {},
+        national: {},
+        states: [
+          {postal: 'AL', name: 'Alabama', slug: 'al'},
+          {postal: 'WY', name: 'Wyoming'},
+        ],
+      },
+      dataAsOf: '2026-11-09',
+      warnings: [],
+    };
+
+    beforeEach(() => {
+      (getContentfulClient as jest.Mock).mockReturnValue({});
+      (getAllEntriesForContentType as jest.Mock).mockResolvedValue([
+        {fields: {slug: '/test'}, sys: {updatedAt: '2024-01-01T00:00:00Z'}},
+      ]);
+    });
+
+    it('lists the report pages in every locale once published', async () => {
+      (getReport as jest.Mock).mockResolvedValue(report);
+
+      const body = await (await GET(mockRequest())).text();
+
+      expect(getReport).toHaveBeenCalledWith({isDraft: false});
+      for (const locale of ['en-US', 'fr']) {
+        expect(body).toContain(`/${locale}/state-of-digital-fluency</loc>`);
+        expect(body).toContain(`/${locale}/state-of-digital-fluency/al</loc>`);
+        expect(body).toContain(`/${locale}/state-of-digital-fluency/wy</loc>`);
+      }
+      expect(body).not.toContain('/report</loc>');
+      expect(body).not.toContain('/rankings</loc>');
+    });
+
+    it('omits the report until it is published', async () => {
+      (getReport as jest.Mock).mockResolvedValue(null);
+
+      const body = await (await GET(mockRequest())).text();
+
+      expect(body).not.toContain('state-of-digital-fluency');
+      expect(body).toContain('/en-US/test</loc>');
+    });
+
+    it('never lists the report on other brands', async () => {
+      (getReport as jest.Mock).mockResolvedValue(report);
+
+      const body = await (
+        await GET(mockRequest('hourofai.marketing-sites.code.org'))
+      ).text();
+
+      expect(getReport).not.toHaveBeenCalled();
+      expect(body).not.toContain('state-of-digital-fluency');
+    });
+
+    it('still serves the sitemap when the report fetch fails', async () => {
+      (getReport as jest.Mock).mockRejectedValue(new Error('shape'));
+
+      const response = await GET(mockRequest());
+
+      expect(response.status).toBe(200);
+      expect(await response.text()).toContain('/en-US/test</loc>');
+    });
   });
 });

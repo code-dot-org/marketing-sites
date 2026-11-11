@@ -181,6 +181,9 @@ See [docs/ui-convention.md](docs/ui-convention.md).
 
 ## Active Technologies
 
+- TypeScript 5.5 on Node 22, React 18.3, Next.js 15.4 App Router + `@mui/material`, `@mui/x-charts` 8.29.3, `zod` (shape check); first-party SVG US map generated from `us-atlas` (014-state-digital-fluency)
+- Reads the Contentful `reportData` entry written by the spec 013 pipeline. No new runtime storage. (014-state-digital-fluency)
+
 - TypeScript ~5.x, React 18, Next.js App Router (existing marketing app) + `@mui/material` (Box, Typography), `@contentful/experiences-sdk-react` (ComponentDefinition, editor properties), `@next/third-parties/google` (`sendGAEvent`, already used by not-found), the existing marketing `Link` component and `useSectionBackground`. No new dependencies. (012-auto-download)
 
 - TypeScript 5.x / React 18 (Next.js App Router) + `@mui/material` (Typography, Box), `@contentful/experiences-sdk-react` (ComponentDefinition), `@code-dot-org/component-library/fontAwesomeV6Icon`; internal `@/components/common/colors`, `@/themes/code.org/typography/tokens`, `@/themes/code.org/typography/fontStack`, `@/components/contentful/section/SectionBackgroundContext` (010-custom-text)
