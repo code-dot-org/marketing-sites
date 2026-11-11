@@ -115,6 +115,11 @@ export const ActivityCardContentfulComponentDefinition: ComponentDefinition = {
       'Link',
       "Bind the Activity's Secondary Link field.",
     ),
+    technologyClassroom: entryField(
+      'Classroom Technology',
+      'Array',
+      "Bind the Activity's Classroom Technology field. Unplugged activities ask for a student count on Start.",
+    ),
     tutorialId: entryField(
       'Tutorial ID',
       'Text',

@@ -128,6 +128,27 @@ export const LongDescription: Story = {
   },
 };
 
+// Start asks for a student count; the dialog renders in a portal.
+export const Unplugged: Story = {
+  args: {...mockArgs, technologyClassroom: ['Unplugged']},
+  render: args => <ActivityCard {...args} />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', {name: /Start/}));
+    const page = within(canvasElement.ownerDocument.body);
+    const dialog = await page.findByRole('dialog');
+    await expect(dialog).toBeInTheDocument();
+    const select = page.getByLabelText('Number of students');
+    await expect(select.querySelectorAll('option')).toHaveLength(61);
+    await expect(
+      page.getByRole('button', {name: 'Start activity'}),
+    ).toBeDisabled();
+    await expect(
+      page.getByRole('button', {name: 'Skip to activity'}),
+    ).toBeEnabled();
+  },
+};
+
 export const Placeholder: Story = {
   render: () => <ActivityCard />,
 };

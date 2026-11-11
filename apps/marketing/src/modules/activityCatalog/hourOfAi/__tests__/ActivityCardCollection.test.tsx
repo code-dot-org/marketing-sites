@@ -21,6 +21,7 @@ const activity = {
   topic: ['Artificial Intelligence'],
   activityType: ['Lesson plan'],
   length: ['One hour'],
+  technologyClassroom: ['Computers'],
   tutorialID: 'ml-magic',
   primaryLinkRef: link('Start', 'https://example.org/start'),
   secondaryLinkRef: link('Teacher notes', 'https://example.org/notes'),
@@ -58,6 +59,18 @@ describe('ActivityCardCollection', () => {
     for (const text of ['Lesson plan', 'One hour']) {
       expect(screen.queryByText(text)).toBeNull();
     }
+  });
+
+  it('asks unplugged activities for a student count on Start', () => {
+    render(
+      <ActivityCardCollection
+        activities={[{...activity, technologyClassroom: ['Unplugged']}]}
+      />,
+    );
+    expect(screen.getByRole('button', {name: /Start/})).toHaveAttribute(
+      'aria-haspopup',
+      'dialog',
+    );
   });
 
   it('renders without a teacher link', () => {

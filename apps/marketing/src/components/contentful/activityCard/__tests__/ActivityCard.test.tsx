@@ -228,6 +228,93 @@ describe('ActivityCard', () => {
     });
   });
 
+  describe('unplugged activities', () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
+    const unplugged = {
+      ...defaultProps,
+      technologyClassroom: ['Unplugged', 'No computers or devices'],
+    };
+    const startEvents = () =>
+      mockLogEvent.mock.calls.filter(
+        ([name]) => name === EVENT.UNPLUGGED_ACTIVITY_STARTED,
+      );
+
+    beforeEach(() => openSpy.mockClear());
+    afterAll(() => openSpy.mockRestore());
+
+    it('opens a student-count dialog instead of the tutorial', () => {
+      render(<ActivityCard {...unplugged} />);
+      expect(screen.queryByRole('link', {name: /Start/})).toBeNull();
+      fireEvent.click(screen.getByRole('button', {name: /Start/}));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      const select = screen.getByLabelText('Number of students');
+      // A placeholder plus 1-60.
+      expect(select.querySelectorAll('option')).toHaveLength(61);
+      expect(openSpy).not.toHaveBeenCalled();
+      expect(mockLogEvent).toHaveBeenCalledWith(
+        EVENT.CARD_PRIMARY_BUTTON_CLICKED,
+        'ml-magic',
+        expect.anything(),
+      );
+    });
+
+    it('logs the student count, then opens the tutorial', () => {
+      render(<ActivityCard {...unplugged} />);
+      fireEvent.click(screen.getByRole('button', {name: /Start/}));
+      const startButton = screen.getByRole('button', {name: 'Start activity'});
+      expect(startButton).toBeDisabled();
+      fireEvent.change(screen.getByLabelText('Number of students'), {
+        target: {value: '24'},
+      });
+      fireEvent.click(startButton);
+      expect(startEvents()).toEqual([
+        [
+          EVENT.UNPLUGGED_ACTIVITY_STARTED,
+          'ml-magic',
+          {
+            tutorialId: 'ml-magic',
+            tutorialTitle: 'Machine Learning Magic',
+            submittedAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
+            studentCount: '24',
+            skipped: 'false',
+          },
+        ],
+      ]);
+      expect(openSpy).toHaveBeenCalledWith(
+        'https://example.org/start',
+        '_blank',
+        'noopener,noreferrer',
+      );
+    });
+
+    it('lets the user skip straight to the tutorial', () => {
+      render(<ActivityCard {...unplugged} />);
+      fireEvent.click(screen.getByRole('button', {name: /Start/}));
+      fireEvent.click(screen.getByRole('button', {name: 'Skip to activity'}));
+      expect(startEvents()[0][2]).toMatchObject({
+        studentCount: '1',
+        skipped: 'true',
+      });
+      expect(openSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('closes without starting', () => {
+      render(<ActivityCard {...unplugged} />);
+      fireEvent.click(screen.getByRole('button', {name: /Start/}));
+      fireEvent.click(screen.getByRole('button', {name: 'Close'}));
+      expect(startEvents()).toHaveLength(0);
+      expect(openSpy).not.toHaveBeenCalled();
+    });
+
+    it('keeps the plain link for other activities', () => {
+      render(
+        <ActivityCard {...defaultProps} technologyClassroom={['Computers']} />,
+      );
+      expect(screen.getByRole('link', {name: /Start/})).toBeInTheDocument();
+      expect(screen.queryByRole('button', {name: /Start/})).toBeNull();
+    });
+  });
+
   it('uses the authored width, or auto', () => {
     const {container, rerender} = render(
       <ActivityCard {...defaultProps} width="325px" />,

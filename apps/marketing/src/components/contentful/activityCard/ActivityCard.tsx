@@ -1,9 +1,9 @@
 'use client';
 
 import {styled} from '@mui/material/styles';
-import React from 'react';
+import React, {useState} from 'react';
 
-import {LinkButton} from '@code-dot-org/component-library/button';
+import {Button, LinkButton} from '@code-dot-org/component-library/button';
 import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon';
 
 import {externalLinkIconProps} from '@/components/common/constants';
@@ -25,12 +25,17 @@ import {LinkEntry} from '@/types/contentful/entries/Link';
 import {cardWidthCss} from './cardWidth';
 import ClampedDescription from './ClampedDescription';
 import {formatAges} from './formatAges';
+import UnpluggedStartDialog from './UnpluggedStartDialog';
 
 const BLACK = 'var(--palette-black)';
 const LIGHT_BLUE = 'var(--palette-light-blue)';
 
+// Unplugged starts can't be counted by a pixel, so Start asks for a count.
+const UNPLUGGED = 'unplugged';
 // Matches Unit Card's Course topics line.
 const MAX_TOPICS = 4;
+// Skipping still counts the one person starting the activity.
+const SKIPPED_STUDENT_COUNT = 1;
 
 export interface ActivityCardProps {
   /** Activity title */
@@ -53,6 +58,8 @@ export interface ActivityCardProps {
   tutorialLink?: LinkEntry;
   /** Link entry for the teacher resource ("Teacher notes") text link */
   teacherLink?: LinkEntry;
+  /** Classroom Technology values; "Unplugged" asks for a student count on Start */
+  technologyClassroom?: string[];
   /** Tutorial ID, used as the analytics card id */
   tutorialId?: string;
   showOrganization?: boolean;
@@ -191,6 +198,14 @@ const capTopics = (topics: string[]) => [
   ...(topics.length > MAX_TOPICS ? ['...'] : []),
 ];
 
+const openLink = (href: string, external: boolean) => {
+  if (external) {
+    window.open(href, '_blank', 'noopener,noreferrer');
+  } else {
+    window.location.assign(href);
+  }
+};
+
 const ActivityCard: React.FC<ActivityCardProps> = ({
   title,
   shortDescription,
@@ -202,6 +217,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   image,
   tutorialLink,
   teacherLink,
+  technologyClassroom,
   tutorialId,
   showOrganization = true,
   showAges = true,
@@ -216,6 +232,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   className,
 }) => {
   const {logEvent} = useStatsigLogger();
+  const [unpluggedDialogOpen, setUnpluggedDialogOpen] = useState(false);
 
   // Show placeholder text until a content entry is bound
   if (!title) {
@@ -257,6 +274,9 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     link?.fields?.label && link.fields.primaryTarget ? link.fields : undefined;
   const tutorial = showTutorialLink ? linkFields(tutorialLink) : undefined;
   const teacher = showTeacherLink ? linkFields(teacherLink) : undefined;
+  const isUnplugged = present(technologyClassroom).some(
+    value => value.trim().toLowerCase() === UNPLUGGED,
+  );
 
   // Same events and payload as the CSforAll Card, so reporting carries over.
   const logCardClick = (
@@ -271,6 +291,21 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
         buttonTarget: fields.primaryTarget || '',
       });
     }
+  };
+
+  // Statsig adds the stable ID and event time; submittedAt keeps the time
+  // in the payload in case reporting moves off Statsig.
+  const startUnplugged = (studentCount?: number) => {
+    setUnpluggedDialogOpen(false);
+    if (!tutorial) return;
+    logEvent(EVENT.UNPLUGGED_ACTIVITY_STARTED, tutorialId || title, {
+      tutorialId: tutorialId || '',
+      tutorialTitle: title,
+      submittedAt: new Date().toISOString(),
+      studentCount: String(studentCount ?? SKIPPED_STUDENT_COUNT),
+      skipped: String(studentCount === undefined),
+    });
+    openLink(tutorial.primaryTarget, !!tutorial.isThisAnExternalLink);
   };
 
   return (
@@ -340,26 +375,49 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             )}
             {tutorial && (
               <ButtonRow>
-                <LinkButton
-                  text={tutorial.label}
-                  type="primary"
-                  color="purple"
-                  size="s"
-                  href={tutorial.primaryTarget}
-                  target={tutorial.isThisAnExternalLink ? '_blank' : '_self'}
-                  iconRight={
-                    tutorial.isThisAnExternalLink
-                      ? externalLinkIconProps
-                      : undefined
-                  }
-                  ariaLabel={tutorial.ariaLabel || undefined}
-                  analyticsCallback={() =>
-                    logCardClick(EVENT.CARD_PRIMARY_BUTTON_CLICKED, tutorial)
-                  }
-                />
+                {isUnplugged ? (
+                  <Button
+                    text={tutorial.label}
+                    type="primary"
+                    color="purple"
+                    size="s"
+                    ariaLabel={tutorial.ariaLabel || undefined}
+                    aria-haspopup="dialog"
+                    onClick={() => {
+                      logCardClick(EVENT.CARD_PRIMARY_BUTTON_CLICKED, tutorial);
+                      setUnpluggedDialogOpen(true);
+                    }}
+                  />
+                ) : (
+                  <LinkButton
+                    text={tutorial.label}
+                    type="primary"
+                    color="purple"
+                    size="s"
+                    href={tutorial.primaryTarget}
+                    target={tutorial.isThisAnExternalLink ? '_blank' : '_self'}
+                    iconRight={
+                      tutorial.isThisAnExternalLink
+                        ? externalLinkIconProps
+                        : undefined
+                    }
+                    ariaLabel={tutorial.ariaLabel || undefined}
+                    analyticsCallback={() =>
+                      logCardClick(EVENT.CARD_PRIMARY_BUTTON_CLICKED, tutorial)
+                    }
+                  />
+                )}
               </ButtonRow>
             )}
           </BottomBlock>
+        )}
+        {isUnplugged && tutorial && (
+          <UnpluggedStartDialog
+            open={unpluggedDialogOpen}
+            activityTitle={title}
+            onStart={startUnplugged}
+            onClose={() => setUnpluggedDialogOpen(false)}
+          />
         )}
       </Content>
     </CardRoot>
