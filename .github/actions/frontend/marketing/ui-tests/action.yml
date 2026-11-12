@@ -42,19 +42,30 @@ runs:
   using: composite
 
   steps:
+    # Inputs are passed through env and expanded by the shell, never interpolated with `${{ }}`
+    # inside `run:`. Some inputs (e.g. PR_HEAD_REF, SITE_TYPE) originate from branch names or
+    # workflow_dispatch inputs and must not be able to inject shell.
     - name: Prepare UI Test Environment
       shell: bash
       working-directory: ./apps/marketing
+      env:
+        INPUT_APPLITOOLS_API_KEY: ${{ inputs.APPLITOOLS_API_KEY }}
+        INPUT_DRAFT_MODE_TOKEN: ${{ inputs.DRAFT_MODE_TOKEN }}
+        INPUT_ENVIRONMENT_TYPE: ${{ inputs.ENVIRONMENT_TYPE }}
+        INPUT_APPLICATION_BASE_ADDRESS: ${{ inputs.APPLICATION_BASE_ADDRESS }}
+        INPUT_BRANCHED_TESTING_ENABLED: ${{ inputs.BRANCHED_TESTING_ENABLED }}
+        INPUT_PR_HEAD_REF: ${{ inputs.PR_HEAD_REF }}
+        INPUT_SITE_TYPE: ${{ inputs.SITE_TYPE }}
       run: |
-        echo "APPLITOOLS_API_KEY=${{ inputs.APPLITOOLS_API_KEY }}
-        DRAFT_MODE_TOKEN=${{ inputs.DRAFT_MODE_TOKEN }}
+        echo "APPLITOOLS_API_KEY=$INPUT_APPLITOOLS_API_KEY
+        DRAFT_MODE_TOKEN=$INPUT_DRAFT_MODE_TOKEN
         CI=true
-        STAGE=${{ inputs.ENVIRONMENT_TYPE }}
-        NEXT_PUBLIC_STAGE=${{ inputs.ENVIRONMENT_TYPE }}
-        APPLICATION_BASE_ADDRESS=${{ inputs.APPLICATION_BASE_ADDRESS }}
-        BRANCHED_TESTING_ENABLED=${{ inputs.BRANCHED_TESTING_ENABLED }}
-        PR_HEAD_REF=${{ inputs.PR_HEAD_REF }}
-        SITE_TYPE=${{ inputs.SITE_TYPE }}
+        STAGE=$INPUT_ENVIRONMENT_TYPE
+        NEXT_PUBLIC_STAGE=$INPUT_ENVIRONMENT_TYPE
+        APPLICATION_BASE_ADDRESS=$INPUT_APPLICATION_BASE_ADDRESS
+        BRANCHED_TESTING_ENABLED=$INPUT_BRANCHED_TESTING_ENABLED
+        PR_HEAD_REF=$INPUT_PR_HEAD_REF
+        SITE_TYPE=$INPUT_SITE_TYPE
         " >> .env
 
     - name: UI Tests
