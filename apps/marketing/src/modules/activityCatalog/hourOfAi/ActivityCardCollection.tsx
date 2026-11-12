@@ -21,8 +21,6 @@ const ActivityCardCollection: React.FC<{activities: Activity[]}> = ({
           <ActivityCard
             width="100%"
             titleColor="black"
-            showTopics={false}
-            showAges={false}
             showActivityType={false}
             showLength={false}
             title={activity.title}
@@ -35,6 +33,7 @@ const ActivityCardCollection: React.FC<{activities: Activity[]}> = ({
             image={activity.image}
             tutorialLink={parseLink(activity.primaryLinkRef)}
             teacherLink={parseLink(activity.secondaryLinkRef)}
+            technologyClassroom={activity.technologyClassroom.map(String)}
             tutorialId={activity.tutorialID}
           />
         </Grid>

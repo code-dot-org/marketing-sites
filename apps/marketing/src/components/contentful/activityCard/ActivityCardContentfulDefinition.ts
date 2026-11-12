@@ -92,7 +92,7 @@ export const ActivityCardContentfulComponentDefinition: ComponentDefinition = {
   category: '07: Activities',
   tooltip: {
     description:
-      'A compact card for one activity: image, organization badge, title, description, ages, activity type, length, topics, and tutorial and teacher buttons. Bind fields from an Activity entry.',
+      'A compact card for one activity: image, organization badge, title, description, topics, ages, activity type, length, a teacher notes link, and a tutorial button. Bind fields from an Activity entry.',
   },
   // Adding an empty array here so no default style options show in the Design tab.
   builtInStyles: [],
@@ -114,6 +114,11 @@ export const ActivityCardContentfulComponentDefinition: ComponentDefinition = {
       'Teacher Resource Link',
       'Link',
       "Bind the Activity's Secondary Link field.",
+    ),
+    technologyClassroom: entryField(
+      'Classroom Technology',
+      'Array',
+      "Bind the Activity's Classroom Technology field. Unplugged activities ask for a student count on Start.",
     ),
     tutorialId: entryField(
       'Tutorial ID',

@@ -32,6 +32,7 @@ type ActivityFields = {
   topic?: string[];
   activityType?: string[];
   length?: string[];
+  technologyClassroom?: string[];
   tutorialID?: string;
   // References arrive from the Experiences entity store as unresolved
   // {sys: {type: 'Link'}} stubs — resolved via resolveContentfulLink.
@@ -176,6 +177,7 @@ const ActivityCarousel: React.FC<ActivityCarouselProps> = ({
                 resolveContentfulLink<LinkEntry>(fields.secondaryLinkRef),
                 teacherLinkTextOverride,
               ),
+              technologyClassroom: fields.technologyClassroom,
               tutorialId: fields.tutorialID,
               showOrganization,
               showAges,

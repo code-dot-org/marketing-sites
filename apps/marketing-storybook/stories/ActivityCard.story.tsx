@@ -5,7 +5,7 @@ import ActivityCard, {
 } from '@/components/contentful/activityCard';
 import {Meta, StoryObj} from '@storybook/react';
 import {within} from '@testing-library/dom';
-import {expect} from 'storybook/test';
+import {expect, userEvent} from 'storybook/test';
 
 import ActivityCardMock from './__mocks__/ActivityCard.json';
 
@@ -106,6 +106,46 @@ export const FieldsHidden: Story = {
     await expect(
       canvas.queryByRole('link', {name: /Teacher notes/}),
     ).toBeNull();
+  },
+};
+
+// Descriptions over four lines clamp, with a Read more toggle.
+export const LongDescription: Story = {
+  args: {
+    ...mockArgs,
+    shortDescription:
+      'Train a model to sort pictures into groups, then test where it gets things wrong and talk with classmates about why that happens. Finish by designing a fairer data set and comparing the results with another team.',
+  },
+  render: args => <ActivityCard {...args} />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    // Appears once the overflow is measured after mount.
+    const toggle = await canvas.findByRole('button', {name: /Read more/});
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.click(toggle);
+    const less = canvas.getByRole('button', {name: /Read less/});
+    await expect(less).toHaveAttribute('aria-expanded', 'true');
+  },
+};
+
+// Start asks for a student count; the dialog renders in a portal.
+export const Unplugged: Story = {
+  args: {...mockArgs, technologyClassroom: ['Unplugged']},
+  render: args => <ActivityCard {...args} />,
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', {name: /Start/}));
+    const page = within(canvasElement.ownerDocument.body);
+    const dialog = await page.findByRole('dialog');
+    await expect(dialog).toBeInTheDocument();
+    const input = page.getByLabelText('Number of students');
+    await expect(input).toHaveAttribute('inputmode', 'numeric');
+    await expect(
+      page.getByRole('button', {name: 'Start activity'}),
+    ).toBeDisabled();
+    await expect(
+      page.getByRole('button', {name: 'Skip to activity'}),
+    ).toBeEnabled();
   },
 };
 

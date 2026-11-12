@@ -12,12 +12,19 @@ const parseAgeSpan = (value: string): [number, number] | undefined => {
   return under ? [0, Number(under[1])] : undefined;
 };
 
+export interface FormattedAges {
+  /** The merged age span, e.g. "6-12" or "12 and under" */
+  span?: string;
+  /** Non-age audiences, e.g. "Educators" */
+  audiences: string[];
+}
+
 /**
  * Collapses an activity's age bands into one span, e.g. ["9-12", "13-18",
- * "6-8"] → "Ages 6-18", like Unit Card's grade bands. Non-age audiences
- * ("Educators") follow the span.
+ * "6-8"] → "6-18", like Unit Card's grade bands. Non-age audiences
+ * ("Educators") are returned separately.
  */
-export function formatAges(ages?: string[]): string | undefined {
+export function formatAges(ages?: string[]): FormattedAges {
   const values = (ages ?? []).map(age => String(age).trim()).filter(Boolean);
   let min = Infinity;
   let max = -Infinity;
@@ -36,10 +43,9 @@ export function formatAges(ages?: string[]): string | undefined {
     max === -Infinity
       ? undefined
       : min === 0
-        ? `Ages ${max} and under`
+        ? `${max} and under`
         : min === max
-          ? `Age ${min}`
-          : `Ages ${min}-${max}`;
-  const parts = [span, ...audiences].filter(Boolean);
-  return parts.length ? parts.join(', ') : undefined;
+          ? `${min}`
+          : `${min}-${max}`;
+  return {span, audiences};
 }
