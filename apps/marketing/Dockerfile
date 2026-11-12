@@ -10,7 +10,6 @@ ARG NODE_IMAGE=node:26-trixie-slim
 
 FROM ${NODE_IMAGE} AS base
 
-# Node 25+ no longer bundles Corepack, which provides the Yarn version pinned by `packageManager` in package.json.
 # Keep in sync with .github/actions/frontend/setup/action.yml
 ARG COREPACK_VERSION=0.36.0
 RUN npm install --global corepack@${COREPACK_VERSION} && corepack enable

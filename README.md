@@ -45,7 +45,7 @@ that you're working on. (e.g. go to [packages/component-library/README.md](packa
 ### Prerequisites
 
 Use the Node.js version in [.nvmrc](.nvmrc) and ensure that [corepack](https://github.com/nodejs/corepack) is
-installed and enabled. Node.js 25+ no longer bundles it.
+installed and enabled.
 
 ```bash
 npm install --global corepack

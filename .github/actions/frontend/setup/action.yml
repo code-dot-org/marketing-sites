@@ -10,7 +10,6 @@ inputs:
 runs:
   using: composite
   steps:
-    # Node 25+ no longer bundles Corepack. Keep the version in sync with apps/marketing/Dockerfile.
     - name: Install and enable Corepack before setting up Node
       shell: bash
       run: npm install --global corepack@0.36.0 && corepack enable
