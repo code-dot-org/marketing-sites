@@ -44,9 +44,11 @@ that you're working on. (e.g. go to [packages/component-library/README.md](packa
 
 ### Prerequisites
 
-Ensure that [corepack](https://nodejs.org/api/corepack.html) is enabled.
+Use the Node.js version in [.nvmrc](.nvmrc) and ensure that [corepack](https://github.com/nodejs/corepack) is
+installed and enabled.
 
 ```bash
+npm install --global corepack
 corepack enable
 ```
 
