@@ -7,7 +7,6 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     container:
-      # Playwright 1.49's browser install hangs on Node 26; the image ships its browsers.
       image: mcr.microsoft.com/playwright:v1.49.1-noble
 
     steps:
