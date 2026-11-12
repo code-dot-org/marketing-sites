@@ -138,8 +138,8 @@ export const Unplugged: Story = {
     const page = within(canvasElement.ownerDocument.body);
     const dialog = await page.findByRole('dialog');
     await expect(dialog).toBeInTheDocument();
-    const select = page.getByLabelText('Number of students');
-    await expect(select.querySelectorAll('option')).toHaveLength(61);
+    const input = page.getByLabelText('Number of students');
+    await expect(input).toHaveAttribute('inputmode', 'numeric');
     await expect(
       page.getByRole('button', {name: 'Start activity'}),
     ).toBeDisabled();

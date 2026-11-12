@@ -247,9 +247,11 @@ describe('ActivityCard', () => {
       expect(screen.queryByRole('link', {name: /Start/})).toBeNull();
       fireEvent.click(screen.getByRole('button', {name: /Start/}));
       expect(screen.getByRole('dialog')).toBeInTheDocument();
-      const select = screen.getByLabelText('Number of students');
-      // A placeholder plus 1-60.
-      expect(select.querySelectorAll('option')).toHaveLength(61);
+      const input = screen.getByLabelText('Number of students');
+      expect(input).toHaveAttribute('inputmode', 'numeric');
+      // Only digits are kept.
+      fireEvent.change(input, {target: {value: '2a.4-'}});
+      expect(input).toHaveValue('24');
       expect(openSpy).not.toHaveBeenCalled();
       expect(mockLogEvent).toHaveBeenCalledWith(
         EVENT.CARD_PRIMARY_BUTTON_CLICKED,
@@ -292,7 +294,7 @@ describe('ActivityCard', () => {
       fireEvent.click(screen.getByRole('button', {name: /Start/}));
       fireEvent.click(screen.getByRole('button', {name: 'Skip to activity'}));
       expect(startEvents()[0][2]).toMatchObject({
-        studentCount: '1',
+        studentCount: '0',
         skipped: 'true',
       });
       expect(openSpy).toHaveBeenCalledTimes(1);

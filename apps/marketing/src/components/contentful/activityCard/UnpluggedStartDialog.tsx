@@ -11,9 +11,8 @@ import FontAwesomeV6Icon from '@code-dot-org/component-library/fontAwesomeV6Icon
 
 import {HOUR_OF_AI_TEXT_FONT_STACK} from '@/themes/hourofai/typography/fontStack';
 
-export const MAX_STUDENT_COUNT = 60;
-
-const STUDENT_COUNTS = Array.from({length: MAX_STUDENT_COUNT}, (_, i) => i + 1);
+// Keeps typos like an extra zero run from reaching the data.
+const MAX_DIGITS = 4;
 
 export interface UnpluggedStartDialogProps {
   open: boolean;
@@ -70,6 +69,8 @@ const UnpluggedStartDialog: React.FC<UnpluggedStartDialogProps> = ({
 }) => {
   const titleId = useId();
   const [studentCount, setStudentCount] = useState('');
+  const count = Number(studentCount);
+  const canStart = count >= 1;
 
   return (
     <Dialog
@@ -95,23 +96,24 @@ const UnpluggedStartDialog: React.FC<UnpluggedStartDialogProps> = ({
           Please share the number of students doing this activity unplugged.
         </Text>
         <TextField
-          select
           label="Number of students"
           value={studentCount}
-          onChange={e => setStudentCount(e.target.value)}
+          // Digits only; text + numeric keyboard avoids number inputs'
+          // e/./- entry and scroll-to-change.
+          onChange={e =>
+            setStudentCount(
+              e.target.value.replace(/\D/g, '').slice(0, MAX_DIGITS),
+            )
+          }
+          onKeyDown={e => {
+            if (e.key === 'Enter' && canStart) onStart(count);
+          }}
           size="small"
           fullWidth
-          slotProps={{select: {native: true}, inputLabel: {shrink: true}}}
-        >
-          <option value="" disabled>
-            Select a number
-          </option>
-          {STUDENT_COUNTS.map(count => (
-            <option key={count} value={count}>
-              {count}
-            </option>
-          ))}
-        </TextField>
+          slotProps={{
+            htmlInput: {inputMode: 'numeric', pattern: '[0-9]*'},
+          }}
+        />
         <Actions>
           <Button
             text="Skip to activity"
@@ -125,8 +127,8 @@ const UnpluggedStartDialog: React.FC<UnpluggedStartDialogProps> = ({
             type="primary"
             color="purple"
             size="s"
-            disabled={!studentCount}
-            onClick={() => onStart(Number(studentCount))}
+            disabled={!canStart}
+            onClick={() => onStart(count)}
           />
         </Actions>
       </Body>

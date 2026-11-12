@@ -34,8 +34,8 @@ const LIGHT_BLUE = 'var(--palette-light-blue)';
 const UNPLUGGED = 'unplugged';
 // Matches Unit Card's Course topics line.
 const MAX_TOPICS = 4;
-// Skipping still counts the one person starting the activity.
-const SKIPPED_STUDENT_COUNT = 1;
+// Skips log a zero count; the skipped flag tells them apart.
+const SKIPPED_STUDENT_COUNT = 0;
 
 export interface ActivityCardProps {
   /** Activity title */
