@@ -123,9 +123,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract static/ from pushed image
+        env:
+          IMAGE: ${{ needs.build-and-push-image.outputs.fullImageUri }}
+          NAME: extract-${{ github.run_id }}-${{ github.run_attempt }}
         run: |
-          IMAGE="${{ needs.build-and-push-image.outputs.fullImageUri }}"
-          NAME="extract-${{ github.run_id }}-${{ github.run_attempt }}"
           # Always clean up, even if docker cp fails — avoids name-collision on workflow retries.
           trap 'docker rm -f "$NAME" >/dev/null 2>&1 || true' EXIT
           docker pull "$IMAGE"
