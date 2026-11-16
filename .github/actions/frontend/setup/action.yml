@@ -10,9 +10,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Enable Corepack before setting up Node
+    - name: Install and enable Corepack before setting up Node
       shell: bash
-      run: corepack enable
+      run: npm install --global corepack@0.36.0 && corepack enable
 
     - name: Cache turborepo
       uses: rharkor/caching-for-turbo@a1c4079258ae08389be75b57d4d7a70f23c1c66d # v1.8

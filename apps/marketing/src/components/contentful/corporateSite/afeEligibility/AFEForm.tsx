@@ -51,7 +51,7 @@ const AFEForm: React.FC<AFEFormProps> = ({
   const {logEvent} = useStatsigClient();
 
   const getSessionFormData = () =>
-    typeof sessionStorage === 'undefined'
+    typeof window === 'undefined'
       ? {}
       : JSON.parse(sessionStorage.getItem(SESSION_STORAGE_KEY) || '{}');
 

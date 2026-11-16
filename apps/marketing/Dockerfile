@@ -5,8 +5,14 @@
 # Code.org marketing app.                                                         #
 ###################################################################################
 
-# See: docker/frontend/base/Dockerfile
-FROM ghcr.io/code-dot-org/frontend-base:latest AS base
+# Keep in sync with .nvmrc
+ARG NODE_IMAGE=node:26-trixie-slim
+
+FROM ${NODE_IMAGE} AS base
+
+# Keep in sync with .github/actions/frontend/setup/action.yml
+ARG COREPACK_VERSION=0.36.0
+RUN npm install --global corepack@${COREPACK_VERSION} && corepack enable
 
 ##############################################################################
 # Source Code Layer                                                          #
@@ -57,9 +63,6 @@ ENV TURBO_API=$TURBO_API
 ARG GIT_SHA
 ENV NEXT_PUBLIC_SENTRY_RELEASE=$GIT_SHA
 
-# Enable corepack
-RUN corepack enable
-
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
@@ -81,7 +84,7 @@ RUN yarn turbo run build
 # Output: Rootless execution env for the target app with minimal artifacts   #
 ##############################################################################
 
-FROM base AS runner
+FROM ${NODE_IMAGE} AS runner
 WORKDIR /app
 
 # When deploying Next.js behind a downstream proxy (e.g. a load-balancer like AWS ELB/ALB), it's important to configure
@@ -94,7 +97,8 @@ ENV KEEP_ALIVE_TIMEOUT 70000
 
 # Enable Node's native source-map support so server-side stack traces (SSR crashes, API routes, server actions)
 # are unminified before they reach Sentry. The .map files next to each compiled .js file are read on demand.
-ENV NODE_OPTIONS=--enable-source-maps
+# Disable Node's Web Storage globals: server sessionStorage is shared across every request the process serves.
+ENV NODE_OPTIONS="--enable-source-maps --no-webstorage"
 
 # Re-declare for the runner stage so the server process sees NEXT_PUBLIC_SENTRY_RELEASE at runtime. (Build-stage
 # ENVs don't propagate across FROM boundaries.) Also causes Next.js to inline the value into any build-time
@@ -102,9 +106,9 @@ ENV NODE_OPTIONS=--enable-source-maps
 ARG GIT_SHA
 ENV NEXT_PUBLIC_SENTRY_RELEASE=$GIT_SHA
 
-# Don't run production as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Don't run production as root. The UID/GID must match the EFS access point in cicd/3-app/template.yml.erb.
+RUN groupadd --system --gid 1001 nodejs
+RUN useradd --system --uid 1001 --gid nodejs nextjs
 USER nextjs
 
 # Automatically leverage output traces to reduce image size

@@ -33,6 +33,9 @@
     "typecheck": "turbo typecheck"
   },
   "prettier": "@code-dot-org/lint-config/prettier/index.mjs",
+  "resolutions": {
+    "extract-zip/yauzl": "^3.4.0"
+  },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
     "husky": "^9.1.7",
@@ -44,6 +47,6 @@
   },
   "packageManager": "yarn@4.6.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=26"
   }
 }
