@@ -71,6 +71,7 @@ describe('getSeoMetadata', () => {
       },
       openGraph: {
         type: 'website',
+        siteName: 'CodeAI',
         locale: 'en-US',
         title: 'Test Title',
         description: 'Test Description',
@@ -173,6 +174,17 @@ describe('getSeoMetadata', () => {
     );
 
     expect(result).not.toHaveProperty('keywords');
+  });
+
+  it('omits og:site_name for brands without one', () => {
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.HOUR_OF_AI,
+      'en-US',
+      'activities',
+    );
+
+    expect(result.openGraph?.siteName).toBeUndefined();
   });
 
   it('falls back to brand default OG image when ogImage is missing', () => {

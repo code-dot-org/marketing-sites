@@ -5,6 +5,7 @@ import {notFound} from 'next/navigation';
 
 import ContentEditorHelper from '@/components/contentEditorHelper';
 import {Brand} from '@/config/brand';
+import WebSiteJsonLd from '@/config/jsonLd/WebSiteJsonLd';
 import {getIcons} from '@/config/metadata/icons';
 import {getSiteVerification} from '@/config/metadata/siteVerification';
 import ExperiencePageLoader from '@/contentful/components/ExperiencePageLoader';
@@ -117,6 +118,7 @@ export default async function ExperiencePage({
   return (
     <main style={{width: '100%'}}>
       <ContentEditorHelper isDraftModeEnabled={isDraftModeEnabled} />
+      {pageProps.slug === '' && <WebSiteJsonLd brand={pageProps.brand} />}
       {stylesheet && <style>{stylesheet}</style>}
       <ExperiencePageLoader
         experienceJSON={experienceJSON}

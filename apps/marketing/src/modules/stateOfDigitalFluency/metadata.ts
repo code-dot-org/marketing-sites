@@ -3,7 +3,10 @@ import {Metadata} from 'next';
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
 import {getIcons} from '@/config/metadata/icons';
-import {BRAND_OPENGRAPH_DEFAULT_IMAGE_URL} from '@/config/metadata/opengraph';
+import {
+  BRAND_OPENGRAPH_DEFAULT_IMAGE_URL,
+  BRAND_SITE_NAME,
+} from '@/config/metadata/opengraph';
 
 import {REPORT_TITLE} from './constants';
 import {nationalPrintPath, overviewPath, printPath, statePath} from './paths';
@@ -60,6 +63,7 @@ export function buildReportMetadata(page: Page, locale: string): Metadata {
     }),
     openGraph: {
       type: 'website',
+      siteName: BRAND_SITE_NAME[Brand.CODE_DOT_ORG],
       locale,
       title,
       description,

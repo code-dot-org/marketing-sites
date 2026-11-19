@@ -11,3 +11,11 @@ export const BRAND_OPENGRAPH_DEFAULT_IMAGE_URL: {
   [Brand.HOUR_OF_AI]:
     'https://contentful-images.code.org/hwu8vzk5v0g2/2GCnOMTztJDBzgDCN8T4B3/9dbd36729973b23e8daee3a2847c8fba/Hour_of_AI_opengraph.jpg?fm=webp',
 };
+
+/** og:site_name; undefined omits the tag. */
+export const BRAND_SITE_NAME: {[brand in Brand]: string | undefined} = {
+  [Brand.CODE_DOT_ORG]: 'CodeAI',
+  [Brand.HOUR_OF_CODE]: undefined,
+  [Brand.CS_FOR_ALL]: undefined,
+  [Brand.HOUR_OF_AI]: undefined,
+};

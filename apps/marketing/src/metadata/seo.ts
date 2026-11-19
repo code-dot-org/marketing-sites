@@ -3,7 +3,10 @@ import {Metadata} from 'next';
 
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
-import {BRAND_OPENGRAPH_DEFAULT_IMAGE_URL} from '@/config/metadata/opengraph';
+import {
+  BRAND_OPENGRAPH_DEFAULT_IMAGE_URL,
+  BRAND_SITE_NAME,
+} from '@/config/metadata/opengraph';
 import {BRAND_DEFAULT_TITLE} from '@/config/metadata/title';
 import {resolveSeoFields, ResolvedSeoFields} from '@/metadata/resolveSeoFields';
 import {getAbsoluteImageUrl} from '@/selectors/contentful/getImage';
@@ -55,6 +58,7 @@ function getOpenGraph(
 
   return {
     type: 'website',
+    siteName: brand && BRAND_SITE_NAME[brand],
     locale,
     title: seo.ogTitle,
     description: seo.ogDescription,
