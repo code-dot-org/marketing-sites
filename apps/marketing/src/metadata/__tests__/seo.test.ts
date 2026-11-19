@@ -177,12 +177,23 @@ describe('getSeoMetadata', () => {
     expect(result).not.toHaveProperty('keywords');
   });
 
-  it('omits og:site_name for brands without one', () => {
+  it('emits og:site_name Hour of AI for HOUR_OF_AI', () => {
     const result = getSeoMetadata(
       mockExperience,
       Brand.HOUR_OF_AI,
       'en-US',
-      'activities',
+      'faq',
+    );
+
+    expect(result.openGraph?.siteName).toBe('Hour of AI');
+  });
+
+  it('omits og:site_name for brands without one', () => {
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CS_FOR_ALL,
+      'en-US',
+      'about',
     );
 
     expect(result.openGraph?.siteName).toBeUndefined();

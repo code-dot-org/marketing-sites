@@ -18,6 +18,12 @@ const BRANDS_WEBSITE_JSON_LD: {
     url: 'https://code.org/',
     publisher: {'@id': ORGANIZATION_ID},
   },
+  [Brand.HOUR_OF_AI]: {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Hour of AI',
+    url: 'https://hourofai.org/',
+  },
 };
 
 interface WebSiteJsonLdProps {

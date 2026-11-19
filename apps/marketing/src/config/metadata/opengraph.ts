@@ -17,5 +17,5 @@ export const BRAND_SITE_NAME: {[brand in Brand]: string | undefined} = {
   [Brand.CODE_DOT_ORG]: 'CodeAI',
   [Brand.HOUR_OF_CODE]: undefined,
   [Brand.CS_FOR_ALL]: undefined,
-  [Brand.HOUR_OF_AI]: undefined,
+  [Brand.HOUR_OF_AI]: 'Hour of AI',
 };

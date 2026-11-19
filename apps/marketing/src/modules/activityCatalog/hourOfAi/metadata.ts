@@ -3,7 +3,10 @@ import {Metadata} from 'next';
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
 import {getIcons} from '@/config/metadata/icons';
-import {BRAND_OPENGRAPH_DEFAULT_IMAGE_URL} from '@/config/metadata/opengraph';
+import {
+  BRAND_OPENGRAPH_DEFAULT_IMAGE_URL,
+  BRAND_SITE_NAME,
+} from '@/config/metadata/opengraph';
 import {CATALOG_PATH} from '@/modules/activityCatalog/hourOfAi/paths';
 
 const COPY = {
@@ -41,6 +44,7 @@ export function buildCatalogMetadata({locale}: {locale: string}): Metadata {
     alternates: {canonical},
     openGraph: {
       type: 'website',
+      siteName: BRAND_SITE_NAME[Brand.HOUR_OF_AI],
       locale,
       title: COPY.title,
       description: COPY.description,

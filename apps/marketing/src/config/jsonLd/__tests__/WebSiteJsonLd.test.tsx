@@ -19,8 +19,19 @@ describe('WebSiteJsonLd', () => {
     });
   });
 
-  it('renders nothing for HOUR_OF_AI', () => {
+  it('renders the Hour of AI site name for HOUR_OF_AI', () => {
     render(<WebSiteJsonLd brand={Brand.HOUR_OF_AI} />);
+
+    expect(JSON.parse(queryScript()?.textContent ?? '')).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Hour of AI',
+      url: 'https://hourofai.org/',
+    });
+  });
+
+  it('renders nothing for CS_FOR_ALL', () => {
+    render(<WebSiteJsonLd brand={Brand.CS_FOR_ALL} />);
 
     expect(queryScript()).not.toBeInTheDocument();
   });

@@ -9,4 +9,10 @@ describe('buildCatalogMetadata', () => {
     );
     expect(result.openGraph?.url).toBe(result.alternates?.canonical);
   });
+
+  it('sets og:site_name to Hour of AI', () => {
+    const result = buildCatalogMetadata({locale: 'en-US'});
+
+    expect(result.openGraph?.siteName).toBe('Hour of AI');
+  });
 });
