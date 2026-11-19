@@ -75,7 +75,7 @@ describe('getSeoMetadata', () => {
         locale: 'en-US',
         title: 'Test Title',
         description: 'Test Description',
-        url: './',
+        url: 'https://code.org/en-US/engineering/all-the-things',
         images: 'https://example.com/test-image.jpg',
       },
       robots: {
@@ -94,6 +94,7 @@ describe('getSeoMetadata', () => {
     );
 
     expect(result.alternates?.canonical).toBe('https://code.org/es-MX');
+    expect(result.openGraph?.url).toBe('https://code.org/es-MX');
   });
 
   it('normalizes a slug that already has slashes around it', () => {

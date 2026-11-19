@@ -31,21 +31,20 @@ const COPY = {
 /** Metadata for the catalog page on hourofai.org. */
 export function buildCatalogMetadata({locale}: {locale: string}): Metadata {
   const canonicalRoot = getProductionCanonicalRootDomain(Brand.HOUR_OF_AI);
+  const canonical = `https://${canonicalRoot}/${locale}${CATALOG_PATH}`;
 
   return {
     title: COPY.title,
     icons: getIcons(Brand.HOUR_OF_AI),
     description: COPY.description,
     keywords: COPY.keywords,
-    alternates: {
-      canonical: `https://${canonicalRoot}/${locale}${CATALOG_PATH}`,
-    },
+    alternates: {canonical},
     openGraph: {
       type: 'website',
       locale,
       title: COPY.title,
       description: COPY.description,
-      url: './',
+      url: canonical,
       images: BRAND_OPENGRAPH_DEFAULT_IMAGE_URL[Brand.HOUR_OF_AI],
     },
   };

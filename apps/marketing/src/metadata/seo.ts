@@ -19,15 +19,14 @@ export function getSeoMetadata(
 ): Metadata {
   const seo = resolveSeoFields(experience);
   const title = seo.title || (brand && BRAND_DEFAULT_TITLE[brand]);
+  const canonical = getCanonicalUrl(brand, locale, slug);
 
   return {
     ...(title ? {title} : undefined),
     description: seo.description,
     ...(seo.keywords?.length ? {keywords: seo.keywords} : undefined),
-    alternates: {
-      canonical: getCanonicalUrl(brand, locale, slug),
-    },
-    openGraph: getOpenGraph(seo, brand, locale),
+    alternates: {canonical},
+    openGraph: getOpenGraph(seo, brand, locale, canonical),
     robots: {
       index: !seo.noIndex,
       follow: !seo.noFollow,
@@ -51,6 +50,7 @@ function getOpenGraph(
   seo: ResolvedSeoFields,
   brand: Brand | undefined,
   locale: string,
+  url: string,
 ) {
   // As of July 2025, all open graph providers support JPEG & PNG but there is
   // only partial support for AVIF. Use webp for compatibility.
@@ -62,7 +62,7 @@ function getOpenGraph(
     locale,
     title: seo.ogTitle,
     description: seo.ogDescription,
-    url: './',
+    url,
     images:
       seo.ogImage && opengraphImageUrl
         ? opengraphImageUrl

@@ -52,12 +52,13 @@ function copy(page: Page) {
 export function buildReportMetadata(page: Page, locale: string): Metadata {
   const {title, description, path} = copy(page);
   const canonicalRoot = getProductionCanonicalRootDomain(Brand.CODE_DOT_ORG);
+  const canonical = `https://${canonicalRoot}/${locale}${path}`;
 
   return {
     title,
     description,
     icons: getIcons(Brand.CODE_DOT_ORG),
-    alternates: {canonical: `https://${canonicalRoot}/${locale}${path}`},
+    alternates: {canonical},
     ...((page.kind === 'print' || page.kind === 'nationalPrint') && {
       robots: {index: false, follow: true},
     }),
@@ -67,7 +68,7 @@ export function buildReportMetadata(page: Page, locale: string): Metadata {
       locale,
       title,
       description,
-      url: './',
+      url: canonical,
       images: BRAND_OPENGRAPH_DEFAULT_IMAGE_URL[Brand.CODE_DOT_ORG],
     },
   };
