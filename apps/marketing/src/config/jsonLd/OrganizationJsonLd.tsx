@@ -1,7 +1,11 @@
 import {JsonLd} from 'react-schemaorg';
 import {WithContext, EducationalOrganization} from 'schema-dts';
 
+import {FOOTER_MISSION} from '@/components/footer/codeOrg/config';
 import {Brand} from '@/config/brand';
+import logoImage from '@public/images/codeai-logo-square.webp';
+
+export const ORGANIZATION_ID = 'https://code.org/#organization';
 
 /** See: https://developers.google.com/search/docs/appearance/structured-data/organization */
 const BRANDS_ORG_JSON_LD: {
@@ -10,20 +14,13 @@ const BRANDS_ORG_JSON_LD: {
   [Brand.CODE_DOT_ORG]: {
     '@context': 'https://schema.org',
     '@type': 'EducationalOrganization',
-    name: 'Code.org',
-    alternateName: 'Code Dot Org',
-    url: 'https://code.org',
-    logo: 'https://contentful-images.code.org/90t6bu6vlf76/2JhHPaRQiMUbjidN4gKuY2/c43817ca968471f1c0811d725025ee64/WordmarkS_Black_Solid.svg',
-    description:
-      'Code.org® is an education innovation nonprofit dedicated to the vision ' +
-      'that every student in every school has the opportunity to learn computer science ' +
-      'and artificial intelligence as part of their core K-12 education. ' +
-      'We expand access to and participation in computer science in schools, ' +
-      'with a focus on increasing participation by young women and students from other underrepresented groups. ' +
-      'The leading provider of K-12 computer science curriculum in the largest school districts ' +
-      'in the United States, Code.org also organizes the annual Hour of Code campaign, ' +
-      'which has engaged more than 15% of all students in the world. ' +
-      'Code.org is supported by generous donors including Microsoft, Amazon, Google and many others.',
+    '@id': ORGANIZATION_ID,
+    name: 'CodeAI',
+    alternateName: 'Code.org',
+    url: 'https://code.org/',
+    // Square raster for Google (min 112x112); Next content-hashes the URL.
+    logo: `https://code.org${logoImage.src}`,
+    description: FOOTER_MISSION,
     nonprofitStatus: 'Nonprofit501c3',
     taxID: '46-0858543',
     foundingDate: '2013',
@@ -31,7 +28,7 @@ const BRANDS_ORG_JSON_LD: {
       {
         '@type': 'Person',
         name: 'Hadi Partovi',
-        jobTitle: 'CEO',
+        jobTitle: 'Founder and Chairman of the Board',
       },
       {
         '@type': 'Person',
@@ -57,7 +54,7 @@ const BRANDS_ORG_JSON_LD: {
       'https://instagram.com/codeorg',
       'https://codeorg.medium.com',
       'https://youtube.com/codeorg',
-      'https://linkedin.com/company/code-dot-org',
+      'https://www.linkedin.com/company/code-org',
       'https://en.wikipedia.org/wiki/Code.org',
       'https://github.com/code-dot-org',
     ],

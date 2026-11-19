@@ -3,7 +3,10 @@ import {Metadata} from 'next';
 import {Brand} from '@/config/brand';
 import {getProductionCanonicalRootDomain} from '@/config/host';
 import {getIcons} from '@/config/metadata/icons';
-import {BRAND_OPENGRAPH_DEFAULT_IMAGE_URL} from '@/config/metadata/opengraph';
+import {
+  BRAND_OPENGRAPH_DEFAULT_IMAGE_URL,
+  BRAND_SITE_NAME,
+} from '@/config/metadata/opengraph';
 
 import {REPORT_TITLE} from './constants';
 import {nationalPrintPath, overviewPath, printPath, statePath} from './paths';
@@ -49,21 +52,23 @@ function copy(page: Page) {
 export function buildReportMetadata(page: Page, locale: string): Metadata {
   const {title, description, path} = copy(page);
   const canonicalRoot = getProductionCanonicalRootDomain(Brand.CODE_DOT_ORG);
+  const canonical = `https://${canonicalRoot}/${locale}${path}`;
 
   return {
     title,
     description,
     icons: getIcons(Brand.CODE_DOT_ORG),
-    alternates: {canonical: `https://${canonicalRoot}/${locale}${path}`},
+    alternates: {canonical},
     ...((page.kind === 'print' || page.kind === 'nationalPrint') && {
       robots: {index: false, follow: true},
     }),
     openGraph: {
       type: 'website',
+      siteName: BRAND_SITE_NAME[Brand.CODE_DOT_ORG],
       locale,
       title,
       description,
-      url: './',
+      url: canonical,
       images: BRAND_OPENGRAPH_DEFAULT_IMAGE_URL[Brand.CODE_DOT_ORG],
     },
   };

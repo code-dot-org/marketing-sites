@@ -13,9 +13,13 @@ describe('OrganizationJsonLd', () => {
     const script = queryScript();
 
     expect(script).toBeInTheDocument();
-    expect(script).toHaveTextContent(
-      '"@type":"EducationalOrganization","name":"Code.org"',
-    );
+    expect(JSON.parse(script?.textContent ?? '')).toMatchObject({
+      '@type': 'EducationalOrganization',
+      '@id': 'https://code.org/#organization',
+      name: 'CodeAI',
+      alternateName: 'Code.org',
+      url: 'https://code.org/',
+    });
   });
 
   it('renders nothing for HOUR_OF_CODE', () => {

@@ -71,10 +71,11 @@ describe('getSeoMetadata', () => {
       },
       openGraph: {
         type: 'website',
+        siteName: 'CodeAI',
         locale: 'en-US',
         title: 'Test Title',
         description: 'Test Description',
-        url: './',
+        url: 'https://code.org/en-US/engineering/all-the-things',
         images: 'https://example.com/test-image.jpg',
       },
       robots: {
@@ -93,6 +94,7 @@ describe('getSeoMetadata', () => {
     );
 
     expect(result.alternates?.canonical).toBe('https://code.org/es-MX');
+    expect(result.openGraph?.url).toBe('https://code.org/es-MX');
   });
 
   it('normalizes a slug that already has slashes around it', () => {
@@ -173,6 +175,28 @@ describe('getSeoMetadata', () => {
     );
 
     expect(result).not.toHaveProperty('keywords');
+  });
+
+  it('emits og:site_name Hour of AI for HOUR_OF_AI', () => {
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.HOUR_OF_AI,
+      'en-US',
+      'faq',
+    );
+
+    expect(result.openGraph?.siteName).toBe('Hour of AI');
+  });
+
+  it('omits og:site_name for brands without one', () => {
+    const result = getSeoMetadata(
+      mockExperience,
+      Brand.CS_FOR_ALL,
+      'en-US',
+      'about',
+    );
+
+    expect(result.openGraph?.siteName).toBeUndefined();
   });
 
   it('falls back to brand default OG image when ogImage is missing', () => {
