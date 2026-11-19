@@ -96,7 +96,8 @@ export interface ReportData {
     years: YearKey[];
     participationYearLabel: string;
     cohortYearLabel: string;
-    blankIndexRule: 'hold-back' | 'rescale';
+    /** How a blank scoring input is handled; 'zero' since the Policy team's 2026-11-13 review. */
+    blankIndexRule: 'hold-back' | 'rescale' | 'zero';
     trendsAvailable: {
       access: boolean;
       participation: boolean;

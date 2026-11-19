@@ -13,11 +13,24 @@ export const REPORT_ENTRY_ID = 'state-of-digital-fluency';
 
 export const REPORT_TITLE = 'The State of Digital Fluency';
 
+/**
+ * The File Download entry that holds marketing's national summary PDF. The
+ * overview's download button appears once a file or URL is attached to it.
+ */
+export const NATIONAL_SUMMARY_ENTRY_ID = '3rfxpNTqfQfWXAlO6FVoYv';
+
+/** The national summary PDF is a fixed yearly snapshot; the state pages carry live data. */
+export const NATIONAL_SUMMARY_LABEL = '2026 National Summary Report';
+
 /** The heroes' description of the report. Draft copy for review; the Policy team may replace it. */
 export const OVERVIEW_INTRO =
   "The State of Digital Fluency measures how well each state prepares students for a world shaped by computing and AI. Every state's Digital Fluency Index Score combines its Digital Sciences policies with high school access, participation, momentum and leadership.";
 
 export const NOT_REPORTED = 'Not reported';
+
+/** How the Digital Fluency Index Score adds up. */
+export const SCORE_FORMULA =
+  'Policy (45) + Access Availability (12) + Participation (18) + Momentum (15) + Leadership (10)';
 
 export const POLICY_KEYS: PolicyKey[] = [
   'plan_guidance',

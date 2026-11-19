@@ -4,6 +4,7 @@ import type {ReactElement} from 'react';
 
 import {Brand} from '@/config/brand';
 import fixture from '@/modules/stateOfDigitalFluency/__tests__/fixtures/reportData.json';
+import {getNationalSummaryUrl} from '@/modules/stateOfDigitalFluency/getNationalSummary';
 import {getReport} from '@/modules/stateOfDigitalFluency/getReport';
 import {checkReportShape} from '@/modules/stateOfDigitalFluency/reportShape';
 import OverviewSection from '@/modules/stateOfDigitalFluency/sections/overview/OverviewSection';
@@ -28,6 +29,9 @@ jest.mock('next/navigation', () => ({
 jest.mock('@/modules/stateOfDigitalFluency/getReport', () => ({
   getReport: jest.fn(),
 }));
+jest.mock('@/modules/stateOfDigitalFluency/getNationalSummary', () => ({
+  getNationalSummaryUrl: jest.fn(),
+}));
 jest.mock(
   '@/modules/stateOfDigitalFluency/sections/overview/OverviewSection',
   () => jest.fn(() => null),
@@ -50,6 +54,9 @@ describe('State of Digital Fluency routes', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (getReport as jest.Mock).mockResolvedValue(report);
+    (getNationalSummaryUrl as jest.Mock).mockResolvedValue(
+      'https://example.org/summary.pdf',
+    );
     (draftMode as jest.Mock).mockResolvedValue({isEnabled: false});
   });
 
@@ -108,6 +115,9 @@ describe('State of Digital Fluency routes', () => {
     expect((StateSection as jest.Mock).mock.calls[0][0].model.postal).toBe(
       'AL',
     );
+    expect(
+      (OverviewSection as jest.Mock).mock.calls[0][0].nationalSummaryUrl,
+    ).toBe('https://example.org/summary.pdf');
   });
 
   it('shows draft warnings only in draft mode', async () => {

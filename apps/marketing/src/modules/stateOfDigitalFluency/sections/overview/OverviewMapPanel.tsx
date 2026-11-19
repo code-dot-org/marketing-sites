@@ -235,7 +235,7 @@ function SidePanels({
   );
 }
 
-const NATIONAL_CAPTION = 'National average across all reporting states';
+const NATIONAL_CAPTION = 'National average across all states';
 const genderCaption = (name: string) => `${name} enrollment by gender`;
 
 /**

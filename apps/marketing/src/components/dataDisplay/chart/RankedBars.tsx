@@ -33,6 +33,10 @@ export interface RankedBarsProps {
   rowHeight?: number;
   /** Design width; the chart scales to its container at this ratio. */
   width?: number;
+  /** Design pixels right of the plot; the headroom already fits the value labels. */
+  rightMargin?: number;
+  /** Design width of the row-label column; wider for labels like "51. MT". */
+  labelWidth?: number;
 }
 
 const MARGIN = {top: 8, bottom: 8, left: 4, right: 56};
@@ -54,6 +58,8 @@ export default function RankedBars({
   size = 'default',
   rowHeight,
   width = 640,
+  rightMargin = MARGIN.right,
+  labelWidth = 34,
 }: RankedBarsProps) {
   const isPrint = size === 'print';
   const row = rowHeight ?? (isPrint ? 9 : 14);
@@ -86,7 +92,7 @@ export default function RankedBars({
         width={width}
         height={height}
         layout="horizontal"
-        margin={MARGIN}
+        margin={{...MARGIN, right: rightMargin}}
         hideLegend
         skipAnimation={isPrint || undefined}
         enableKeyboardNavigation={interactive}
@@ -97,7 +103,7 @@ export default function RankedBars({
             scaleType: 'band',
             data: items.map(i => i.key),
             valueFormatter: (key: string) => labels.get(key) ?? key,
-            width: 34,
+            width: labelWidth,
             categoryGapRatio: 0.25,
             tickLabelStyle: {fontSize: isPrint ? 8 : 10, fontWeight: 700},
             disableTicks: true,

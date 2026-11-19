@@ -120,7 +120,14 @@ export const YearBarsInteractive: Story = {
         .getAllByRole('columnheader')
         .map(h => h.textContent),
     ).toEqual(['Year', 'Georgia', 'National average']);
-    // The latest year is missing: a hatched "N/A" bar and a "Not reported" cell.
+    // Each national-average marker carries its value as a label.
+    const labelled = yearProps.points.filter(p => p.reference != null);
+    await expect(
+      chartSurface(canvasElement).querySelectorAll(
+        '.year-bars-reference-labels text',
+      ),
+    ).toHaveLength(labelled.length);
+    // The latest year is missing: a plain gray "N/A" bar and a "Not reported" cell.
     const latest = tableRow(table, '2025–26');
     await expect(within(latest).getAllByText(NOT_REPORTED)).toHaveLength(2);
     await expect(

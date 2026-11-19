@@ -13,7 +13,7 @@ export interface MapRegion {
   name: string;
   /** Accessible link name, e.g. "California, score 63.2, 51 – 80". */
   label: string;
-  /** `null` draws the "Not reported" pattern. */
+  /** `null` draws plain gray. */
   fill: string | null;
   href: string;
   /** Cells for the table equivalent, by column key. */
@@ -22,7 +22,7 @@ export interface MapRegion {
 
 export interface MapLegendItem {
   label: string;
-  /** `null` is the "Not reported" pattern. */
+  /** `null` is plain gray. */
   fill: string | null;
 }
 
@@ -34,18 +34,15 @@ export interface UsMapProps {
   emptyLabel: string;
 }
 
-const NOT_REPORTED_FILL = CODEAI.gray1;
-const NOT_REPORTED_STRIPE = CODEAI.gray4;
-const PATTERN_ID = 'us-map-not-reported';
-const NOT_REPORTED_HOVER = CODEAI.gray3;
+// Plain gray, never a pattern: lines through a state read as "no data".
+const NO_FILL = CODEAI.gray3;
+const NO_FILL_HOVER = CODEAI.gray4;
 
 /** Hover shading for a region, read by the map's hover styles. */
 const hoverStyle = (fill: string | null) =>
   ({
-    '--region-hover': fill ? shade(fill) : NOT_REPORTED_HOVER,
+    '--region-hover': fill ? shade(fill) : NO_FILL_HOVER,
   }) as CSSProperties;
-
-const notReportedSwatch = `repeating-linear-gradient(45deg, ${NOT_REPORTED_FILL} 0, ${NOT_REPORTED_FILL} 3px, ${NOT_REPORTED_STRIPE} 3px, ${NOT_REPORTED_STRIPE} 4px)`;
 
 /**
  * A server-rendered US map: one SVG link per state and DC (with a callout
@@ -71,24 +68,10 @@ export default function UsMap({
         aria-label={title}
         sx={mapStyles}
       >
-        <defs>
-          <pattern
-            id={PATTERN_ID}
-            width="6"
-            height="6"
-            patternUnits="userSpaceOnUse"
-            patternTransform="rotate(45)"
-          >
-            <rect width="6" height="6" fill={NOT_REPORTED_FILL} />
-            <rect width="1.5" height="6" fill={NOT_REPORTED_STRIPE} />
-          </pattern>
-        </defs>
         {Object.entries(US_STATE_PATHS).map(([code, d]) => {
           const region = byCode.get(code);
           if (!region) {
-            return (
-              <path key={code} d={d} fill={NOT_REPORTED_FILL} stroke="#fff" />
-            );
+            return <path key={code} d={d} fill={NO_FILL} stroke="#fff" />;
           }
           // DC's shape is too small to use; its callout is the focusable link.
           const isDcShape = code === 'DC';
@@ -103,7 +86,7 @@ export default function UsMap({
             >
               <path
                 d={d}
-                fill={region.fill ?? `url(#${PATTERN_ID})`}
+                fill={region.fill ?? NO_FILL}
                 className="region"
                 style={hoverStyle(region.fill)}
               />
@@ -124,7 +107,7 @@ export default function UsMap({
               cx={US_DC_CALLOUT.cx}
               cy={US_DC_CALLOUT.cy}
               r={US_DC_CALLOUT.r}
-              fill={dc.fill ?? `url(#${PATTERN_ID})`}
+              fill={dc.fill ?? NO_FILL}
               className="region"
               style={hoverStyle(dc.fill)}
             />
@@ -167,7 +150,7 @@ export default function UsMap({
                 height: 14,
                 borderRadius: '3px',
                 border: `1px solid ${CODEAI.gray4}`,
-                background: item.fill ?? notReportedSwatch,
+                background: item.fill ?? NO_FILL,
               }}
             />
             {item.label}

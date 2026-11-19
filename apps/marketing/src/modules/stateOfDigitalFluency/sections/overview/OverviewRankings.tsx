@@ -4,7 +4,7 @@ import {Paragraph} from '@/components/dataDisplay/brandComponents';
 import {CODEAI} from '@/components/dataDisplay/codeaiColors';
 import FlexColumns from '@/components/dataDisplay/layout/FlexColumns';
 
-import {TIER_COLORS} from '../../constants';
+import {SCORE_FORMULA, TIER_COLORS} from '../../constants';
 import {RANKINGS_ANCHOR} from '../../paths';
 import {type RankingsModel, type RankRow, tierColor} from '../../readReport';
 import {PanelHeading, ReportPanel, ReportSection} from '../common';
@@ -105,9 +105,8 @@ export default function OverviewRankings({
         title="Digital Fluency Index Score"
         titleColor="purpleDark"
         centerHeader
-        intro="Policy (45) + Access Availability (12) + Participation (18) + Momentum (15) + Leadership (10)"
+        intro={SCORE_FORMULA}
         introSize="regular"
-        divider
       >
         <TierLegend />
         <ReportPanel bordered>
