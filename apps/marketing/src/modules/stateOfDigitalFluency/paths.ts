@@ -17,9 +17,5 @@ export const statePath = (slug: string, locale?: string) =>
 export const printPath = (slug: string, locale?: string) =>
   withLocale(`${REPORT_BASE_PATH}/${slug}/report`, locale);
 
-/** The printable national report. */
-export const nationalPrintPath = (locale?: string) =>
-  withLocale(`${REPORT_BASE_PATH}/report`, locale);
-
 export const methodologyPath = (locale?: string) =>
   withLocale(`${REPORT_BASE_PATH}/methodology`, locale);

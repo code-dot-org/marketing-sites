@@ -108,10 +108,12 @@ export const NotReportedStates: Story = {
       'aria-label',
       `Alaska, score ${NOT_REPORTED}, ${NOT_REPORTED}`,
     );
-    await expect(alaska.querySelector('path')).toHaveAttribute(
+    // Plain gray, never a pattern: lines through a state read as "no data".
+    await expect(alaska.querySelector('path')).not.toHaveAttribute(
       'fill',
-      'url(#us-map-not-reported)',
+      expect.stringContaining('url('),
     );
+    await expect(canvasElement.querySelector('svg pattern')).toBeNull();
     const legend = canvas.getByRole('list', {name: 'Legend'});
     await expect(within(legend).getByText(NOT_REPORTED)).toBeInTheDocument();
   },

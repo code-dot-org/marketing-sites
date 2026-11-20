@@ -9,13 +9,12 @@ import {
 } from '@/config/metadata/opengraph';
 
 import {REPORT_TITLE} from './constants';
-import {nationalPrintPath, overviewPath, printPath, statePath} from './paths';
+import {overviewPath, printPath, statePath} from './paths';
 
 type Page =
   | {kind: 'overview'}
   | {kind: 'state'; slug: string; name: string}
-  | {kind: 'print'; slug: string; name: string}
-  | {kind: 'nationalPrint'};
+  | {kind: 'print'; slug: string; name: string};
 
 function copy(page: Page) {
   switch (page.kind) {
@@ -38,13 +37,6 @@ function copy(page: Page) {
         description: `The printable State of Digital Fluency report for ${page.name}.`,
         path: printPath(page.slug),
       };
-    case 'nationalPrint':
-      return {
-        title: `National printable report | ${REPORT_TITLE}`,
-        description:
-          'The printable national State of Digital Fluency report: score distribution, policy landscape, trends and highlights.',
-        path: nationalPrintPath(),
-      };
   }
 }
 
@@ -59,7 +51,7 @@ export function buildReportMetadata(page: Page, locale: string): Metadata {
     description,
     icons: getIcons(Brand.CODE_DOT_ORG),
     alternates: {canonical},
-    ...((page.kind === 'print' || page.kind === 'nationalPrint') && {
+    ...(page.kind === 'print' && {
       robots: {index: false, follow: true},
     }),
     openGraph: {

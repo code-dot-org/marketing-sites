@@ -72,8 +72,61 @@ function BarGlow({values, fill}: {values: (number | null)[]; fill: string}) {
 }
 
 /**
- * Vertical bars by year. Missing years draw a short hatched "N/A" bar; an
- * optional benchmark per year draws as a dashed line with markers.
+ * Each benchmark marker's value. Inside a bar (benchmark below the bar's
+ * value) it sits under the marker in white; otherwise above the marker. Either
+ * way it stays clear of the bar's own value label, which sits on the bar top.
+ */
+function ReferenceLabels({
+  references,
+  bars,
+  format,
+  fontSize,
+}: {
+  references: (number | null)[];
+  bars: (number | null)[];
+  format: (v: number) => string;
+  fontSize: number;
+}) {
+  const x = useXScale<'band'>('years');
+  const y = useYScale('values');
+  const half = x.bandwidth() / 2;
+  return (
+    <g aria-hidden className="year-bars-reference-labels">
+      {x.domain().map((label, i) => {
+        const value = references[i];
+        const left = x(label);
+        const top = value == null ? undefined : y(value);
+        if (value == null || left == null || top == null) {
+          return null;
+        }
+        const bar = bars[i];
+        const inside = bar != null && value < bar;
+        return (
+          <text
+            key={String(label)}
+            x={left + half}
+            y={inside ? top + fontSize + 5 : top - 7}
+            textAnchor="middle"
+            fontSize={fontSize}
+            fontWeight={700}
+            fill={inside ? '#fff' : CODEAI.gray8}
+            {...(!inside && {
+              stroke: '#fff',
+              strokeWidth: 3,
+              paintOrder: 'stroke',
+            })}
+          >
+            {format(value)}
+          </text>
+        );
+      })}
+    </g>
+  );
+}
+
+/**
+ * Vertical bars by year. Missing years draw a short plain gray "N/A" bar; an
+ * optional benchmark per year draws as a dashed line with labelled markers.
  */
 export default function YearBars({
   title,
@@ -88,7 +141,6 @@ export default function YearBars({
   tooltip = true,
   size = 'default',
 }: YearBarsProps) {
-  const hatchId = `hatch-${useId().replace(/:/g, '')}`;
   const isPrint = size === 'print';
   const showTooltip = interactive && tooltip;
   const glow = interactive && !isPrint;
@@ -195,7 +247,8 @@ export default function YearBars({
             data: points.map(p =>
               p.value == null ? max * GAP_HEIGHT_RATIO : null,
             ),
-            color: `url(#${hatchId})`,
+            // Plain gray, never a pattern (Policy team review).
+            color: CODEAI.gray3,
             stack: 'year',
             // Listed in the tooltip only for the years it marks.
             valueFormatter: v => (v == null ? null : emptyLabel),
@@ -244,16 +297,6 @@ export default function YearBars({
           }}
         >
           <defs>
-            <pattern
-              id={hatchId}
-              width="10"
-              height="10"
-              patternUnits="userSpaceOnUse"
-              patternTransform="rotate(45)"
-            >
-              <rect width="10" height="10" fill={CODEAI.gray1} />
-              <rect width="5" height="10" fill={CODEAI.gray3} />
-            </pattern>
             {glow && (
               // Deepest at the base, fading to a soft sheen at the top.
               <linearGradient id={glowId} x1="0" y1="1" x2="0" y2="0">
@@ -275,6 +318,14 @@ export default function YearBars({
           )}
           <LinePlot />
           <MarkPlot />
+          {hasReference && (
+            <ReferenceLabels
+              references={points.map(p => p.reference ?? null)}
+              bars={points.map(p => p.value)}
+              format={v => formatValue(v, valueFormat)}
+              fontSize={isPrint ? 8 : 10}
+            />
+          )}
           <ChartsXAxis />
         </ChartsSurface>
         {showTooltip && <ChartsTooltip />}

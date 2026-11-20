@@ -21,6 +21,7 @@ import {
   HIGHLIGHTS,
   NOT_REPORTED,
   REPORT_TITLE,
+  SCORE_FORMULA,
   TIER_COLORS,
   TIER_FAMILIES,
 } from '../../constants';
@@ -37,6 +38,7 @@ import {
 import {Narrative} from '../common';
 import RankList from '../rankings/RankList';
 import AccessCard, {ACCESS_TITLE} from '../state/AccessCard';
+import {TierLegend} from '../state/NationalRankings';
 import ParticipationCard, {
   PARTICIPATION_TITLE,
 } from '../state/ParticipationCard';
@@ -61,7 +63,7 @@ const TIER_THRESHOLDS = [
   {label: 'Emerging', range: '0–50', color: TIER_COLORS.Emerging},
 ];
 
-// Report page 5's component descriptions, carried unchanged (research open item 3).
+// Report page 5's component descriptions. Leadership wording approved by the Policy team 2026-11-18.
 const BREAKDOWN = [
   {
     key: 'policy',
@@ -91,7 +93,7 @@ const BREAKDOWN = [
     key: 'leadership',
     label: 'Leadership & Commitment',
     max: 10,
-    note: 'Active taskforce (4 pts) + TeachAI membership (3 pts) + CSedWeek proclamation with AI mention (3 pts) / without (1.5 pts).',
+    note: 'Active taskforce (6 pts) + CSedWeek proclamation with AI mention (4 pts) / without AI (2 pts).',
   },
 ] as const;
 
@@ -109,6 +111,7 @@ function RankingPage({
   valueHeading,
   valueFormat,
   dataAsOf,
+  note,
   children,
 }: {
   label: string;
@@ -121,6 +124,8 @@ function RankingPage({
   valueHeading: string;
   valueFormat: ValueFormat;
   dataAsOf: string | null;
+  /** A muted line after the rank, as on the prototype's score page. */
+  note?: string;
   children?: ReactNode;
 }) {
   return (
@@ -134,6 +139,11 @@ function RankingPage({
           </strong>{' '}
           {summary}
         </Paragraph>
+        {note && <Small center>{note}</Small>}
+        {/* The prototype's key: tier colours and the national-average line. */}
+        <Box sx={{display: 'flex', justifyContent: 'center', mt: 1}}>
+          <TierLegend size="print" />
+        </Box>
       </Box>
       <RankedBars
         title={`${heading}: all states, ranked`}
@@ -147,9 +157,11 @@ function RankingPage({
         size="print"
         rowHeight={11}
         width={720}
+        // Numbered rows, as in the prototype: "1. AR".
+        labelWidth={44}
         items={rows.map(r => ({
           key: r.postal,
-          label: r.postal,
+          label: r.rank == null ? r.postal : `${r.rank}. ${r.postal}`,
           value: r.value,
           color: tierColor(r.tierLabel),
         }))}
@@ -234,7 +246,8 @@ export default function PrintReport({
       <RankingPage
         label="Page 2 · Digital Fluency Index Score Ranking"
         heading="Digital Fluency Index Score"
-        summary="· bar colour = score tier"
+        summary=""
+        note="Sorted highest to lowest · bar color = score band"
         model={model}
         rows={rankings.score}
         rank={rankings.ranks.score}
@@ -469,7 +482,8 @@ export default function PrintReport({
       >
         <PrintBand background="purpleDark">
           <Paragraph visualAppearance="text-xs" isStrong removeMarginBottom>
-            {national.yearLabel ? `${national.yearLabel} ` : ''}Annual Report ·{' '}
+            {/* The report year, as the prototype labels it. */}
+            {dataAsOf ? `${dataAsOf.slice(0, 4)} ` : ''}Annual Report ·{' '}
             {model.name} Edition
           </Paragraph>
           <PrintHeading level="h2">{REPORT_TITLE}</PrintHeading>
@@ -680,6 +694,9 @@ export default function PrintReport({
           ).map(([heading, rows, format]) => (
             <Box key={heading}>
               <PrintHeading level="h3">{heading}</PrintHeading>
+              {heading === 'Digital Fluency Index Score' && (
+                <Small>{SCORE_FORMULA}</Small>
+              )}
               <RankList
                 label={`States ranked by ${heading}`}
                 rows={rows}

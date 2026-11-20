@@ -5,13 +5,14 @@ import UsMap from '@/components/dataDisplay/map/UsMap';
 import Stat from '@/components/dataDisplay/stat/Stat';
 import StatGroup from '@/components/dataDisplay/stat/StatGroup';
 
-import {BAND_FILLS, BANDS, NOT_REPORTED, OVERVIEW_INTRO} from '../../constants';
 import {
-  MAP_ANCHOR,
-  methodologyPath,
-  nationalPrintPath,
-  statePath,
-} from '../../paths';
+  BAND_FILLS,
+  BANDS,
+  NATIONAL_SUMMARY_LABEL,
+  NOT_REPORTED,
+  OVERVIEW_INTRO,
+} from '../../constants';
+import {MAP_ANCHOR, methodologyPath, statePath} from '../../paths';
 import {
   formatPercent,
   formatRank,
@@ -44,9 +45,12 @@ const bothGender = (g: {female: number | null; male: number | null} | null) =>
 export default function OverviewSection({
   model,
   locale,
+  nationalSummaryUrl = null,
 }: {
   model: OverviewModel;
   locale: string;
+  /** Marketing's national PDF; the download button shows once it's set. */
+  nationalSummaryUrl?: string | null;
 }) {
   const {stats} = model;
 
@@ -54,10 +58,7 @@ export default function OverviewSection({
     <UsMap
       title="Digital Fluency Index Score by state"
       emptyLabel={NOT_REPORTED}
-      legend={[
-        ...BANDS.map(b => ({label: b.label, fill: b.fill})),
-        {label: NOT_REPORTED, fill: null},
-      ]}
+      legend={[...BANDS.map(b => ({label: b.label, fill: b.fill}))]}
       tableColumns={[
         {key: 'name', label: 'State'},
         {key: 'score', label: 'Score', numeric: true},
@@ -86,11 +87,18 @@ export default function OverviewSection({
         subtitle={OVERVIEW}
         subtitleMaxWidth={[680, 600]}
         centered
-        primaryAction={{href: `#${MAP_ANCHOR}`, label: 'View your state'}}
-        secondaryAction={{
-          href: nationalPrintPath(locale),
-          label: 'View printable report',
-        }}
+        primaryAction={{href: `#${MAP_ANCHOR}`, label: 'Live data by state'}}
+        secondaryAction={
+          nationalSummaryUrl
+            ? {
+                href: nationalSummaryUrl,
+                label: NATIONAL_SUMMARY_LABEL,
+                icon: 'download',
+                newTab: true,
+                trackDownload: true,
+              }
+            : undefined
+        }
       />
 
       <ReportSection label="National summary" background="purpleDark">

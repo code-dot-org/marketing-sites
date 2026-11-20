@@ -47,7 +47,7 @@ export default function StateSection({
         primaryAction={{href: overviewPath(locale), label: 'View all states'}}
         secondaryAction={{
           href: printPath(model.slug, locale),
-          label: 'View full printable report',
+          label: 'View state printable report',
         }}
       />
 

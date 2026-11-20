@@ -15,9 +15,17 @@ import {codeaiRadius} from '@/themes/code.org/constants/radius';
 
 import {REPORT_TITLE} from '../constants';
 
+import DownloadTracker from './DownloadTracker';
+
 export interface ReportAction {
   href: string;
   label: string;
+  /** Font Awesome name; defaults to angle-right. */
+  icon?: string;
+  /** Opens in a new tab, and says so to screen readers. */
+  newTab?: boolean;
+  /** Sends the GA file_download event on click. */
+  trackDownload?: boolean;
 }
 
 /** The page hero: h1, subtitle and actions on Purple Light. */
@@ -45,6 +53,23 @@ export function ReportHero({
   primaryAction?: ReportAction;
   secondaryAction?: ReportAction;
 }) {
+  const secondaryButton = secondaryAction && (
+    <Button
+      // The site's usual hero pair: purple, then black.
+      color="black"
+      type="primary"
+      href={secondaryAction.href}
+      text={secondaryAction.label}
+      isLinkExternal={secondaryAction.newTab}
+      ariaLabel={
+        secondaryAction.newTab
+          ? `${secondaryAction.label} (opens in a new tab)`
+          : undefined
+      }
+      iconRightName={secondaryAction.icon ?? 'angle-right'}
+    />
+  );
+
   return (
     <Section background="purpleLight" padding="l">
       <Box sx={centered ? {textAlign: 'center'} : undefined}>
@@ -94,19 +119,17 @@ export function ReportHero({
                 type="primary"
                 href={primaryAction.href}
                 text={primaryAction.label}
-                iconRightName="angle-right"
+                iconRightName={primaryAction.icon ?? 'angle-right'}
               />
             )}
-            {secondaryAction && (
-              <Button
-                // The site's usual hero pair: purple, then black.
-                color="black"
-                type="primary"
-                href={secondaryAction.href}
-                text={secondaryAction.label}
-                iconRightName="angle-right"
-              />
-            )}
+            {secondaryAction &&
+              (secondaryAction.trackDownload ? (
+                <DownloadTracker href={secondaryAction.href}>
+                  {secondaryButton}
+                </DownloadTracker>
+              ) : (
+                secondaryButton
+              ))}
           </Box>
         )}
       </Box>

@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import type {ReactNode} from 'react';
 
 import Badge from '@/components/contentful/badge/Badge';
 import {Paragraph} from '@/components/dataDisplay/brandComponents';
@@ -9,7 +10,6 @@ import FlexColumns from '@/components/dataDisplay/layout/FlexColumns';
 import {
   NATIONAL_MARKER_COLOR,
   NOT_REPORTED,
-  NOT_SCORED_COLOR,
   TIER_COLORS,
 } from '../../constants';
 import {
@@ -24,7 +24,6 @@ const LEGEND = [
   {label: 'Transformative', color: TIER_COLORS.Transformative},
   {label: 'Developing', color: TIER_COLORS.Developing},
   {label: 'Emerging', color: TIER_COLORS.Emerging},
-  {label: 'Not scored', color: NOT_SCORED_COLOR},
 ];
 
 export const nationalRankingsTitle = (name: string) =>
@@ -98,6 +97,8 @@ function Chart({
   interactive,
   size,
   width,
+  rightMargin,
+  bare = false,
 }: {
   heading: string;
   rank: number | null;
@@ -110,6 +111,9 @@ function Chart({
   interactive: boolean;
   size: 'default' | 'print';
   width?: number;
+  rightMargin?: number;
+  /** Without its own panel, for charts that share one. */
+  bare?: boolean;
 }) {
   const content = (
     <>
@@ -137,6 +141,7 @@ function Chart({
         interactive={interactive}
         size={size}
         width={width}
+        rightMargin={rightMargin}
         items={rows.map(r => ({
           key: r.postal,
           label: r.postal,
@@ -147,10 +152,24 @@ function Chart({
     </>
   );
 
-  return size === 'print' ? (
+  return size === 'print' || bare ? (
     <Box sx={{minWidth: 0}}>{content}</Box>
   ) : (
     <ReportPanel bordered>{content}</ReportPanel>
+  );
+}
+
+function SharedPanel({
+  size,
+  children,
+}: {
+  size: 'default' | 'print';
+  children: ReactNode;
+}) {
+  return size === 'print' ? (
+    children
+  ) : (
+    <ReportPanel bordered>{children}</ReportPanel>
   );
 }
 
@@ -182,42 +201,53 @@ export default function NationalRankings({
         size={size}
         width={960}
       />
-      <FlexColumns
-        columns={{xs: 1, md: 2}}
-        columnGap={{xs: 4, md: 10}}
-        rowGap={4}
-      >
-        <Chart
-          heading="High School Access"
-          rank={rankings.ranks.access}
-          national={
-            national.access == null ? null : `${Math.round(national.access)}%`
-          }
-          referenceValue={national.access}
-          rows={rankings.access}
-          postal={model.postal}
-          valueHeading="Access"
-          valueFormat={{digits: 0, suffix: '%'}}
-          interactive={interactive}
-          size={size}
-        />
-        <Chart
-          heading="HS Participation (All Students)"
-          rank={rankings.ranks.participation}
-          national={
-            national.participation == null
-              ? null
-              : `${national.participation.toFixed(1)}%`
-          }
-          referenceValue={national.participation}
-          rows={rankings.participation}
-          postal={model.postal}
-          valueHeading="Participation"
-          valueFormat={{digits: 1, suffix: '%'}}
-          interactive={interactive}
-          size={size}
-        />
-      </FlexColumns>
+      {/* One panel for the pair: two panels' padding left the charts too small. */}
+      <SharedPanel size={size}>
+        <FlexColumns
+          columns={{xs: 1, md: 2}}
+          columnGap={{xs: 4, md: 6}}
+          rowGap={4}
+        >
+          <Chart
+            heading="High School Access"
+            rank={rankings.ranks.access}
+            national={
+              national.access == null ? null : `${Math.round(national.access)}%`
+            }
+            referenceValue={national.access}
+            rows={rankings.access}
+            postal={model.postal}
+            valueHeading="Access"
+            valueFormat={{digits: 0, suffix: '%'}}
+            interactive={interactive}
+            size={size}
+            // Half-width columns: a narrower design scales rows and labels up.
+            width={480}
+            rightMargin={8}
+            bare
+          />
+          <Chart
+            heading="HS Participation (All Students)"
+            rank={rankings.ranks.participation}
+            national={
+              national.participation == null
+                ? null
+                : `${national.participation.toFixed(1)}%`
+            }
+            referenceValue={national.participation}
+            rows={rankings.participation}
+            postal={model.postal}
+            valueHeading="Participation"
+            valueFormat={{digits: 1, suffix: '%'}}
+            interactive={interactive}
+            size={size}
+            // Half-width columns: a narrower design scales rows and labels up.
+            width={480}
+            rightMargin={8}
+            bare
+          />
+        </FlexColumns>
+      </SharedPanel>
     </Box>
   );
 }
