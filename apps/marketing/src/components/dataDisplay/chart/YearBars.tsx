@@ -38,6 +38,9 @@ export interface YearBarsProps {
    *  bars fill with a deeper shade on hover either way. */
   tooltip?: boolean;
   size?: 'default' | 'print';
+  /** Drawing size in px. Match the rendered width so text isn't scaled. */
+  width?: number;
+  height?: number;
 }
 
 const WIDTH = 480;
@@ -140,12 +143,14 @@ export default function YearBars({
   interactive = true,
   tooltip = true,
   size = 'default',
+  width = WIDTH,
+  height: heightProp,
 }: YearBarsProps) {
   const isPrint = size === 'print';
   const showTooltip = interactive && tooltip;
   const glow = interactive && !isPrint;
   const glowId = `glow-${useId().replace(/:/g, '')}`;
-  const height = isPrint ? 120 : 220;
+  const height = heightProp ?? (isPrint ? 120 : 220);
   const hasReference = points.some(p => p.reference != null);
   const format = (v: number | null) =>
     v == null ? emptyLabel : formatValue(v, valueFormat);
@@ -184,7 +189,7 @@ export default function YearBars({
   return (
     <ChartFrame
       title={title}
-      width={WIDTH}
+      width={width}
       height={height}
       interactive={showTooltip}
       legend={legend}
@@ -208,7 +213,7 @@ export default function YearBars({
       }}
     >
       <ChartDataProvider
-        width={WIDTH}
+        width={width}
         height={height}
         margin={MARGIN}
         skipAnimation={isPrint || undefined}

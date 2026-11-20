@@ -3,9 +3,13 @@
 import {
   TIER_BADGES,
   TIER_COLORS,
-  TIER_SECTION_BACKGROUNDS,
-  UNSCORED_SECTION_BACKGROUND,
 } from '@/modules/stateOfDigitalFluency/constants';
+import {
+  MUTED,
+  TIER_GRADIENT_STOPS,
+  TIER_GRADIENT_TEXT,
+} from '@/modules/stateOfDigitalFluency/sections/print/PrintLayout';
+import {NATIONAL_LINE_COLOR} from '@/modules/stateOfDigitalFluency/sections/print/PrintRankChart';
 
 import {CODEAI as C} from '../codeaiColors';
 
@@ -44,12 +48,26 @@ describe('report colour contrast', () => {
     },
   );
 
-  it.each([
-    ...Object.values(TIER_SECTION_BACKGROUNDS),
-    UNSCORED_SECTION_BACKGROUND,
-    'purpleDark' as const,
-  ])('white text on the %s score band meets 4.5:1', background => {
-    expect(contrast(C.white, C[background])).toBeGreaterThanOrEqual(4.5);
+  it('white text on the Purple Dark score band meets 4.5:1', () => {
+    expect(contrast(C.white, C.purpleDark)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it.each(Object.entries(TIER_GRADIENT_STOPS))(
+    'print %s gradient text meets 4.5:1 at both stops',
+    (tier, stops) => {
+      const text = TIER_GRADIENT_TEXT[tier as keyof typeof TIER_GRADIENT_TEXT];
+      for (const stop of stops) {
+        expect(contrast(text, stop)).toBeGreaterThanOrEqual(4.5);
+      }
+    },
+  );
+
+  it('print muted text on white meets 4.5:1', () => {
+    expect(contrast(MUTED, C.white)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('print national-average line on white meets 3:1', () => {
+    expect(contrast(NATIONAL_LINE_COLOR, C.white)).toBeGreaterThanOrEqual(3);
   });
 
   it.each(Object.entries(TIER_COLORS))(

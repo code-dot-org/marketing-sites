@@ -1,121 +1,165 @@
 import Box from '@mui/material/Box';
 import GlobalStyles from '@mui/material/GlobalStyles';
+import type {SxProps, Theme} from '@mui/material/styles';
 import type {ReactNode} from 'react';
 
-import type {BrandColor} from '@/components/common/colors';
-import {SectionBackgroundProvider} from '@/components/contentful/section/SectionBackgroundContext';
 import {
-  CustomText,
-  Heading,
   Link,
   Paragraph,
   Section,
 } from '@/components/dataDisplay/brandComponents';
+import {CODEAI} from '@/components/dataDisplay/codeaiColors';
 import {
-  type CodeaiColor,
-  codeaiVar,
-} from '@/components/dataDisplay/codeaiColors';
-import {codeaiRadius} from '@/themes/code.org/constants/radius';
+  CODE_ORG_DISPLAY_FONT_STACK,
+  CODE_ORG_TEXT_FONT_STACK,
+} from '@/themes/code.org/typography/fontStack';
 
 import {REPORT_TITLE} from '../../constants';
-import {DataAsOf} from '../common';
+import type {TierLabel} from '../../types';
 
 import styles from './print.module.scss';
 
-const exactColors = {
-  WebkitPrintColorAdjust: 'exact',
-  printColorAdjust: 'exact',
-} as const;
+/** The prototype's ink and muted text (AA on white). */
+export const INK = '#1a1a1a';
+export const MUTED = CODEAI.gray6;
+/** The prototype's lavender panel fill. */
+export const PURPLE_BG = '#EEEDF9';
 
-/** A heading at the printable report's scale. */
+/**
+ * Each tier's hero gradient stops: the tier colour, easing to a lighter
+ * shade. Purple stops short of Purple Mid so white text keeps AA.
+ */
+export const TIER_GRADIENT_STOPS: Record<TierLabel, [string, string]> = {
+  Transformative: [CODEAI.purplePrimary, '#6A61D8'],
+  Developing: [CODEAI.bluePrimary, CODEAI.blueMid],
+  Emerging: [CODEAI.orangePrimary, CODEAI.orangeMid],
+};
+
+export const TIER_GRADIENTS = Object.fromEntries(
+  Object.entries(TIER_GRADIENT_STOPS).map(([tier, [from, to]]) => [
+    tier,
+    `linear-gradient(180deg, ${from} 0%, ${from} 60%, ${to} 100%)`,
+  ]),
+) as Record<TierLabel, string>;
+
+/**
+ * Text on a tier gradient. The prototype uses white throughout, but white on
+ * the orange and blue tiers is 3.1:1, under AA; ink there is 6:1.
+ */
+export const TIER_GRADIENT_TEXT: Record<TierLabel, string> = {
+  Transformative: CODEAI.white,
+  Developing: CODEAI.gray9,
+  Emerging: CODEAI.gray9,
+};
+
+export const displayFont = {fontFamily: CODE_ORG_DISPLAY_FONT_STACK};
+
+/** A heading in the display face. */
 export function PrintHeading({
   level,
   children,
+  sx,
 }: {
   level: 'h1' | 'h2' | 'h3';
   children: ReactNode;
+  sx?: SxProps<Theme>;
 }) {
-  const appearance = {
-    h1: 'heading-xxl',
-    h2: 'heading-xl',
-    h3: 'heading-lg',
-  } as const;
-  const fontSize = {h1: 1.75, h2: 1, h3: 0.8125};
   return (
-    <Heading
-      visualAppearance={appearance[level]}
-      fontSize={fontSize[level]}
-      lineHeight={1.25}
-      removeMarginBottom={level === 'h1'}
+    <Box
+      component={level}
+      sx={[
+        {...displayFont, m: 0, fontWeight: 700, lineHeight: 1.25},
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       {children}
-    </Heading>
+    </Box>
   );
 }
 
-/** A bordered block (borders print where backgrounds may not). */
-export function PrintPanel({
+/** The prototype's white card, its title a centred purple h2. */
+export function PrintCard({
   title,
   children,
+  sx,
 }: {
-  /** Rendered as an h2. */
   title?: string;
   children: ReactNode;
+  sx?: SxProps<Theme>;
 }) {
   return (
     <Box
-      sx={{
-        border: `1px solid ${codeaiVar('gray3')}`,
-        borderRadius: codeaiRadius('md', '10px'),
-        px: 1.5,
-        py: 1.25,
-        minWidth: 0,
-        breakInside: 'avoid',
-      }}
+      sx={[
+        {
+          background: '#fff',
+          border: '1px solid #ECECEC',
+          borderRadius: '12px',
+          boxShadow: '0 1px 3px rgb(0 0 0 / 8%)',
+          px: '18px',
+          py: '12px',
+          minWidth: 0,
+          breakInside: 'avoid',
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
-      {title && <PrintHeading level="h2">{title}</PrintHeading>}
+      {title && (
+        <PrintHeading
+          level="h2"
+          sx={{
+            textAlign: 'center',
+            color: CODEAI.purplePrimary,
+            fontSize: '16px',
+            mb: '6px',
+          }}
+        >
+          {title}
+        </PrintHeading>
+      )}
       {children}
     </Box>
   );
 }
 
-/** A filled block whose text contrast-switches like a Section on `background`. */
-export function PrintBand({
-  background,
+/** The lavender title band at the top of the profile, breakdown and rankings pages. */
+export function HeaderBand({
   children,
+  aside,
 }: {
-  background: BrandColor & CodeaiColor;
   children: ReactNode;
+  aside?: ReactNode;
 }) {
   return (
     <Box
       sx={{
-        background: codeaiVar(background),
-        borderRadius: codeaiRadius('md', '10px'),
-        px: 2,
-        py: 1.5,
-        breakInside: 'avoid',
-        ...exactColors,
+        background: CODEAI.purpleLight,
+        borderRadius: '12px',
+        px: '22px',
+        py: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 2,
       }}
     >
-      <SectionBackgroundProvider value={background}>
-        {children}
-      </SectionBackgroundProvider>
+      {children}
+      {aside && (
+        <Box sx={{fontSize: '12px', color: '#333', textAlign: 'right'}}>
+          {aside}
+        </Box>
+      )}
     </Box>
   );
 }
 
-/** One US Letter page with the edition and "Data as of" in its header. */
+/** One US Letter sheet: a label in the corner, content, and a centred footer. */
 export function PrintPage({
   label,
-  edition,
-  dataAsOf,
+  footer,
   children,
 }: {
   label: string;
-  /** The state name, or "National". */
-  edition: string;
-  dataAsOf: string | null;
+  footer: string;
   children: ReactNode;
 }) {
   return (
@@ -124,97 +168,83 @@ export function PrintPage({
       aria-label={label}
       data-print-page
       className={styles.page}
-      sx={exactColors}
     >
       <Box
-        component="header"
+        aria-hidden
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: 1,
-          borderBottom: `1px solid ${codeaiVar('gray3')}`,
-          pb: 0.75,
+          position: 'absolute',
+          top: '10px',
+          right: '18px',
+          fontSize: '10px',
+          letterSpacing: '.1em',
+          textTransform: 'uppercase',
+          color: MUTED,
         }}
       >
-        <Paragraph visualAppearance="text-xs" color="gray6" removeMarginBottom>
-          {REPORT_TITLE} · <strong>{edition}</strong> · {label}
-        </Paragraph>
-        <DataAsOf value={dataAsOf} />
+        {label}
       </Box>
-      <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, flex: 1}}>
+      <Box sx={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
         {children}
       </Box>
+      <Box
+        component="footer"
+        sx={{
+          position: 'absolute',
+          bottom: '8px',
+          left: 0,
+          right: 0,
+          textAlign: 'center',
+          fontSize: '10px',
+          color: MUTED,
+        }}
+      >
+        {footer}
+      </Box>
     </Box>
   );
 }
 
-/** Small print text. */
-export function Small({
-  children,
-  strong,
-  center,
-}: {
-  children: ReactNode;
-  strong?: boolean;
-  center?: boolean;
-}) {
-  return (
-    <Paragraph
-      visualAppearance="text-xs"
-      isStrong={strong}
-      removeMarginBottom
-      sx={center ? {textAlign: 'center'} : undefined}
-    >
-      {children}
-    </Paragraph>
-  );
-}
+/** The footer line: title, year, edition and "Data as of". */
+export const footerText = (...parts: (string | null | undefined)[]) =>
+  [REPORT_TITLE, ...parts].filter(Boolean).join(' · ');
 
-/** A page's title row: heading on the left, a short aside on the right. */
-export function PageTitle({
-  level = 'h2',
-  overline,
-  title,
-  aside,
+/** A year-over-year change pill: green up, red down, nothing when flat. */
+export function DeltaTag({
+  value,
+  suffix = '',
+  digits = 1,
 }: {
-  level?: 'h1' | 'h2';
-  overline?: string;
-  title: string;
-  aside?: ReactNode;
+  value: number | null;
+  suffix?: string;
+  digits?: number;
 }) {
+  if (value == null || value === 0) {
+    return null;
+  }
+  const up = value > 0;
   return (
     <Box
+      component="span"
       sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
-        gap: 2,
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '4px',
+        fontSize: '12px',
+        fontWeight: 700,
+        px: '8px',
+        py: '1px',
+        borderRadius: '12px',
+        color: up ? '#2E7D32' : '#C8361A',
+        background: up ? '#E6F4EA' : '#FCE4DE',
       }}
     >
-      <Box>
-        {overline && (
-          <CustomText
-            type="overline"
-            htmlTag="p"
-            fontSize={0.625}
-            removeMarginBottom
-          >
-            {overline}
-          </CustomText>
-        )}
-        <PrintHeading level={level}>{title}</PrintHeading>
+      <Box component="span" aria-hidden sx={{fontSize: '10px'}}>
+        {up ? '▲' : '▼'}
       </Box>
-      {aside && <Box sx={{textAlign: 'right'}}>{aside}</Box>}
+      {`${up ? '+' : ''}${value.toFixed(digits)}${suffix}`}
     </Box>
   );
 }
-
-export const printTile = {
-  background: codeaiVar('purpleLight'),
-  borderRadius: codeaiRadius('md', '10px'),
-  p: 1.5,
-};
 
 // Page-level print rules. Global, so they can't live in the CSS module.
 const printGlobals = {
@@ -223,8 +253,10 @@ const printGlobals = {
     '*:has(> main [data-sodf-print]) > :not(main)': {
       display: 'none !important',
     },
+    // The report's sheets are the print: no section padding or background.
     'main:has([data-sodf-print]) .section-root': {
       background: 'none !important',
+      padding: '0 !important',
     },
     'main:has([data-sodf-print]) .section-root > .MuiContainer-root': {
       padding: '0 !important',
@@ -244,19 +276,16 @@ export default function PrintLayout({
 }) {
   return (
     <Section background="gray1" padding="m">
-      <Box className={styles.report} data-sodf-print>
+      <Box
+        className={styles.report}
+        data-sodf-print
+        sx={{fontFamily: CODE_ORG_TEXT_FONT_STACK, color: INK, lineHeight: 1.5}}
+      >
         <GlobalStyles styles={printGlobals} />
         <Box
           component="nav"
           aria-label="Printable report"
           className={styles.toolbar}
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 2,
-          }}
         >
           <Link
             href={back.href}
