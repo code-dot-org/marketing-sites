@@ -140,7 +140,7 @@ export default function OverviewSection({
 
       <ReportSection
         id={MAP_ANCHOR}
-        title="Digital Fluency Index Score Map"
+        title="Digital Fluency Index Map"
         titleColor="purpleDark"
         intro="Hover over a state for details. Select a state to open its profile."
         introSize="regular"

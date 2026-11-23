@@ -1,24 +1,13 @@
 import Box from '@mui/material/Box';
 
-import Badge from '@/components/contentful/badge/Badge';
-import {
-  CustomText,
-  Heading,
-  Paragraph,
-} from '@/components/dataDisplay/brandComponents';
+import {CustomText, Paragraph} from '@/components/dataDisplay/brandComponents';
 import YearBars from '@/components/dataDisplay/chart/YearBars';
 import {CODEAI, codeaiVar} from '@/components/dataDisplay/codeaiColors';
 import FlexColumns from '@/components/dataDisplay/layout/FlexColumns';
 import Stat from '@/components/dataDisplay/stat/Stat';
-import {textCell} from '@/components/dataDisplay/typeScale';
 import {codeaiRadius} from '@/themes/code.org/constants/radius';
 
-import {
-  HIGHLIGHTS,
-  NOT_REPORTED,
-  POLICY_KEYS,
-  POLICY_LABELS,
-} from '../../constants';
+import {NOT_REPORTED, POLICY_KEYS, POLICY_LABELS} from '../../constants';
 import type {NationalModel, OverviewModel} from '../../readReport';
 import {ReportPanel, ReportSection} from '../common';
 
@@ -116,9 +105,10 @@ function Trends({
 }) {
   return (
     <ReportSection
-      title="Trends in Computer Science Education"
+      title="Trends in Digital Sciences Education"
       titleColor="purpleDark"
       centerHeader
+      divider
     >
       <FlexColumns columns={{xs: 1, md: 2}} weights={[2, 1]}>
         <ReportPanel bordered>
@@ -185,60 +175,7 @@ function Trends({
   );
 }
 
-function Highlights() {
-  return (
-    <ReportSection
-      title="Digital Sciences Highlights"
-      titleColor="purpleDark"
-      centerHeader
-      background="purpleLight"
-    >
-      <FlexColumns
-        component="ul"
-        aria-label="State highlights"
-        columns={{xs: 1, sm: 2, lg: 4}}
-      >
-        {HIGHLIGHTS.map(h => (
-          <Box
-            component="li"
-            key={h.state}
-            sx={{
-              ...tile,
-              p: 3,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              gap: 1.5,
-            }}
-          >
-            <Badge
-              text={h.tag}
-              color="purple"
-              size="small"
-              appearance="light"
-            />
-            <Heading
-              visualAppearance="heading-lg"
-              color="purpleDark"
-              {...textCell('xl')}
-              removeMarginBottom
-            >
-              {h.state}
-            </Heading>
-            <Paragraph visualAppearance="text-md" isStrong removeMarginBottom>
-              {h.headline}
-            </Paragraph>
-            <Paragraph visualAppearance="text-sm" removeMarginBottom>
-              {h.body}
-            </Paragraph>
-          </Box>
-        ))}
-      </FlexColumns>
-    </ReportSection>
-  );
-}
-
-/** The overview's national sections: policy landscape, trends, highlights. */
+/** The overview's national sections: policy landscape and trends. */
 export default function OverviewNational({
   national,
   stats,
@@ -252,7 +189,6 @@ export default function OverviewNational({
     <>
       <PolicyLandscape counts={national.policyCounts} stateCount={stateCount} />
       <Trends national={national} stats={stats} />
-      <Highlights />
     </>
   );
 }
