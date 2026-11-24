@@ -70,17 +70,23 @@ describe('printable report route', () => {
     );
   });
 
-  it('renders eight letter pages, each with the state name and data date', async () => {
+  it('renders eight letter pages, the state pages footed with its name and data date', async () => {
     const {container} = render(
       (await PrintPage({params: params(Brand.CODE_DOT_ORG)})) as ReactElement,
     );
-    const pages = container.querySelectorAll('section[data-print-page]');
+    const pages = [...container.querySelectorAll('section[data-print-page]')];
 
     expect(pages).toHaveLength(8);
+    // Pages 7 and 8 are national, as in the prototype: no state in the footer.
+    pages.slice(0, 6).forEach(page => {
+      const footer = page.querySelector('footer');
+      expect(footer).toHaveTextContent('Minnesota');
+      expect(footer).toHaveTextContent('Data as of 2026-11-09');
+    });
     pages.forEach(page => {
-      const header = page.querySelector('header');
-      expect(header).toHaveTextContent('Minnesota');
-      expect(header).toHaveTextContent('Data as of 2026-11-09');
+      expect(page.querySelector('footer')).toHaveTextContent(
+        'The State of Digital Fluency',
+      );
     });
   });
 });

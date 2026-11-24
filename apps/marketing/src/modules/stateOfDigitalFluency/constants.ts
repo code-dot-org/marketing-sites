@@ -1,10 +1,5 @@
-import type {BrandColor} from '@/components/common/colors';
 import type {BadgeColor} from '@/components/contentful/badge/Badge';
-import {
-  CODEAI,
-  type CodeaiColor,
-  codeaiVar,
-} from '@/components/dataDisplay/codeaiColors';
+import {CODEAI, codeaiVar} from '@/components/dataDisplay/codeaiColors';
 
 import type {Band, PolicyKey, Tier, TierLabel} from './types';
 
@@ -95,18 +90,6 @@ export const TIER_COLORS: Record<TierLabel, string> = {
   Developing: CODEAI.bluePrimary,
   Emerging: CODEAI.orangePrimary,
 };
-
-/** The score band behind a state's score: the tier's Dark shade (white text meets AA). */
-export const TIER_SECTION_BACKGROUNDS: Record<
-  TierLabel,
-  BrandColor & CodeaiColor
-> = {
-  Transformative: 'purpleDark',
-  Developing: 'blueDark',
-  Emerging: 'orangeDark',
-};
-
-export const UNSCORED_SECTION_BACKGROUND: BrandColor & CodeaiColor = 'gray8';
 
 /** Graphics for states with no value. */
 export const NOT_SCORED_COLOR = CODEAI.gray3;
