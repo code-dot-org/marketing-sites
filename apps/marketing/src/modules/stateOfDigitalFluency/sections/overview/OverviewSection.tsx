@@ -4,6 +4,7 @@ import {Link} from '@/components/dataDisplay/brandComponents';
 import UsMap from '@/components/dataDisplay/map/UsMap';
 import Stat from '@/components/dataDisplay/stat/Stat';
 import StatGroup from '@/components/dataDisplay/stat/StatGroup';
+import type {FileDownloadEntry} from '@/types/contentful/entries/FileDownload';
 
 import {
   BAND_FILLS,
@@ -21,6 +22,7 @@ import {
 } from '../../readReport';
 import {ReportFooter, ReportHero, ReportSection} from '../common';
 
+import OverviewDownloads from './OverviewDownloads';
 import OverviewMapPanel, {type PanelState} from './OverviewMapPanel';
 import OverviewNational from './OverviewNational';
 import OverviewRankings from './OverviewRankings';
@@ -46,11 +48,14 @@ export default function OverviewSection({
   model,
   locale,
   nationalSummaryUrl = null,
+  pastReports = [],
 }: {
   model: OverviewModel;
   locale: string;
   /** Marketing's national PDF; the download button shows once it's set. */
   nationalSummaryUrl?: string | null;
+  /** File Download entries for the past reports dropdown. */
+  pastReports?: FileDownloadEntry[];
 }) {
   const {stats} = model;
 
@@ -204,7 +209,12 @@ export default function OverviewSection({
 
       <OverviewRankings rankings={model.rankings} locale={locale} />
 
-      <ReportFooter dataAsOf={model.dataAsOf} />
+      <ReportFooter dataAsOf={model.dataAsOf} divider={false} />
+
+      <OverviewDownloads
+        nationalSummaryUrl={nationalSummaryUrl}
+        pastReports={pastReports}
+      />
     </>
   );
 }

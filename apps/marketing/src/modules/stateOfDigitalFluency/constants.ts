@@ -14,6 +14,9 @@ export const REPORT_TITLE = 'The State of Digital Fluency';
  */
 export const NATIONAL_SUMMARY_ENTRY_ID = '3rfxpNTqfQfWXAlO6FVoYv';
 
+/** The List of File Download entries behind the overview's past reports dropdown. */
+export const PAST_REPORTS_LIST_ENTRY_ID = 'kmjadsTbLQtuZvoWUvypa';
+
 /** The national summary PDF is a fixed yearly snapshot; the state pages carry live data. */
 export const NATIONAL_SUMMARY_LABEL = '2026 National Summary Report';
 

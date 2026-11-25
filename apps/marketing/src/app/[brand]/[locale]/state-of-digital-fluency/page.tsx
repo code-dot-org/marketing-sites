@@ -1,6 +1,7 @@
 import {Metadata} from 'next';
 
 import {getNationalSummaryUrl} from '@/modules/stateOfDigitalFluency/getNationalSummary';
+import {getPastReports} from '@/modules/stateOfDigitalFluency/getPastReports';
 import {loadReport} from '@/modules/stateOfDigitalFluency/loadReport';
 import {buildReportMetadata} from '@/modules/stateOfDigitalFluency/metadata';
 import {toOverviewModel} from '@/modules/stateOfDigitalFluency/readReport';
@@ -29,7 +30,10 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 export default async function StateOfDigitalFluencyPage({params}: Props) {
   const {brand, locale} = await params;
   const {report, isDraft} = await loadReport(brand);
-  const nationalSummaryUrl = await getNationalSummaryUrl({isDraft});
+  const [nationalSummaryUrl, pastReports] = await Promise.all([
+    getNationalSummaryUrl({isDraft}),
+    getPastReports({isDraft}),
+  ]);
 
   return (
     <ReportMain warnings={report.warnings} isDraft={isDraft}>
@@ -37,6 +41,7 @@ export default async function StateOfDigitalFluencyPage({params}: Props) {
         model={toOverviewModel(report)}
         locale={locale}
         nationalSummaryUrl={nationalSummaryUrl}
+        pastReports={pastReports}
       />
     </ReportMain>
   );
