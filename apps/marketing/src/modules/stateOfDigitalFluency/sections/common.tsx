@@ -310,13 +310,20 @@ export function DataAsOf({value}: {value: string | null}) {
 /** Report name and data date, closed with the strong section rule. */
 export function ReportFooter({
   dataAsOf,
+  divider = true,
   children,
 }: {
   dataAsOf: string | null;
+  /** Off when a colored section follows, which already marks the edge. */
+  divider?: boolean;
   children?: ReactNode;
 }) {
   return (
-    <Section background="white" padding="m" divider="strong">
+    <Section
+      background="white"
+      padding="m"
+      divider={divider ? 'strong' : 'none'}
+    >
       <Box
         component="footer"
         sx={{
