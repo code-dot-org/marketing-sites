@@ -748,7 +748,7 @@ Resources:
       MaxCapacity: 20 # Upper limit for scaling, can be increased as needed
       MinCapacity:  !If
         - IsProductionEnvironment
-        - 3 # High Availability for production
+        - 6 # TODO: Temporary floor for Hour of AI 2026 (event week 2026-12-07); revert to 3 after 2026-12-11. Same change as 2025 (INF-1993).
         - 1
       ResourceId: !Sub "service/${EcsCluster}/${FargateService.Name}"
       RoleARN: !GetAtt ECSAutoScalingRole.Arn
